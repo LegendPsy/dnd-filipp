@@ -13,7 +13,7 @@
   let gen = (W.__aliveGen = (W.__aliveGen || 0) + 1);
   const alive = () => gen === W.__aliveGen;
   const observers = [];
-  W.__alive = {stop() { ac.abort(); observers.forEach(o => o.disconnect()); try { amb.forEach(a => a.pause()); } catch (e) {} W.__aliveGen++; }};
+  W.__alive = {stop() { ac.abort(); observers.forEach(o => o.disconnect()); try { amb.forEach(a => a.pause()); if (actx) actx.close(); } catch (e) {} W.__aliveGen++; }};
 
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const FINE = matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -589,23 +589,38 @@ html.alive-entered body{animation:alive-enter 1.4s ease-out both}
     if (D.querySelector('.journal')) return ['fire', 'rain'];   // страницы памяти
     return ['rain'];                                            // главная
   };
-  const VOL = {tavern: .5, fire: .45, rain: .35};
+  const VOL = {tavern: .55, fire: .5, rain: .4};
   const sndOn = () => ls.get('alive-sound') === 'on';
   const amb = [];
   function sfx(name, v) {
     if (!sndOn()) return;
     try { const a = new Audio(SFX_BASE + name + '.mp3'); a.volume = v || .6; a.play().catch(() => {}); } catch (e) {}
   }
-  const fade = (a, to, ms, done) => {
-    const from = a.volume, t0 = performance.now();
-    const step = () => { if (!alive()) { a.pause(); return; } const k = Math.min(1, (performance.now() - t0) / ms); a.volume = from + (to - from) * k; if (k < 1) requestAnimationFrame(step); else if (done) done(); };
-    step();
-  };
-  function ambStart() {
-    if (!amb.length) PAGE_AMB().forEach(n => { const a = new Audio(SFX_BASE + n + '.mp3'); a.loop = true; a.preload = 'none'; a.volume = 0; a._v = VOL[n] || .4; amb.push(a); });
-    amb.forEach(a => { a.play().then(() => fade(a, a._v, 1800)).catch(() => {}); });
+  // фон играет через Web Audio: так петля звучит без щелчка на стыке
+  let actx = null, master = null, loading = null;
+  async function ambStart() {
+    try {
+      if (!actx) { actx = new (W.AudioContext || W.webkitAudioContext)(); master = actx.createGain(); master.gain.value = 0; master.connect(actx.destination); }
+      if (actx.state === 'suspended') await actx.resume();
+      if (!amb.length && !loading) loading = Promise.all(PAGE_AMB().map(async n => {
+        const buf = await actx.decodeAudioData(await (await fetch(SFX_BASE + n + '.mp3')).arrayBuffer());
+        const src = actx.createBufferSource(); src.buffer = buf; src.loop = true;
+        const g = actx.createGain(); g.gain.value = VOL[n] || .4;
+        src.connect(g).connect(master);
+        src.start(0, Math.random() * buf.duration); // каждый раз с нового места
+        amb.push({pause() { try { src.stop(); } catch (e) {} }});
+      }));
+      await loading;
+      if (!alive() || !sndOn()) return;
+      const t = actx.currentTime;
+      master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(master.gain.value, t); master.gain.linearRampToValueAtTime(1, t + 2);
+    } catch (e) {}
   }
-  function ambStop() { amb.forEach(a => fade(a, 0, 700, () => a.pause())); }
+  function ambStop() {
+    if (!actx) return;
+    const t = actx.currentTime;
+    master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(master.gain.value, t); master.gain.linearRampToValueAtTime(0, t + .8);
+  }
   async function soundInit() {
     const names = PAGE_AMB();
     let ok = false;
@@ -625,11 +640,11 @@ html.alive-entered body{animation:alive-enter 1.4s ease-out both}
     if (sndOn()) {
       ambStart();
       // браузер может не дать играть до первого касания: тогда начнём с него
-      const kick = () => { if (sndOn() && amb.some(a => a.paused)) ambStart(); };
+      const kick = () => { if (sndOn()) ambStart(); };
       addEventListener('pointerdown', kick, {once: true, signal: ac.signal});
       addEventListener('keydown', kick, {once: true, signal: ac.signal});
     }
-    D.addEventListener('visibilitychange', () => { if (!sndOn()) return; if (D.hidden) amb.forEach(a => a.pause()); else ambStart(); }, sig);
+    D.addEventListener('visibilitychange', () => { if (!sndOn() || !actx) return; if (D.hidden) actx.suspend(); else actx.resume(); }, sig);
   }
 
   /* ---------- сюжет: смех рвёт строку «Вы слышите? Кто-то смеётся» ---------- */
