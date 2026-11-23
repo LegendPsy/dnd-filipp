@@ -1,7 +1,7 @@
 /* Открывает зашифрованную страницу паролем.
    Шифр: PBKDF2-SHA256 -> AES-GCM 256. В коде страницы лежит только шифр, без открытого текста. */
 {
-  const KEY = 'filipp-pass';
+  const KEY = 'filipp-pass:' + location.pathname.replace(/index\.html$/, '');
   const norm = s => s.normalize('NFC').trim().toLowerCase().replace(/ё/g, 'е').replace(/\s+/g, ' ');
   const bytes = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 
