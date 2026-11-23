@@ -468,7 +468,7 @@ html.alive-entered body{animation:alive-enter 1.4s ease-out both}
 <g class="half l"><path d="M60 6 C30 6 8 28 9 58 C8 88 30 114 60 113 L56 96 L63 80 L55 64 L64 48 L57 30 Z" fill="url(#aw)"/></g>
 <g class="half r"><path d="M60 6 C90 6 112 30 111 60 C112 90 88 114 60 113 L56 96 L63 80 L55 64 L64 48 L57 30 Z" fill="url(#aw)"/></g>
 <g fill="none" stroke="rgba(255,210,200,.55)" stroke-width="2.2" stroke-linecap="round"><circle cx="60" cy="60" r="38" stroke-dasharray="3 5"/>
-<path d="M60 36 C66 44 69 50 69 56 a9 9 0 0 1 -18 0 C51 50 54 44 60 36 Z"/><path d="M50 80 h20 M60 66 v14"/></g></svg>`;
+</g><text x="60" y="78" text-anchor="middle" font-family="Cormorant Garamond,serif" font-weight="600" font-size="52" fill="rgba(255,214,204,.6)" stroke="rgba(70,8,18,.5)" stroke-width="1">Ф</text></svg>`;
       D.body.appendChild(box);
       requestAnimationFrame(() => box.classList.add('go'));
       setTimeout(() => box.classList.add('crack'), 520);
