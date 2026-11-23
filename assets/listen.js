@@ -63,7 +63,7 @@
 
       var box = document.createElement('div'); box.className = 'listen';
       box.innerHTML = '<button class="seal" type="button" aria-label="Слушать главу">'+ICON+'</button>'+
-        '<div class="lbody"><p class="ltitle">Слушать главу <small>· читает Нестер</small></p>'+
+        '<div class="lbody"><p class="ltitle">Слушать главу</p>'+
         '<div class="thread" role="slider" aria-label="Где сейчас чтение" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">'+
         '<svg><path class="base"/><path class="red"/><circle class="knot" r="4" cx="0" cy="8"/></svg></div>'+
         '<div class="ltime"><span class="cur">0:00</span> / <span class="dur">—</span><button class="spd" type="button" aria-label="Скорость чтения">×1</button></div></div>';
