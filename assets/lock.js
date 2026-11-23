@@ -24,13 +24,19 @@
   const msg = document.getElementById('msg');
   const label = btn.textContent;
 
-  const tryOpen = async (pass, remember) => {
+  // ответ «живого» слоя (assets/alive.js): печать ломается, потом страница проявляется
+  const ceremony = () => window.aliveUnlock
+    ? Promise.race([window.aliveUnlock(), new Promise(r => setTimeout(r, 2500))]).catch(() => {})
+    : Promise.resolve();
+
+  const tryOpen = async (pass, remember, quiet) => {
     btn.disabled = true;
     btn.textContent = 'Открываю…';
     msg.textContent = '';
     try {
       const html = await decrypt(pass, data);
       try { if (remember) localStorage.setItem(KEY, pass); } catch (e) {}
+      if (!quiet) await ceremony();
       show(html);
       return true;
     } catch (e) {
@@ -46,6 +52,7 @@
     const ok = await tryOpen(input.value, keep.checked);
     if (!ok) {
       msg.textContent = 'Не тот пароль. Мысли расплываются.';
+      document.dispatchEvent(new CustomEvent('alive:fail'));
       form.classList.remove('shake'); void form.offsetWidth; form.classList.add('shake');
       input.select();
     }
@@ -57,6 +64,6 @@
   } else {
     let saved = null;
     try { saved = localStorage.getItem(KEY); } catch (e) {}
-    if (saved) tryOpen(saved, true).then(ok => { if (!ok) { try { localStorage.removeItem(KEY); } catch (e) {} } });
+    if (saved) tryOpen(saved, true, true).then(ok => { if (!ok) { try { localStorage.removeItem(KEY); } catch (e) {} } });
   }
 }
