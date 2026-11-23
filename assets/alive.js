@@ -13,7 +13,7 @@
   let gen = (W.__aliveGen = (W.__aliveGen || 0) + 1);
   const alive = () => gen === W.__aliveGen;
   const observers = [];
-  W.__alive = {stop() { ac.abort(); observers.forEach(o => o.disconnect()); W.__aliveGen++; }};
+  W.__alive = {stop() { ac.abort(); observers.forEach(o => o.disconnect()); try { amb.forEach(a => a.pause()); } catch (e) {} W.__aliveGen++; }};
 
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const FINE = matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -41,7 +41,27 @@
 
   /* ---------- стили слоя жизни ---------- */
   const css = `
+@view-transition{navigation:auto}
+.alive-fiber{position:fixed;inset:0;width:100vw;height:100vh;z-index:29;pointer-events:none;overflow:visible;transition:opacity .5s}
+.alive-fiber path{fill:none;stroke:#c0283f;stroke-width:1.3;stroke-linecap:round;opacity:.85}
+.alive-fiber circle{fill:#c0283f;transition:opacity .4s}
+.alive-tear{position:absolute;pointer-events:none;margin:0;transition:transform .5s cubic-bezier(.3,1.5,.5,1)}
+.alive-tear-gap{position:absolute;left:0;right:0;pointer-events:none;display:flex;gap:1.2em;justify-content:center;align-items:center;font:400 15px/1 "Marck Script",cursive;color:#b89cff;opacity:0;transition:opacity .4s;white-space:nowrap;overflow:hidden}
+::view-transition-old(root){animation:alive-vt-out .45s ease-in both}
+::view-transition-new(root){animation:alive-vt-in .7s ease-out both}
+@keyframes alive-vt-out{to{opacity:0;filter:brightness(.4) blur(4px)}}
+@keyframes alive-vt-in{from{opacity:0;filter:brightness(1.4) sepia(.4)}}
 html.alive-entering body{opacity:0}
+.alive-snd{position:fixed;left:max(10px,1.4vw);bottom:max(16px,env(safe-area-inset-bottom));z-index:46;width:44px;height:44px;display:grid;place-items:center;
+  border:1px solid rgba(232,225,215,.22);border-radius:50%;background:rgba(13,10,14,.78);color:#cfc6ba;cursor:pointer;padding:0;transition:border-color .3s,color .3s,opacity .5s;opacity:.75}
+.alive-snd:hover{opacity:1;border-color:rgba(232,184,106,.6);color:#fff}
+.alive-snd:focus-visible{outline:2px solid #a57cff;outline-offset:3px}
+.alive-snd svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+.alive-snd .w{opacity:0;transition:opacity .4s}
+.alive-snd[aria-pressed=true]{color:#e8b86a;border-color:rgba(232,184,106,.55);opacity:1}
+.alive-snd[aria-pressed=true] .w{opacity:1}
+.alive-snd[aria-pressed=true] .x{opacity:0}
+body:has(.alive-candle) .alive-snd{bottom:calc(max(16px,env(safe-area-inset-bottom)) + 96px)}
 html.alive-entered body{animation:alive-enter 1.4s ease-out both}
 @keyframes alive-enter{from{opacity:0;filter:brightness(1.8) sepia(.6) blur(6px)}to{opacity:1;filter:none}}
 .alive-fx{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;contain:strict}
@@ -170,6 +190,8 @@ html.alive-entered body{animation:alive-enter 1.4s ease-out both}
     candleInit();
     gateInit();
     idleInit();
+    soundInit();
+    tearInit();
     W.dispatchEvent(new CustomEvent('alive:ready'));
   }
 
@@ -416,7 +438,9 @@ html.alive-entered body{animation:alive-enter 1.4s ease-out both}
       const x = 15, bend = sway + Math.sin(t / 900) * (RM ? 0 : 1.6);
       path.setAttribute('d', `M${x},-2 Q${x + bend},${L * .55} ${x + bend * .35},${L}`);
       knot.setAttribute('cx', (x + bend * .35).toFixed(1)); knot.setAttribute('cy', L.toFixed(1));
+      if (fiber) fiber(L, bend);
     };
+    const fiber = fiberInit(svg);
     jobs.add((t, dt) => {
       const y = scrollY; const v = y - lastY; lastY = y;
       if (Math.abs(v) > .5) still = 0; else still += dt;
@@ -427,6 +451,42 @@ html.alive-entered body{animation:alive-enter 1.4s ease-out both}
     addEventListener('scroll', wake, {passive: true, signal: ac.signal});
     addEventListener('resize', wake, {passive: true, signal: ac.signal});
     render(0); wake();
+  }
+
+  /* ---------- сюжет: нитка вытягивается из шарфа на арте таверны ---------- */
+  function fiberInit(threadSvg) {
+    const img = D.querySelector('.cover > img[src*="portrait"]');
+    if (!img || SMALL) return null;
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = D.createElementNS(NS, 'svg'); svg.setAttribute('class', 'alive-fiber'); svg.setAttribute('aria-hidden', 'true');
+    const path = D.createElementNS(NS, 'path'), end = D.createElementNS(NS, 'circle');
+    end.setAttribute('r', '2.2');
+    svg.append(path, end); D.body.appendChild(svg);
+    const SCARF = [.4, .45]; // шарф над тетрадью, в долях исходной картинки
+    const anchor = () => {
+      const r = img.getBoundingClientRect(), nw = img.naturalWidth || 1536, nh = img.naturalHeight || 2048;
+      const sc = Math.max(r.width / nw, r.height / nh), w = nw * sc, h = nh * sc;
+      const op = getComputedStyle(img).objectPosition.split(' ').map(v => parseFloat(v) / 100);
+      const ox = (r.width - w) * (isNaN(op[0]) ? .5 : op[0]), oy = (r.height - h) * (isNaN(op[1]) ? .5 : op[1]);
+      return [r.left + ox + w * SCARF[0], r.top + oy + h * SCARF[1]];
+    };
+    let len = 0;
+    return (L, bend) => {
+      const [ax, ay] = anchor();
+      const tr = threadSvg.getBoundingClientRect();
+      const tx = tr.left + 15 + bend * .35, ty = L;
+      const cover = img.parentElement.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, -cover.top / Math.max(1, cover.height * .55))); // сколько пролистали обложку
+      const mx = (ax + tx) / 2, my = Math.max(ay, ty) + 60 + Math.abs(tx - ax) * .08; // нитка провисает
+      path.setAttribute('d', `M${ax.toFixed(1)},${ay.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${tx.toFixed(1)},${ty.toFixed(1)}`);
+      const l = path.getTotalLength();
+      if (Math.abs(l - len) > 1) { len = l; path.style.strokeDasharray = l; }
+      path.style.strokeDashoffset = (l * (1 - (RM ? 1 : p))).toFixed(1);
+      end.setAttribute('cx', ax.toFixed(1)); end.setAttribute('cy', ay.toFixed(1));
+      svg.style.opacity = p > .02 || RM ? '1' : '0';
+      const on = p > .02 && cover.bottom > -40;
+      end.style.opacity = on ? '1' : '0';
+    };
   }
 
   /* ---------- 8: свеча повести догорает, пока читаешь ---------- */
@@ -461,6 +521,7 @@ html.alive-entered body{animation:alive-enter 1.4s ease-out both}
     }, sig);
     W.aliveUnlock = () => new Promise(res => {
       ss.set('alive-enter', '1');
+      sfx('seal', .8);
       if (RM) { res(); return; }
       const box = D.createElement('div'); box.className = 'alive-seal'; box.setAttribute('aria-hidden', 'true');
       box.innerHTML = `<span class="glow"></span><span class="veil"></span>
@@ -512,5 +573,100 @@ html.alive-entered body{animation:alive-enter 1.4s ease-out both}
     s.style.rotate = (Math.random() * 24 - 12) + 'deg';
     s.addEventListener('animationend', () => s.remove());
     D.body.appendChild(s);
+  }
+
+  /* ---------- звук: только по кнопке, тишина по умолчанию ---------- */
+  // файлы лежат в assets/sfx/; если файла нет, кнопка просто не появляется
+  const SFX_BASE = (() => { const sc = D.querySelector('script[src$="assets/alive.js"]'); return sc ? sc.src.replace(/alive\.js$/, 'sfx/') : 'assets/sfx/'; })();
+  const PAGE_AMB = () => {
+    if (D.getElementById('gate')) return ['rain'];
+    if (D.querySelector('.shelf')) return ['tavern'];          // таверна
+    if (D.querySelector('.bar #prog')) return ['rain', 'fire']; // повесть
+    if (D.querySelector('.hero')) return ['fire'];              // мастер
+    if (D.querySelector('.journal')) return ['fire', 'rain'];   // страницы памяти
+    return ['rain'];                                            // главная
+  };
+  const VOL = {tavern: .5, fire: .45, rain: .35};
+  const sndOn = () => ls.get('alive-sound') === 'on';
+  const amb = [];
+  function sfx(name, v) {
+    if (!sndOn()) return;
+    try { const a = new Audio(SFX_BASE + name + '.mp3'); a.volume = v || .6; a.play().catch(() => {}); } catch (e) {}
+  }
+  const fade = (a, to, ms, done) => {
+    const from = a.volume, t0 = performance.now();
+    const step = () => { if (!alive()) { a.pause(); return; } const k = Math.min(1, (performance.now() - t0) / ms); a.volume = from + (to - from) * k; if (k < 1) requestAnimationFrame(step); else if (done) done(); };
+    step();
+  };
+  function ambStart() {
+    if (!amb.length) PAGE_AMB().forEach(n => { const a = new Audio(SFX_BASE + n + '.mp3'); a.loop = true; a.preload = 'none'; a.volume = 0; a._v = VOL[n] || .4; amb.push(a); });
+    amb.forEach(a => { a.play().then(() => fade(a, a._v, 1800)).catch(() => {}); });
+  }
+  function ambStop() { amb.forEach(a => fade(a, 0, 700, () => a.pause())); }
+  async function soundInit() {
+    const names = PAGE_AMB();
+    let ok = false;
+    try { const r = await fetch(SFX_BASE + names[0] + '.mp3', {method: 'HEAD'}); ok = r.ok; } catch (e) {}
+    if (!ok || !alive()) return;
+    const b = D.createElement('button');
+    b.type = 'button'; b.className = 'alive-snd';
+    b.setAttribute('aria-label', 'Звук'); b.title = 'Звук';
+    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="w" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="x" d="M16 10l4 4M20 10l-4 4"/></svg>';
+    const sync = () => b.setAttribute('aria-pressed', sndOn() ? 'true' : 'false');
+    sync();
+    b.addEventListener('click', () => {
+      ls.set('alive-sound', sndOn() ? 'off' : 'on'); sync();
+      if (sndOn()) ambStart(); else ambStop();
+    }, sig);
+    D.body.appendChild(b);
+    if (sndOn()) {
+      ambStart();
+      // браузер может не дать играть до первого касания: тогда начнём с него
+      const kick = () => { if (sndOn() && amb.some(a => a.paused)) ambStart(); };
+      addEventListener('pointerdown', kick, {once: true, signal: ac.signal});
+      addEventListener('keydown', kick, {once: true, signal: ac.signal});
+    }
+    D.addEventListener('visibilitychange', () => { if (!sndOn()) return; if (D.hidden) amb.forEach(a => a.pause()); else ambStart(); }, sig);
+  }
+
+  /* ---------- сюжет: смех рвёт строку «Вы слышите? Кто-то смеётся» ---------- */
+  function tearInit() {
+    const q = D.querySelector('.stage .q');
+    if (!q || RM) return;
+    let busy = false, hold = 0;
+    const jag = (y, n) => { const pts = []; for (let i = 0; i <= n; i++) pts.push([i / n * 100, y + (Math.random() - .5) * 7]); return pts; };
+    const tear = () => {
+      if (busy) return; busy = true;
+      const host = q.parentElement;
+      if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+      const hr = host.getBoundingClientRect(), r = q.getBoundingClientRect();
+      const cut = jag(50, 14);
+      const top = 'polygon(0% 0%,100% 0%,' + cut.slice().reverse().map(([x, y]) => `${x}% ${y}%`).join(',') + ')';
+      const bot = 'polygon(' + cut.map(([x, y]) => `${x}% ${y}%`).join(',') + ',100% 100%,0% 100%)';
+      const mk = clip => {
+        const c = q.cloneNode(true);
+        c.classList.remove('alive-write', 'alive-go', 'alive-ink', 'alive-in', 'alive-q-shiver');
+        c.classList.add('alive-tear'); c.setAttribute('aria-hidden', 'true');
+        Object.assign(c.style, {left: (r.left - hr.left) + 'px', top: (r.top - hr.top) + 'px', width: r.width + 'px', clipPath: clip, WebkitClipPath: clip});
+        host.appendChild(c); return c;
+      };
+      const a = mk(top), b = mk(bot);
+      const gap = D.createElement('div'); gap.className = 'alive-tear-gap'; gap.setAttribute('aria-hidden', 'true');
+      gap.innerHTML = '<span>ха</span><span>ха-ха</span><span>ха</span>';
+      Object.assign(gap.style, {left: (r.left - hr.left) + 'px', width: r.width + 'px', top: (r.top - hr.top + r.height / 2 - 9) + 'px', height: '18px'});
+      host.appendChild(gap);
+      q.style.visibility = 'hidden';
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        a.style.transform = 'translateY(-13px) rotate(-.7deg)';
+        b.style.transform = 'translateY(13px) rotate(.6deg)';
+        gap.style.opacity = '.85';
+        gustNow(.6);
+      }));
+      setTimeout(() => { a.style.transform = b.style.transform = ''; gap.style.opacity = '0'; }, 2100);
+      setTimeout(() => { a.remove(); b.remove(); gap.remove(); q.style.visibility = ''; busy = false; }, 2700);
+    };
+    q.addEventListener('pointerenter', () => { clearTimeout(hold); hold = setTimeout(tear, 900); }, sig);
+    q.addEventListener('pointerleave', () => clearTimeout(hold), sig);
+    q.addEventListener('click', tear, sig);
   }
 })();
