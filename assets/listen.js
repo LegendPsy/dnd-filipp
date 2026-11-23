@@ -1,8 +1,10 @@
 /* Озвучка глав: «сургучная печать» + красная нитка-прогресс.
    Кнопка ставится в подпись главы, если для её id есть файл в AUDIO. */
 (function(){
-  var AUDIO = { bashnya: '../audio/bashnya.mp3' };
-  var WORDS = { bashnya: '../audio/bashnya.json' };   // время каждого слова в записи
+  var READY = ['bashnya', 'noch', 'izverg', 'uchenik', 'tetrad'];   // главы, у которых есть запись
+  var AUDIO = {}, WORDS = {};                       // запись и время каждого слова в ней
+  READY.forEach(function(id){ AUDIO[id] = '../audio/' + id + '.mp3'; WORDS[id] = '../audio/' + id + '.json'; });
+  var players = [];                                 // все главы: играет только одна
   var RAIN = '../assets/sfx/rain.mp3', RAIN_VOL = 0.10;  // тихий дождь под чтение
   var BASE = 0.85;                         // «×1» = запись, замедленная до 85% (так понравилось автору)
   var SPEEDS = [1, 1.25, 1.5, 1.75, 2];
@@ -50,6 +52,20 @@
   var ICON = '<svg class="pl" viewBox="0 0 24 24"><path d="M7 4.5v15l12.5-7.5z"/></svg><svg class="pa" viewBox="0 0 24 24"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg>';
   function fmt(s){ s = Math.max(0, Math.floor(s||0)); return Math.floor(s/60) + ':' + ('0'+(s%60)).slice(-2); }
 
+  /* ---- дождь под чтение: один на всю страницу, Web Audio, чтобы громкость работала и на iPhone ---- */
+  var ac = null, rainGain = null, rainSrc = null, rainBuf = null;
+  function rainUp(a){
+    try{
+      if(!ac){ ac = new (window.AudioContext||window.webkitAudioContext)(); rainGain = ac.createGain(); rainGain.gain.value = 0; rainGain.connect(ac.destination);
+        fetch(RAIN).then(function(r){ return r.arrayBuffer(); }).then(function(b){ return new Promise(function(ok,no){ ac.decodeAudioData(b, ok, no); }); })
+          .then(function(buf){ rainBuf = buf; if(!a.paused) rainUp(a); }).catch(function(){}); }
+      if(ac.state === 'suspended') ac.resume();
+      if(rainBuf && !rainSrc){ rainSrc = ac.createBufferSource(); rainSrc.buffer = rainBuf; rainSrc.loop = true; rainSrc.connect(rainGain); rainSrc.start(); }
+      rainGain.gain.cancelScheduledValues(ac.currentTime); rainGain.gain.setTargetAtTime(RAIN_VOL, ac.currentTime, 0.8);
+    }catch(e){}
+  }
+  function rainOff(){ try{ if(ac && rainGain) rainGain.gain.setTargetAtTime(0, ac.currentTime, 0.5); }catch(e){} }
+
   var done = {};
   function init(){
     Object.keys(AUDIO).forEach(function(id){
@@ -60,6 +76,8 @@
       a.preservesPitch = true; a.mozPreservesPitch = true; a.webkitPreservesPitch = true;
       a.defaultPlaybackRate = rate(); a.playbackRate = rate();
       a.addEventListener('loadedmetadata', function(){ a.playbackRate = rate(); });
+      players.push(a);
+      a.addEventListener('play', function(){ players.forEach(function(o){ if(o !== a && !o.paused) o.pause(); }); });
 
       var box = document.createElement('div'); box.className = 'listen';
       box.innerHTML = '<button class="seal" type="button" aria-label="Слушать главу">'+ICON+'</button>'+
@@ -92,29 +110,21 @@
       addEventListener('resize', function(){ draw(last); });
 
       /* ---- дождь под чтение: Web Audio, чтобы громкость работала и на iPhone ---- */
-      var ac = null, rainGain = null, rainSrc = null, rainBuf = null;
-      function rainOn(){
-        try{
-          if(!ac){ ac = new (window.AudioContext||window.webkitAudioContext)(); rainGain = ac.createGain(); rainGain.gain.value = 0; rainGain.connect(ac.destination);
-            fetch(RAIN).then(function(r){ return r.arrayBuffer(); }).then(function(b){ return new Promise(function(ok,no){ ac.decodeAudioData(b, ok, no); }); })
-              .then(function(buf){ rainBuf = buf; if(!a.paused) rainOn(); }).catch(function(){}); }
-          if(ac.state === 'suspended') ac.resume();
-          if(rainBuf && !rainSrc){ rainSrc = ac.createBufferSource(); rainSrc.buffer = rainBuf; rainSrc.loop = true; rainSrc.connect(rainGain); rainSrc.start(); }
-          rainGain.gain.cancelScheduledValues(ac.currentTime); rainGain.gain.setTargetAtTime(RAIN_VOL, ac.currentTime, 0.8);
-        }catch(e){}
-      }
-      function rainOff(){ try{ if(ac && rainGain) rainGain.gain.setTargetAtTime(0, ac.currentTime, 0.5); }catch(e){} }
-      a.addEventListener('play', rainOn); a.addEventListener('pause', rainOff); a.addEventListener('ended', rainOff);
+      function rainOn(){ rainUp(a); }
+      a.addEventListener('play', rainOn);
+      a.addEventListener('pause', function(){ if(players.every(function(o){ return o.paused; })) rainOff(); });
+      a.addEventListener('ended', function(){ if(players.every(function(o){ return o.paused; })) rainOff(); });
+
 
       /* ---- следование за голосом: каждое слово в span, подсветка, запуск с любого слова ---- */
       var spans = [], times = [], curW = -1, userScroll = 0;
       if(WORDS[id]) fetch(WORDS[id]).then(function(r){ return r.json(); }).then(function(d){ follow(d); }).catch(function(){});
       function norm(t){ return t.toLowerCase().replace(/ё/g,'е').replace(/[^0-9a-zа-я-]/g,'').replace(/^-+|-+$/g,''); }
       function follow(d){
-        var root = sec.querySelector('.text') || sec;
+        var root = sec;
         var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: function(n){
           var p = n.parentNode; if(!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
-          if(p.closest && p.closest('.listen, .cap, .head, figcaption, script, style')) return NodeFilter.FILTER_REJECT;
+          if(p.closest && p.closest('.listen, .cap, .head, figcaption:not(.leaf), script, style')) return NodeFilter.FILTER_REJECT;
           return NodeFilter.FILTER_ACCEPT; } });
         var nodes = []; while(walker.nextNode()) nodes.push(walker.currentNode);
         var RX = /[0-9A-Za-zА-Яа-яЁё]+(?:-[0-9A-Za-zА-Яа-яЁё]+)*/g;
@@ -184,8 +194,12 @@
       spd.addEventListener('click', function(){
         SP = SPEEDS[(SPEEDS.indexOf(SP) + 1) % SPEEDS.length];
         try{ localStorage.setItem('listen-speed', SP); }catch(e){}
+        spd.classList.add('turn'); setTimeout(function(){ spd.classList.remove('turn'); }, 140);
+        dispatchEvent(new Event('listen-speed'));
+      });
+      addEventListener('listen-speed', function(){       // скорость общая для всех глав
         a.playbackRate = rate(); a.defaultPlaybackRate = rate();
-        spd.classList.add('turn'); setTimeout(function(){ showSpd(); spd.classList.remove('turn'); }, 140);
+        setTimeout(showSpd, 140);
         if(a.duration){ dur.textContent = fmt(a.duration / rate()); cur.textContent = fmt(a.currentTime / rate()); }
       });
       function toggle(){ if(a.paused){ a.play(); } else { a.pause(); } }
