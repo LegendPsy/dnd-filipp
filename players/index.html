@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Marck+Script&display=swap" rel="stylesheet">
 <style>
 /* VOICE  то, что видит и слышит любой посетитель таверны, и ни словом больше
-   IDEA   вечер в таверне: человек в углу, слухи у стойки, записки на пальто, а внизу запертые страницы его памяти
+   IDEA   вечер в таверне: человек в углу, его привычки, слухи у стойки, а внизу запертые страницы его памяти
    COLOUR ночь, тёплый свет свечей, костяная бумага, одна красная нитка */
 :root{color-scheme:dark;--bg:#0d0a0e;--bg2:#151017;--ink:#e8e1d7;--mute:#a99f97;--blood:#c0283f;--red2:#e3485d;--paper:#d9d0c2;--amber:#e8b86a;--line:rgba(232,225,215,.14)}
 *{box-sizing:border-box;min-width:0}
@@ -70,11 +70,6 @@ figcaption{font:italic 500 18px/1.3 "Cormorant Garamond",serif;color:var(--mute)
 .rgrid blockquote:nth-child(even){transform:rotate(.7deg)}
 .rgrid p{font:italic 500 21px/1.35 "Cormorant Garamond",serif;margin:0 0 10px}
 .rgrid cite{font-style:normal;color:#6a5a5a;font-size:15px}
-/* notes */
-.notes{display:flex;flex-wrap:wrap;gap:14px;margin-top:8px}
-.notes span{background:var(--paper);color:#2a1f22;font:22px/1.2 "Marck Script",cursive;padding:12px 16px 14px;box-shadow:0 10px 20px -12px #000;position:relative}
-.notes span::before{content:"";position:absolute;top:-6px;left:50%;width:10px;height:10px;border-radius:50%;background:var(--blood);transform:translateX(-50%)}
-.notes span:nth-child(3n){transform:rotate(-2deg)}.notes span:nth-child(3n+1){transform:rotate(1.5deg)}
 /* memory pages */
 .mem{background:#0a080b}
 .shelf{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,2vw,22px)}
@@ -111,7 +106,7 @@ figcaption{font:italic 500 18px/1.3 "Cormorant Garamond",serif;color:var(--mute)
   <div class="in">
     <p class="no">Таверна, поздний вечер</p>
     <h1>Странник в углу</h1>
-    <p class="sub">Сидит спиной к стене, лицом к двери. Перед ним не пиво, а таз с водой. Иногда он замирает и прислушивается, хотя в зале никто ничего не сказал.</p>
+    <p class="sub">Сидит спиной к стене, лицом к двери, с кружкой эля. Вежливый, приветливый, охотно поддержит разговор. Только иногда замолкает посреди фразы и прислушивается, хотя в зале никто ничего не сказал.</p>
   </div>
 </section>
 
@@ -121,15 +116,15 @@ figcaption{font:italic 500 18px/1.3 "Cormorant Garamond",serif;color:var(--mute)
     <p class="lead">Это видит любой, кто зашёл в таверну. Больше пока ничего.</p>
     <ul>
       <li><b>Человек под пятьдесят.</b> Жилистый, худое усталое лицо, седая щетина, растрёпанные тёмные волосы с сильной сединой.</li>
-      <li><b>Рваное пальто</b> в пятнах воска и чернил, застёгнуто не на те пуговицы. К лацканам приколоты записки.</li>
-      <li><b>Длинный красный шарф,</b> распустившийся на конце. На пальцах повязаны цветные нитки.</li>
-      <li><b>Руки в старых шрамах</b> и мелко дрожат, когда он берёт кружку.</li>
-      <li><b>При нём толстая тетрадь,</b> которую он не выпускает из рук, и мешочек на шнурке под рубашкой.</li>
+      <li><b>Старое пальто</b> в пятнах воска и чернил, застёгнуто не на те пуговицы.</li>
+      <li><b>Длинный красный шарф,</b> распустившийся на конце. На пальце повязана старая красная нитка, выцветшая почти до розовой.</li>
+      <li><b>Руки в старых тонких шрамах,</b> на запястьях и предплечьях.</li>
+      <li><b>При нём толстая тетрадь</b> в мягкой обложке. Он держит её поближе к себе.</li>
       <li>На поясе нет оружия. Только огарок свечи и кусок мыла.</li>
     </ul>
   </div>
   <figure>
-    <img src="../img/hero.jpg" srcset="../img/hero-640.webp 640w, ../img/hero-1024.webp 1024w, ../img/hero-1600.webp 1600w" sizes="(max-width:640px) 100vw, 50vw" alt="Худой человек в рваном плаще и красном шарфе стоит в тумане под луной, в пальцах фиолетовая искра" loading="lazy">
+    <img src="../img/hero.jpg" srcset="../img/hero-640.webp 640w, ../img/hero-1024.webp 1024w, ../img/hero-1600.webp 1600w" sizes="(max-width:640px) 100vw, 50vw" alt="Худой человек в рваном пальто и красном шарфе стоит в тумане под луной, в пальцах фиолетовая искра" loading="lazy">
     <figcaption>Таким его видели на дороге перед тем, как он постучал в дверь.</figcaption>
   </figure>
 </div></section>
@@ -141,7 +136,7 @@ figcaption{font:italic 500 18px/1.3 "Cormorant Garamond",serif;color:var(--mute)
     <article class="card">
       <div class="pic"><img src="../img/wash.jpg" srcset="../img/wash-640.webp 640w, ../img/wash-1024.webp 1024w" sizes="(max-width:640px) 100vw, 33vw" alt="Филипп моет руки над каменной чашей с водой" loading="lazy" style="object-position:65% 40%"></div>
       <h3>Моет руки</h3>
-      <p>Трижды за вечер просит у трактирщика воды. Моет руки и лицо долго и тщательно, даже посреди разговора.</p>
+      <p>Увидев воду, моет руки и лицо. Не спеша и очень тщательно, как лекарь перед работой. Даже если руки и так чистые.</p>
       <p class="say hand">«Руки должны быть чистыми. Всегда».</p>
     </article>
     <article class="card">
@@ -153,7 +148,7 @@ figcaption{font:italic 500 18px/1.3 "Cormorant Garamond",serif;color:var(--mute)
     <article class="card">
       <div class="pic"><img src="../img/episode.jpg" srcset="../img/episode-640.webp 640w, ../img/episode-1024.webp 1024w" sizes="(max-width:640px) 100vw, 33vw" alt="Седой человек в таверне, вокруг его рук взрывается фиолетовая магия" loading="lazy"></div>
       <h3>Слышит смех</h3>
-      <p>Вдруг замолкает и оборачивается. Дёргается глаз, дрожат пальцы. В такие минуты рядом с ним лучше не стоять со свечой.</p>
+      <p>Иногда замирает посреди фразы и слушает тишину. Потом виновато улыбается и продолжает как ни в чём не бывало. А когда он расстроен, рядом сами собой вспыхивают свечи.</p>
       <p class="say hand">«Вы слышали? Кто-то смеётся».</p>
     </article>
   </div>
@@ -166,9 +161,9 @@ figcaption{font:italic 500 18px/1.3 "Cormorant Garamond",serif;color:var(--mute)
     <div><div class="q">Кто ты?</div><div class="a">«Филипп. Странник, чародей… скромный. Хотя некоторые мои дела, видит бог, достойны баллады».</div></div>
     <div><div class="q">Зачем странствуешь?</div><div class="a">«Ищу одного демона. И одно заклинание. Остальное долгая история, а у вас кружка пустая».</div></div>
     <div><div class="q">Что ты читаешь?</div><div class="a">«Стихи. Моей жены».<span class="n">Больше не скажет. Может прочесть одну строчку, если попросить вежливо.</span></div></div>
-    <div><div class="q">Зачем ты всё время моешь руки?</div><div class="a">«Разве это странно? Руки должны быть чистыми».<span class="n">Искренне удивлён вопросу.</span></div></div>
+    <div><div class="q">Зачем ты моешь руки?</div><div class="a">«Разве это странно? Руки должны быть чистыми».<span class="n">Искренне удивлён вопросу.</span></div></div>
     <div><div class="q">Ты слышишь смех?</div><div class="a">«Конечно. А вы разве нет?»<span class="n">Смотрит с надеждой, потом с испугом.</span></div></div>
-    <div><div class="q">Пойдёшь с нами?</div><div class="a">«Возьмите меня с собой. Я полезный. И песни знаю».</div></div>
+    <div><div class="q">Пойдёшь с нами?</div><div class="a">«Возьмите меня с собой. Я не буду обузой. И песни знаю. Много песен».</div></div>
   </div>
 </div></section>
 
@@ -176,25 +171,12 @@ figcaption{font:italic 500 18px/1.3 "Cormorant Garamond",serif;color:var(--mute)
   <h2>Что болтают у стойки</h2>
   <p class="lead">Трактирщик и завсегдатаи. Правда ли это, решайте сами.</p>
   <div class="rgrid">
-    <blockquote><p>«Платит серебром, а просит таз воды, а не пива. Третий раз за вечер».</p><cite>трактирщик</cite></blockquote>
-    <blockquote><p>«На прошлой неделе чихнул у камина, и свечи на всех столах вспыхнули разом. Бороду мою до сих пор жалко».</p><cite>старик у огня</cite></blockquote>
-    <blockquote><p>«Ночью из его комнаты голос. Будто спорит с кем-то. А он там один, я проверяла».</p><cite>служанка</cite></blockquote>
+    <blockquote><p>«Пьёт эль, как все, платит серебром. Только руки моет, как лекарь, всякий раз, как увидит воду. Спросишь зачем, удивляется».</p><cite>трактирщик</cite></blockquote>
+    <blockquote><p>«Вчера чихнул у камина, и свечи на всех столах вспыхнули разом. Бороду мою до сих пор жалко».</p><cite>старик у огня</cite></blockquote>
+    <blockquote><p>«Ночью у него в комнате голос. Стихи читает, тихо так. А потом вдруг замолчит, будто его кто-то перебил».</p><cite>служанка</cite></blockquote>
     <blockquote><p>«Каждого, кто с книгами, спрашивает про одно заклинание. Про забвение какое-то».</p><cite>заезжий писарь</cite></blockquote>
-    <blockquote><p>«Добрый он. Прошлой зимой полез в прорубь за чужой собакой, сам чуть не утонул. А потом пел, да так красиво, что все замолчали».</p><cite>конюх</cite></blockquote>
+    <blockquote><p>«Добрый он. Говорят, в соседнем селе полез в прорубь за чужой собакой, сам чуть не утонул. А вчера тут пел, да так красиво, что все замолчали».</p><cite>конюх</cite></blockquote>
     <blockquote><p>«Назвали его слабаком в шутку. Он побелел весь. Я думала, сейчас ударит, а он ушёл мыть руки».</p><cite>жена трактирщика</cite></blockquote>
-  </div>
-</div></section>
-
-<section class="band" id="zapiski"><div class="wrap">
-  <h2>Что приколото к пальто</h2>
-  <p class="lead">Записки его рукой. Он перечитывает их, когда думает, что никто не видит.</p>
-  <div class="notes">
-    <span>Тебя зовут Филипп</span>
-    <span>Ты ищешь заклинание</span>
-    <span>Мыть руки, когда страшно</span>
-    <span>Не спать спиной к двери</span>
-    <span>Читать стихи по ночам</span>
-    <span>Спросить: «Вы слышали?»</span>
   </div>
 </div></section>
 
@@ -216,7 +198,7 @@ figcaption{font:italic 500 18px/1.3 "Cormorant Garamond",serif;color:var(--mute)
 
 <section class="cta">
   <img src="../img/road.jpg" srcset="../img/road-640.webp 640w, ../img/road-1024.webp 1024w, ../img/road-1600.webp 1600w" sizes="100vw" alt="Одинокая фигура в красном шарфе уходит по раскисшей дороге в туман к замку" loading="lazy">
-  <p>«Возьмите меня с собой. Я полезный. И песни знаю».</p>
+  <p>«Возьмите меня с собой. Я не буду обузой. И песни знаю. Много песен».</p>
   <small><a href="../">На главную</a> · Персонаж для кампании «Проклятие Страда». Игрок: Алексей.</small>
 </section>
 
