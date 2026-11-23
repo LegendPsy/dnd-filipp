@@ -63,6 +63,7 @@ html.alive-entering body{opacity:0}
 .alive-snd[aria-pressed=true]{color:#e8b86a;border-color:rgba(232,184,106,.55);opacity:1}
 .alive-snd[aria-pressed=true] .w{opacity:1}
 .alive-snd[aria-pressed=true] .x{opacity:0}
+@media (max-width:760px){.alive-snd{width:38px;height:38px;left:6px;opacity:.6}.alive-snd.away{opacity:0;pointer-events:none}}
 body:has(.alive-candle) .alive-snd{bottom:calc(max(16px,env(safe-area-inset-bottom)) + 96px)}
 html.alive-entered body{animation:alive-enter 1.4s ease-out both}
 @keyframes alive-enter{from{opacity:0;filter:brightness(1.8) sepia(.6) blur(6px)}to{opacity:1;filter:none}}
@@ -204,6 +205,7 @@ html.alive-entered body{animation:alive-enter 1.4s ease-out both}
     if (!pic) return;
     host.classList.add('alive-host');
     if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+    if (getComputedStyle(host).overflow === 'visible') host.style.overflow = 'clip'; // увеличенный арт не вылезает за край
     const isolated = getComputedStyle(host).isolation === 'isolate';
     const fx = D.createElement('div');
     fx.className = 'alive-fx';
@@ -637,6 +639,8 @@ html.alive-entered body{animation:alive-enter 1.4s ease-out both}
       if (sndOn()) ambStart(); else ambStop();
     }, sig);
     D.body.appendChild(b);
+    // на телефоне кнопка не мешает читать: прячется, пока листаешь
+    if (SMALL) { let tm = 0; addEventListener('scroll', () => { b.classList.add('away'); clearTimeout(tm); tm = setTimeout(() => b.classList.remove('away'), 1400); }, {passive: true, signal: ac.signal}); }
     if (sndOn()) {
       ambStart();
       // браузер может не дать играть до первого касания: тогда начнём с него
