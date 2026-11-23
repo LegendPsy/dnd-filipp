@@ -4,7 +4,10 @@
   var AUDIO = { bashnya: '../audio/bashnya.mp3' };
   var WORDS = { bashnya: '../audio/bashnya.json' };   // время каждого слова в записи
   var RAIN = '../assets/sfx/rain.mp3', RAIN_VOL = 0.10;  // тихий дождь под чтение
-  var RATE = 1;   // скорость чтения (1 = как записано)
+  var BASE = 0.85;                         // «×1» = запись, замедленная до 85% (так понравилось автору)
+  var SPEEDS = [1, 1.25, 1.5, 1.75, 2];
+  var SP = 1; try{ var v = parseFloat(localStorage.getItem('listen-speed')); if(SPEEDS.indexOf(v) >= 0) SP = v; }catch(e){}
+  function rate(){ return BASE * SP; }
   var css = `
 .listen{display:flex;align-items:center;gap:14px;margin-top:14px;max-width:560px;user-select:none;-webkit-user-select:none}
 .seal{position:relative;flex:none;width:58px;height:58px;border:0;border-radius:50%;cursor:pointer;color:#f3d9c9;
@@ -24,7 +27,12 @@
 .thread .base{fill:none;stroke:rgba(232,225,215,.22);stroke-width:1.5;stroke-dasharray:2 5}
 .thread .red{fill:none;stroke:var(--blood);stroke-width:2.5;stroke-linecap:round}
 .thread .knot{fill:var(--blood)}
-.ltime{font:14px/1 Alegreya,serif;color:var(--mute);margin-top:2px;font-variant-numeric:tabular-nums}
+.ltime{font:14px/1 Alegreya,serif;color:var(--mute);margin-top:2px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px}
+.spd{margin-left:10px;min-width:52px;height:30px;padding:0 10px;border:1px solid rgba(232,225,215,.28);border-radius:15px;background:rgba(13,10,14,.55);color:#efe6da;font:600 15px/1 "Cormorant Garamond",serif;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.55);transition:transform .08s,box-shadow .08s,border-color .3s;-webkit-tap-highlight-color:transparent}
+.spd:hover{border-color:var(--blood)}
+.spd:active,.spd.down{transform:translateY(3px);box-shadow:0 0 0 rgba(0,0,0,.55)}
+.spd b{display:inline-block;transition:transform .18s}
+.spd.turn b{transform:translateY(-3px);opacity:.4}
 .mini{position:fixed;left:calc(max(3vw,16px) + 40px);bottom:max(18px,env(safe-area-inset-bottom));z-index:45;width:48px;height:48px;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .4s,transform .4s}
 .mini.show{opacity:1;pointer-events:auto;transform:none}
 .mini .seal{width:48px;height:48px}
@@ -50,15 +58,15 @@
       var cap = sec.querySelector('.cap, .head'); if(!cap) return;
       var a = new Audio(); a.preload = 'metadata'; a.src = AUDIO[id];
       a.preservesPitch = true; a.mozPreservesPitch = true; a.webkitPreservesPitch = true;
-      a.addEventListener('play', function(){ a.playbackRate = RATE; });
-      a.defaultPlaybackRate = RATE;
+      a.defaultPlaybackRate = rate(); a.playbackRate = rate();
+      a.addEventListener('loadedmetadata', function(){ a.playbackRate = rate(); });
 
       var box = document.createElement('div'); box.className = 'listen';
       box.innerHTML = '<button class="seal" type="button" aria-label="Слушать главу">'+ICON+'</button>'+
         '<div class="lbody"><p class="ltitle">Слушать главу <small>· читает Нестер</small></p>'+
         '<div class="thread" role="slider" aria-label="Где сейчас чтение" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">'+
         '<svg><path class="base"/><path class="red"/><circle class="knot" r="4" cx="0" cy="8"/></svg></div>'+
-        '<div class="ltime"><span class="cur">0:00</span> / <span class="dur">—</span></div></div>';
+        '<div class="ltime"><span class="cur">0:00</span> / <span class="dur">—</span><button class="spd" type="button" aria-label="Скорость чтения">×1</button></div></div>';
       cap.appendChild(box); done[id] = true;
 
       var mini = document.createElement('div'); mini.className = 'mini';
@@ -167,6 +175,19 @@
       }
       a.addEventListener('ended', function(){ mark(-1); });
 
+      /* скорость: нажатие переключает 1 → 1,25 → 1,5 → 1,75 → 2 → 1, выбор запоминается */
+      var spd = box.querySelector('.spd');
+      function showSpd(){ spd.innerHTML = '<b>×' + String(SP).replace('.', ',') + '</b>'; }
+      showSpd();
+      spd.addEventListener('pointerdown', function(){ spd.classList.add('down'); if(navigator.vibrate) navigator.vibrate(5); });
+      ['pointerup','pointerleave','pointercancel'].forEach(function(e){ spd.addEventListener(e, function(){ spd.classList.remove('down'); }); });
+      spd.addEventListener('click', function(){
+        SP = SPEEDS[(SPEEDS.indexOf(SP) + 1) % SPEEDS.length];
+        try{ localStorage.setItem('listen-speed', SP); }catch(e){}
+        a.playbackRate = rate(); a.defaultPlaybackRate = rate();
+        spd.classList.add('turn'); setTimeout(function(){ showSpd(); spd.classList.remove('turn'); }, 140);
+        if(a.duration){ dur.textContent = fmt(a.duration / rate()); cur.textContent = fmt(a.currentTime / rate()); }
+      });
       function toggle(){ if(a.paused){ a.play(); } else { a.pause(); } }
       [seal, mseal].forEach(function(b){
         b.addEventListener('pointerdown', function(){ b.classList.add('down'); if(navigator.vibrate) navigator.vibrate(8); });
@@ -174,11 +195,11 @@
         b.addEventListener('click', toggle);
       });
 
-      a.addEventListener('loadedmetadata', function(){ dur.textContent = fmt(a.duration / RATE); });
+      a.addEventListener('loadedmetadata', function(){ dur.textContent = fmt(a.duration / rate()); });
       a.addEventListener('play', function(){ box.classList.add('on'); seal.setAttribute('aria-label','Пауза'); vis(); });
       a.addEventListener('pause', function(){ box.classList.remove('on'); seal.setAttribute('aria-label','Слушать главу'); vis(); });
       a.addEventListener('ended', function(){ a.currentTime = 0; draw(0); });
-      a.addEventListener('timeupdate', function(){ if(a.duration){ draw(a.currentTime/a.duration); cur.textContent = fmt(a.currentTime / RATE); } });
+      a.addEventListener('timeupdate', function(){ if(a.duration){ draw(a.currentTime/a.duration); cur.textContent = fmt(a.currentTime / rate()); } });
 
       /* перемотка: тянуть нитку пальцем */
       function seek(e){ var r = thr.getBoundingClientRect(); var p = Math.min(1, Math.max(0, (e.clientX - r.left)/r.width)); if(a.duration){ a.currentTime = p*a.duration; draw(p); } }
