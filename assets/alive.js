@@ -99,7 +99,9 @@ html.alive-entered body{animation:alive-enter 1.4s ease-out both}
 .shelf a{position:relative}
 .shelf a:not(.read){animation:alive-breathe 7s ease-in-out infinite;animation-delay:var(--dl,0s)}
 @keyframes alive-breathe{50%{box-shadow:inset 0 0 26px rgba(192,40,63,.13),0 0 0 rgba(0,0,0,0)}}
-.shelf a.read .ok{animation:alive-flame 2.2s ease-in-out infinite;transform-origin:50% 90%}
+.shelf .ok .wx{fill:rgba(232,184,106,.18)}
+.shelf .ok .fl{fill:#ffcf7a;stroke:#e8b86a;stroke-width:.6;transform-box:fill-box;transform-origin:50% 100%;filter:drop-shadow(0 0 2.5px rgba(255,180,90,.9));animation:alive-flame 1.8s ease-in-out infinite}
+.shelf a.read small svg.ok{overflow:visible}
 @keyframes alive-flame{25%{transform:scale(1.06,.94)}50%{transform:scale(.95,1.07) skewX(3deg)}75%{transform:scale(1.03,.97) skewX(-2deg)}}
 .alive-rustle{animation:alive-rustle .55s ease-out}
 @keyframes alive-rustle{20%{rotate:-.7deg}45%{rotate:.5deg}70%{rotate:-.2deg}100%{rotate:0deg}}
@@ -144,7 +146,7 @@ html.alive-entered body{animation:alive-enter 1.4s ease-out both}
 .alive-q-shiver{animation:alive-shiver 1.6s ease-in-out}
 @keyframes alive-shiver{20%{letter-spacing:.02em;opacity:.7}50%{letter-spacing:-.01em;opacity:1}}
 @media (prefers-reduced-motion:reduce){.alive-ink,.alive-write{opacity:1!important;translate:none!important;filter:none!important;-webkit-mask-image:none!important;mask-image:none!important}
-  .shelf a,.shelf a .ok,.alive-candle .fl,.alive-candle .halo,.alive-beam{animation:none!important}}
+  .shelf a,.shelf a .ok .fl,.alive-candle .fl,.alive-candle .halo,.alive-beam{animation:none!important}}
 `;
   const st = D.createElement('style');
   st.id = 'alive-css';
