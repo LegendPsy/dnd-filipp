@@ -174,11 +174,11 @@
         b.addEventListener('click', toggle);
       });
 
-      a.addEventListener('loadedmetadata', function(){ dur.textContent = fmt(a.duration); });
+      a.addEventListener('loadedmetadata', function(){ dur.textContent = fmt(a.duration / RATE); });
       a.addEventListener('play', function(){ box.classList.add('on'); seal.setAttribute('aria-label','Пауза'); vis(); });
       a.addEventListener('pause', function(){ box.classList.remove('on'); seal.setAttribute('aria-label','Слушать главу'); vis(); });
       a.addEventListener('ended', function(){ a.currentTime = 0; draw(0); });
-      a.addEventListener('timeupdate', function(){ if(a.duration){ draw(a.currentTime/a.duration); cur.textContent = fmt(a.currentTime); } });
+      a.addEventListener('timeupdate', function(){ if(a.duration){ draw(a.currentTime/a.duration); cur.textContent = fmt(a.currentTime / RATE); } });
 
       /* перемотка: тянуть нитку пальцем */
       function seek(e){ var r = thr.getBoundingClientRect(); var p = Math.min(1, Math.max(0, (e.clientX - r.left)/r.width)); if(a.duration){ a.currentTime = p*a.duration; draw(p); } }
