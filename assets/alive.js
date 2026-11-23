@@ -42,6 +42,11 @@
   /* ---------- стили слоя жизни ---------- */
   const css = `
 @view-transition{navigation:auto}
+.alive-hand{position:absolute;pointer-events:none;z-index:2;width:300px;height:200px;opacity:0;filter:blur(7px);mix-blend-mode:screen}
+.alive-hand.go{animation:alive-hand 5.2s cubic-bezier(.45,.05,.4,1) forwards}
+@keyframes alive-hand{0%{opacity:0;transform:translate(var(--x0),0) rotate(-4deg)}15%{opacity:.75}75%{opacity:.6}100%{opacity:0;transform:translate(var(--x1),-14px) rotate(3deg)}}
+.alive-name{position:absolute;pointer-events:none;font:400 1.2em/1 "Marck Script",cursive;text-shadow:0 0 6px #0d0a0e,0 0 2px #0d0a0e;color:#c9adff;opacity:0;transition:opacity 2.4s ease;white-space:nowrap}
+.alive-name.on{opacity:.75}
 .alive-fiber{position:fixed;inset:0;width:100vw;height:100vh;z-index:29;pointer-events:none;overflow:visible;transition:opacity .5s}
 .alive-fiber path{fill:none;stroke:#c0283f;stroke-width:1.3;stroke-linecap:round;opacity:.85}
 .alive-fiber circle{fill:#c0283f;transition:opacity .4s}
@@ -192,6 +197,7 @@ html.alive-entered body{animation:alive-enter 1.4s ease-out both}
     idleInit();
     soundInit();
     tearInit();
+    smokeHandInit();
     W.dispatchEvent(new CustomEvent('alive:ready'));
   }
 
@@ -668,5 +674,41 @@ html.alive-entered body{animation:alive-enter 1.4s ease-out both}
     q.addEventListener('pointerenter', () => { clearTimeout(hold); hold = setTimeout(tear, 900); }, sig);
     q.addEventListener('pointerleave', () => clearTimeout(hold), sig);
     q.addEventListener('click', tear, sig);
+  }
+
+  /* ---------- сюжет: дымная рука стирает память (повесть, глава «Филипп») ---------- */
+  function smokeHandInit() {
+    const p = D.querySelector('p.forget');
+    if (!p || RM) return;
+    const NS = 'http://www.w3.org/2000/svg';
+    const run = () => {
+      if (getComputedStyle(p).position === 'static') p.style.position = 'relative';
+      const w = p.offsetWidth, h = p.offsetHeight;
+      const hand = D.createElementNS(NS, 'svg');
+      hand.setAttribute('class', 'alive-hand'); hand.setAttribute('aria-hidden', 'true'); hand.setAttribute('viewBox', '0 0 300 200');
+      hand.innerHTML = `<defs><radialGradient id="ahg" cx="35%" cy="50%" r="70%"><stop offset="0" stop-color="#d9c8ff" stop-opacity=".55"/><stop offset=".6" stop-color="#9d86d8" stop-opacity=".28"/><stop offset="1" stop-color="#6b5aa0" stop-opacity="0"/></radialGradient></defs>
+<g fill="url(#ahg)"><ellipse cx="105" cy="100" rx="70" ry="52"/>
+<rect x="150" y="48" width="95" height="20" rx="10" transform="rotate(-10 150 58)"/><rect x="160" y="74" width="110" height="21" rx="10"/>
+<rect x="158" y="101" width="102" height="20" rx="10" transform="rotate(5 158 111)"/><rect x="148" y="126" width="80" height="18" rx="9" transform="rotate(12 148 135)"/>
+<rect x="80" y="30" width="70" height="20" rx="10" transform="rotate(-38 80 40)"/><rect x="0" y="80" width="70" height="44" rx="20"/></g>`;
+      hand.style.top = Math.max(0, h / 2 - 100) + 'px';
+      hand.style.left = '0px';
+      hand.style.setProperty('--x0', '-260px');
+      hand.style.setProperty('--x1', (w - 40) + 'px');
+      p.appendChild(hand);
+      requestAnimationFrame(() => hand.classList.add('go'));
+      setTimeout(() => hand.remove(), 5600);
+      // под растаявшим «Ро…» проступает новое имя
+      const ro = p.querySelector('.ro');
+      if (ro) setTimeout(() => {
+        const n = D.createElement('span'); n.className = 'alive-name'; n.setAttribute('aria-hidden', 'true'); n.textContent = 'Филипп';
+        const pr = p.getBoundingClientRect(), rr = ro.getBoundingClientRect();
+        n.style.left = (rr.left - pr.left) + 'px'; n.style.top = (rr.top - pr.top - rr.height * .15) + 'px';
+        p.appendChild(n); requestAnimationFrame(() => n.classList.add('on'));
+      }, 6200);
+    };
+    if (p.classList.contains('seen')) { run(); return; }
+    const mo = new MutationObserver(() => { if (p.classList.contains('seen')) { mo.disconnect(); run(); } });
+    mo.observe(p, {attributes: true, attributeFilter: ['class']}); observers.push(mo);
   }
 })();
