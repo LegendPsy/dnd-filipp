@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Филипп для игроков</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Marck+Script&display=swap" rel="stylesheet">
+<style>
+/* VOICE  то, что видит группа: странный, тёплый, тревожный попутчик
+   IDEA   его собственные бумаги: лист персонажа, записки, приколотые к пальто, тетрадь
+   PICTURE утверждённый Филипп во весь первый экран, дальше арты как вклейки
+   COLOUR ночь, костяная бумага, красная нитка; фиолетовый только для магии
+   TYPE   Cormorant Garamond заголовки, Alegreya текст, Marck Script его почерк
+   LAYOUT обложка; лист персонажа с портретом; его рассказ на бумаге рядом с листом; три привычки карточками; вопросы-ответы; дорога */
+:root{color-scheme:dark;--bg:#0d0a0e;--bg2:#151017;--ink:#e8e1d7;--mute:#a99f97;--blood:#c0283f;--red2:#e3485d;--paper:#d9d0c2;--sepia:#2b1a12}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:70px;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Alegreya,Georgia,serif;overflow-x:clip}
+img{max-width:100%;display:block}
+a{color:inherit}
+figure{margin:0}
+:focus-visible{outline:2px solid #a57cff;outline-offset:3px}
+.band{padding:clamp(48px,7vw,104px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+h2{font:600 clamp(36px,4.6vw,56px)/1.05 "Cormorant Garamond",serif;letter-spacing:-.01em;margin:0 0 10px;text-wrap:balance}
+.lead{color:#cfc6ba;max-width:62ch;margin:0 0 clamp(24px,3vw,40px)}
+.hand{font-family:"Marck Script",cursive}
+
+.top{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;gap:4px 20px;align-items:center;flex-wrap:wrap;padding:6px max(3vw,16px) 14px;background:linear-gradient(rgba(13,10,14,.94) 50%,rgba(13,10,14,0));font-size:15px}
+.top a{display:inline-flex;align-items:center;min-height:44px;color:var(--mute);text-decoration:none}
+.top a:hover{color:var(--ink)}
+.top .me{color:var(--ink);font:600 20px "Cormorant Garamond",serif;margin-right:auto}
+
+.cover{position:relative;min-height:min(100svh,940px);display:grid;align-items:end;overflow:hidden}
+.cover>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:68% 40%}
+.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(13,10,14,.9) 0%,rgba(13,10,14,.5) 40%,rgba(13,10,14,0) 68%),linear-gradient(0deg,var(--bg) 0%,rgba(13,10,14,0) 40%)}
+.cover .in{position:relative;z-index:1;width:100%;max-width:1240px;margin:0 auto;padding:120px max(5vw,16px) clamp(32px,5vw,64px)}
+h1{font:600 clamp(64px,11vw,150px)/.9 "Cormorant Garamond",serif;letter-spacing:-.02em;margin:0 0 16px}
+.cover .sub{font:italic 500 clamp(20px,2.1vw,26px)/1.4 "Cormorant Garamond",serif;max-width:32ch;margin:0 0 18px;color:#ddd4c8}
+.cover .q{font-size:clamp(22px,2.4vw,30px);line-height:1.3;color:#c9adff;max-width:26ch;margin:0}
+
+.sheet{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,4vw,64px);align-items:start}
+dl{margin:0;display:grid;grid-template-columns:minmax(8em,auto) minmax(0,1fr);border-top:1px solid rgba(232,225,215,.18)}
+dt,dd{margin:0;padding:12px 0;border-bottom:1px solid rgba(232,225,215,.18)}
+dt{color:var(--mute);font-size:15px;padding-right:18px}
+dd b{font-weight:500;color:#fff}
+dd small{display:block;font-size:15px;color:var(--mute);line-height:1.45;margin-top:2px}
+.portrait{position:sticky;top:80px;aspect-ratio:3/4;overflow:hidden}
+.portrait img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+
+.story{background:var(--bg2)}
+.story .grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,4vw,64px);align-items:start}
+.notes{list-style:none;margin:0;padding:clamp(22px,3vw,38px);background:var(--paper);color:var(--sepia);box-shadow:0 24px 50px rgba(0,0,0,.5);transform:rotate(-.5deg);counter-reset:n}
+.notes li{font:400 clamp(20px,1.9vw,24px)/1.45 "Marck Script",cursive;padding:10px 0 10px 2.2em;position:relative;border-bottom:1px dashed rgba(43,26,18,.25)}
+.notes li:last-child{border-bottom:0}
+.notes li::before{counter-increment:n;content:counter(n);position:absolute;left:0;top:12px;font:italic 600 18px "Cormorant Garamond",serif;color:var(--blood)}
+.story aside{display:grid;gap:18px}
+.story aside figure{position:relative;aspect-ratio:4/3;overflow:hidden}
+.story aside img{width:100%;height:100%;object-fit:cover}
+figcaption{position:absolute;left:0;right:0;bottom:0;padding:34px 14px 10px;font:italic 15px/1.4 Alegreya,serif;color:#e2d9cd;background:linear-gradient(rgba(13,10,14,0),rgba(13,10,14,.88))}
+.honest{margin:18px 0 0;font-size:16px;color:var(--mute)}
+
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2vw,28px)}
+.card{background:var(--bg2);display:flex;flex-direction:column}
+.card .pic{aspect-ratio:4/3;overflow:hidden}
+.card .pic img{width:100%;height:100%;object-fit:cover}
+.card h3{font:600 30px/1.1 "Cormorant Garamond",serif;margin:18px 20px 6px}
+.card p{margin:0 20px 22px;color:#d4cbbf}
+.card .say{color:#c9adff;font-size:22px;line-height:1.3;margin-top:-8px}
+.seen{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);margin-top:clamp(32px,4vw,56px)}
+.seen h3{font:600 30px/1.1 "Cormorant Garamond",serif;margin:0 0 12px}
+.seen ul{margin:0;padding-left:1.1em}
+.seen li{margin-bottom:10px}
+.seen li::marker{color:var(--blood)}
+.pins{display:flex;flex-wrap:wrap;gap:12px;align-content:start}
+.pins span{background:var(--paper);color:var(--sepia);padding:8px 14px;font:400 21px/1.2 "Marck Script",cursive;box-shadow:0 8px 18px rgba(0,0,0,.4)}
+.pins span:nth-child(odd){transform:rotate(-2deg)}
+.pins span:nth-child(even){transform:rotate(1.5deg)}
+
+.qa{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(24px,4vw,64px)}
+.qa div{padding:18px 0;border-top:1px solid rgba(232,225,215,.18)}
+.qa .q{font:600 23px/1.25 "Cormorant Garamond",serif;color:#fff;margin:0 0 6px}
+.qa .a{margin:0}
+.qa .n{display:block;font-size:15px;color:var(--mute);font-style:italic;margin-top:4px}
+
+.road{position:relative;min-height:min(80svh,720px);display:grid;align-items:end;overflow:hidden}
+.road>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 60%}
+.road::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,var(--bg) 0%,rgba(13,10,14,.4) 35%,rgba(13,10,14,0) 65%)}
+.road .in{position:relative;z-index:1;width:100%;max-width:1240px;margin:0 auto;padding:120px max(5vw,16px) clamp(28px,4vw,52px)}
+.road .hand{font-size:clamp(30px,4vw,48px);line-height:1.2;margin:0 0 24px}
+.links{display:flex;flex-wrap:wrap;gap:4px 26px;padding-top:14px;border-top:1px solid rgba(232,225,215,.2);font-size:15px;color:var(--mute)}
+.links a{display:inline-flex;align-items:center;min-height:44px;color:var(--ink);text-decoration-color:var(--blood);text-underline-offset:4px}
+
+@media (max-width:900px){
+.sheet,.story .grid,.seen,.qa{grid-template-columns:minmax(0,1fr)}
+.portrait{position:relative;top:auto;max-width:440px}
+.cards{grid-template-columns:minmax(0,1fr)}
+.card{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr)}
+.card .pic{grid-row:span 3;aspect-ratio:auto;min-height:100%}
+.card h3{margin-top:14px}
+}
+@media (max-width:600px){
+.top .nav{display:none}
+.card{display:flex}
+.card .pic{aspect-ratio:4/3}
+dl{grid-template-columns:minmax(0,1fr)}
+dt{border-bottom:0;padding-bottom:0}
+.cover>img{object-position:72% 30%}
+.cover::after{background:linear-gradient(0deg,var(--bg) 0%,rgba(13,10,14,.8) 42%,rgba(13,10,14,.05) 75%)}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="me" href="../">Филипп</a>
+  <a class="nav" href="#kto">Кто он</a>
+  <a class="nav" href="#istoriya">Его история</a>
+  <a class="nav" href="#privychki">Привычки</a>
+  <a class="nav" href="#voprosy">Если спросить</a>
+</header>
+
+<section class="cover">
+  <img src="../img/hero.jpg" alt="Худой человек в рваном плаще и красном шарфе стоит в тумане под луной, в пальцах фиолетовая искра">
+  <div class="in">
+    <h1>Филипп</h1>
+    <p class="sub">Чародей дикой магии под пятьдесят. Седеющий, измотанный, в рваном пальто, с изрезанными руками. Ищет демона, который разрушил его семью.</p>
+    <p class="q hand">«Вы слышите? Кто-то смеётся. Вы ведь тоже слышите, правда?»</p>
+  </div>
+</section>
+
+<section class="band" id="kto"><div class="wrap">
+  <h2>Кто он</h2>
+  <p class="lead">Так он представится у костра. Всё на этой странице можно знать группе: здесь только то, что видно со стороны, и то, во что он сам верит.</p>
+  <div class="sheet">
+    <dl>
+      <dt>Имя</dt><dd><b>Филипп</b></dd>
+      <dt>Раса и возраст</dt><dd><b>Человек, около 48–50 лет</b></dd>
+      <dt>Класс</dt><dd><b>Чародей, происхождение «Дикая магия»</b></dd>
+      <dt>Предыстория</dt><dd><b>Преследуемый</b><small>Открыл мистический том и увидел то, что не укладывается в рассудок.</small></dd>
+      <dt>Черта</dt><dd>Любит цитировать и учить стихи: они дают мимолётные моменты радости.</dd>
+      <dt>Идеал</dt><dd>Помогать нуждающимся, не считаясь с личной ценой.</dd>
+      <dt>Привязанность</dt><dd>Мучения лишили его любимой. Он жаждет вернуть утраченную любовь.</dd>
+      <dt>Слабость</dt><dd>Ежедневный ритуал, который нельзя нарушать.</dd>
+      <dt>Недостаток</dt><dd><b>Паранойя</b><small>Ему ещё предстоит научиться не оправдывать страхом вред, причинённый другим.</small></dd>
+      <dt>Прошлое</dt><dd><b>Разрушение</b><small>«Кто-то разрушил всё, что мне было дорого. Я не понимаю, что толкает человека на такое зло».</small></dd>
+      <dt>При нём</dt><dd><b>Смятая страница с началом заклинания</b><small>И тетрадь стихов, которую он не выпускает из рук.</small></dd>
+    </dl>
+    <figure class="portrait">
+      <img src="../img/portrait.jpg" alt="Филипп в таверне у свечи прижимает к груди тетрадь" loading="lazy">
+      <figcaption>Спиной к стене, лицом к двери. Как всегда.</figcaption>
+    </figure>
+  </div>
+</div></section>
+
+<section class="band story" id="istoriya"><div class="wrap">
+  <h2>Как он сам это рассказывает</h2>
+  <p class="lead">Рассказывает охотно, с жалостью к себе и с хвастовством под конец.</p>
+  <div class="grid">
+    <div>
+      <ol class="notes">
+        <li>У меня была жена, Миранда. Мы жили тихо, но я хотел для нас большего: особняк, достаток, уважение.</li>
+        <li>В дальней башне я изучал существ, что владеют чужим разумом. Одно из них пришло за нами.</li>
+        <li>Двадцать лет назад Миранда носила ребёнка. Демон устроил выкидыш и сожрал его. Тела мы так и не нашли.</li>
+        <li>Она узнала о моих опытах, обвинила меня и ушла. Потом были пьянство и порезы на руках по утрам.</li>
+        <li>Я взял себя в руки и пошёл по миру искать мести и настоящей жизни.</li>
+        <li>Десять лет назад я очнулся избитый, со смятым листом в кулаке: «Если вы хотите забыть, если с вами случилось горе…» Дальше оборвано.</li>
+        <li>Я искал это заклинание для себя: хотел забыть горе. Хозяин трактата меня избил, но лист я вырвал. Ищу заклинание целиком до сих пор.</li>
+        <li>С тех пор я слышу смех и голоса. Иногда пропадают куски дня. Смех настоящий, в этом я уверен.</li>
+        <li>Лет пятнадцать назад у меня был ученик, Лоренцо. Он ушёл. Почему, помню смутно.</li>
+      </ol>
+      <p class="honest">Он не врёт: он искренне считает всё это правдой.</p>
+    </div>
+    <aside>
+      <figure><img src="../img/page.jpg" alt="Смятый лист с формулами у свечи, по нему ползёт фиолетовое свечение" loading="lazy"><figcaption>Тот самый лист.</figcaption></figure>
+      <figure><img src="../img/tower.jpg" alt="Кривая башня на холме под луной" loading="lazy"><figcaption>Дальняя башня, где всё началось.</figcaption></figure>
+    </aside>
+  </div>
+</div></section>
+
+<section class="band" id="privychki"><div class="wrap">
+  <h2>Как он держится и как ломается</h2>
+  <p class="lead">Добрый, но жуткий. Приступы у него тихие, а доброта настоящая.</p>
+  <div class="cards">
+    <article class="card">
+      <div class="pic"><img src="../img/wash.jpg" alt="Филипп моет руки над каменной чашей с водой" loading="lazy"></div>
+      <h3>Омовение</h3>
+      <p>Увидев воду, спешит мыть руки и лицо. Может сорваться умываться посреди спора.</p>
+      <p class="say hand">«Руки должны быть чистыми. Всегда».</p>
+    </article>
+    <article class="card">
+      <div class="pic"><img src="../img/notebook.jpg" alt="Рука на раскрытой старой тетради со стихами у свечи" loading="lazy"></div>
+      <h3>Стихи на ночь</h3>
+      <p>Каждую ночь перечитывает тетрадь стихов, написанных Мирандой. Откуда она у него, не помнит: кажется, была всегда. Без тетради ему очень плохо.</p>
+    </article>
+    <article class="card">
+      <div class="pic"><img src="../img/episode.jpg" alt="Из рук Филиппа вырывается вихрь фиолетовых огней и бабочек" loading="lazy"></div>
+      <h3>Приступ</h3>
+      <p>Дёргается глаз, дрожат руки, взгляд уходит внутрь. Он начинает колдовать, сам того не замечая, и магия срывается: огненный снаряд лишь опаляет, а свеча взрывает полкухни.</p>
+    </article>
+  </div>
+  <div class="seen">
+    <div>
+      <h3>Что видят остальные</h3>
+      <ul>
+        <li>Жилистый, худое усталое лицо, тёмные волосы с сильной сединой. Рваное пальто застёгнуто не на те пуговицы, красный шарф распускается.</li>
+        <li>Посреди фразы замирает и прислушивается, хотя никто ничего не говорил.</li>
+        <li>Подолгу смотрит на детей, будто видит их впервые.</li>
+        <li>Слово «слабак» заводит его с полоборота.</li>
+        <li>В хорошие минуты сразу бросается спасать, красиво поёт, любит выпить. Застенчив и при этом хвастлив.</li>
+        <li>В деревнях от него иногда делают знак от нечистого. Он делает вид, что не замечает.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Что приколото к пальто и повязано на пальцах</h3>
+      <div class="pins" aria-label="Записки и нитки">
+        <span>Тебя зовут Филипп</span>
+        <span>Ты ищешь заклинание</span>
+        <span>Мыть руки, когда страшно</span>
+        <span>Не спать спиной к двери</span>
+        <span>Читать стихи по ночам</span>
+        <span>Спросить: «Вы слышали?»</span>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section class="band" id="voprosy" style="background:var(--bg2)"><div class="wrap">
+  <h2>Если его спросить</h2>
+  <p class="lead">Что он ответит за столом.</p>
+  <div class="qa">
+    <div><p class="q">Кто ты и откуда?</p><p class="a">«Филипп. Странник, чародей… скромный. Хотя некоторые мои дела, видит бог, достойны баллады».</p></div>
+    <div><p class="q">Зачем ты странствуешь?</p><p class="a">«Демон разрушил мою семью. Я ищу его. И одно заклинание, чтобы наконец забыть. И жизни ищу, настоящей, чтобы сердце стучало».</p></div>
+    <div><p class="q">Что случилось с семьёй?</p><p class="a">Рассказывает про выкидыш и демона, сожравшего ребёнка.<span class="n">Искренне трагично и чуть театрально.</span></p></div>
+    <div><p class="q">Кто такая Миранда?</p><p class="a">«Моя жена. Была. Есть. Она ушла, и я её не виню».<span class="n">Достаёт тетрадь и читает строчку.</span></p></div>
+    <div><p class="q">Откуда шрамы на руках?</p><p class="a">«Не хотелось бы об этом… Выпивка уже не помогала, и по утрам я находил на себе порезы».</p></div>
+    <div><p class="q">Что за смятая страница?</p><p class="a">«Начало заклинания забвения. Хочу найти его целиком и наконец забыть. Когда я его добывал, меня жестоко избили, но этот лист я вырвал».</p></div>
+    <div><p class="q">Почему ты так смотришь на детей?</p><p class="a">«Разве странно? Они такие… маленькие».<span class="n">Искренне не понимает вопроса.</span></p></div>
+    <div><p class="q">Ты слышишь смех?</p><p class="a">«Конечно. А вы разве нет?»<span class="n">Смотрит с надеждой, потом с испугом.</span></p></div>
+  </div>
+</div></section>
+
+<footer class="road">
+  <img src="../img/road.jpg" alt="Одинокая фигура в красном шарфе уходит по раскисшей дороге в туман" loading="lazy">
+  <div class="in">
+    <p class="hand">«Возьмите меня с собой. Я полезный. И песни знаю».</p>
+    <div class="links">
+      <a href="../">На главную</a>
+      <span>Персонаж для кампании «Проклятие Страда». Игрок: Алексей.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Филипп</title>
+<meta name="description" content="Филипп, чародей дикой магии. Персонаж для кампании «Проклятие Страда».">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;1,400&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Marck+Script&display=swap" rel="stylesheet">
+<style>
+/* VOICE  порог: тихо, туманно, нужно выбрать дверь
+   IDEA   расклад таро Баровии: три карты лежат перед гостем, каждая ведёт на свою страницу
+   PICTURE Филипп в тумане во весь экран, поверх него три высокие карты с артами
+   COLOUR ночь, кость, кровь; рамки карт костяные, замок красный
+   TYPE   Cormorant Garamond, Alegreya, Marck Script для его фразы
+   LAYOUT имя слева сверху, карты в ряд снизу; на телефоне имя, потом карты столбиком */
+:root{color-scheme:dark;--bg:#0d0a0e;--bg2:#151017;--ink:#e8e1d7;--mute:#a99f97;--blood:#c0283f;--red2:#e3485d;--bone:#d9d0c2}
+*{box-sizing:border-box;min-width:0}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 Alegreya,Georgia,serif;overflow-x:clip}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid #a57cff;outline-offset:4px}
+
+.stage{position:relative;min-height:100svh;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+.stage>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:68% 35%}
+.stage::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(13,10,14,.85) 0%,rgba(13,10,14,.35) 45%,rgba(13,10,14,.05) 70%),linear-gradient(0deg,var(--bg) 0%,rgba(13,10,14,.75) 28%,rgba(13,10,14,0) 58%)}
+.head,.deal,.foot{position:relative;z-index:1;width:100%;max-width:1240px;margin:0 auto;padding-inline:max(5vw,16px)}
+.head{padding-top:clamp(32px,6vh,90px)}
+.head p,.head h1{text-shadow:0 2px 18px rgba(13,10,14,.8)}
+.k{font:italic 500 clamp(18px,1.7vw,22px)/1.2 "Cormorant Garamond",serif;color:var(--red2);margin:0 0 4px}
+h1{font:600 clamp(72px,10vw,140px)/.88 "Cormorant Garamond",serif;letter-spacing:-.025em;margin:0 0 14px}
+.sub{font:italic 500 clamp(19px,2vw,25px)/1.4 "Cormorant Garamond",serif;max-width:30ch;color:#ddd4c8;margin:0 0 12px}
+.q{font:400 clamp(21px,2.2vw,28px)/1.3 "Marck Script",cursive;color:#c9adff;max-width:28ch;margin:0}
+
+.deal{align-self:end;padding-top:28px;padding-bottom:clamp(24px,4vh,48px)}
+.pick{font:italic 500 20px "Cormorant Garamond",serif;color:var(--mute);margin:0 0 14px}
+.cards{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,2vw,28px);max-width:980px}
+.card{position:relative;display:flex;flex-direction:column;text-decoration:none;background:#120d13;border:1px solid rgba(217,208,194,.55);padding:8px;box-shadow:0 26px 50px rgba(0,0,0,.55);transition:transform .35s ease,border-color .35s,box-shadow .35s}
+.card::before{content:"";position:absolute;inset:4px;border:1px solid rgba(217,208,194,.22);pointer-events:none}
+.card:hover,.card:focus-visible{transform:translateY(-8px);border-color:var(--bone);box-shadow:0 36px 60px rgba(0,0,0,.7)}
+.card .pic{position:relative;aspect-ratio:1/1;overflow:hidden}
+@media (min-height:1000px){.card .pic{aspect-ratio:4/5}}
+.card .pic img{width:100%;height:100%;object-fit:cover;transition:transform .8s ease}
+.card:hover .pic img{transform:scale(1.04)}
+.card .pic::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(18,13,19,.95) 0%,rgba(18,13,19,0) 45%)}
+.card .t{position:relative;margin-top:-64px;padding:0 12px 12px;z-index:1}
+.card h2{font:600 clamp(28px,2.6vw,36px)/1.05 "Cormorant Garamond",serif;margin:0 0 6px}
+.card p{margin:0;font-size:15px;line-height:1.45;color:#d2c9bd}
+.tag{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:14px;color:var(--mute)}
+.tag svg{width:13px;height:15px;fill:none;stroke:var(--red2);stroke-width:1.6}
+.tag.open svg{stroke:#9fbf9a}
+
+.foot{padding-bottom:28px;color:var(--mute);font-size:14px}
+.foot p{margin:0;border-top:1px solid rgba(232,225,215,.16);padding-top:14px}
+
+@media (max-width:760px){
+.stage{grid-template-rows:auto auto}
+.stage>img{height:62svh;object-position:70% 30%}
+.stage::after{background:linear-gradient(0deg,var(--bg) 0%,var(--bg) 40%,rgba(13,10,14,.6) 52%,rgba(13,10,14,0) 75%)}
+.head{padding-top:30svh}
+.cards{grid-template-columns:minmax(0,1fr)}
+.card{flex-direction:row;gap:12px}
+.card .pic{flex:0 0 38%;aspect-ratio:3/4}
+.card .pic::after{display:none}
+.card .t{margin:0;padding:6px 6px 6px 0;align-self:center}
+}
+@media (prefers-reduced-motion:reduce){.card,.card .pic img{transition:none}.card:hover{transform:none}}
+</style>
+</head>
+<body>
+<main class="stage">
+  <img src="img/hero.jpg" alt="Худой человек в рваном плаще и красном шарфе стоит в тумане под луной, за ним замок на скале">
+  <div class="head">
+    <p class="k">Персонаж для «Проклятия Страда»</p>
+    <h1>Филипп</h1>
+    <p class="sub">Чародей дикой магии под пятьдесят. Человек, который помнит свою трагедию неправильно.</p>
+    <p class="q">«Вы слышите? Кто-то смеётся».</p>
+  </div>
+  <div class="deal">
+    <p class="pick">Выберите карту</p>
+    <ul class="cards">
+      <li><a class="card" href="book/">
+        <div class="pic"><img src="img/tower.jpg" alt="Кривая башня на холме под луной"></div>
+        <div class="t"><h2>Повесть</h2><p>«Руки должны быть чистыми». Короткая книга о человеке, который забыл, кем был.</p>
+          <span class="tag"><svg viewBox="0 0 13 15" aria-hidden="true"><rect x="1" y="6.5" width="11" height="7.5" rx="1"/><path d="M3.5 6.5V4.5a3 3 0 0 1 6 0v2"/></svg>под паролем</span></div>
+      </a></li>
+      <li><a class="card" href="master/">
+        <div class="pic"><img src="img/wash.jpg" alt="Филипп моет руки над каменной чашей с водой" style="object-position:70% 40%"></div>
+        <div class="t"><h2>Для мастера</h2><p>Правда о прошлом, люди, которые придут за ним, правило приступов и готовые ответы.</p>
+          <span class="tag"><svg viewBox="0 0 13 15" aria-hidden="true"><rect x="1" y="6.5" width="11" height="7.5" rx="1"/><path d="M3.5 6.5V4.5a3 3 0 0 1 6 0v2"/></svg>под паролем</span></div>
+      </a></li>
+      <li><a class="card" href="players/">
+        <div class="pic"><img src="img/portrait.jpg" alt="Филипп в таверне у свечи прижимает к груди тетрадь" style="object-position:50% 20%"></div>
+        <div class="t"><h2>Для игроков</h2><p>Каким его видит группа: внешность, привычки, приступы и что он рассказывает о себе.</p>
+          <span class="tag open"><svg viewBox="0 0 13 15" aria-hidden="true"><rect x="1" y="6.5" width="11" height="7.5" rx="1"/><path d="M3.5 6.5V4.5a3 3 0 0 1 6-1"/></svg>открыто всем</span></div>
+      </a></li>
+    </ul>
+  </div>
+  <div class="foot"><p>Игрок: Алексей. Арты сделаны в Scenario.</p></div>
+</main>
+</body>
+</html>
