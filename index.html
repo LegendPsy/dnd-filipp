@@ -38,7 +38,8 @@ h1{font:600 clamp(72px,10vw,140px)/.88 "Cormorant Garamond",serif;letter-spacing
 .deal{align-self:end;padding-top:28px;padding-bottom:clamp(24px,4vh,48px)}
 .pick{font:italic 500 20px "Cormorant Garamond",serif;color:var(--mute);margin:0 0 14px}
 .cards{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,2vw,28px);max-width:980px}
-.card{position:relative;display:flex;flex-direction:column;text-decoration:none;background:#120d13;border:1px solid rgba(217,208,194,.55);padding:8px;box-shadow:0 26px 50px rgba(0,0,0,.55);transition:transform .35s ease,border-color .35s,box-shadow .35s}
+.cards>li{display:flex}
+.card{flex:1;position:relative;display:flex;flex-direction:column;text-decoration:none;background:#120d13;border:1px solid rgba(217,208,194,.55);padding:8px;box-shadow:0 26px 50px rgba(0,0,0,.55);transition:transform .35s ease,border-color .35s,box-shadow .35s}
 .card::before{content:"";position:absolute;inset:4px;border:1px solid rgba(217,208,194,.22);pointer-events:none}
 .card:hover,.card:focus-visible{transform:translateY(-8px);border-color:var(--bone);box-shadow:0 36px 60px rgba(0,0,0,.7)}
 .card .pic{position:relative;aspect-ratio:1/1;overflow:hidden}
@@ -46,10 +47,10 @@ h1{font:600 clamp(72px,10vw,140px)/.88 "Cormorant Garamond",serif;letter-spacing
 .card .pic img{width:100%;height:100%;object-fit:cover;transition:transform .8s ease}
 .card:hover .pic img{transform:scale(1.04)}
 .card .pic::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(18,13,19,.95) 0%,rgba(18,13,19,0) 45%)}
-.card .t{position:relative;margin-top:-64px;padding:0 12px 12px;z-index:1}
+.card .t{position:relative;margin-top:-64px;padding:0 12px 12px;z-index:1;flex:1;display:flex;flex-direction:column;align-items:flex-start}
 .card h2{font:600 clamp(28px,2.6vw,36px)/1.05 "Cormorant Garamond",serif;margin:0 0 6px}
 .card p{margin:0;font-size:15px;line-height:1.45;color:#d2c9bd}
-.tag{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:14px;color:var(--mute)}
+.tag{display:inline-flex;align-items:center;gap:6px;margin-top:auto;padding-top:10px;font-size:14px;color:var(--mute)}
 .tag svg{width:13px;height:15px;fill:none;stroke:var(--red2);stroke-width:1.6}
 .tag.open svg{stroke:#9fbf9a}
 
@@ -59,13 +60,16 @@ h1{font:600 clamp(72px,10vw,140px)/.88 "Cormorant Garamond",serif;letter-spacing
 @media (max-width:760px){
 .stage{grid-template-rows:auto auto}
 .stage>img{height:62svh;object-position:70% 30%}
-.stage::after{background:linear-gradient(0deg,var(--bg) 0%,var(--bg) 40%,rgba(13,10,14,.6) 52%,rgba(13,10,14,0) 75%)}
+.stage::after{bottom:auto;height:62svh;background:linear-gradient(0deg,var(--bg) 0%,rgba(13,10,14,.82) 30%,rgba(13,10,14,.45) 58%,rgba(13,10,14,0) 80%)}
+.head p,.head h1{text-shadow:0 1px 3px rgba(13,10,14,.9),0 2px 18px rgba(13,10,14,.9)}
+.k{color:#ff6b7e}
 .head{padding-top:30svh}
 .cards{grid-template-columns:minmax(0,1fr)}
 .card{flex-direction:row;gap:12px}
 .card .pic{flex:0 0 38%;aspect-ratio:3/4}
 .card .pic::after{display:none}
-.card .t{margin:0;padding:6px 6px 6px 0;align-self:center}
+.card .t{margin:0;padding:6px 6px 6px 0;align-self:center;flex:0 1 auto}
+.tag{margin-top:10px}
 }
 @media (prefers-reduced-motion:reduce){.card,.card .pic img{transition:none}.card:hover{transform:none}}
 </style>
@@ -82,6 +86,11 @@ h1{font:600 clamp(72px,10vw,140px)/.88 "Cormorant Garamond",serif;letter-spacing
   <div class="deal">
     <p class="pick">Выберите карту</p>
     <ul class="cards">
+      <li><a class="card" href="players/">
+        <div class="pic"><img src="img/portrait.jpg" srcset="img/portrait-640.webp 640w, img/portrait-1024.webp 1024w, img/portrait-1536.webp 1536w" sizes="(max-width: 760px) 40vw, 340px" alt="Филипп в таверне у свечи прижимает к груди тетрадь" style="object-position:50% 20%"></div>
+        <div class="t"><h2>Для игроков</h2><p>Странник в углу таверны: каким его видят, что о нём болтают, и страницы памяти, которые открываются с каждым уровнем.</p>
+          <span class="tag open"><svg viewBox="0 0 13 15" aria-hidden="true"><rect x="1" y="6.5" width="11" height="7.5" rx="1"/><path d="M3.5 6.5V4.5a3 3 0 0 1 6-1"/></svg>открыто всем</span></div>
+      </a></li>
       <li><a class="card" href="book/">
         <div class="pic"><img src="img/tower.jpg" srcset="img/tower-640.webp 640w, img/tower-1024.webp 1024w, img/tower-1600.webp 1600w, img/tower-2048.webp 2048w" sizes="(max-width: 760px) 50vw, 440px" alt="Кривая башня на холме под луной"></div>
         <div class="t"><h2>Повесть</h2><p>«Руки должны быть чистыми». Вся правда о человеке, который забыл, кем был. Откроется на 10 уровне.</p>
@@ -91,11 +100,6 @@ h1{font:600 clamp(72px,10vw,140px)/.88 "Cormorant Garamond",serif;letter-spacing
         <div class="pic"><img src="img/wash.jpg" srcset="img/wash-640.webp 640w, img/wash-1024.webp 1024w, img/wash-1600.webp 1600w, img/wash-2048.webp 2048w" sizes="(max-width: 760px) 50vw, 440px" alt="Филипп моет руки над каменной чашей с водой" style="object-position:70% 40%"></div>
         <div class="t"><h2>Для мастера</h2><p>Правда о прошлом, люди из прошлого, правило приступов и пароли страниц памяти.</p>
           <span class="tag"><svg viewBox="0 0 13 15" aria-hidden="true"><rect x="1" y="6.5" width="11" height="7.5" rx="1"/><path d="M3.5 6.5V4.5a3 3 0 0 1 6 0v2"/></svg>под паролем</span></div>
-      </a></li>
-      <li><a class="card" href="players/">
-        <div class="pic"><img src="img/portrait.jpg" srcset="img/portrait-640.webp 640w, img/portrait-1024.webp 1024w, img/portrait-1536.webp 1536w" sizes="(max-width: 760px) 40vw, 340px" alt="Филипп в таверне у свечи прижимает к груди тетрадь" style="object-position:50% 20%"></div>
-        <div class="t"><h2>Для игроков</h2><p>Странник в углу таверны: каким его видят, что о нём болтают, и страницы памяти, которые открываются с каждым уровнем.</p>
-          <span class="tag open"><svg viewBox="0 0 13 15" aria-hidden="true"><rect x="1" y="6.5" width="11" height="7.5" rx="1"/><path d="M3.5 6.5V4.5a3 3 0 0 1 6-1"/></svg>открыто всем</span></div>
       </a></li>
     </ul>
   </div>
