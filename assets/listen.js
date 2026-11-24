@@ -1,7 +1,7 @@
 /* Озвучка глав: «сургучная печать» + красная нитка-прогресс.
    Кнопка ставится в подпись главы, если для её id есть файл в AUDIO. */
 (function(){
-  var READY = ['bashnya', 'noch', 'izverg', 'uchenik', 'tetrad'];   // главы, у которых есть запись
+  var READY = ['bashnya', 'noch', 'izverg', 'uchenik', 'tetrad', 'filipp', 'nitki', 'taverna'];   // главы, у которых есть запись
   var AUDIO = {}, WORDS = {};                       // запись и время каждого слова в ней
   READY.forEach(function(id){ AUDIO[id] = '../audio/' + id + '.mp3'; WORDS[id] = '../audio/' + id + '.json'; });
   var players = [];                                 // все главы: играет только одна
