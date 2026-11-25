@@ -4,112 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Страница VI. Руки</title>
+<title>Страница VI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Marck+Script&display=swap" rel="stylesheet">
-<style>:root{color-scheme:dark;--bg:#0d0a0e;--bg2:#151017;--ink:#e8e1d7;--mute:#a99f97;--blood:#c0283f;--red2:#e3485d;--paper:#d9d0c2;--pink:#2a2026;--line:rgba(232,225,215,.14)}
-*{box-sizing:border-box;min-width:0}
-html{background:var(--bg)}
-body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Alegreya,Georgia,serif;overflow-x:clip}
-img{max-width:100%;display:block}
-a{color:inherit}
-figure{margin:0}
-:focus-visible{outline:2px solid #a57cff;outline-offset:3px}
-h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1.05;letter-spacing:-.01em;text-wrap:balance;margin:0}
-h2{font-size:clamp(32px,4.4vw,50px);margin-bottom:14px}
-.hand{font-family:"Marck Script",cursive}
-.band{padding:clamp(44px,6vw,96px) max(5vw,16px)}
-.wrap{max-width:1180px;margin:0 auto}
-.top{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px max(3vw,16px) 28px;background:linear-gradient(rgba(13,10,14,.8),rgba(13,10,14,0))}
-.top a{display:inline-flex;align-items:center;min-height:44px;color:#e8e1d7;text-decoration:none;font-size:15px;text-shadow:0 1px 8px #0d0a0e,0 0 2px #0d0a0e}
-.top a:hover{color:#fff}
-.cover{position:relative;min-height:min(92svh,860px);display:grid;align-items:end;isolation:isolate;overflow:hidden}
-.cover>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;animation:in 2.4s ease-out both}
-.cover::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(13,10,14,.25) 20%,rgba(13,10,14,.92) 82%,var(--bg))}
-@keyframes in{from{filter:blur(14px) grayscale(1);transform:scale(1.06)}to{filter:none;transform:none}}
-.cover .wrap{width:100%;padding:0 max(5vw,16px) clamp(40px,6vw,80px)}
-.no{font:italic 500 22px/1.2 "Cormorant Garamond",serif;color:var(--red2);margin:0 0 8px}
-.cover h1{font-size:clamp(56px,10vw,130px);font-weight:500;line-height:.92}
-.cover .sub{font:italic 500 clamp(20px,2.3vw,27px)/1.35 "Cormorant Garamond",serif;color:#ddd4c8;max-width:34ch;margin:16px 0 0}
-.journal{background:var(--paper);color:#2a1f22;background-image:radial-gradient(ellipse at 20% 10%,rgba(255,255,255,.35),transparent 60%),radial-gradient(ellipse at 90% 90%,rgba(120,80,50,.18),transparent 55%)}
-.journal .grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:start}
-.entry{max-width:34em}
-.entry p{font:400 clamp(22px,2.1vw,27px)/1.5 "Marck Script",cursive;word-spacing:-.08em;color:#21171a;margin:0 0 .9em;opacity:0;transform:translateY(8px);animation:ink 1.2s ease-out forwards}
-.entry p:nth-child(2){animation-delay:.5s}.entry p:nth-child(3){animation-delay:1s}.entry p:nth-child(4){animation-delay:1.5s}.entry p:nth-child(5){animation-delay:2s}.entry p:nth-child(6){animation-delay:2.5s}
-@keyframes ink{to{opacity:1;transform:none}}
-.entry .date{font:italic 500 18px/1.2 "Cormorant Garamond",serif;color:#7a5a52;margin-bottom:18px;opacity:1;transform:none;animation:none}
-.leaf{background:#efe7da;border:1px solid rgba(42,31,34,.15);padding:26px 26px 22px;box-shadow:0 18px 40px -24px rgba(0,0,0,.5);transform:rotate(-1.2deg)}
-.leaf .big{font:italic 500 clamp(24px,2.6vw,32px)/1.25 "Cormorant Garamond",serif;color:#7a1626;margin:0 0 12px}
-.leaf .small{color:#5a4a4a;font-size:16px;margin:0}
-.poem{font:400 22px/1.5 "Marck Script",cursive;white-space:pre-line;color:#2a1f22;margin:0}
-.leaf+.leaf{margin-top:26px;transform:rotate(.8deg)}
-.side-pic{margin-top:26px;aspect-ratio:4/5;position:relative;overflow:hidden;box-shadow:0 18px 40px -24px rgba(0,0,0,.6)}
-.side-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 25%}
-.side-cap{font:italic 500 18px/1.3 "Cormorant Garamond",serif;color:#5a4a4a;margin-top:10px}
-.two{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(24px,4vw,56px)}
-.noticed{list-style:none;margin:0;padding:0}
-.noticed li{padding:14px 0 14px 34px;border-bottom:1px solid var(--line);position:relative}
-.noticed li::before{content:"";position:absolute;left:4px;top:24px;width:14px;height:2px;background:var(--blood)}
-.ask{background:var(--pink);padding:24px 24px 18px;border-left:3px solid var(--blood);align-self:start}
-.ask h3{font-size:26px;margin-bottom:10px}
-.ask p{font:italic 500 21px/1.35 "Cormorant Garamond",serif;margin:0 0 12px}
-.pages{background:var(--bg2)}
-.track{list-style:none;margin:24px 0 0;padding:0;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:8px}
-.track a,.track span{display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:76px;padding:8px 4px;text-decoration:none;border:1px solid var(--line);text-align:center;font-size:13px;color:var(--mute);line-height:1.2}
-.track b{font:600 26px/1 "Cormorant Garamond",serif;color:var(--ink);margin-bottom:4px}
-.track a:hover{border-color:var(--red2)}
-.track .cur{background:var(--blood);border-color:var(--blood);color:#fff}
-.track .cur b{color:#fff}
-.track .lock{opacity:.5}
-.next{margin-top:22px;color:#cfc6ba;font:italic 500 21px/1.35 "Cormorant Garamond",serif}
-.next a{color:var(--red2)}
-footer{padding:28px max(5vw,16px) 40px;color:var(--mute);font-size:15px;text-align:center}
-footer a{display:inline-flex;align-items:center;min-height:44px}
-@media (max-width:800px){.journal .grid,.two{grid-template-columns:minmax(0,1fr)}.track{grid-template-columns:repeat(5,minmax(0,1fr))}}
-@media (max-width:420px){.track{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (prefers-reduced-motion:reduce){.cover>img,.entry p{animation:none;opacity:1;transform:none}}</style>
+<link rel="stylesheet" href="../../assets/gate.css">
 <script src="../../assets/alive.js"></script>
 </head>
 <body>
-<nav class="top"><a href="../../players/">← В таверну</a><a href="#pages">Все страницы</a></nav>
-<header class="cover">
+<main class="scene closed">
   <img src="../../img/wash.jpg" srcset="../../img/wash-640.webp 640w, ../../img/wash-1024.webp 1024w, ../../img/wash-1600.webp 1600w, ../../img/wash-2048.webp 2048w" sizes="100vw" alt="Филипп моет руки над каменной чашей с водой под луной" style="object-position:60% 40%">
-  <div class="wrap">
-    <p class="no">Страница VI · вернулась на 6 уровне</p>
+  <a class="home" href="../../players/">← В таверну</a>
+  <div class="in">
+    <p class="no">Страница памяти VI</p>
     <h1>Руки</h1>
     <p class="sub">Руки должны быть чистыми. Он до сих пор не понимает, что именно пытается с них смыть.</p>
+    <p class="why">Откроется на 6 уровне.</p>
+    <p class="why"><b>Пока закрыто.</b> Эту страницу откроют за столом, когда придёт время.</p>
   </div>
-</header>
-
-<section class="band journal"><div class="wrap grid">
-  <div class="entry">
-    <p class="date">Утром он нашёл эту страницу в тетради, исписанную его почерком. Вчера её не было.</p>
-    <p>Я столько лет повторял одно и то же: эти белёсые порезы на руках остались со времён, когда я пил до беспамятства. Мол, просыпался поутру в каком-нибудь сарае и находил на себе свежие царапины, не помня откуда.</p>
-    <p>Вчера вечером я поднёс руки к самой свече и долго, внимательно их разглядывал. Они не такие. Те, кто режет себя сам, режут поперёк, по мягкому, ровно. А мои шрамы — косые, глубокие, по внешней стороне запястья и предплечья. Такие остаются, когда на тебя бросаются с ножом, а ты вскидываешь руки, чтобы закрыться.</p>
-    <p>А ночью мне приснился нож. Не боевой кинжал, не тесак — самый простой кухонный нож с длинной трещиной вдоль деревянной ручки, каким дома режут хлеб. Я знаю эту трещину на ощупь. Я видел её тысячу раз — и хоть убей не могу вспомнить где.</p>
-    <p>Утром я, как всегда, подошёл к воде и спокойно, тщательно вымыл руки. Руки должны быть чистыми. Всегда. Раньше я просто выполнял это, как дышат. Сегодня мне впервые стало страшно оттого, что я не знаю — почему.</p>
-  </div>
-  <div><div class="leaf"><p class="big">«Руки должны быть чистыми. Всегда».</p></div></div>
-</div></section>
-
-<section class="band"><div class="wrap two">
-  <div>
-    <h2>Что заметила группа</h2>
-    <ul class="noticed"><li>Он по-прежнему моет руки спокойно и старательно, но теперь после воды замирает и подолгу, хмурясь, водит пальцем по старым белым рубцам на предплечье.</li><li>Обычный столовый или кухонный нож выбивает его из колеи. Мечи, топоры, мясницкие тесаки его не трогают — а простой потёртый нож на столе заставляет его напрячься.</li><li>Когда за привалом кто-то режет хлеб, Филипп тихо отводит взгляд.</li></ul>
-  </div>
-  <aside class="ask">
-    <h3>Вопросы без ответа</h3>
-    <p>Кто бросался на него с кухонным ножом — и почему этот человек защищался или нападал прямо в доме?</p><p>Откуда Филипп так хорошо знает трещину на рукояти?</p>
-  </aside>
-</div></section>
-
-<section class="band pages" id="pages"><div class="wrap">
-  <h2>Страницы памяти</h2>
-  <ol class="track"><li><a href="../../levels/2/"><b>II</b>Смятый лист</a></li><li><a href="../../levels/3/"><b>III</b>Тетрадь Миранды</a></li><li><a href="../../levels/4/"><b>IV</b>Башня</a></li><li><a href="../../levels/5/"><b>V</b>Лоренцо</a></li><li><span class="cur" aria-current="page"><b>VI</b>Руки</span></li><li><a class="lock" href="../../levels/7/"><b>VII</b>Дом</a></li><li><a class="lock" href="../../levels/8/"><b>VIII</b>Смех</a></li><li><a class="lock" href="../../levels/9/"><b>IX</b>Подпись</a></li><li><a class="lock" href="../../book/"><b>X</b>Повесть</a></li></ol>
-  <p class="next">Следующая страница вернётся к нему на 7 уровне: «Дом».</p>
-</div></section>
-
-<footer><a href="../../players/">В таверну</a> · <a href="../../">На главную</a></footer>
+</main>
 </body>
 </html>
