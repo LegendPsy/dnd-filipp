@@ -773,8 +773,8 @@ function d20(spec){
  if(busy)return;
  const m0=spec.mode||rollMode;let adv=m0==='adv',dis=m0==='dis';const notes=[];
  if(spec.kind){const cf=condFx(spec);if(cf.dis.length){dis=true;notes.push('помеха: '+[...new Set(cf.dis)].join(', '))}if(cf.adv.length){adv=true;notes.push('преимущество: '+cf.adv.join(', '))}if(cf.fail)notes.push('по правилам автопровал: '+cf.fail)}
- if(spec.noLuck){}else if(chaosArmed){adv=true;chaosArmed=false;S.chaos.used=Math.min(S.chaos.max,S.chaos.used+1);save();renderFate();notes.unshift('Поток хаоса')}
- else if(inspArmed){adv=true;inspArmed=false;S.insp=0;save();renderFate();notes.unshift('Вдохновение')}
+ if(spec.noLuck){}else if(chaosArmed){adv=true;chaosArmed=false;S.chaos.used=Math.min(S.chaos.max,S.chaos.used+1);save();renderFate();renderFight();notes.unshift('Поток хаоса')}
+ else if(inspArmed){adv=true;inspArmed=false;S.insp=0;save();renderFate();renderFight();notes.unshift('Вдохновение')}
  if(adv&&dis)notes.push('преимущество и помеха гасят друг друга');
  spec.note=notes.join(' · ');
  const m=adv&&dis?'norm':adv?'adv':dis?'dis':'norm';
@@ -969,7 +969,7 @@ function resExtra(die){const sp=cur.spec;let h=sp.after?sp.after(die):'';
  if(sp.dmg){const g=sp.dmg,crit=die===20,n=crit?g.dn*2:g.dn;h+=`<div class="acts">${die===1?'':`<button class="red" data-dmg="${n}">${crit?'Крит! ':''}Попал: урон ${n}к${g.ds}${g.k?sg(g.k):''}</button>`}</div>`}
  return h}
 function useLuck(){
- if(!cur||cur.dice||busy)return;S.luck.used++;save();renderFate();
+ if(!cur||cur.dice||busy)return;S.luck.used++;save();renderFate();renderFight();
  const extra=r(20),{used,bonus,spec}=cur;
  lastPt={x:innerWidth*.5,y:innerHeight*.9};
  throwDie(20,extra,null,'n',()=>{
@@ -1206,7 +1206,7 @@ fixGap();addEventListener('resize',()=>{fixGap();fit()});addEventListener('orien
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-13';
+const BUILD='2026-11-25-14';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
