@@ -245,7 +245,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .sg i{font-style:normal;font-size:10px;line-height:1;color:var(--mute)}.sg.z i{opacity:.5}
 .fxh{font:600 10.5px/1.2 Alegreya,serif;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);padding:2px 2px 0;border-top:1px solid var(--line)}
 .fxh .mlink{text-transform:none;letter-spacing:0;color:var(--gold);font:italic 500 13px "Cormorant Garamond",serif}
-.fxr{display:flex;align-items:stretch;gap:4px}
+.fxr{display:flex;align-items:stretch;gap:4px}.fxr .mlb{background:none;border:0;padding:0;text-align:left;color:var(--gold);font:italic 500 13px/1.05 "Cormorant Garamond",serif}.fq.mq{background:rgba(233,189,108,.14)!important;border-color:rgba(233,189,108,.45)}
 .fxr .lb{flex:none;width:62px;font-size:10px;line-height:1.1;color:var(--mute);align-self:center}
 .fq{flex:1;min-width:0;border:1px solid rgba(233,189,108,.4);border-radius:9px;background:rgba(233,189,108,.08);color:var(--gold2);font:600 13px/1.1 "Cormorant Garamond",serif;padding:5px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
 .fq.dn{border-color:rgba(165,124,255,.4);background:rgba(165,124,255,.08);color:#e3d4ff}
@@ -485,7 +485,7 @@ body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards
 #p-fight.d4 .smh:not(:has(.pick)){display:none}
 #p-fight.d5 .atk.cmp b{font-size:13px!important}#p-fight.d5 .atk.cmp{padding-top:3px!important;padding-bottom:3px!important}
 #p-fight.d7 .fxh{display:none}#p-fight.d7 .fres4 .fc{padding:4px 9px!important}#p-fight.d7 .fq{padding:3px 2px}#p-fight.d7 .mode button{padding:2px}#p-fight.d7 .fvit .tok .k{min-height:12px}
-#p-fight.d8 .atk.cmp .hit{flex-wrap:nowrap}#p-fight.d8 .atk.cmp .hit .dm{white-space:nowrap!important}#p-fight.d8 .flexp{padding-top:3px!important;padding-bottom:3px!important}#p-fight.d8 .flexp .fr{margin:0!important}#p-fight.d8 .fres4{margin-top:3px!important}#p-fight.d8 .fsect{margin:3px 0 2px!important}#p-fight.d8 #fAct{gap:3px!important}#p-fight.d8 .fvit{margin-bottom:3px!important}#p-fight.d8 .atk.cmp{padding-top:2px!important;padding-bottom:2px!important}#p-fight.d8 .atk.cmp b{line-height:.98!important}#p-fight.d8 .atk.cmp .hit{margin-top:0}#p-fight.d8 .fq{padding:2px!important}
+#p-fight.d8 .atk.cmp .hit{flex-wrap:nowrap}#p-fight.d8 .atk.cmp .hit .dm{white-space:nowrap!important}#p-fight.d8 .flexp{padding-top:3px!important;padding-bottom:3px!important}#p-fight.d8 .flexp .fr{margin:0!important}#p-fight.d8 .fres4{margin-top:3px!important}#p-fight.d8 .fsect{margin:3px 0 2px!important}#p-fight.d8 #fAct{gap:3px!important}#p-fight.d8 .fvit{margin-bottom:3px!important}#p-fight.d8 .atk.cmp{padding-top:2px!important;padding-bottom:2px!important}#p-fight.d8 .atk.cmp b{line-height:.98!important}#p-fight.d8 .atk.cmp .hit{margin-top:0}#p-fight.d8 .fq{padding:2px!important}#p-fight.d8 .flexp{gap:3px!important}#p-fight.d8 .fres4{gap:4px!important}
 #p-fight.d6 .smh{display:none}#p-fight.d6 .it small{display:none}#p-fight.d4 .atk .hit .dm{display:none}
 
 /* ---------- эффекты заклинаний: у каждой стихии свой материал ---------- */
@@ -750,8 +750,6 @@ body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards
   <div class="fgrid" id="fAct"></div>
   <div class="smh">Реакция и бонусное действие<i></i></div>
   <div class="fgrid c3" id="fRe"></div>
-  <div class="smh">Предметы<span class="lg"> для боя</span><i></i><button class="pick" data-info="itempick_fight">выбрать ›</button></div>
-  <div class="itl" id="fItems"></div>
   <div class="smh">Запасы<i></i></div>
   <div class="fres" id="fRes"></div>
  </div></section>
@@ -925,16 +923,18 @@ function renderFight(){
  const pips=(n,u,cls)=>Array.from({length:n},(_,i)=>`<span class="charge ${cls} ${i<u?'used':''}"></span>`).join('');
  const dz=S.hp.cur<=0,D=S.death,dp=(n,c)=>Array.from({length:3},(_,i)=>`<span class="charge ${i<n?c:'used'}"></span>`).join('');
  const circ=[1,...hiC()],L=S.spt.max-S.spt.used,cost=c=>c===1?2:FONT[c];
- const one=circ.length<=2,mk=c=>`<button class="fq" data-act="${c===1?'pt2slot':'pt2slotC:'+c}" ${L>=cost(c)?'':'disabled'}>${one?`${cost(c)} единицы → ячейка ${c} круга`:`${c} круг <small>${cost(c)}</small>`}</button>`,br=c=>`<button class="fq dn" data-act="${c===1?'slot2pt':'slot2ptC:'+c}" ${cLeft(c)&&S.spt.used>=1?'':'disabled'}>${one?`ячейка ${c} круга → ${c} ${c===1?'единица':'единицы'}`:`${c} круг <small>+${c}</small>`}</button>`;
+ const mm=S.meta||[],one=circ.length<=2,mk=c=>`<button class="fq" data-act="${c===1?'pt2slot':'pt2slotC:'+c}" ${L>=cost(c)?'':'disabled'}>${one?`${cost(c)} единицы → ячейка ${c} круга`:`${c} круг <small>${cost(c)}</small>`}</button>`,br=c=>`<button class="fq dn" data-act="${c===1?'slot2pt':'slot2ptC:'+c}" ${cLeft(c)&&S.spt.used>=1?'':'disabled'}>${one?`ячейка ${c} круга → ${c} ${c===1?'единица':'единицы'}`:`${c} круг <small>+${c}</small>`}</button>`;
  $('fRes').innerHTML=`<div class="flexp">
   <button class="fr" data-info="slots"><span class="t">Ячейки</span><span class="sgs">${circ.map(c=>{const t=cTot(c),l=cLeft(c);return `<span class="sg ${l?'':'z'}"><span class="ch">${Array.from({length:t},(_,i)=>`<span class="charge v ${i>=l?'used':''}"></span>`).join('')}</span><i>${c} круг</i></span>`}).join('')}</span></button>
   <button class="fr" data-info="flex"><span class="t">Единицы чародейства <small>${L} из ${S.spt.max}</small></span><span class="ch">${pips(S.spt.max,S.spt.used,'')}</span></button>
-  <div class="fxh">Гибкое колдовство · бонусное действие${S.meta&&S.meta.length?' · <button class="mlink" data-info="meta">метамагия ›</button>':''}</div>
+  <div class="fxh">Гибкое колдовство · бонусное действие</div>
   ${one?`<div class="fxr">${circ.map(mk).join('')}${circ.map(br).join('')}</div>`:`<div class="fxr"><span class="lb">единицы → ячейка</span>${circ.map(mk).join('')}</div><div class="fxr"><span class="lb">ячейка → единицы</span>${circ.map(br).join('')}</div>`}
+  ${mm.length?`<div class="fxr"><button class="lb mlb" data-info="meta">метамагия ›</button>${mm.filter(m=>m!=='twinned').map(m=>{const n=m==='subtle'?1:2;return `<button class="fq mq" data-act="meta:${m}:${n}" ${L>=n?'':'disabled'}>${META[m].n.split(' ')[0]} <small>${n}</small></button>`}).join('')}</div>
+  ${mm.includes('twinned')?`<div class="fxr"><span class="lb">удвоенное</span>${[1,2,3,4,5].map(n=>`<button class="fq mq" data-act="meta:twinned:${n}" ${L>=n?'':'disabled'}>${n} круг <small>${n}</small></button>`).join('')}</div>`:''}`:''}
  </div>
  <div class="fres4">
  <button class="fc ${chaosArmed?'armed':''}" data-info="chaos"><span class="t">Поток хаоса</span><span class="ch">${pips(S.chaos.max,S.chaos.used,'v')}</span></button>
- <button class="fc surge" data-info="surge"><span class="t">Волна дикой магии</span><span class="ic">✺</span></button>
+ <button class="fc surge" data-info="surge"><span class="t">Волна дикой магии</span><span class="ic">✺</span></button>${S.hi&&S.level>=6?`<button class="fc" data-info="bend"><span class="t">Подчинение удачи</span><small class="cc">2 единицы</small></button>`:''}
  ${S.conc?`<button class="fc armed" data-info="conc"><span class="t">${SPELLS[S.conc].n}</span><small class="cc">концентрация</small></button>`:`<button class="fc" data-info="conc"><span class="t">Концентрация</span></button>`}
  ${dz||D.s||D.f?`<button class="fc ${dz?'dead':''}" data-info="death"><span class="t">Спасброски от смерти</span><span class="ch tw"><span>${dp(D.s,'g')}</span><span>${dp(D.f,'r')}</span></span></button>`:''}</div>`;
 }
@@ -1215,7 +1215,7 @@ let TEST=false;try{TEST=localStorage.getItem('filipp-test10')==='1'}catch(e){}
 const SKEY=TEST?'filipp-sheet-test10':'filipp-sheet-v2';
 let S;try{S=JSON.parse(localStorage.getItem(SKEY))}catch(e){}
 if(!S||S.v!==2)S=structuredClone(TEST?TEST10:DEFAULT);
-if(!S.cond)S.cond={};if(!S.condShow)S.condShow=COND_MAIN.slice();if(S.exh==null)S.exh=0;if(!S.slots)S.slots={max:3,used:0};if(S.conc===undefined)S.conc=null;if(!S.spt)S.spt={max:2,used:0};if(S.slots.extra==null)S.slots.extra=0;if(!S.death)S.death={s:0,f:0};if(!S.orbT)S.orbT='огонь';if(S.shieldOn==null)S.shieldOn=0;if(!S.fSpellShow)S.fSpellShow=['fire_bolt','chromatic_orb','shield'];if(S.test&&!S.fs9){S.fs9=1;if(!S.fSpellShow.includes('greater_invisibility')&&S.fSpellShow.length<9)S.fSpellShow.push('greater_invisibility')}if(!S.inv)S.inv=[];if(!S.sItemShow)S.sItemShow=[];if(!S.fItemShow)S.fItemShow=[];if(!S.smagShow)S.smagShow=['friends','minor_illusion','message','charm_person'];S.smagShow=S.smagShow.filter(k=>SPELLS[k]&&SPELLS[k].soc);
+if(!S.cond)S.cond={};if(!S.condShow)S.condShow=COND_MAIN.slice();if(S.exh==null)S.exh=0;if(!S.slots)S.slots={max:3,used:0};if(S.conc===undefined)S.conc=null;if(!S.spt)S.spt={max:2,used:0};if(S.slots.extra==null)S.slots.extra=0;if(!S.death)S.death={s:0,f:0};if(!S.orbT)S.orbT='огонь';if(S.shieldOn==null)S.shieldOn=0;if(!S.fSpellShow)S.fSpellShow=['fire_bolt','chromatic_orb','shield'];if(S.test&&!S.fs9){S.fs9=1;if(!S.fSpellShow.includes('greater_invisibility')&&S.fSpellShow.length<9)S.fSpellShow.push('greater_invisibility')}if(!S.inv)S.inv=[];if(!S.sItemShow)S.sItemShow=[];if(!S.fItemShow)S.fItemShow=[];if(!S.smagShow)S.smagShow=['friends','minor_illusion','message','charm_person'];S.smagShow=S.smagShow.filter(k=>SPELLS[k]&&SPELLS[k].soc).slice(0,8);
 if(!S.items){S.items=structuredClone(KIT);if(!S.fItemShow.length)S.fItemShow=['holy','oil'];if(!S.sItemShow.length)S.sItemShow=['symbol','trinket']}
 syncItems();
 const save=()=>{try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}};
@@ -2032,7 +2032,7 @@ document.addEventListener('click',e=>{
  if(t.dataset.cnd)return toggleCnd(t.dataset.cnd);
  if(t.dataset.fshow){const k=t.dataset.fshow,i=S.fSpellShow.indexOf(k);if(i>=0)S.fSpellShow.splice(i,1);else if(S.fSpellShow.length<9)S.fSpellShow.push(k);else{toast('В бою помещается 9 заклинаний. Сними галочку с другого.');vib([20,40,20]);return}save();renderFight();openInfo('fspellpick',true);vib(8);return}
  if(t.dataset.ishow){const [kind,k]=t.dataset.ishow.split(':'),arr=kind==='soc'?S.sItemShow:S.fItemShow,i=arr.indexOf(k);if(i>=0)arr.splice(i,1);else if(arr.length<ITMAX)arr.push(k);else{toast('Помещается '+ITMAX+' предмета. Сними галочку с другого.');vib([20,40,20]);return}save();renderItems(kind);openInfo('itempick_'+kind,true);vib(8);return}
- if(t.dataset.sshow){const k=t.dataset.sshow,i=S.smagShow.indexOf(k);if(i>=0)S.smagShow.splice(i,1);else if(S.smagShow.length<10)S.smagShow.push(k);else{toast('На экране помещается 10 заклинаний. Сними галочку с другого.');vib([20,40,20]);return}save();renderSmag();openInfo('smagpick',true);vib(8);return}
+ if(t.dataset.sshow){const k=t.dataset.sshow,i=S.smagShow.indexOf(k);if(i>=0)S.smagShow.splice(i,1);else if(S.smagShow.length<8)S.smagShow.push(k);else{toast('На экране помещается 8 заклинаний. Сними галочку с другого.');vib([20,40,20]);return}save();renderSmag();openInfo('smagpick',true);vib(8);return}
  if(t.dataset.cshow){const k=t.dataset.cshow,i=S.condShow.indexOf(k);if(i>=0)S.condShow.splice(i,1);else S.condShow.push(k);save();renderConds();openInfo('conds',true);vib(8);return}
  if(t.dataset.sroll)return rollSkill(t.dataset.sroll);
  if(t.dataset.coin){const k=t.dataset.coin;S.money[k]=Math.max(0,S.money[k]+ +t.dataset.d);save();renderCoins();vib(8);return}
@@ -2096,7 +2096,7 @@ const INFO={
   <p>Везунчик, Поток хаоса и ячейки заклинаний короткий отдых <b>не возвращает</b>.</p>`,acts:`<button data-act="toHd">Открыть кости хитов</button>`}),
  long:()=>({t:'Долгий отдых',sub:'8 часов, раз в сутки',body:`<p>Не меньше <b>8 часов</b>: сон и спокойные дела. Не чаще раза в сутки. Если отдых прервал бой больше чем на час, его надо начать заново.</p>
   <p>После него возвращается:</p><p>• все <b>хиты</b><br>• половина <b>костей хитов</b> (минимум 1)<br>• все очки <b>Везунчика</b><br>• <b>Поток хаоса</b><br>• снимается 1 уровень <b>истощения</b>, если ты поел и попил<br>• все ячейки заклинаний и единицы чародейства</p>`,acts:`<button data-act="longRest">Отдохнуть до утра</button>`}),
- smagpick:()=>({t:'Заклинания на экране',sub:`галочка = показать в «Общении» · ${S.smagShow.length} из 10`,body:known().filter(k=>SPELLS[k]&&SPELLS[k].soc).map(k=>{const sh=S.smagShow.includes(k),p=SPELLS[k];return `<button class="crow ck ${sh?'on':''}" data-sshow="${k}"><span><i class="box">${sh?'✓':''}</i>${p.n}</span><small>${p.lv?p.lv+' круг':'заговор'}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">Здесь только заклинания Филиппа, которые помогают в разговоре: очарование, иллюзии, послания. Боевые (Огненный снаряд, Щит, Цветной шарик) сюда не попадают. Отметь до 10.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
+ smagpick:()=>({t:'Заклинания на экране',sub:`галочка = показать в «Общении» · ${S.smagShow.length} из 8`,body:known().filter(k=>SPELLS[k]&&SPELLS[k].soc).map(k=>{const sh=S.smagShow.includes(k),p=SPELLS[k];return `<button class="crow ck ${sh?'on':''}" data-sshow="${k}"><span><i class="box">${sh?'✓':''}</i>${p.n}</span><small>${p.lv?p.lv+' круг':'заговор'}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">Здесь только заклинания Филиппа, которые помогают в разговоре: очарование, иллюзии, послания. Боевые (Огненный снаряд, Щит, Цветной шарик) сюда не попадают. Отметь до 8.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
  spelldc:()=>({t:'Сложность заклинаний',sub:`${spellDC()} = 8 + мастерство ${prof()} + Харизма ${sg(mod(S.ab.cha))}`,body:`<p>Когда твоё заклинание действует на кого-то (Очарование личности, иллюзия), цель делает <b>спасбросок</b>. Если выбросит <b>${spellDC()} или больше</b>, заклинание её не берёт.</p><p>Чем выше число, тем труднее устоять.</p><div class="how">Бросать ничего не нужно: число называешь мастеру, бросает он.</div>`,acts:''}),
  fair:()=>{const d=S.d20s||Array(20).fill(0),n=d.reduce((a,b)=>a+b,0),sim=window.__sim;
   const bars=(arr)=>{const mx=Math.max(1,...arr);return `<div class="hist">${arr.map((v,i)=>`<i class="${i===19?'t':''}" style="height:${(v/mx*100).toFixed(1)}%"></i>`).join('')}</div><div class="hlab">${arr.map((_,i)=>`<span>${i+1}</span>`).join('')}</div>`};
@@ -2280,7 +2280,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-33';
+const BUILD='2026-11-25-34';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
