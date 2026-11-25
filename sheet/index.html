@@ -340,7 +340,7 @@ function renderCoins(){
 }
 function pas(k){const a={perception:'wis',insight:'wis',investigation:'int'}[k];return 10+mod(S.ab[a])+(S.skills[k]?prof():0)}
 function renderSenses(){$('senses').innerHTML=[['perception','Пассивное восприятие'],['insight','Пассивная проницат.'],['investigation','Пассивный анализ']].map(([k,n])=>`<button class="sense" data-info="senses"><b>${pas(k)}</b><span>${n}</span></button>`).join('')}
-function renderLog(){$('log').innerHTML=S.log.length?S.log.slice(0,12).map(l=>`<div><span>${esc(l.l)}</span><b>${l.t}</b></div>`).join(''):'<div><span>Пока ни одного броска</span></div>'}
+function renderLog(){if(S.log.length>7){S.log=S.log.slice(0,7);save()}$('log').innerHTML=S.log.length?S.log.map(l=>`<div><span>${esc(l.l)}</span><b>${l.t}</b></div>`).join(''):'<div><span>Пока ни одного броска</span></div>'}
 function renderAll(){renderHead();renderSenses();renderAbil();renderFate();renderCoins();renderLog();if(openAb)renderDrawer();else if(openInfoKey)openInfo(openInfoKey,true)}
 
 /* ---------- шторка характеристики ---------- */
@@ -370,17 +370,6 @@ $('dim').addEventListener('click',closeDrawer);
  d.addEventListener('pointerup',end);d.addEventListener('pointercancel',end);
 })();
 
-/* ---------- звук (только по нажатию) ---------- */
-let actx;
-function snd(type){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const t=actx.currentTime,o=actx.destination;
- if(type==='tick'){const s=actx.createOscillator(),g=actx.createGain();s.type='square';s.frequency.value=700+Math.random()*600;g.gain.setValueAtTime(.02,t);g.gain.exponentialRampToValueAtTime(.0001,t+.03);s.connect(g).connect(o);s.start(t);s.stop(t+.04);return}
- const len=.2,buf=actx.createBuffer(1,actx.sampleRate*len,actx.sampleRate),d=buf.getChannelData(0);
- for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3);
- const n=actx.createBufferSource();n.buffer=buf;const f=actx.createBiquadFilter();f.type='lowpass';f.frequency.value=type==='soft'?500:800;const g=actx.createGain();g.gain.value=type==='soft'?.25:.65;n.connect(f).connect(g).connect(o);n.start(t);
- const s=actx.createOscillator(),g2=actx.createGain();s.frequency.setValueAtTime(type==='soft'?130:90,t);s.frequency.exponentialRampToValueAtTime(42,t+.16);g2.gain.setValueAtTime(type==='soft'?.18:.5,t);g2.gain.exponentialRampToValueAtTime(.0001,t+.22);s.connect(g2).connect(o);s.start(t);s.stop(t+.24);
- if(type==='crit')[523,784,1046].forEach((fr,i)=>{const s=actx.createOscillator(),g=actx.createGain();s.type='triangle';s.frequency.value=fr;g.gain.setValueAtTime(0,t+.06+i*.08);g.gain.linearRampToValueAtTime(.07,t+.08+i*.08);g.gain.exponentialRampToValueAtTime(.0001,t+.7+i*.08);s.connect(g).connect(o);s.start(t);s.stop(t+1)});
- if(type==='fail'){const s=actx.createOscillator(),g=actx.createGain();s.type='sawtooth';s.frequency.setValueAtTime(110,t+.05);s.frequency.exponentialRampToValueAtTime(55,t+.6);g.gain.setValueAtTime(.05,t+.05);g.gain.exponentialRampToValueAtTime(.0001,t+.7);s.connect(g).connect(o);s.start(t);s.stop(t+.8)}
-}catch(e){}}
 
 /* ---------- кубик: вылетает из-под пальца, бьётся о стол ---------- */
 const r=s=>1+Math.floor(Math.random()*s);
@@ -424,13 +413,13 @@ function throwDie(sides,final,other,m,done){
   if(k>.49&&k<.56)sq=.8;else if(k>.77&&k<.81)sq=.92;
   die.style.transform=`translate(${x}px,${y}px) rotate(${spin*(1-Math.pow(1-k,2.6))}deg) scale(${sc/sq*.98+.02},${sc*sq})`;
   const air=Math.max(0,Math.min(1,(ey-y)/260));shd.style.opacity=k<.5?k*1.6*(1-air):1-air*.7;shd.style.transform=`scale(${1-air*.5})`;
-  if(t-last>35+k*k*240&&k<.94){last=t;die.innerHTML=dieSvg(r(sides),tint);snd('tick')}
-  if(!hit&&k>=.5){hit=1;snd(final===20&&sides===20?'crit':'hit');vib(final===20?[30,40,70]:40);document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake');dust(ex,ey+56,final===20&&sides===20)}
-  if(!hit2&&k>=.78){hit2=1;snd('soft');vib(12)}
+  if(t-last>35+k*k*240&&k<.94){last=t;die.innerHTML=dieSvg(r(sides),tint)}
+  if(!hit&&k>=.5){hit=1;vib(final===20?[30,40,70]:40);document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake');dust(ex,ey+56,final===20&&sides===20)}
+  if(!hit2&&k>=.78){hit2=1;vib(12)}
   if(k<1)requestAnimationFrame(f);else{
    die.innerHTML=dieSvg(final,tint);die.style.transform=`translate(${ex}px,${ey}px)`;
    if(sides===20&&final===20)die.style.filter='drop-shadow(0 0 26px #f6d58e)';
-   if(sides===20&&final===1){die.style.filter='drop-shadow(0 0 18px #b3233a) grayscale(.5)';snd('fail')}
+   if(sides===20&&final===1){die.style.filter='drop-shadow(0 0 18px #b3233a) grayscale(.5)'}
    if(other!=null){const d2=document.createElement('div');d2.className='die2';d2.innerHTML=dieSvg(other,'n');d2.style.left=(ex+92)+'px';d2.style.top=(ey-40)+'px';ov.appendChild(d2);d2.animate([{transform:'translate(-60px,20px) rotate(-90deg)',opacity:0},{transform:'none',opacity:.5}],{duration:300,easing:'cubic-bezier(.3,1.5,.5,1)'})}
    done();setTimeout(()=>busy=false,150);
   }}
@@ -458,7 +447,7 @@ function useLuck(){
   $('res').classList.add('on');
  });
 }
-function pushLog(l,t){S.log.unshift({l,t});S.log=S.log.slice(0,20);save();renderLog()}
+function pushLog(l,t){S.log.unshift({l,t});S.log=S.log.slice(0,7);save();renderLog()}
 $('roll').addEventListener('click',e=>{
  if(busy)return;
  if(e.target.closest('[data-luck]')){useLuck();return}
