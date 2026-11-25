@@ -590,7 +590,7 @@ body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards
 .dieM.t-chaos{animation:tchaos 1.4s ease-out forwards}
 @keyframes tchaos{0%{filter:brightness(1.8) drop-shadow(0 0 18px #d58cff)}100%{filter:drop-shadow(0 0 8px rgba(165,124,255,.6))}}
 /* ---------- три кнопки без движения (Кинжал, Удар вслед, иллюзии): вместо бликов статичная картинка ---------- */
-.fx-illu .fxl::before,.fx-illu>b{animation:none!important}
+.fx-illu>b{animation:none!important}
 .fx-steel .fxl::before{display:none}
 .fx-illu .fxl::before{left:8%;width:84%;background:linear-gradient(100deg,transparent,rgba(255,140,210,.24),rgba(140,220,255,.26),rgba(255,240,150,.24),transparent)}
 .fxl .pxa{position:absolute}
@@ -602,6 +602,22 @@ body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards
 .cwave.hyp2{background:repeating-radial-gradient(circle,rgba(240,170,255,.42) 0 4px,transparent 4px 16px);-webkit-mask:radial-gradient(circle,#000 0 24%,transparent 56%);mask:radial-gradient(circle,#000 0 24%,transparent 56%)}
 .cwave.ring{border:3px dashed rgba(200,165,255,.85);mix-blend-mode:normal;box-shadow:0 0 18px rgba(165,124,255,.5),inset 0 0 18px rgba(165,124,255,.4)}
 .cwave.ring.b{border:2px dotted rgba(240,225,255,.8)}
+/* ---------- маленькие живые знаки: один предмет на кнопке, медленно и тихо ---------- */
+.fxl .emb{position:absolute;right:10px;top:0;height:100%;display:flex;align-items:flex-start;opacity:.62;transform-origin:50% 0;pointer-events:none}
+.fxl .emb svg{height:84%;width:auto;overflow:visible;shape-rendering:crispEdges}
+.fxl .emb.sway{animation:esway 5.5s ease-in-out infinite alternate!important}
+.fxl .emb.bob{align-items:center;animation:ebob 4.6s ease-in-out infinite alternate!important}
+.fxl .emb.bob svg{height:46%}
+.fxl .emb.spin{align-items:center}.fxl .emb.spin svg{height:60%;animation:fhspin 18s linear infinite!important;shape-rendering:auto}
+.fxl .emb .fl{transform-box:fill-box;transform-origin:50% 100%;animation:eflame 2.8s ease-in-out infinite alternate!important}
+@keyframes esway{from{transform:rotate(-7deg)}to{transform:rotate(7deg)}}
+@keyframes ebob{from{transform:translateY(-2px)}to{transform:translateY(2px)}}
+@keyframes eflame{from{transform:skewX(-7deg) scaleY(.94)}to{transform:skewX(7deg) scaleY(1.04)}}
+.fx-hand .fxl::before{animation:none!important;opacity:.8}
+.fx-illu .fxl::before{animation:edrift 9s ease-in-out infinite alternate!important}
+@keyframes edrift{from{transform:translateX(-10px)}to{transform:translateX(10px)}}
+.fx-counter .fxl svg{animation:none!important;opacity:.6}
+.fx-counter .fxl svg circle{transform-origin:20px 20px;animation:fhspin 22s linear infinite!important}
 </style>
 </head>
 <body>
@@ -1778,6 +1794,17 @@ function castWave(k){if(RM)return;const W=innerWidth,H=innerHeight,cx=W/2,cy=H*.
  if(k==='prestidigitation'){for(let i=0;i<4;i++)setTimeout(()=>burst('spark',RN(.2,.8)*W,RN(.25,.65)*H,1.4,H),i*110);vib(8);return}
  if(k==='mage_hand'){spawn({k:'flash',x:W*.8,y:H*.7,s:160,gr:.4,m:.8,c:'rgba(143,232,200,.3)',fin:.2,fp:1.4});burst('hand',W*.8,H*.7,2.2,H);return}
  return _cw(k)}}
+/* маленькие живые знаки вместо летающих точек */
+function pxRects(rows,pal,ox,oy,cls){let r='';rows.forEach((row,y)=>[...row].forEach((c,x)=>{if(pal[c])r+=`<rect x="${x+ox}" y="${y+oy}" width="1" height="1" fill="${pal[c]}"/>`}));return cls?`<g class="${cls}">${r}</g>`:r}
+const EMB={
+ charm:()=>`<span class="emb sway"><svg viewBox="0 0 7 14"><rect x="3" y="0" width="1" height="7" fill="#ffd0e0" opacity=".6"/>${pxRects(['.11.11.','1221221','1222221','.12221.','..121..','...1...'],{1:'#ff7aa8',2:'#ffb3cc'},0,7)}</svg></span>`,
+ friend:()=>`<span class="emb sway"><svg viewBox="0 0 12 16" style="shape-rendering:auto"><line x1="6" y1="0" x2="6" y2="6" stroke="#f6d58e" stroke-opacity=".6" stroke-width=".6"/><circle cx="4.3" cy="10" r="3" fill="none" stroke="#f6d58e" stroke-width="1"/><circle cx="7.7" cy="10" r="3" fill="none" stroke="#e9bd6c" stroke-width="1"/></svg></span>`,
+ sugg:()=>`<span class="emb spin"><svg viewBox="-10 -10 20 20"><path d="M0 0 C1 -1 2 0 2 1 C2 3 -1 4 -3 2 C-5 0 -3 -5 1 -5 C5 -5 7 -1 6 3 C5 7 -1 9 -5 7" fill="none" stroke="#d58cff" stroke-width="1.1" stroke-linecap="round"/></svg></span>`,
+ msg:()=>`<span class="emb bob"><svg viewBox="0 0 9 7">${pxRects(['111111111','11.....11','1.1...1.1','1..1.1..1','1...1...1','1.......1','111111111'],{1:'#e9b88a'},0,0)}</svg></span>`,
+ glyph:()=>`<span class="emb bob"><svg viewBox="0 0 10 12" style="shape-rendering:auto"><text x="5" y="10" text-anchor="middle" font-size="12" font-family="serif" font-weight="700" fill="#f6d58e">ᛟ</text></svg></span>`,
+ spark:()=>`<span class="emb"><svg viewBox="0 0 5 12">${pxRects(['..1..','.121.','.121.','..1..'],{1:'#ffb347',2:'#fff3c4'},0,0,'fl')}${pxRects(['.333.','.343.','.333.','.333.','.333.','.333.','33333','.....'],{3:'#e9dcc0',4:'#b8a888'},0,4)}</svg></span>`,
+ hand:()=>`<span class="emb bob"><svg viewBox="0 0 8 10">${pxRects(['...1.1..','.1.1.1..','.1.1.1.1','.111111.','1.11111.','1111111.','.111111.','..1111..','..1111..','..1111..'],{1:'#bff5e0'},0,0)}</svg></span>`};
+{const _l=fxLayer;fxLayer=function(el){if(EMB[el])return EMB[el]();return _l(el)}}
 {const _rf=renderFight,_oi=openInfo;renderFight=function(){_rf.apply(this,arguments);fxDecor()};openInfo=function(){_oi.apply(this,arguments);fxDecor()}}
 /* ---------- броски из шторки ---------- */
 function rollFromDrawer(what){
@@ -2043,7 +2070,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-21';
+const BUILD='2026-11-25-22';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
