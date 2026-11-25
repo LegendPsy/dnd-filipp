@@ -16,267 +16,262 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
 <style>
-/* IDEA   лист персонажа = смятые страницы Филиппа на тёмном столе при свече; связывает всё одна красная нитка
-   FEEL   каждое нажатие ощущается рукой: лист проминается, кубик вылетает из-под пальца, бьётся о стол */
+/* IDEA   один экран, готовый к игре: всё главное видно сразу, детали выезжают шторкой
+   FEEL   лист проминается под пальцем, шторка тянется за пальцем, кубик вылетает из-под пальца и бьётся о стол
+   ART    портрет Филиппа живёт в темноте за листом и встречает при запуске */
 :root{color-scheme:dark;
- --bg:#0b080c;--bg2:#141016;--ink:#ece4d8;--mute:#a39888;--line:rgba(236,228,216,.13);
+ --bg:#0b080c;--bg2:rgba(20,15,22,.86);--ink:#ece4d8;--mute:#a39888;--line:rgba(236,228,216,.13);
  --paper:#d8ccb6;--paper2:#c4b597;--paperInk:#2a1d17;--paperMute:#6e5a48;
- --blood:#b3233a;--red2:#e0485e;--gold:#e9bd6c;--gold2:#f6d58e;--violet:#a57cff;--green:#86c79c}
+ --blood:#b3233a;--red2:#e0485e;--gold:#e9bd6c;--gold2:#f6d58e;--violet:#a57cff;--green:#86c79c;
+ --tabh:calc(64px + env(safe-area-inset-bottom))}
 *{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
-html,body{background:var(--bg)}
-body{margin:0;color:var(--ink);font:16px/1.45 Alegreya,Georgia,serif;overflow-x:clip;padding-bottom:calc(86px + env(safe-area-inset-bottom))}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
- background:radial-gradient(120% 60% at 15% 110%,rgba(233,189,108,.10),transparent 60%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 .9  0 0 0 0 .8  0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
-main,header,nav,.page{position:relative;z-index:1}
+html,body{background:var(--bg);height:100%}
+body{margin:0;color:var(--ink);font:16px/1.4 Alegreya,Georgia,serif;overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;user-select:none}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
-input{font:inherit;color:var(--paperInk);background:rgba(255,255,255,.45);border:1px solid rgba(42,29,23,.3);border-radius:6px;padding:4px 6px;width:100%;text-align:center}
+input{font:inherit;color:var(--ink);background:#0e0a0f;border:1px solid var(--line);border-radius:8px;padding:8px;width:100%;text-align:center;-webkit-user-select:text;user-select:text}
 h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;margin:0}
 .px{image-rendering:pixelated}
-.wrap{max-width:640px;margin:0 auto;padding:0 16px}
 
-/* ===== портрет ===== */
-.hero{position:relative;height:min(68svh,560px);overflow:hidden;isolation:isolate}
-.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 12%;z-index:-2;transform:scale(1.02)}
-.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,var(--bg) 2%,rgba(11,8,12,.55) 32%,rgba(11,8,12,0) 58%),linear-gradient(180deg,rgba(11,8,12,.6),transparent 18%)}
-.flame{position:absolute;inset:0;z-index:-1;pointer-events:none;mix-blend-mode:soft-light;background:radial-gradient(60% 45% at 20% 75%,rgba(255,190,110,.55),transparent 70%);animation:flick 3.2s infinite}
-@keyframes flick{0%,100%{opacity:.85}12%{opacity:.6}20%{opacity:.95}43%{opacity:.7}61%{opacity:1}78%{opacity:.75}}
-.hero .top{position:absolute;top:0;left:0;right:0;display:flex;justify-content:flex-end;padding:calc(10px + env(safe-area-inset-top)) 14px 0}
-.hero .title{position:absolute;left:0;right:0;bottom:62px}
-.hero h1{font-size:58px;font-weight:500;letter-spacing:-.01em;text-shadow:0 2px 18px #000}
-.hero .cls{font:italic 500 19px/1.3 "Cormorant Garamond",serif;color:#e4d8c6;margin-top:6px;text-shadow:0 1px 10px #000}
-.hero .cls b{color:var(--gold);font-weight:600}
-.iconbtn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(11,8,12,.55);border:1px solid var(--line);backdrop-filter:blur(4px)}
+/* ===== портрет: фон и заставка ===== */
+.bgart{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bgart img{position:absolute;right:-18%;top:-2%;height:78%;width:auto;max-width:none;opacity:.28;filter:saturate(.8);transition:opacity .9s,transform .9s cubic-bezier(.2,.8,.2,1)}
+.bgart::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 18%,rgba(11,8,12,.55) 60%,rgba(11,8,12,.2)),linear-gradient(0deg,var(--bg) 35%,transparent 70%)}
+.flame{position:absolute;inset:0;mix-blend-mode:soft-light;background:radial-gradient(50% 35% at 70% 40%,rgba(255,190,110,.5),transparent 70%);animation:flick 3.2s infinite}
+@keyframes flick{0%,100%{opacity:.8}12%{opacity:.55}20%{opacity:.95}43%{opacity:.65}61%{opacity:1}78%{opacity:.7}}
+.splash{position:fixed;inset:0;z-index:200;background:var(--bg);display:grid;place-items:end center;transition:opacity .6s ease .1s}
+.splash img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 15%;transition:transform 1s cubic-bezier(.3,0,.2,1)}
+.splash::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,var(--bg) 8%,transparent 55%)}
+.splash .t{position:relative;z-index:1;text-align:center;padding-bottom:16vh}
+.splash h1{font-size:64px;font-weight:500;text-shadow:0 2px 20px #000}
+.splash p{font:italic 500 19px "Cormorant Garamond",serif;color:#d9cdbb;margin:6px 0 0}
+.splash.go{opacity:0;pointer-events:none}
+.splash.go img{transform:scale(1.08) translateY(-2%)}
+
+/* ===== экран ===== */
+.page{position:fixed;inset:0 0 var(--tabh) 0;z-index:1;display:none;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.page.on{display:block;animation:pg .28s ease-out}
+.screen{height:calc(100svh - var(--tabh));display:flex;flex-direction:column;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;gap:8px;max-width:560px;margin:0 auto}
+.below{max-width:560px;margin:0 auto;padding:6px 14px 30px}
+.below h2{font-size:22px;margin:4px 0 6px;color:var(--mute)}
+.log{color:var(--mute);font-size:14px}
+.log div{padding:7px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}
+.log b{color:var(--ink);font-weight:500}
+.senses{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.sense{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:4px 6px;display:flex;align-items:center;gap:6px;transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
+.sense b{font:700 21px/1 "Cormorant Garamond",serif;color:var(--gold2)}
+.sense span{font-size:11.5px;line-height:1.1;color:var(--mute);text-align:left}
+.info{padding:2px 6px 10px;font-size:15.5px;line-height:1.45;color:#ddd3c4}
+.info p{margin:0 0 9px}
+.info b{color:var(--gold2);font-weight:500}
+.info .how{background:rgba(233,189,108,.07);border-left:3px solid var(--gold);border-radius:8px;padding:8px 10px;margin:4px 0 10px;font-size:14.5px}
+.dacts{display:grid;gap:8px;padding-top:4px}
+.dacts button{border-radius:14px;padding:13px;font-weight:700;font-size:16px;background:var(--gold);color:#1b1208}
+.dacts button.ghost{background:none;border:1px solid var(--line);color:var(--ink);font-weight:500}
+.dacts button:disabled{opacity:.4}
+@keyframes pg{from{opacity:0;transform:translateY(8px)}}
+
+.head{display:flex;align-items:center;gap:10px}
+.head .face{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--gold);object-fit:cover}
+.head .who{flex:1;line-height:1.15}
+.head h1{font-size:26px;font-weight:600}
+.head .cls{font:italic 500 14px "Cormorant Garamond",serif;color:var(--mute)}
+.head .cls b{color:var(--gold);font-weight:600}
+.iconbtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(20,15,22,.7);border:1px solid var(--line)}
 .iconbtn.on{background:var(--gold);color:#1b1208}
 
-/* ===== жизнь: жетоны ===== */
-.vit{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:8px;margin-top:-46px;position:relative;z-index:2}
-.tok{position:relative;background:linear-gradient(160deg,#241a24,#150f16);border:1px solid rgba(233,189,108,.22);border-radius:16px;padding:9px 6px 8px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.5);transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
-.tok .k{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
-.tok .v{font:700 26px/1.05 "Cormorant Garamond",serif}
-.tok .v small{font-size:16px;color:var(--mute);font-weight:600}
-.tok.hp{text-align:left;padding-left:12px}
-.hpbar{height:5px;background:#2b1c24;border-radius:3px;margin-top:5px;overflow:hidden}
+.vit{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:6px}
+.tok{background:linear-gradient(160deg,rgba(36,26,36,.92),rgba(21,15,22,.92));border:1px solid rgba(233,189,108,.22);border-radius:14px;padding:6px 4px 6px;text-align:center;transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
+.tok .k{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.tok .v{font:700 24px/1.05 "Cormorant Garamond",serif}
+.tok .v small{font-size:14px;color:var(--mute);font-weight:600}
+.tok.hp{text-align:left;padding-left:10px}
+.hpbar{height:4px;background:#2b1c24;border-radius:3px;margin-top:3px;overflow:hidden}
 .hpbar i{display:block;height:100%;background:linear-gradient(90deg,#7d1426,var(--red2));transition:width .45s cubic-bezier(.3,1.5,.5,1)}
-.tok .temp{color:var(--violet);font-size:15px}
+.tok .temp{color:var(--violet);font-size:14px}
 
-/* ===== режим броска ===== */
-.mode{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px}
-.mode button{padding:9px 4px;border-radius:12px;font-size:14px;color:var(--mute);border:1px solid var(--line);background:var(--bg2);transition:.15s}
-.mode button.on{color:var(--ink);border-color:var(--gold);box-shadow:inset 0 0 0 1px rgba(233,189,108,.4),0 0 14px rgba(233,189,108,.15)}
-.mode button.on[data-m="adv"]{border-color:var(--green);box-shadow:inset 0 0 0 1px rgba(134,199,156,.4),0 0 14px rgba(134,199,156,.2);color:var(--green)}
-.mode button.on[data-m="dis"]{border-color:var(--red2);box-shadow:inset 0 0 0 1px rgba(224,72,94,.4),0 0 14px rgba(224,72,94,.2);color:var(--red2)}
+.mode{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:3px}
+.mode button{padding:4px 2px;border-radius:8px;font-size:12.5px;color:var(--mute);border:1px solid transparent;background:none;transition:.15s}
+.mode button.on{color:var(--ink);border-color:var(--gold);box-shadow:inset 0 0 0 1px rgba(233,189,108,.35)}
+.mode button.on[data-m="adv"]{border-color:var(--green);color:var(--green);box-shadow:inset 0 0 0 1px rgba(134,199,156,.35),0 0 12px rgba(134,199,156,.2)}
+.mode button.on[data-m="dis"]{border-color:var(--red2);color:var(--red2);box-shadow:inset 0 0 0 1px rgba(224,72,94,.35),0 0 12px rgba(224,72,94,.2)}
 
-/* ===== заголовки разделов с красной ниткой ===== */
-.sec{margin-top:30px}
-.sh{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.sh h2{font-size:27px;font-weight:600}
-.sh .th{flex:1;height:14px;overflow:visible}
-.hint{font-size:13px;color:var(--mute);margin:-6px 0 12px}
-
-/* ===== характеристики: клочки бумаги ===== */
-.abil{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 10px}
-.ab{position:relative;color:var(--paperInk);filter:drop-shadow(0 6px 10px rgba(0,0,0,.55));transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
-.ab .sheet{position:relative;padding:10px 6px 0;text-align:center;background:
+/* характеристики: клочки бумаги, растягиваются по свободной высоте */
+.abil{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr);gap:9px 8px;padding:2px 0}
+.ab{position:relative;color:var(--paperInk);filter:drop-shadow(0 5px 8px rgba(0,0,0,.55));transition:transform .12s cubic-bezier(.3,1.6,.5,1);display:flex;min-height:0}
+.ab .sheet{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 4px 4px;text-align:center;background:
   radial-gradient(120% 90% at 30% 10%,rgba(255,250,235,.55),transparent 55%),
   radial-gradient(90% 70% at 90% 100%,rgba(120,80,40,.28),transparent 60%),
   linear-gradient(170deg,var(--paper),var(--paper2));
   clip-path:polygon(2% 3%,22% 0,41% 2.5%,63% .5%,84% 2.8%,99% 1%,97.5% 24%,100% 47%,98% 71%,99.5% 97%,79% 99%,58% 97.5%,37% 100%,18% 98%,1% 99.5%,2.5% 75%,0 52%,2% 28%)}
 .ab:nth-child(2n) .sheet{transform:rotate(.8deg)}.ab:nth-child(3n) .sheet{transform:rotate(-.6deg)}
-.ab .ic{width:58px;height:58px;margin:-2px auto 0;display:block;filter:drop-shadow(0 2px 0 rgba(0,0,0,.25))}
-.ab .n{font:600 15px/1 "Cormorant Garamond",serif;letter-spacing:.02em;margin-top:2px}
-.ab .chk{display:block;width:100%;padding:0 0 4px}
-.ab .m{font:700 38px/1 "Cormorant Garamond",serif;margin-top:2px}
-.ab .s{font-size:12px;color:var(--paperMute)}
-.ab .sv{display:flex;align-items:center;justify-content:center;gap:5px;width:calc(100% + 12px);margin:0 -6px;padding:7px 4px 9px;border-top:1px dashed rgba(42,29,23,.35);font-size:13px;color:var(--paperMute);background:rgba(42,29,23,.06)}
-.ab .sv b{color:var(--paperInk);font-size:15px}
-.ab .sv .dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--paperMute)}
-.ab .sv .dot.on{background:var(--blood);border-color:var(--blood);box-shadow:0 0 6px rgba(179,35,58,.6)}
-.ab input{margin:2px 0 6px;font-size:16px}
+.ab .ic{width:var(--ic,48px);height:var(--ic,48px);flex:none;display:block;filter:drop-shadow(0 2px 0 rgba(0,0,0,.25))}
+.ab .n{font:600 14px/1 "Cormorant Garamond",serif;margin-top:1px}
+.ab .m{font:700 clamp(24px,4.2vh,34px)/1 "Cormorant Garamond",serif;margin-top:2px}
+.ab .s{font-size:11.5px;color:var(--paperMute);margin-top:2px;display:flex;gap:4px;align-items:center}
+.ab .s .dot{width:7px;height:7px;border-radius:50%;border:1.3px solid var(--paperMute)}
+.ab .s .dot.on{background:var(--blood);border-color:var(--blood)}
 .pressed{transform:scale(.93) translateY(2px)!important}
 
-/* ===== судьба: умения с зарядами ===== */
-.fate{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.fc{position:relative;background:linear-gradient(160deg,#211821,#140f15);border:1px solid var(--line);border-radius:16px;padding:12px;text-align:left;transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
-.fc .t{font:600 19px/1.1 "Cormorant Garamond",serif}
-.fc .d{font-size:13px;color:var(--mute);margin-top:3px;line-height:1.3}
-.fc .ch{display:flex;gap:7px;margin-top:9px}
-.charge{width:20px;height:20px;transform:rotate(45deg);border-radius:4px;border:2px solid var(--gold);background:radial-gradient(circle at 35% 35%,#fff3cf,var(--gold) 55%,#8d6020);box-shadow:0 0 10px rgba(233,189,108,.5);transition:.25s cubic-bezier(.3,1.6,.5,1)}
-.charge.v{border-color:var(--violet);background:radial-gradient(circle at 35% 35%,#e3d4ff,var(--violet) 55%,#4b2c8f);box-shadow:0 0 10px rgba(165,124,255,.55)}
-.charge.r{border-color:var(--red2);background:radial-gradient(circle at 35% 35%,#ffc2cb,var(--red2) 55%,#6e1222);box-shadow:0 0 10px rgba(224,72,94,.5)}
-.charge.used{background:#120d13;box-shadow:none;border-color:#4a3d36;transform:rotate(45deg) scale(.78)}
-.fc.armed{border-color:var(--violet);box-shadow:0 0 0 1px var(--violet),0 0 22px rgba(165,124,255,.35)}
+/* судьба */
+.fate{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.fc{background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:5px 10px;min-height:40px;text-align:left;display:flex;align-items:center;gap:8px;transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
+.fc .t{font:600 16.5px/1.05 "Cormorant Garamond",serif;flex:1}
+.fc .t small{display:block;font:400 11.5px/1.2 Alegreya,serif;color:var(--mute);margin-top:2px}
+.fc .ch{display:flex;gap:5px}
+.charge{width:14px;height:14px;transform:rotate(45deg);border-radius:3px;border:1.6px solid var(--gold);background:radial-gradient(circle at 35% 35%,#fff3cf,var(--gold) 55%,#8d6020);box-shadow:0 0 8px rgba(233,189,108,.5);transition:.25s cubic-bezier(.3,1.6,.5,1)}
+.charge.v{border-color:var(--violet);background:radial-gradient(circle at 35% 35%,#e3d4ff,var(--violet) 55%,#4b2c8f);box-shadow:0 0 8px rgba(165,124,255,.55)}
+.charge.r{border-color:var(--red2);background:radial-gradient(circle at 35% 35%,#ffc2cb,var(--red2) 55%,#6e1222);box-shadow:0 0 8px rgba(224,72,94,.5)}
+.charge.used{background:#120d13;box-shadow:none;border-color:#4a3d36;transform:rotate(45deg) scale(.75)}
+.fc.armed{border-color:var(--violet);box-shadow:0 0 0 1px var(--violet),0 0 18px rgba(165,124,255,.35)}
+.fc.rest{justify-content:center;min-height:34px;padding:3px 8px}
+.fc.rest .t{font-size:15px}
+.fc.rest .t{flex:none;text-align:center}
 
-/* ===== навыки ===== */
-.list{background:var(--bg2);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.grp{font:600 13px/1 Alegreya,serif;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;padding:14px 14px 6px}
-.row{display:flex;align-items:center;gap:10px;padding:12px 14px;width:100%;text-align:left;border-top:1px solid var(--line);transition:background .12s,transform .12s}
-.grp+.row{border-top:0}
-.row:active{background:#21182a}
-.row .dot{width:11px;height:11px;border-radius:50%;border:1.5px solid #6f6458;flex:none}
-.row .dot.on{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px rgba(233,189,108,.55)}
-.row .nm{flex:1;font-size:17px}
-.row .ab3{font-size:11px;color:var(--mute);letter-spacing:.06em}
-.row .md{font:700 22px "Cormorant Garamond",serif;min-width:40px;text-align:right}
-.row .tag{font-size:11px;color:var(--violet);border:1px solid currentColor;border-radius:6px;padding:0 5px}
+/* заглушки */
+.soon{flex:1;display:grid;place-items:center;text-align:center}
+.soon h2{font-size:38px;font-weight:500}
+.soon p{color:var(--mute);max-width:30ch;margin:8px auto 0}
+.soon img{width:88px;height:88px;margin:0 auto 12px;display:block}
+.coins{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;max-width:420px;margin:18px auto 0}
+.coin{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:8px 4px;text-align:center}
+.coin .c{width:24px;height:24px;margin:0 auto;display:block}
+.coin .v{font:700 22px/1.1 "Cormorant Garamond",serif}
+.coin .k{font-size:11px;color:var(--mute)}
+.coin .pm{display:flex;gap:4px;margin-top:5px}
+.coin .pm button{flex:1;background:#221a22;border-radius:8px;padding:5px 0}
 
-.senses{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.sense{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:10px 8px;text-align:center}
-.sense .v{font:700 28px/1 "Cormorant Garamond",serif;color:var(--gold2)}
-.sense .k{font-size:12px;color:var(--mute);margin-top:4px;line-height:1.2}
-
-.coins{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.coin{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:9px 6px;text-align:center}
-.coin .c{width:26px;height:26px;margin:0 auto;display:block}
-.coin .v{font:700 24px/1.1 "Cormorant Garamond",serif}
-.coin .k{font-size:12px;color:var(--mute)}
-.coin .pm{display:flex;gap:4px;margin-top:6px}
-.coin .pm button{flex:1;background:#221a22;border-radius:8px;padding:4px 0}
-
-.log{color:var(--mute);font-size:14px}
-.log div{padding:7px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}
-.log b{color:var(--ink);font-weight:500}
-
-.soon{min-height:62svh;display:grid;place-items:center;text-align:center;padding:40px 20px}
-.soon h2{font-size:40px;font-weight:500}
-.soon p{color:var(--mute);max-width:30ch;margin:10px auto 0}
-.soon img{width:96px;height:96px;margin:0 auto 14px;opacity:.85;display:block}
-
-/* ===== нижнее меню ===== */
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:40;background:linear-gradient(rgba(11,8,12,.82),rgba(11,8,12,.98));backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
-.tabs button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 0;border-radius:12px;color:var(--mute);font-size:12px;transition:.15s}
-.tabs .ti{width:32px;height:32px;border-radius:8px;object-fit:cover;opacity:.55;transition:.2s}
+/* нижнее меню */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:40;height:var(--tabh);background:rgba(11,8,12,.96);border-top:1px solid var(--line);padding:5px 6px env(safe-area-inset-bottom);display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.tabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:12px;color:var(--mute);font-size:11.5px}
+.tabs .ti{width:30px;height:30px;border-radius:8px;object-fit:cover;opacity:.5;transition:.2s}
 .tabs button.on{color:var(--ink)}
 .tabs button.on .ti{opacity:1;transform:translateY(-2px);filter:drop-shadow(0 0 8px rgba(233,189,108,.45))}
-.tabs .face{border-radius:50%;border:1.5px solid var(--gold)}
-.page{display:none}
-.page.on{display:block;animation:pg .3s ease-out}
-@keyframes pg{from{opacity:0;transform:translateY(10px)}}
+.tabs .fc2{border-radius:50%;border:1.5px solid var(--gold)}
+
+/* ===== шторка навыков ===== */
+.dim{position:fixed;inset:0;z-index:80;background:rgba(6,4,8,0);pointer-events:none;transition:background .25s}
+.dim.on{background:rgba(6,4,8,.62);pointer-events:auto}
+.drawer{position:fixed;left:0;right:0;bottom:0;z-index:81;max-width:560px;margin:0 auto;background:linear-gradient(175deg,#1d1520,#120d14);border-top:1px solid rgba(233,189,108,.35);border-radius:22px 22px 0 0;padding:6px 12px calc(14px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .34s cubic-bezier(.2,1.15,.35,1);box-shadow:0 -14px 40px rgba(0,0,0,.6);max-height:82vh;display:flex;flex-direction:column;touch-action:none}
+.drawer.on{transform:translateY(0)}
+.drawer .grab{width:44px;height:5px;border-radius:3px;background:rgba(236,228,216,.3);margin:4px auto 8px}
+.drawer .dh{display:flex;align-items:center;gap:10px;padding:0 4px 8px}
+.drawer .dh img{width:48px;height:48px}
+.drawer .dh h2{font-size:28px;flex:1}
+.drawer .dh .sc{font-size:13px;color:var(--mute);text-align:right}
+.drawer .dh .sc b{display:block;font:700 26px/1 "Cormorant Garamond",serif;color:var(--ink)}
+.drows{overflow:auto;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.2)}
+.row{display:flex;align-items:center;gap:10px;padding:13px 14px;width:100%;text-align:left;border-top:1px solid var(--line);transition:background .12s,transform .12s}
+.row:first-child{border-top:0}
+.row:active{background:#2a1f2c}
+.row .dot{width:11px;height:11px;border-radius:50%;border:1.5px solid #6f6458;flex:none}
+.row .dot.on{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px rgba(233,189,108,.55)}
+.row .dot.red.on{background:var(--blood);border-color:var(--blood);box-shadow:0 0 8px rgba(179,35,58,.6)}
+.row .nm{flex:1;font-size:17px}
+.row .nm small{display:block;font-size:12px;color:var(--mute)}
+.row .tag{font-size:11px;color:var(--violet);border:1px solid currentColor;border-radius:6px;padding:0 5px}
+.row .md{font:700 24px "Cormorant Garamond",serif;min-width:42px;text-align:right}
+.row.main{background:rgba(233,189,108,.06)}
+.row .d20{width:18px;height:18px;opacity:.5;flex:none}
+.passive{display:flex;justify-content:space-between;color:var(--mute);font-size:13.5px;padding:10px 6px 0}
+.passive b{color:var(--gold2);font:700 20px "Cormorant Garamond",serif}
+.drawer .edrow{display:flex;gap:10px;align-items:center;padding:4px 4px 10px;color:var(--mute);font-size:14px}
+.drawer .edrow input{width:90px;font-size:22px;padding:4px}
 
 /* ===== бросок ===== */
 .roll{position:fixed;inset:0;z-index:100;display:none;background:rgba(6,4,8,0);transition:background .2s}
 .roll.on{display:block;background:rgba(6,4,8,.8)}
-.die{position:absolute;left:0;top:0;width:140px;height:140px;margin:-70px 0 0 -70px;will-change:transform;z-index:2}
+.die{position:absolute;left:0;top:0;width:136px;height:136px;margin:-68px 0 0 -68px;will-change:transform;z-index:2}
 .die svg{width:100%;height:100%;overflow:visible}
 .num{font:700 42px "Cormorant Garamond",serif;fill:#fff;text-anchor:middle;dominant-baseline:central}
 .shd{position:absolute;width:110px;height:16px;margin:-8px 0 0 -55px;border-radius:50%;background:radial-gradient(rgba(0,0,0,.8),transparent 70%)}
-.die2{position:absolute;width:70px;height:70px;margin:-35px 0 0 -35px;opacity:.5}
+.die2{position:absolute;width:68px;height:68px;margin:-34px 0 0 -34px;opacity:.5}
 .die2 svg{width:100%;height:100%}
 .dust{position:absolute;width:5px;height:5px;background:var(--paper);pointer-events:none}
-.res{position:absolute;left:0;right:0;top:calc(50% + 50px);text-align:center;opacity:0;transform:translateY(10px);transition:.25s;padding:0 16px}
+.res{position:absolute;left:0;right:0;top:calc(50% + 30px);text-align:center;opacity:0;transform:translateY(10px);transition:.25s;padding:0 16px}
 .res.on{opacity:1;transform:none}
 .res .lbl{color:#cbbfae;font:italic 500 20px "Cormorant Garamond",serif}
-.res .tot{font:700 80px/1 "Cormorant Garamond",serif;color:#fff}
+.res .tot{font:700 78px/1 "Cormorant Garamond",serif;color:#fff}
 .res .br{color:var(--paper);font-size:15px;margin-top:4px}
 .res .br b{color:#fff}
 .res .crit{font:600 22px "Cormorant Garamond",serif;margin-top:6px}
-.res .acts{display:flex;justify-content:center;gap:8px;margin-top:16px;flex-wrap:wrap}
+.res .acts{display:flex;justify-content:center;gap:8px;margin-top:14px;flex-wrap:wrap}
 .res .acts button{border:1px solid rgba(233,189,108,.5);color:var(--gold2);border-radius:999px;padding:9px 16px;font-size:15px;background:rgba(233,189,108,.08)}
 .res .pick{display:flex;justify-content:center;gap:10px;margin-top:12px}
 .res .pick button{border:1px solid var(--line);border-radius:14px;padding:8px 18px;background:#1d151e}
 .res .pick button b{display:block;font:700 34px "Cormorant Garamond",serif}
 .res .pick button.best{border-color:var(--gold)}
-.res .hint{color:var(--mute);font-size:13px;margin-top:16px}
+.res .hint{color:var(--mute);font-size:13px;margin-top:14px}
 .shake{animation:shake .3s}
 @keyframes shake{15%{transform:translate(-6px,3px)}35%{transform:translate(5px,-3px)}55%{transform:translate(-3px,2px)}75%{transform:translate(2px,-1px)}}
 
-/* ===== листы ввода и подсказки ===== */
+/* ввод чисел */
 .sheetbg{position:fixed;inset:0;z-index:90;display:none;background:rgba(6,4,8,.7);align-items:flex-end}
 .sheetbg.on{display:flex}
-.sheetbg form{width:100%;max-width:640px;margin:0 auto;background:#171118;border-top:1px solid rgba(233,189,108,.3);border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;animation:up .28s cubic-bezier(.2,1.25,.4,1)}
+.sheetbg form{width:100%;max-width:560px;margin:0 auto;background:#171118;border-top:1px solid rgba(233,189,108,.3);border-radius:22px 22px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:11px;animation:up .28s cubic-bezier(.2,1.25,.4,1)}
 @keyframes up{from{transform:translateY(100%)}}
-.sheetbg h2{font-size:26px}
-.sheetbg input{font-size:30px;color:var(--ink);background:#0e0a0f;border-color:var(--line);padding:10px}
+.sheetbg h2{font-size:25px}
+.sheetbg .big{font-size:30px;padding:10px}
 .sheetbg .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sheetbg .three{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sheetbg label{font-size:12.5px;color:var(--mute);display:flex;flex-direction:column;gap:3px;text-align:center}
 .go{border-radius:14px;padding:13px;font-weight:700;font-size:17px}
-.go.red{background:var(--blood);color:#fff}.go.grn{background:#2f6a45;color:#fff}
-.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:120;background:#2a2030;border:1px solid var(--line);border-radius:14px;padding:10px 14px;transition:.2s;width:max-content;max-width:calc(100% - 32px);font-size:15px}
+.go.red{background:var(--blood);color:#fff}.go.grn{background:#2f6a45;color:#fff}.go.gold{background:var(--gold);color:#1b1208}
+.toast{position:fixed;left:50%;bottom:calc(var(--tabh) + 10px);transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:120;background:#2a2030;border:1px solid var(--line);border-radius:14px;padding:10px 14px;transition:.2s;width:max-content;max-width:calc(100% - 32px);font-size:15px}
 .toast.on{opacity:1;transform:translate(-50%,0)}
-.edit-only{display:none}
-body.editing .edit-only{display:block}
-body.editing .view-only{display:none}
-.note{color:var(--mute);font-size:13px;margin-top:10px;text-align:center;display:block}
-.dk{color:var(--ink);background:#0e0a0f;border-color:var(--line)}
 @media (prefers-reduced-motion:reduce){.flame{animation:none}}
+@media (max-height:700px){.screen{gap:6px}.head .face{width:34px;height:34px}.head h1{font-size:23px}.tok .v{font-size:21px}.fate{gap:5px}.fc{min-height:36px}}
+@media (max-height:600px){.head .cls{display:none}.fate .fc .t small{display:none}.fc{min-height:32px;padding:3px 9px}.ab .n{font-size:13px}.ab .s{font-size:10.5px}
+ .ab .sheet{flex-direction:row;flex-wrap:wrap;justify-content:center;align-content:center;gap:0 4px}.ab .ic{width:30px!important;height:30px!important}.ab .n{width:100%}.ab .m{font-size:24px}}
 </style>
 </head>
 <body>
 
+<div class="bgart"><img src="art/portrait.webp" alt="" class="px" id="bgImg"><div class="flame"></div></div>
+<div class="splash" id="splash"><img src="art/portrait.webp" alt="" class="px"><div class="t"><h1>Филипп</h1><p>…и ещё одна ночь в Баровии</p></div></div>
+
 <section class="page on" id="p-char">
-  <header class="hero">
-    <img src="art/portrait.webp" alt="Филипп" class="px" id="heroImg">
-    <div class="flame"></div>
-    <div class="top"><button class="iconbtn" id="editBtn" aria-label="Изменить цифры"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/></svg></button></div>
-    <div class="title wrap"><h1 id="nm">Филипп</h1><div class="cls" id="cl"></div></div>
-  </header>
+ <div class="screen">
+  <div class="head">
+    <img class="face" src="art/face.webp" alt="">
+    <div class="who"><h1 id="nm">Филипп</h1><div class="cls" id="cl"></div></div>
+    <button class="iconbtn" id="editBtn" aria-label="Изменить цифры"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/></svg></button>
+  </div>
 
-  <main class="wrap">
-    <div class="vit">
-      <button class="tok hp" id="hpTok"><div class="k">Хиты</div><div class="v"><span id="hpCur"></span> <small>/ <span id="hpMax"></span></small> <span class="temp" id="hpTemp"></span></div><div class="hpbar"><i id="hpBar"></i></div></button>
-      <div class="tok"><div class="k">КД</div><div class="v" id="acV"></div></div>
-      <div class="tok"><div class="k">Шаг</div><div class="v" id="spV"></div></div>
-      <button class="tok" id="initTok"><div class="k">Иниц.</div><div class="v" id="initV"></div></button>
-    </div>
+  <div class="vit">
+    <button class="tok hp" id="hpTok"><div class="k">Хиты</div><div class="v"><span id="hpCur"></span> <small>/ <span id="hpMax"></span></small> <span class="temp" id="hpTemp"></span></div><div class="hpbar"><i id="hpBar"></i></div></button>
+    <div class="tok"><div class="k">КД</div><div class="v" id="acV"></div></div>
+    <div class="tok"><div class="k">Шаг</div><div class="v" id="spV"></div></div>
+    <button class="tok" id="initTok"><div class="k">Иниц.</div><div class="v" id="initV"></div></button>
+  </div>
 
-    <div class="mode" id="mode">
-      <button data-m="norm" class="on">Обычный</button>
-      <button data-m="adv">Преимущество</button>
-      <button data-m="dis">Помеха</button>
-    </div>
+  <div class="senses" id="senses"></div>
 
-    <div class="sec">
-      <div class="sh"><h2>Характеристики</h2><svg class="th" viewBox="0 0 200 14" preserveAspectRatio="none"><path d="M0 7 C40 1 70 13 110 6 S170 9 200 4" fill="none" stroke="#b3233a" stroke-width="1.6"/></svg></div>
-      <p class="hint">Верх листка: проверка. Низ: спасбросок (красная точка = владеешь).</p>
-      <div class="abil" id="abil"></div>
-      <div class="edit-only" style="margin-top:14px">
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-          <label class="note" style="margin:0">Уровень<input id="lvlIn" class="dk" type="number" min="1" max="20"></label>
-          <label class="note" style="margin:0">Макс. хитов<input id="hpMaxIn" class="dk" type="number"></label>
-          <label class="note" style="margin:0">КД<input id="acIn" class="dk" type="number"></label>
-        </div>
-      </div>
-    </div>
+  <div class="mode" id="mode">
+    <button data-m="norm" class="on">Обычный</button>
+    <button data-m="adv">Преимущество</button>
+    <button data-m="dis">Помеха</button>
+  </div>
 
-    <div class="sec">
-      <div class="sh"><h2>Судьба</h2><svg class="th" viewBox="0 0 200 14" preserveAspectRatio="none"><path d="M0 6 C50 12 80 2 120 8 S175 3 200 9" fill="none" stroke="#b3233a" stroke-width="1.6"/></svg></div>
-      <div class="fate" id="fate"></div>
-    </div>
+  <div class="abil" id="abil"></div>
 
-    <div class="sec">
-      <div class="sh"><h2>Навыки</h2><svg class="th" viewBox="0 0 200 14" preserveAspectRatio="none"><path d="M0 8 C30 3 90 12 130 5 S180 10 200 6" fill="none" stroke="#b3233a" stroke-width="1.6"/></svg></div>
-      <p class="hint" id="skHint"></p>
-      <div class="list" id="skills"></div>
-    </div>
-
-    <div class="sec">
-      <div class="sh"><h2>Чутьё</h2><svg class="th" viewBox="0 0 200 14" preserveAspectRatio="none"><path d="M0 5 C60 11 90 3 140 9 S185 4 200 7" fill="none" stroke="#b3233a" stroke-width="1.6"/></svg></div>
-      <p class="hint">Что Филипп замечает без броска. Мастер сравнивает с этими числами.</p>
-      <div class="senses" id="senses"></div>
-    </div>
-
-    <div class="sec">
-      <div class="sh"><h2>Кошель</h2><svg class="th" viewBox="0 0 200 14" preserveAspectRatio="none"><path d="M0 7 C40 2 80 12 120 6 S170 10 200 5" fill="none" stroke="#b3233a" stroke-width="1.6"/></svg></div>
-      <div class="coins" id="coins"></div>
-    </div>
-
-    <div class="sec">
-      <div class="sh"><h2>Последние броски</h2></div>
-      <div class="log" id="log"></div>
-    </div>
-    <p class="note">Всё сохраняется в этом телефоне. Карандаш вверху меняет цифры.</p>
-  </main>
+  <div class="fate" id="fate"></div>
+ </div>
+ <div class="below"><h2>Последние броски</h2><div class="log" id="log"></div></div>
 </section>
 
-<section class="page" id="p-social"><div class="soon"><div><img class="px" src="art/ab-cha.webp" alt=""><h2>Общение</h2><p>Обман, проницательность, черты характера, знакомые и враги. Этот раздел нарисуем следующим.</p></div></div></section>
-<section class="page" id="p-fight"><div class="soon"><div><img class="px" src="art/ab-dex.webp" alt=""><h2>Бой</h2><p>Заклинания, ячейки, действие и бонусное действие, дикая магия. Скоро.</p></div></div></section>
-<section class="page" id="p-inv"><div class="soon"><div><img class="px" src="art/ab-int.webp" alt=""><h2>Инвентарь</h2><p>Смятая страница, кинжалы, болты, свечи. Скоро.</p></div></div></section>
+<section class="page" id="p-social"><div class="screen"><div class="soon"><div><img class="px" src="art/ab-cha.webp" alt=""><h2>Общение</h2><p>Черты характера, знакомые и враги. Нарисуем следующим.</p></div></div></div></section>
+<section class="page" id="p-fight"><div class="screen"><div class="soon"><div><img class="px" src="art/ab-dex.webp" alt=""><h2>Бой</h2><p>Заклинания, ячейки, действие и бонусное действие, дикая магия. Скоро.</p></div></div></div></section>
+<section class="page" id="p-inv"><div class="screen"><div class="soon"><div><img class="px" src="art/ab-int.webp" alt=""><h2>Инвентарь</h2><p>Пока здесь только кошель. Остальное скоро.</p><div class="coins" id="coins"></div></div></div></div></section>
 
 <nav class="tabs" id="tabs">
-  <button data-p="p-char" class="on"><img class="ti face" src="art/face.webp" alt="">Персонаж</button>
+  <button data-p="p-char" class="on"><img class="ti fc2" src="art/face.webp" alt="">Персонаж</button>
   <button data-p="p-social"><img class="ti px" src="art/ab-cha.webp" alt="">Общение</button>
   <button data-p="p-fight"><img class="ti px" src="art/ab-dex.webp" alt="">Бой</button>
   <button data-p="p-inv"><img class="ti px" src="art/ab-int.webp" alt="">Инвентарь</button>
 </nav>
 
+<div class="dim" id="dim"></div>
+<div class="drawer" id="drawer"><div class="grab"></div><div id="dbody"></div></div>
 <div class="roll" id="roll"><div class="shd" id="shd"></div><div class="die" id="die"></div><div class="res" id="res"></div></div>
 <div class="sheetbg" id="sheet"><form id="form"></form></div>
 <div class="toast" id="toast"></div>
@@ -284,11 +279,14 @@ body.editing .view-only{display:none}
 <script>
 const AB=[['str','Сила','СИЛ'],['dex','Ловкость','ЛОВ'],['con','Телосложение','ТЕЛ'],['int','Интеллект','ИНТ'],['wis','Мудрость','МДР'],['cha','Харизма','ХАР']];
 const ABN=Object.fromEntries(AB.map(a=>[a[0],a]));
-const SKILLS=[
- ['В пути',[['perception','Восприятие','wis'],['survival','Выживание','wis'],['medicine','Медицина','wis'],['stealth','Скрытность','dex'],['acrobatics','Акробатика','dex'],['sleight','Ловкость рук','dex'],['athletics','Атлетика','str'],['animal','Уход за животными','wis']]],
- ['Знания',[['arcana','Магия','int'],['investigation','Анализ','int'],['history','История','int'],['religion','Религия','int'],['nature','Природа','int']]],
- ['Общение',[['deception','Обман','cha'],['insight','Проницательность','wis'],['persuasion','Убеждение','cha'],['intimidation','Запугивание','cha'],['performance','Выступление','cha']]]
-];
+const SK={
+ str:[['athletics','Атлетика','лазать, плыть, прыгать, толкать']],
+ dex:[['acrobatics','Акробатика','удержать равновесие, кувырок'],['sleight','Ловкость рук','стянуть, подбросить, спрятать'],['stealth','Скрытность','прятаться, красться']],
+ con:[],
+ int:[['arcana','Магия','заклинания, магические знаки'],['investigation','Анализ','найти улику, понять механизм'],['history','История','события, рода, легенды'],['religion','Религия','боги, нежить, обряды'],['nature','Природа','звери, травы, погода']],
+ wis:[['perception','Восприятие','заметить, услышать'],['insight','Проницательность','понять, лжёт ли собеседник'],['medicine','Медицина','перевязать, понять причину смерти'],['survival','Выживание','следы, путь, охота'],['animal','Уход за животными','успокоить лошадь']],
+ cha:[['deception','Обман','соврать убедительно'],['persuasion','Убеждение','уговорить, договориться'],['intimidation','Запугивание','напугать, надавить'],['performance','Выступление','стихи, песня, рассказ']]
+};
 const SRC={medicine:'раса',deception:'класс',insight:'класс',arcana:'предыстория',investigation:'предыстория'};
 const DEFAULT={v:2,name:'Филипп',race:'Человек',cls:'Чародей',sub:'Дикая магия',bg:'Преследуемый',level:2,
  ab:{str:8,dex:14,con:14,int:12,wis:10,cha:16},saves:{con:1,cha:1},
@@ -304,52 +302,73 @@ const mod=s=>Math.floor((s-10)/2);
 const sg=n=>(n>=0?'+':'−')+Math.abs(n);
 const prof=()=>Math.ceil(S.level/4)+1;
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let rollMode='norm',editing=false,chaosArmed=false;
+let rollMode='norm',editing=false,chaosArmed=false,inspArmed=false,openAb=null,openInfoKey=null;
 const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+const d20i='<svg class="d20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 2l-5 9h10z M7 11l5 11 5-11"/></svg>';
 
+/* ---------- заставка ---------- */
+(function(){const sp=$('splash');let done=false;const go=()=>{if(done)return;done=true;sp.classList.add('go');setTimeout(()=>sp.remove(),800)};
+ try{if(sessionStorage.getItem('filipp-splash')){sp.remove();return}sessionStorage.setItem('filipp-splash','1')}catch(e){}
+ sp.addEventListener('pointerdown',go);setTimeout(go,1100)})();
+
+/* ---------- отрисовка ---------- */
 function renderHead(){
  $('nm').textContent=S.name;
- $('cl').innerHTML=`${S.race} · <b>${S.cls}</b> · ${S.sub}<br>${S.bg} · ${S.level} уровень · мастерство ${sg(prof())}`;
+ $('cl').innerHTML=`<b>${S.cls}</b> · ${S.sub} · ${S.level} ур. · мастерство ${sg(prof())}`;
  $('hpCur').textContent=S.hp.cur;$('hpMax').textContent=S.hp.max;$('hpTemp').textContent=S.hp.temp?'+'+S.hp.temp:'';
  $('hpBar').style.width=Math.max(0,Math.min(100,S.hp.cur/S.hp.max*100))+'%';
  $('acV').textContent=S.ac;$('spV').innerHTML=`${S.speed}<small>м</small>`;$('initV').textContent=sg(mod(S.ab.dex));
- $('lvlIn').value=S.level;$('hpMaxIn').value=S.hp.max;$('acIn').value=S.ac;
 }
 function renderAbil(){
  const p=prof();
- $('abil').innerHTML=AB.map(([k,n])=>{const m=mod(S.ab[k]),on=S.saves[k],sv=m+(on?p:0);
-  return `<div class="ab"><div class="sheet">
-   <button class="chk" data-ab="${k}"><img class="ic px" src="art/ab-${k}.webp" alt=""><div class="n">${n}</div><div class="m">${sg(m)}</div><div class="s view-only">значение ${S.ab[k]}</div></button>
-   <input class="edit-only" type="number" inputmode="numeric" value="${S.ab[k]}" data-abin="${k}" aria-label="${n}">
-   <button class="sv" data-save="${k}"><span class="dot ${on?'on':''}"></span>спас <b>${sg(sv)}</b></button>
-  </div></div>`}).join('');
+ $('abil').innerHTML=AB.map(([k,n])=>{const m=mod(S.ab[k]),on=S.saves[k];
+  return `<button class="ab" data-ab="${k}"><div class="sheet"><img class="ic px" src="art/ab-${k}.webp" alt=""><div class="n">${n}</div><div class="m">${sg(m)}</div><div class="s"><span class="dot ${on?'on':''}"></span>спас ${sg(m+(on?p:0))}</div></div></button>`}).join('');
 }
 function renderFate(){
  const pips=(o,cls)=>Array.from({length:o.max},(_,i)=>`<span class="charge ${cls} ${i<o.used?'used':''}"></span>`).join('');
  const hdLeft=S.level-S.hd.used;
  $('fate').innerHTML=`
- <button class="fc" data-fate="luck"><div class="t">Везунчик</div><div class="d">После броска к20 можно бросить ещё один и выбрать лучший.</div><div class="ch">${pips(S.luck,'')}</div></button>
- <button class="fc ${chaosArmed?'armed':''}" data-fate="chaos"><div class="t">Поток хаоса</div><div class="d">${chaosArmed?'Готов: следующий бросок с преимуществом.':'Нажми перед броском, и он будет с преимуществом.'}</div><div class="ch">${pips(S.chaos,'v')}</div></button>
- <button class="fc" data-fate="hd"><div class="t">Кости хитов</div><div class="d">На коротком отдыхе: нажми, бросится к${S.hd.die} и вылечит.</div><div class="ch">${Array.from({length:S.level},(_,i)=>`<span class="charge r ${i>=hdLeft?'used':''}"></span>`).join('')}</div></button>
- <button class="fc" data-fate="insp"><div class="t">Вдохновение</div><div class="d">Даёт мастер за хорошую игру. Нажми, когда получил или потратил.</div><div class="ch"><span class="charge ${S.insp?'':'used'}"></span></div></button>
- <button class="fc" data-fate="long" style="grid-column:1/-1;text-align:center"><div class="t">☾ Долгий отдых</div><div class="d">Вернуть хиты, Везунчика, Поток хаоса и половину костей хитов</div></button>`;
-}
-function renderSkills(){
- const p=prof();
- $('skills').innerHTML=SKILLS.filter(([g])=>editing||g!=='Общение').map(([g,list])=>`<div class="grp">${g}</div>`+list.map(([k,n,a])=>{const on=S.skills[k],v=mod(S.ab[a])+(on?p:0);
-  return `<button class="row" data-skill="${k}"><span class="dot ${on?'on':''}"></span><span class="nm">${n}</span>${on&&SRC[k]?`<span class="tag">${SRC[k]}</span>`:''}<span class="ab3">${ABN[a][2]}</span><span class="md">${sg(v)}</span></button>`}).join('')).join('');
- $('skHint').textContent=editing?'Нажми на навык, чтобы включить или выключить владение.':'Нажми на навык, кубик бросится сам. Разговорные навыки будут в разделе «Общение».';
-}
-function renderSenses(){
- const p=prof(),ps=k=>10+mod(S.ab[{perception:'wis',insight:'wis',investigation:'int'}[k]])+(S.skills[k]?p:0);
- $('senses').innerHTML=[['perception','Пассивное восприятие'],['insight','Пассивная проницат.'],['investigation','Пассивный анализ']].map(([k,n])=>`<div class="sense"><div class="v">${ps(k)}</div><div class="k">${n}</div></div>`).join('');
+ <button class="fc" data-info="luck"><div class="t">Везунчик<small>перебросы</small></div><div class="ch">${pips(S.luck,'')}</div></button>
+ <button class="fc ${chaosArmed?'armed':''}" data-info="chaos"><div class="t">Поток хаоса<small>${chaosArmed?'готов!':'преимущество'}</small></div><div class="ch">${pips(S.chaos,'v')}</div></button>
+ <button class="fc" data-info="hd"><div class="t">Кости хитов<small>к${S.hd.die}, лечат</small></div><div class="ch">${Array.from({length:S.level},(_,i)=>`<span class="charge r ${i>=hdLeft?'used':''}"></span>`).join('')}</div></button>
+ <button class="fc ${inspArmed?'armed':''}" data-info="insp"><div class="t">Вдохновение<small>${inspArmed?'готово!':'от мастера'}</small></div><div class="ch"><span class="charge ${S.insp?'':'used'}"></span></div></button>
+ <button class="fc rest" data-info="short"><div class="t">☾ Короткий отдых</div></button><button class="fc rest" data-info="long"><div class="t">☀ Долгий отдых</div></button>`;
 }
 const COINS=[['pp','платина',['#c9c6d4','#7c7988']],['gp','золото',['#f3cf7a','#a8761e']],['sp','серебро',['#d9d0c2','#837a6c']],['cp','медь',['#d38b55','#6e3f22']]];
 function renderCoins(){
  $('coins').innerHTML=COINS.map(([k,n,c])=>`<div class="coin"><svg class="c" viewBox="0 0 12 12" shape-rendering="crispEdges"><rect x="4" y="1" width="4" height="1" fill="${c[1]}"/><rect x="2" y="2" width="8" height="8" fill="${c[1]}"/><rect x="1" y="4" width="10" height="4" fill="${c[1]}"/><rect x="4" y="10" width="4" height="1" fill="${c[1]}"/><rect x="3" y="3" width="6" height="6" fill="${c[0]}"/><rect x="2" y="4" width="8" height="4" fill="${c[0]}"/><rect x="5" y="4" width="2" height="4" fill="${c[1]}"/><rect x="3" y="3" width="1" height="1" fill="#fff"/></svg><div class="v">${S.money[k]}</div><div class="k">${n}</div><div class="pm"><button data-coin="${k}" data-d="-1">−</button><button data-coin="${k}" data-d="1">+</button></div></div>`).join('');
 }
-function renderLog(){$('log').innerHTML=S.log.length?S.log.slice(0,6).map(l=>`<div><span>${esc(l.l)}</span><b>${l.t}</b></div>`).join(''):'<div><span>Пока ни одного броска</span></div>'}
-function renderAll(){renderHead();renderAbil();renderFate();renderSkills();renderSenses();renderCoins();renderLog()}
+function pas(k){const a={perception:'wis',insight:'wis',investigation:'int'}[k];return 10+mod(S.ab[a])+(S.skills[k]?prof():0)}
+function renderSenses(){$('senses').innerHTML=[['perception','Пассивное восприятие'],['insight','Пассивная проницат.'],['investigation','Пассивный анализ']].map(([k,n])=>`<button class="sense" data-info="senses"><b>${pas(k)}</b><span>${n}</span></button>`).join('')}
+function renderLog(){$('log').innerHTML=S.log.length?S.log.slice(0,12).map(l=>`<div><span>${esc(l.l)}</span><b>${l.t}</b></div>`).join(''):'<div><span>Пока ни одного броска</span></div>'}
+function renderAll(){renderHead();renderSenses();renderAbil();renderFate();renderCoins();renderLog();if(openAb)renderDrawer();else if(openInfoKey)openInfo(openInfoKey,true)}
+
+/* ---------- шторка характеристики ---------- */
+function renderDrawer(){
+ const k=openAb,[,n,s3]=ABN[k],m=mod(S.ab[k]),p=prof(),on=S.saves[k];
+ let h=`<div class="dh"><img class="px" src="art/ab-${k}.webp" alt=""><h2>${n}</h2><div class="sc">значение<b>${S.ab[k]}</b></div></div>`;
+ if(editing)h+=`<div class="edrow">Значение характеристики <input type="number" inputmode="numeric" id="abIn" value="${S.ab[k]}"> <span>нажимай на точки, чтобы менять владение</span></div>`;
+ h+=`<div class="drows">`;
+ h+=`<button class="row main" data-roll="check"><span class="dot" style="visibility:hidden"></span><span class="nm">Проверка: ${n}<small>просто ${n.toLowerCase()}, без навыка</small></span><span class="md">${sg(m)}</span>${d20i}</button>`;
+ h+=`<button class="row main" data-roll="save"><span class="dot red ${on?'on':''}"></span><span class="nm">Спасбросок<small>${on?'владеешь':'не владеешь'}</small></span><span class="md">${sg(m+(on?p:0))}</span>${d20i}</button>`;
+ SK[k].forEach(([id,nm,hint])=>{const o=S.skills[id];h+=`<button class="row" data-roll="${id}"><span class="dot ${o?'on':''}"></span><span class="nm">${nm}<small>${hint}</small></span>${o&&SRC[id]?`<span class="tag">${SRC[id]}</span>`:''}<span class="md">${sg(m+(o?p:0))}</span>${d20i}</button>`});
+ if(!SK[k].length)h+=`<div class="row" style="color:var(--mute);font-size:14px">У Телосложения нет навыков. Его бросают на выносливость и удержание заклинаний.</div>`;
+ h+=`</div>`;
+ const pp=x=>10+m+(S.skills[x]?p:0);
+ if(k==='wis')h+=`<div class="passive"><span>Пассивное восприятие <b>${pp('perception')}</b></span><span>Пассивная проницат. <b>${pp('insight')}</b></span></div>`;
+ if(k==='int')h+=`<div class="passive"><span>Пассивный анализ <b>${pp('investigation')}</b></span></div>`;
+ $('dbody').innerHTML=h;
+}
+function openDrawer(k){openAb=k;openInfoKey=null;renderDrawer();$('drawer').style.transform='';$('drawer').classList.add('on');$('dim').classList.add('on');vib(10)}
+function closeDrawer(){openAb=null;openInfoKey=null;$('drawer').style.transform='';$('drawer').classList.remove('on');$('dim').classList.remove('on')}
+$('dim').addEventListener('click',closeDrawer);
+// шторку можно стянуть пальцем вниз
+(function(){const d=$('drawer');let sy=0,dy=0,drag=false;
+ d.addEventListener('pointerdown',e=>{const rows=e.target.closest('.drows');if(rows&&rows.scrollTop>0)return;sy=e.clientY;dy=0;drag=true;d.style.transition='none'});
+ d.addEventListener('pointermove',e=>{if(!drag)return;dy=e.clientY-sy;if(dy>0)d.style.transform=`translateY(${dy}px)`;else d.style.transform=`translateY(${dy*.15}px)`});
+ const end=()=>{if(!drag)return;drag=false;d.style.transition='';if(dy>90){closeDrawer()}else d.style.transform='';};
+ d.addEventListener('pointerup',end);d.addEventListener('pointercancel',end);
+})();
 
 /* ---------- звук (только по нажатию) ---------- */
 let actx;
@@ -377,6 +396,7 @@ function d20(spec){
  if(busy)return;
  let m=spec.mode||rollMode;
  if(chaosArmed){m=m==='dis'?'norm':'adv';chaosArmed=false;S.chaos.used=Math.min(S.chaos.max,S.chaos.used+1);save();renderFate();spec.note='Поток хаоса'}
+ else if(inspArmed){m=m==='dis'?'norm':'adv';inspArmed=false;S.insp=0;save();renderFate();spec.note='Вдохновение'}
  const a=r(20),b=r(20);let used=a,other=null;
  if(m==='adv'){used=Math.max(a,b);other=Math.min(a,b)}else if(m==='dis'){used=Math.min(a,b);other=Math.max(a,b)}
  cur={spec,m,used,other,bonus:spec.bonus.reduce((s,x)=>s+x.v,0)};
@@ -394,18 +414,18 @@ function dice(spec){
 function throwDie(sides,final,other,m,done){
  busy=true;const ov=$('roll'),die=$('die'),shd=$('shd'),res=$('res');
  ov.classList.add('on');res.classList.remove('on');res.innerHTML='';ov.querySelectorAll('.dust,.die2').forEach(e=>e.remove());die.style.filter='';
- const W=innerWidth,H=innerHeight,sx=lastPt?lastPt.x:W/2,sy=lastPt?lastPt.y:H*.8,ex=W/2,ey=H/2-60;
- shd.style.left=ex+'px';shd.style.top=(ey+64)+'px';
+ const W=innerWidth,H=innerHeight,sx=lastPt?lastPt.x:W/2,sy=lastPt?lastPt.y:H*.8,ex=W/2,ey=H/2-80;
+ shd.style.left=ex+'px';shd.style.top=(ey+62)+'px';
  const dur=820,t0=performance.now(),spin=(sx<ex?1:-1)*(620+Math.random()*300),tint=m==='dis'?'dis':'n';let last=0,hit=0,hit2=0;
  function f(t){const k=Math.min(1,(t-t0)/dur);let x,y,sq=1,sc;
-  if(k<.5){const q=k/.5;x=sx+(ex-sx)*q;y=sy+(ey-sy)*q-Math.sin(Math.PI*q)*Math.min(240,H*.3);sc=.45+.55*q+Math.sin(Math.PI*q)*.25}
+  if(k<.5){const q=k/.5;x=sx+(ex-sx)*q;y=sy+(ey-sy)*q-Math.sin(Math.PI*q)*Math.min(220,H*.28);sc=.45+.55*q+Math.sin(Math.PI*q)*.25}
   else if(k<.78){const q=(k-.5)/.28;x=ex;y=ey-50*Math.sin(Math.PI*q);sc=1+.06*Math.sin(Math.PI*q)}
   else{const q=(k-.78)/.22;x=ex;y=ey-9*Math.sin(Math.PI*q);sc=1}
   if(k>.49&&k<.56)sq=.8;else if(k>.77&&k<.81)sq=.92;
   die.style.transform=`translate(${x}px,${y}px) rotate(${spin*(1-Math.pow(1-k,2.6))}deg) scale(${sc/sq*.98+.02},${sc*sq})`;
   const air=Math.max(0,Math.min(1,(ey-y)/260));shd.style.opacity=k<.5?k*1.6*(1-air):1-air*.7;shd.style.transform=`scale(${1-air*.5})`;
   if(t-last>35+k*k*240&&k<.94){last=t;die.innerHTML=dieSvg(r(sides),tint);snd('tick')}
-  if(!hit&&k>=.5){hit=1;snd(final===20&&sides===20?'crit':'hit');vib(final===20?[30,40,70]:40);document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake');dust(ex,ey+58,final===20&&sides===20)}
+  if(!hit&&k>=.5){hit=1;snd(final===20&&sides===20?'crit':'hit');vib(final===20?[30,40,70]:40);document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake');dust(ex,ey+56,final===20&&sides===20)}
   if(!hit2&&k>=.78){hit2=1;snd('soft');vib(12)}
   if(k<1)requestAnimationFrame(f);else{
    die.innerHTML=dieSvg(final,tint);die.style.transform=`translate(${ex}px,${ey}px)`;
@@ -433,46 +453,92 @@ function useLuck(){
  const extra=r(20),{used,bonus,spec}=cur;
  lastPt={x:innerWidth*.5,y:innerHeight*.9};
  throwDie(20,extra,null,'n',()=>{
-  const res=$('res');
-  res.innerHTML=`<div class="lbl">${esc(spec.label)} · Везунчик</div><div class="br" style="margin-top:6px">Выбери, какой кубик оставить</div>
+  $('res').innerHTML=`<div class="lbl">${esc(spec.label)} · Везунчик</div><div class="br" style="margin-top:6px">Выбери, какой кубик оставить</div>
   <div class="pick"><button data-pick="${used}" class="${used>=extra?'best':''}">прежний<b>${used+bonus}</b></button><button data-pick="${extra}" class="${extra>used?'best':''}">новый<b>${extra+bonus}</b></button></div>`;
-  res.classList.add('on');
+  $('res').classList.add('on');
  });
 }
 function pushLog(l,t){S.log.unshift({l,t});S.log=S.log.slice(0,20);save();renderLog()}
 $('roll').addEventListener('click',e=>{
  if(busy)return;
  if(e.target.closest('[data-luck]')){useLuck();return}
- const p=e.target.closest('[data-pick]');if(p){const v=+p.dataset.pick+cur.bonus;S.log[0]={l:cur.spec.label+' (Везунчик)',t:v};save();renderLog();$('res').innerHTML=`<div class="lbl">${esc(cur.spec.label)}</div><div class="tot">${v}</div><div class="br">оставлен кубик <b>${p.dataset.pick}</b></div><div class="hint">нажми, чтобы закрыть</div>`;vib(15);return}
+ const p=e.target.closest('[data-pick]');if(p){const v=+p.dataset.pick+cur.bonus;S.log[0]={l:cur.spec.label+' (Везунчик)',t:v};save();$('res').innerHTML=`<div class="lbl">${esc(cur.spec.label)}</div><div class="tot">${v}</div><div class="br">оставлен кубик <b>${p.dataset.pick}</b></div><div class="hint">нажми, чтобы закрыть</div>`;vib(15);return}
  if(e.target.closest('.res button'))return;
  $('roll').classList.remove('on');
 });
 
-const rollAb=k=>d20({label:`Проверка: ${ABN[k][1]}`,bonus:[{l:ABN[k][2],v:mod(S.ab[k])}]});
-const rollSave=k=>{const b=[{l:ABN[k][2],v:mod(S.ab[k])}];if(S.saves[k])b.push({l:'мастерство',v:prof()});d20({label:`Спасбросок: ${ABN[k][1]}`,bonus:b})};
-function rollSkill(k){let sk;SKILLS.forEach(([,l])=>l.forEach(x=>{if(x[0]===k)sk=x}));const b=[{l:ABN[sk[2]][2],v:mod(S.ab[sk[2]])}];if(S.skills[k])b.push({l:'мастерство',v:prof()});d20({label:sk[1],bonus:b})}
+/* ---------- броски из шторки ---------- */
+function rollFromDrawer(what){
+ const k=openAb,[,n,s3]=ABN[k],m=mod(S.ab[k]),b=[{l:s3,v:m}];
+ if(what==='check')return d20({label:`Проверка: ${n}`,bonus:b});
+ if(what==='save'){if(S.saves[k])b.push({l:'мастерство',v:prof()});return d20({label:`Спасбросок: ${n}`,bonus:b})}
+ const sk=SK[k].find(x=>x[0]===what);if(S.skills[what])b.push({l:'мастерство',v:prof()});d20({label:sk[1],bonus:b});
+}
 
 document.addEventListener('click',e=>{
- const t=e.target.closest('button');if(!t||t.closest('#roll')||t.closest('#tabs')||t.closest('#mode'))return;
- if(t.dataset.ab){if(!editing)rollAb(t.dataset.ab);return}
- if(t.dataset.save){if(editing){S.saves[t.dataset.save]=S.saves[t.dataset.save]?0:1;save();renderAbil()}else rollSave(t.dataset.save);return}
- if(t.dataset.skill){if(editing){const k=t.dataset.skill;S.skills[k]=S.skills[k]?0:1;save();renderSkills();renderSenses()}else rollSkill(t.dataset.skill);return}
+ const t=e.target.closest('button');if(!t||t.closest('#roll')||t.closest('#tabs')||t.closest('#mode')||t.closest('form'))return;
+ if(t.dataset.ab)return openDrawer(t.dataset.ab);
+ if(t.dataset.roll){
+  if(editing){const w=t.dataset.roll;if(w==='save')S.saves[openAb]=S.saves[openAb]?0:1;else if(w!=='check')S.skills[w]=S.skills[w]?0:1;save();renderAll();vib(8);return}
+  return rollFromDrawer(t.dataset.roll);
+ }
  if(t.dataset.coin){const k=t.dataset.coin;S.money[k]=Math.max(0,S.money[k]+ +t.dataset.d);save();renderCoins();vib(8);return}
- if(t.dataset.fate)return fate(t.dataset.fate);
+ if(t.dataset.info)return openInfo(t.dataset.info);
+ if(t.dataset.act)return act(t.dataset.act);
  if(t.id==='initTok')return d20({label:'Инициатива',bonus:[{l:'ЛОВ',v:mod(S.ab.dex)}]});
  if(t.id==='hpTok')return hpSheet();
- if(t.id==='editBtn'){editing=!editing;document.body.classList.toggle('editing',editing);t.classList.toggle('on',editing);renderAll();toast(editing?'Правка: меняй числа, нажимай на точки владения':'Сохранено');return}
+ if(t.id==='editBtn')return editSheet();
 });
-function fate(k){
- if(k==='luck'){toast(S.luck.max-S.luck.used?'Везунчик включается в окне броска, когда кубик уже упал':'Везунчик кончился до долгого отдыха');return}
- if(k==='chaos'){if(chaosArmed){chaosArmed=false;renderFate();return}if(S.chaos.used>=S.chaos.max){toast('Поток хаоса потрачен. Вернётся после долгого отдыха или волны дикой магии');return}chaosArmed=true;renderFate();vib(15);toast('Следующий бросок будет с преимуществом');return}
- if(k==='insp'){S.insp=S.insp?0:1;save();renderFate();vib(10);return}
- if(k==='hd'){if(S.hd.used>=S.level){toast('Кости хитов закончились');return}S.hd.used++;save();renderFate();const c=mod(S.ab.con);
-  dice({label:'Кость хитов',n:1,s:S.hd.die,k:c,kl:'ТЕЛ',min:1,after:v=>{const before=S.hp.cur;S.hp.cur=Math.min(S.hp.max,S.hp.cur+v);save();renderHead();return `<div class="br">хиты ${before} → <b>${S.hp.cur}</b></div>`}});return}
- if(k==='long'){S.hp.cur=S.hp.max;S.hp.temp=0;S.luck.used=0;S.chaos.used=0;S.hd.used=Math.max(0,S.hd.used-Math.max(1,Math.floor(S.level/2)));save();renderAll();flash('#hpTok','#86c79c');toast('Утро. Силы вернулись');vib([10,60,10])}
+const INFO={
+ luck:()=>({t:'Везунчик',sub:'черта · 3 очка удачи',body:`<p>У тебя <b>3 очка удачи</b>. Осталось: <b>${S.luck.max-S.luck.used}</b>.</p>
+  <p>Когда ты бросаешь к20 на <b>атаку, проверку или спасбросок</b>, можешь потратить одно очко и бросить <b>ещё один к20</b>. Потом сам выбираешь, какой из двух кубиков засчитать. Решать можно уже увидев первый кубик, но до того, как мастер скажет итог.</p>
+  <p>Ещё очко можно потратить, когда <b>враг атакует тебя</b>: бросаешь свой к20 и выбираешь, какой кубик возьмёт враг, его или твой.</p>
+  <div class="how">В приложении: после любого броска к20 внизу появится кнопка «Везунчик». Очки возвращаются после долгого отдыха.</div>`,
+  acts:`<button data-act="luckSpend" ${S.luck.used>=S.luck.max?'disabled':''}>Потратить очко вручную (атака врага)</button><button class="ghost" data-act="luckBack" ${S.luck.used?'':'disabled'}>Вернуть одно очко</button>`}),
+ chaos:()=>({t:'Поток хаоса',sub:'дикая магия · 1 раз',body:`<p>Один раз можешь получить <b>преимущество</b> на один бросок <b>атаки, проверки или спасброска</b>. Преимущество значит: бросаешь два к20 и берёшь больший.</p>
+  <p>После этого умение потрачено. Оно вернётся после <b>долгого отдыха</b>. Или раньше: если ты сотворишь заклинание чародея 1 уровня или выше, мастер может сказать бросить по таблице <b>волны дикой магии</b>, и тогда Поток хаоса восстанавливается.</p>
+  <div class="how">В приложении: нажми «Включить», и следующий бросок сам пойдёт с преимуществом. Состояние: <b>${chaosArmed?'включено, ждёт броска':S.chaos.used>=S.chaos.max?'потрачено':'готово'}</b>.</div>`,
+  acts:chaosArmed?`<button class="ghost" data-act="chaosOff">Выключить, передумал</button>`:S.chaos.used>=S.chaos.max?`<button data-act="chaosBack">Вернуть: была волна дикой магии</button>`:`<button data-act="chaosOn">Включить на следующий бросок</button>`}),
+ hd:()=>{const c=mod(S.ab.con),left=S.level-S.hd.used;return{t:'Кости хитов',sub:`к${S.hd.die} · ${left} из ${S.level}`,body:`<p>Это твой запас лечения на <b>короткий отдых</b> (час покоя: перевязать раны, перекусить). У тебя по одной кости <b>к${S.hd.die}</b> на каждый уровень, сейчас <b>${left} из ${S.level}</b>.</p>
+  <p>На коротком отдыхе можно потратить одну или несколько. Каждая лечит <b>к${S.hd.die} ${sg(c)}</b> (Телосложение) хитов, минимум 1.</p>
+  <p>После <b>долгого отдыха</b> возвращается половина от всех костей, минимум одна.</p>
+  <div class="how">Хиты сейчас: <b>${S.hp.cur} из ${S.hp.max}</b>.</div>`,
+  acts:`<button data-act="hdRoll" ${left?'':'disabled'}>Бросить кость и вылечиться</button>`}},
+ insp:()=>({t:'Вдохновение',sub:'награда от мастера',body:`<p>Мастер даёт вдохновение за хорошую игру: например, когда ты отыграл характер Филиппа, его страхи или привязанности. Можно иметь <b>только одно</b>.</p>
+  <p>Потратив его, получаешь <b>преимущество</b> на один бросок <b>атаки, проверки или спасброска</b>. Можно и отдать другому игроку.</p>
+  <div class="how">Сейчас: <b>${inspArmed?'потрачено на следующий бросок':S.insp?'есть':'нет'}</b>.</div>`,
+  acts:S.insp?(inspArmed?`<button class="ghost" data-act="inspOff">Не тратить, передумал</button>`:`<button data-act="inspUse">Потратить: следующий бросок с преимуществом</button><button class="ghost" data-act="inspGive">Отдал другому игроку</button>`):`<button data-act="inspGet">Мастер дал вдохновение</button>`}),
+ short:()=>({t:'Короткий отдых',sub:'около часа',body:`<p>Час покоя: перевязать раны, поесть, отдышаться. Во время короткого отдыха можно тратить <b>кости хитов</b>, чтобы лечиться.</p>
+  <p>Везунчик, Поток хаоса и ячейки заклинаний короткий отдых <b>не возвращает</b>.</p>`,acts:`<button data-act="toHd">Открыть кости хитов</button>`}),
+ long:()=>({t:'Долгий отдых',sub:'8 часов, раз в сутки',body:`<p>Не меньше <b>8 часов</b>: сон и спокойные дела. Не чаще раза в сутки. Если отдых прервал бой больше чем на час, его надо начать заново.</p>
+  <p>После него возвращается:</p><p>• все <b>хиты</b><br>• половина <b>костей хитов</b> (минимум 1)<br>• все очки <b>Везунчика</b><br>• <b>Поток хаоса</b><br>• все ячейки заклинаний и единицы чародейства (будут во вкладке «Бой»)</p>`,acts:`<button data-act="longRest">Отдохнуть до утра</button>`}),
+ senses:()=>({t:'Чутьё',sub:'пассивные проверки',body:`<p>Это то, что Филипп замечает <b>без броска</b>. Число = 10 + модификатор + мастерство, если владеешь навыком.</p>
+  <p><b>Пассивное восприятие ${pas('perception')}</b>: заметить спрятавшегося врага, засаду, ловушку. Если Скрытность врага ниже, ты его видишь.</p>
+  <p><b>Пассивная проницательность ${pas('insight')}</b>: почувствовать, что собеседник врёт или что-то скрывает.</p>
+  <p><b>Пассивный анализ ${pas('investigation')}</b>: заметить нестыковку, скрытую дверь, след, если ты что-то осматриваешь.</p>
+  <div class="how">Эти числа нужны мастеру, нажимать их не надо. Если хочешь искать активно, открой Мудрость или Интеллект и бросай навык.</div>`,acts:''})
+};
+function openInfo(k,re){const d=INFO[k]();openAb=null;openInfoKey=k;
+ $('dbody').innerHTML=`<div class="dh"><h2>${d.t}</h2><div class="sc">${d.sub}</div></div><div class="drows" style="border:0;background:none"><div class="info">${d.body}</div></div><div class="dacts">${d.acts}</div>`;
+ if(!re){$('drawer').style.transform='';$('drawer').classList.add('on');$('dim').classList.add('on');vib(10)}}
+function act(a){
+ const re=()=>{save();renderAll()};
+ if(a==='luckSpend'){S.luck.used++;re();toast('Очко удачи потрачено');vib(15)}
+ if(a==='luckBack'){S.luck.used=Math.max(0,S.luck.used-1);re()}
+ if(a==='chaosOn'){chaosArmed=true;re();closeDrawer();toast('Следующий бросок будет с преимуществом');vib(15)}
+ if(a==='chaosOff'){chaosArmed=false;re()}
+ if(a==='chaosBack'){S.chaos.used=0;re();toast('Поток хаоса снова готов');vib(15)}
+ if(a==='inspGet'){S.insp=1;re();vib(15)}
+ if(a==='inspUse'){inspArmed=true;re();closeDrawer();toast('Следующий бросок будет с преимуществом');vib(15)}
+ if(a==='inspOff'){inspArmed=false;re()}
+ if(a==='inspGive'){S.insp=0;re()}
+ if(a==='toHd')openInfo('hd',true);
+ if(a==='hdRoll'){if(S.hd.used>=S.level)return;S.hd.used++;save();const c=mod(S.ab.con);
+  dice({label:'Кость хитов',n:1,s:S.hd.die,k:c,kl:'ТЕЛ',min:1,after:v=>{const before=S.hp.cur;S.hp.cur=Math.min(S.hp.max,S.hp.cur+v);save();renderAll();return `<div class="br">хиты ${before} → <b>${S.hp.cur}</b></div>`}})}
+ if(a==='longRest'){S.hp.cur=S.hp.max;S.hp.temp=0;S.luck.used=0;S.chaos.used=0;S.hd.used=Math.max(0,S.hd.used-Math.max(1,Math.floor(S.level/2)));save();closeDrawer();renderAll();flash('#hpTok','#86c79c');toast('Утро. Силы вернулись');vib([10,60,10])}
 }
 function hpSheet(){
- const f=$('form');f.innerHTML=`<h2>Хиты: ${S.hp.cur} из ${S.hp.max}</h2><input name="n" type="number" inputmode="numeric" placeholder="сколько?" required>
+ const f=$('form');f.innerHTML=`<h2>Хиты: ${S.hp.cur} из ${S.hp.max}</h2><input class="big" name="n" type="number" inputmode="numeric" placeholder="сколько?" required>
  <div class="two"><button class="go red" type="submit" value="dmg">− Урон</button><button class="go grn" type="submit" value="heal">+ Лечение</button></div>
  <button class="go" type="submit" value="temp" style="border:1px solid var(--violet);color:var(--violet)">Временные хиты</button>`;
  $('sheet').classList.add('on');setTimeout(()=>f.n.focus(),250);
@@ -483,20 +549,30 @@ function hpSheet(){
   save();renderHead();if(S.hp.cur===0)toast('0 хитов: Филипп без сознания. Спасброски от смерти');
  };
 }
+function editSheet(){
+ const f=$('form');
+ f.innerHTML=`<h2>Правка листа</h2>
+ <div class="three"><label>Уровень<input name="level" type="number" inputmode="numeric" value="${S.level}"></label><label>Макс. хитов<input name="hp" type="number" inputmode="numeric" value="${S.hp.max}"></label><label>КД<input name="ac" type="number" inputmode="numeric" value="${S.ac}"></label></div>
+ <div class="three">${AB.map(([k,n])=>`<label>${n}<input name="${k}" type="number" inputmode="numeric" value="${S.ab[k]}"></label>`).join('')}</div>
+ <button class="go gold" type="submit">Сохранить</button>
+ <button class="go" type="button" id="profBtn" style="border:1px solid var(--line);font-weight:500">${editing?'Выключить':'Включить'} правку владений</button>
+ <p style="color:var(--mute);font-size:13px;margin:0;text-align:center">Правка владений: в шторке характеристики нажатие на навык включает или выключает владение, а не бросает кубик.</p>`;
+ $('sheet').classList.add('on');
+ $('profBtn').onclick=()=>{editing=!editing;$('editBtn').classList.toggle('on',editing);$('sheet').classList.remove('on');toast(editing?'Правка владений включена: открой характеристику и нажимай на навыки':'Правка владений выключена')};
+ f.onsubmit=e=>{e.preventDefault();const g=n=>+f[n].value;
+  S.level=Math.max(1,Math.min(20,g('level')||1));S.hp.max=Math.max(1,g('hp')||1);S.hp.cur=Math.min(S.hp.cur,S.hp.max);S.ac=g('ac')||10;
+  AB.forEach(([k])=>S.ab[k]=Math.max(1,Math.min(30,g(k)||10)));save();renderAll();$('sheet').classList.remove('on');toast('Сохранено')};
+}
 $('sheet').addEventListener('click',e=>{if(e.target.id==='sheet')$('sheet').classList.remove('on')});
-function flash(sel,c){document.querySelector(sel).animate([{boxShadow:`0 0 0 2px ${c},0 0 28px ${c}`},{boxShadow:'0 8px 24px rgba(0,0,0,.5)'}],{duration:700,easing:'ease-out'})}
+function flash(sel,c){document.querySelector(sel).animate([{boxShadow:`0 0 0 2px ${c},0 0 28px ${c}`},{boxShadow:'0 0 0 0 transparent'}],{duration:700,easing:'ease-out'})}
 let tt;function toast(s){const t=$('toast');t.textContent=s;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2400)}
 
 $('mode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;rollMode=b.dataset.m;$('mode').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));vib(8)});
-$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$('tabs').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p));scrollTo({top:0});vib(6)});
-document.addEventListener('change',e=>{const el=e.target;
- if(el.dataset.abin)S.ab[el.dataset.abin]=Math.max(1,Math.min(30,+el.value||10));
- else if(el.id==='lvlIn')S.level=Math.max(1,Math.min(20,+el.value||1));
- else if(el.id==='hpMaxIn'){S.hp.max=Math.max(1,+el.value||1);S.hp.cur=Math.min(S.hp.cur,S.hp.max)}
- else if(el.id==='acIn')S.ac=+el.value||10;
- else return;save();renderAll()});
-addEventListener('scroll',()=>{const y=scrollY;if(y<700)$('heroImg').style.transform=`scale(1.02) translateY(${y*.25}px)`},{passive:true});
-renderAll();
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;closeDrawer();$('tabs').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p));vib(6)});
+function fit(){const a=$('abil');if(!a||!a.offsetParent)return;const rowH=(a.clientHeight-9)/2;const small=innerHeight<=600;
+ const ic=Math.max(26,Math.min(62,rowH-(small?0:78)));document.documentElement.style.setProperty('--ic',ic+'px')}
+addEventListener('resize',fit);
+renderAll();fit();setTimeout(fit,300);
 </script>
 </body>
 </html>
