@@ -251,6 +251,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .fq.dn{border-color:rgba(165,124,255,.4);background:rgba(165,124,255,.08);color:#e3d4ff}
 .fq small{font:400 10px Alegreya,serif;color:var(--mute)}
 .fq:active{transform:scale(.9)}.fq:disabled{opacity:.3}
+.fq{background:linear-gradient(90deg,rgba(233,189,108,.26) 0%,rgba(233,189,108,.26) 72%,rgba(165,124,255,.6) 86%,rgba(165,124,255,.6) 100%)!important;border-image:none;border-color:rgba(233,189,108,.5)}.fq.dn{background:linear-gradient(90deg,rgba(165,124,255,.32) 0%,rgba(165,124,255,.32) 72%,rgba(233,189,108,.55) 86%,rgba(233,189,108,.55) 100%)!important;border-color:rgba(165,124,255,.55)}
 .fres4{display:flex;flex-wrap:wrap;gap:6px}
 .fres4 .fc{flex:1 1 auto;flex-direction:row!important;align-items:center!important;min-height:0!important;padding:6px 10px!important;gap:7px!important}
 .fres4 .fc .t{font-size:14.5px!important;line-height:1.05;white-space:nowrap}.fres4 .fc .charge{width:10px;height:10px}
@@ -2279,7 +2280,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-31';
+const BUILD='2026-11-25-32';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
