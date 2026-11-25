@@ -462,7 +462,7 @@ const SPELLS={
   d:()=>`<p>На 1 час ты понимаешь <b>буквальный смысл любой речи</b> на любом языке. Можешь читать любой текст, касаясь его, примерно минута на страницу.</p><p>Тайные шифры и магические знаки не расшифровывает.</p><p class="mu">Ритуал: можно сотворить за 10 минут без ячейки.</p>`}
 };
 const KNOWN=['fire_bolt','friends','minor_illusion','message','shield','chromatic_orb','charm_person'];
-function renderSmag(){const list=KNOWN.filter(k=>SPELLS[k]&&S.smagShow.includes(k)),sl=S.slots;
+function renderSmag(){const list=KNOWN.filter(k=>SPELLS[k]&&SPELLS[k].soc&&S.smagShow.includes(k)),sl=S.slots;
  $('smag').innerHTML=`<div class="smh">Магия<span class="lg"> в разговоре</span><i></i><button class="dc" data-info="spelldc">сложность заклинаний ${spellDC()}</button><span class="sl" title="ячейки 1 круга">${Array.from({length:sl.max},(_,i)=>`<span class="charge v ${i<sl.used?'used':''}"></span>`).join('')}</span></div><div class="spl">${list.map(k=>{const p=SPELLS[k],on=S.conc===k;return `<button class="sp ${p.lv?'lv':''} ${on?'on':''}" data-info="sp_${k}"><b>${p.n}</b><small>${on?'действует · концентрация':p.short}</small></button>`}).join('')}<button class="sp more" data-info="smagpick">${list.length?'выбрать заклинания ›':'+ выбрать заклинания для этого экрана'}</button></div>`}
 
 /* ---------- общение ---------- */
@@ -486,7 +486,7 @@ const DEFAULT={v:2,name:'Филипп',race:'Человек',cls:'Чародей
  money:{pp:0,gp:10,sp:1,cp:0},log:[]};
 let S;try{S=JSON.parse(localStorage.getItem('filipp-sheet-v2'))}catch(e){}
 if(!S||S.v!==2)S=structuredClone(DEFAULT);
-if(!S.cond)S.cond={};if(!S.condShow)S.condShow=COND_MAIN.slice();if(S.exh==null)S.exh=0;if(!S.slots)S.slots={max:3,used:0};if(S.conc===undefined)S.conc=null;if(!S.smagShow)S.smagShow=['friends','minor_illusion','message','charm_person'];
+if(!S.cond)S.cond={};if(!S.condShow)S.condShow=COND_MAIN.slice();if(S.exh==null)S.exh=0;if(!S.slots)S.slots={max:3,used:0};if(S.conc===undefined)S.conc=null;if(!S.smagShow)S.smagShow=['friends','minor_illusion','message','charm_person'];S.smagShow=S.smagShow.filter(k=>SPELLS[k]&&SPELLS[k].soc);
 const save=()=>{try{localStorage.setItem('filipp-sheet-v2',JSON.stringify(S))}catch(e){}};
 const $=id=>document.getElementById(id);
 const mod=s=>Math.floor((s-10)/2);
@@ -783,7 +783,7 @@ const INFO={
   <p>Везунчик, Поток хаоса и ячейки заклинаний короткий отдых <b>не возвращает</b>.</p>`,acts:`<button data-act="toHd">Открыть кости хитов</button>`}),
  long:()=>({t:'Долгий отдых',sub:'8 часов, раз в сутки',body:`<p>Не меньше <b>8 часов</b>: сон и спокойные дела. Не чаще раза в сутки. Если отдых прервал бой больше чем на час, его надо начать заново.</p>
   <p>После него возвращается:</p><p>• все <b>хиты</b><br>• половина <b>костей хитов</b> (минимум 1)<br>• все очки <b>Везунчика</b><br>• <b>Поток хаоса</b><br>• снимается 1 уровень <b>истощения</b>, если ты поел и попил<br>• все ячейки заклинаний и единицы чародейства (будут во вкладке «Бой»)</p>`,acts:`<button data-act="longRest">Отдохнуть до утра</button>`}),
- smagpick:()=>({t:'Заклинания на экране',sub:`галочка = показать в «Общении» · ${S.smagShow.length} из 6`,body:KNOWN.filter(k=>SPELLS[k]).map(k=>{const sh=S.smagShow.includes(k),p=SPELLS[k];return `<button class="crow ck ${sh?'on':''}" data-sshow="${k}"><span><i class="box">${sh?'✓':''}</i>${p.n}</span><small>${p.lv?'1 круг':'заговор'}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">Здесь все заклинания, которые знает Филипп. Отметь до 6, которые нужны в разговоре.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
+ smagpick:()=>({t:'Заклинания на экране',sub:`галочка = показать в «Общении» · ${S.smagShow.length} из 6`,body:KNOWN.filter(k=>SPELLS[k]&&SPELLS[k].soc).map(k=>{const sh=S.smagShow.includes(k),p=SPELLS[k];return `<button class="crow ck ${sh?'on':''}" data-sshow="${k}"><span><i class="box">${sh?'✓':''}</i>${p.n}</span><small>${p.lv?'1 круг':'заговор'}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">Здесь только заклинания Филиппа, которые помогают в разговоре: очарование, иллюзии, послания. Боевые (Огненный снаряд, Щит, Цветной шарик) сюда не попадают. Отметь до 6.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
  spelldc:()=>({t:'Сложность заклинаний',sub:`${spellDC()} = 8 + мастерство ${prof()} + Харизма ${sg(mod(S.ab.cha))}`,body:`<p>Когда твоё заклинание действует на кого-то (Очарование личности, иллюзия), цель делает <b>спасбросок</b>. Если выбросит <b>${spellDC()} или больше</b>, заклинание её не берёт.</p><p>Чем выше число, тем труднее устоять.</p><div class="how">Бросать ничего не нужно: число называешь мастеру, бросает он.</div>`,acts:''}),
  conds:()=>({t:'Состояния',sub:'галочка = значок на экране',body:CORDER.map(k=>{const sh=S.condShow.includes(k);return `<button class="crow ck ${sh?'on':''}" data-cshow="${k}"><span><i class="box">${sh?'✓':''}</i>${k==='exh'?'Истощение':COND[k].n}</span><small>${cndOn(k)?(k==='exh'?'уровень '+S.exh:'на мне'):''}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">На экране нажатие на значок сразу включает или выключает состояние. Истощение: каждое нажатие +1 уровень, после 6 снова 0. Помехи и скорость лист считает сам.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
  exh:()=>({t:'Истощение',sub:`уровень ${S.exh} из 6`,body:`<p>Уровни складываются: на 3 уровне действуют и 1, и 2.</p>`+EXH.slice(1).map((t,i)=>`<p${S.exh>=i+1?' class="warn"':''}>${S.exh>=i+1?'●':'○'} <b>${i+1}</b>: ${t}</p>`).join('')+`<div class="how">Долгий отдых, если ты поел и попил, снимает 1 уровень. Лист снимет его сам при долгом отдыхе.</div>`,acts:`<button data-act="exhUp" ${S.exh>=6?'disabled':''}>Добавить уровень</button><button class="ghost" data-act="exhDown" ${S.exh?'':'disabled'}>Снять уровень</button>`}),
@@ -877,7 +877,7 @@ fixGap();addEventListener('resize',()=>{fixGap();fit()});addEventListener('orien
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-8';
+const BUILD='2026-11-25-9';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
