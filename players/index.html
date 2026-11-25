@@ -85,6 +85,11 @@ figcaption{font:italic 500 18px/1.3 "Cormorant Garamond",serif;color:var(--mute)
 .shelf a.read small{color:var(--amber)}
 .shelf a.read small .lk{display:none}
 .shelf a.read small .ok{display:block}
+.shelf a.open{border-color:rgba(232,184,106,.45);background:linear-gradient(135deg,#221a14,#151017)}
+.shelf a.open small{color:var(--amber)}
+.shelf a.open small .lk{display:none}
+.shelf a.open small .ok{display:block}
+.shelf a:not(.open):not(.read) small span::after{content:" · закрыта"}
 .shelf .hint{grid-column:1/-1;margin:4px 0 0;color:var(--mute);font-size:15px}
 .shelf .book a{background:linear-gradient(135deg,#2a1018,#151017);border-color:rgba(192,40,63,.5)}
 .shelf .book{grid-column:1/-1}
@@ -192,7 +197,7 @@ figcaption{font:italic 500 18px/1.3 "Cormorant Garamond",serif;color:var(--mute)
 
 <section class="band mem" id="stranicy"><div class="wrap">
   <h2>Страницы памяти</h2>
-  <p class="lead">У моего персонажа есть сюжетная фишка, которую мы продумали вместе с мастером. Память Филиппа — как старая залатанная ткань, и с каждым новым уровнем в ней будут проступать настоящие куски прошлого. Когда мы поднимаем уровень, наутро Филипп находит в своей тетради новую страницу, исписанную его собственным почерком, — хотя вчера её там не было. Мастер назовёт вам пароль за столом, вы введёте его здесь и прочтёте, что вспомнил Филипп и что заметили ваши персонажи.</p>
+  <p class="lead">У моего персонажа есть сюжетная фишка, которую мы продумали вместе с мастером. Память Филиппа — как старая залатанная ткань, и с каждым новым уровнем в ней будут проступать настоящие куски прошлого. Когда мы поднимаем уровень, наутро Филипп находит в своей тетради новую страницу, исписанную его собственным почерком, — хотя вчера её там не было. Страницы открываются по ходу игры: когда придёт время, страница откроется здесь, и вы прочтёте, что вспомнил Филипп и что заметили ваши персонажи.</p>
   <ol class="shelf">
     <li><a href="../levels/2/"><span class="r">II</span><span><h3>Смятый лист</h3><small><svg class="lk" viewBox="0 0 13 15" aria-hidden="true"><rect x="1" y="6.5" width="11" height="7.5" rx="1"/><path d="M3.5 6.5V4.5a3 3 0 0 1 6 0v2"/></svg><svg class="ok" viewBox="0 0 13 15" aria-hidden="true"><rect class="wx" x="4.6" y="8.2" width="3.8" height="6.2" rx=".6"/><path class="wk" d="M6.5 7.2v1"/><path class="fl" d="M6.5 1.2c1.2 1.5 1.9 2.6 1.9 3.6a1.9 1.9 0 0 1-3.8 0c0-1 .7-2.1 1.9-3.6z"/></svg><span>2 уровень</span></small></span></a></li>
     <li><a href="../levels/3/"><span class="r">III</span><span><h3>Тетрадь Миранды</h3><small><svg class="lk" viewBox="0 0 13 15" aria-hidden="true"><rect x="1" y="6.5" width="11" height="7.5" rx="1"/><path d="M3.5 6.5V4.5a3 3 0 0 1 6 0v2"/></svg><svg class="ok" viewBox="0 0 13 15" aria-hidden="true"><rect class="wx" x="4.6" y="8.2" width="3.8" height="6.2" rx=".6"/><path class="wk" d="M6.5 7.2v1"/><path class="fl" d="M6.5 1.2c1.2 1.5 1.9 2.6 1.9 3.6a1.9 1.9 0 0 1-3.8 0c0-1 .7-2.1 1.9-3.6z"/></svg><span>3 уровень</span></small></span></a></li>
