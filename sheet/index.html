@@ -315,6 +315,15 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .die svg{width:100%;height:100%;overflow:visible}
 .num{font:700 42px "Cormorant Garamond",serif;fill:#fff;text-anchor:middle;dominant-baseline:central}
 .shd{position:absolute;width:110px;height:16px;margin:-8px 0 0 -55px;border-radius:50%;background:radial-gradient(rgba(0,0,0,.8),transparent 70%)}
+.dieM{position:absolute;left:0;top:0;will-change:transform;z-index:2}
+.dieM svg{width:100%;height:100%;overflow:visible}
+.dieM .num{font-size:40px}
+.dieM.land svg{animation:dland .35s cubic-bezier(.3,1.6,.5,1)}
+@keyframes dland{40%{filter:brightness(1.6) drop-shadow(0 0 10px #f6d58e)}}
+.shdM{position:absolute;height:12px;border-radius:50%;background:radial-gradient(rgba(0,0,0,.8),transparent 70%)}
+.res .chips{display:flex;justify-content:center;flex-wrap:wrap;gap:5px;margin-top:6px}
+.res .chips span{min-width:30px;padding:2px 7px;border:1px solid rgba(233,189,108,.45);border-radius:8px;font:700 18px/1.2 "Cormorant Garamond",serif;color:#fff;background:rgba(90,42,74,.5)}
+.res .chips span.mx{border-color:var(--gold2);color:var(--gold2)}.res .chips span.mn{opacity:.6}
 .die2{position:absolute;width:68px;height:68px;margin:-34px 0 0 -34px;opacity:.5}
 .die2 svg{width:100%;height:100%}
 .dust{position:absolute;width:5px;height:5px;background:var(--paper);pointer-events:none}
@@ -777,16 +786,60 @@ function d20(spec){
 }
 function dice(spec){
  if(busy)return;
- const rolls=Array.from({length:spec.n},()=>r(spec.s)),total=Math.max(spec.min??-99,rolls.reduce((a,b)=>a+b,0)+(spec.k||0));
+ let rolls,faces;
+ if(spec.s===100){const v=r(100);rolls=[v];faces=[{s:10,v:String(Math.floor((v%100)/10)*10).padStart(2,'0')},{s:10,v:String(v%10)}]}
+ else{rolls=Array.from({length:spec.n},()=>r(spec.s));faces=rolls.map(v=>({s:spec.s,v:String(v)}))}
+ const sum=rolls.reduce((a,b)=>a+b,0),total=Math.max(spec.min??-99,sum+(spec.k||0));
  cur={dice:true};
- throwDie(spec.s,rolls.reduce((a,b)=>a+b,0),null,'norm',()=>{
-  const res=$('res');res.innerHTML=`<div class="lbl">${esc(spec.label)}</div><div class="tot">${total}</div><div class="br">${spec.n}к${spec.s}: <b>${rolls.join(' + ')}</b>${spec.k?` ${spec.k>0?'+':'−'} ${Math.abs(spec.k)} ${spec.kl||''}`:''}</div>${spec.after?spec.after(total):''}<div class="hint">нажми, чтобы закрыть</div>`;
+ throwMany(faces,()=>{
+  const mx=Math.max(...rolls),mn=Math.min(...rolls);
+  const br=spec.s===100?`к100: десятки <b>${faces[0].v}</b> и единицы <b>${faces[1].v}</b>`:`${spec.n}к${spec.s}${spec.n>1?`<div class="chips">${rolls.map(v=>`<span class="${v===spec.s?'mx':v===1?'mn':''}">${v}</span>`).join('')}</div>`:`: <b>${rolls[0]}</b>`}${spec.k?`<div>${spec.n>1?'сумма '+sum:''} ${spec.k>0?'+':'−'} ${Math.abs(spec.k)} ${spec.kl||''}</div>`:''}`;
+  const res=$('res');res.innerHTML=`<div class="lbl">${esc(spec.label)}</div><div class="tot">${total}</div><div class="br">${br}</div>${spec.after?spec.after(total):''}<div class="hint">нажми, чтобы закрыть</div>`;
   res.classList.add('on');pushLog(spec.label,total);
  });
 }
+
+/* ---------- несколько кубиков: у каждого своя форма, каждый летит и падает сам ---------- */
+const SHAPE={
+ 4:{o:'M50 6 L95 88 L5 88Z',i:'M50 6 L50 62 M5 88 L50 62 L95 88',y:64},
+ 6:{o:'M14 8 H86 Q92 8 92 14 V86 Q92 92 86 92 H14 Q8 92 8 86 V14 Q8 8 14 8Z',i:'M22 22 H78 V78 H22Z',y:50},
+ 8:{o:'M50 3 L95 50 L50 97 L5 50Z',i:'M50 3 L80 62 L20 62Z M5 50 L20 62 M95 50 L80 62 M50 97 L20 62 M50 97 L80 62',y:46},
+ 10:{o:'M50 3 L95 44 L50 97 L5 44Z',i:'M50 3 L30 56 L50 68 L70 56Z M5 44 L30 56 M95 44 L70 56 M50 68 L50 97',y:47},
+ 12:{o:'M50 3 L95 36 L78 93 L22 93 L5 36Z',i:'M50 22 L72 40 L64 70 L36 70 L28 40Z M50 3 L50 22 M95 36 L72 40 M78 93 L64 70 M22 93 L36 70 M5 36 L28 40',y:50},
+ 20:{o:'M50 4 L92 28 L92 72 L50 96 L8 72 L8 28Z',i:'M50 4 L26 46 L74 46Z M26 46 L50 96 M74 46 L50 96 M8 28 L26 46 M92 28 L74 46 M8 72 L26 46 M92 72 L74 46',y:52}};
+function dieSvgS(sides,n){const p=SHAPE[sides]||SHAPE[20];return `<svg viewBox="0 0 100 100"><defs><linearGradient id="gm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a2a4a"/><stop offset=".55" stop-color="#33142c"/><stop offset="1" stop-color="#160912"/></linearGradient></defs>
+ <path d="${p.o}" fill="url(#gm)" stroke="#e9bd6c" stroke-width="3" stroke-linejoin="round"/><path d="${p.i}" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.5"/>
+ <text class="num" x="50" y="${p.y}" ${String(n).length>2?'style="font-size:30px"':''}>${n}</text></svg>`}
+function throwMany(faces,done){
+ busy=true;const ov=$('roll'),res=$('res');critClear();ov.classList.add('on');res.classList.remove('on');res.innerHTML='';
+ ov.querySelectorAll('.dust,.die2,.dieM,.shdM').forEach(e=>e.remove());$('die').innerHTML='';$('shd').style.opacity=0;
+ const N=faces.length,W=innerWidth,H=innerHeight,sz=N<=1?124:N<=2?108:N<=4?86:N<=6?72:60,per=N<=4?N:Math.ceil(N/2),rows=Math.ceil(N/per),gap=10;
+ const sx=lastPt?lastPt.x:W/2,sy=lastPt?lastPt.y:H*.8,cy=H/2-80;let left=N,first=1;
+ faces.forEach((f,i)=>{const row=Math.floor(i/per),inRow=row<rows-1?per:N-per*(rows-1),col=i-row*per;
+  const tx=W/2+(col-(inRow-1)/2)*(sz+gap)+(Math.random()-.5)*8,ty=cy+(row-(rows-1)/2)*(sz+gap)+(Math.random()-.5)*8;
+  const d=document.createElement('div');d.className='dieM';d.style.width=d.style.height=sz+'px';d.style.margin=`-${sz/2}px 0 0 -${sz/2}px`;d.style.opacity=0;
+  const sh=document.createElement('div');sh.className='shdM';sh.style.width=sz*.8+'px';sh.style.margin=`-6px 0 0 -${sz*.4}px`;sh.style.left=tx+'px';sh.style.top=(ty+sz*.46)+'px';sh.style.opacity=0;
+  ov.appendChild(sh);ov.appendChild(d);
+  const pool=f.s===10&&f.v.length===2?()=>String(r(10)*10-10).padStart(2,'0'):()=>String(r(f.s===10&&f.v.length===1?10:f.s)-(f.s===10&&f.v.length===1?1:0));
+  const x0=sx+(Math.random()-.5)*40,y0=sy+(Math.random()-.5)*20,dur=760+Math.random()*120,delay=i*70,spin=(x0<tx?1:-1)*360*(2+(Math.random()<.5?0:1)),arc=Math.min(200,H*.25)*(.8+Math.random()*.4);
+  let t0=null,edge=-1,hit=0,hit2=0;
+  function fr(t){if(t0===null)t0=t+delay;const k=Math.max(0,Math.min(1,(t-t0)/dur));if(t<t0){requestAnimationFrame(fr);return}d.style.opacity=1;
+   let x,y,sc,sq=1;
+   if(k<.5){const q=k/.5;x=x0+(tx-x0)*q;y=y0+(ty-y0)*q-Math.sin(Math.PI*q)*arc;sc=.45+.55*q+Math.sin(Math.PI*q)*.22}
+   else if(k<.78){const q=(k-.5)/.28;x=tx+Math.sin(Math.PI*q)*(x0<tx?6:-6);y=ty-36*Math.sin(Math.PI*q);sc=1+.05*Math.sin(Math.PI*q)}
+   else{const q=(k-.78)/.22;x=tx;y=ty-7*Math.sin(Math.PI*q);sc=1}
+   if(k>.49&&k<.56)sq=.8;else if(k>.77&&k<.81)sq=.92;
+   const rot=spin*(1-Math.pow(1-k,2.6));d.style.transform=`translate(${x}px,${y}px) rotate(${rot}deg) scale(${sc/sq*.98+.02},${sc*sq})`;
+   const air=Math.max(0,Math.min(1,(ty-y)/240));sh.style.opacity=k<.5?k*1.6*(1-air):1-air*.7;sh.style.transform=`scale(${1-air*.5})`;
+   const e=Math.floor(Math.abs(rot)/70);if(e!==edge){edge=e;d.innerHTML=dieSvgS(f.s,Math.abs(spin)-Math.abs(rot)<70?f.v:pool())}
+   if(!hit&&k>=.5){hit=1;vib(first?40:16);if(first){first=0;document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake')}dust(tx,ty+sz*.42,false)}
+   if(!hit2&&k>=.78){hit2=1}
+   if(k<1)requestAnimationFrame(fr);else{d.style.transform=`translate(${tx}px,${ty}px)`;d.innerHTML=dieSvgS(f.s,f.v);d.classList.add('land');if(--left===0){vib(12);setTimeout(()=>{done();setTimeout(()=>busy=false,150)},180)}}}
+  requestAnimationFrame(fr)});
+}
 function throwDie(sides,final,other,m,done){
  busy=true;const ov=$('roll'),die=$('die'),shd=$('shd'),res=$('res');
- critClear();ov.classList.add('on');res.classList.remove('on');res.innerHTML='';ov.querySelectorAll('.dust,.die2').forEach(e=>e.remove());die.style.filter='';
+ critClear();ov.classList.add('on');res.classList.remove('on');res.innerHTML='';ov.querySelectorAll('.dust,.die2,.dieM,.shdM').forEach(e=>e.remove());die.style.filter='';
  const W=innerWidth,H=innerHeight,sx=lastPt?lastPt.x:W/2,sy=lastPt?lastPt.y:H*.8,ex=W/2,ey=H/2-80;
  shd.style.left=ex+'px';shd.style.top=(ey+62)+'px';
  /* Результат известен заранее. Кубик крутится ровно на целое число оборотов и ложится прямо, без доворота.
@@ -1153,7 +1206,7 @@ fixGap();addEventListener('resize',()=>{fixGap();fit()});addEventListener('orien
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-12';
+const BUILD='2026-11-25-13';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
