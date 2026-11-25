@@ -589,27 +589,11 @@ body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards
 .dieM.t-fireball{animation:tfire 2.4s ease-out forwards}
 .dieM.t-chaos{animation:tchaos 1.4s ease-out forwards}
 @keyframes tchaos{0%{filter:brightness(1.8) drop-shadow(0 0 18px #d58cff)}100%{filter:drop-shadow(0 0 8px rgba(165,124,255,.6))}}
-/* ---------- кнопки в покое неподвижны: никаких бликов, мерцания и движения по таймеру ---------- */
-.fxl,.fxl *,.fxl::before,.fxl::after,.fx-invis>*,.fx-illu>b{animation:none!important}
-.fxl .burn::after{opacity:.85}
-.fx-fire .fxl s{opacity:calc(1 - var(--p)*.75);transform:translate(calc(var(--dx)*var(--p)),calc(-1*var(--h)*var(--p)));background:#ffb347}
-.fx-cold .fxl s{opacity:.7}
-.fx-cold .fr path{stroke-dashoffset:0}.fx-cold:not(.on):not(.atk):not(.solid) .fr path{stroke-dashoffset:40}
-.fx-acid .fxl s{opacity:.85;transform:scaleY(calc(.6 + var(--p)))}
-.fx-acid .fxl u{opacity:.6;transform:translateY(calc(-14px*var(--p))) scale(calc(.5 + var(--p)*.6))}
-.fx-elec .fxl .z1{opacity:.45}.fx-elec .fxl .z2{display:none}
-.fx-snd .fxl u{opacity:calc(.75 - var(--p)*.5);transform:translate(-50%,-50%) scale(calc(.4 + var(--p)*.9))}
-.fx-poi .fxl s{opacity:.75;transform:translate(calc(var(--dx)*var(--p)),calc(-18px*var(--p))) scale(calc(.8 + var(--p)*1.3))}
-.fx-mist .fxl s{opacity:.75;transform:translate(calc(34px*var(--p) - 12px),calc(-12px*var(--p))) scale(calc(.8 + var(--p)))}
-.fx-counter .fxl svg{opacity:.6}
-.fx-invis>b,.fx-invis>.hit,.fx-invis>small{opacity:.6}
-.fx-charm .fxl s,.fx-friend .fxl s,.fx-luck .fxl s,.fx-heal .fxl s,.fx-chaos .fxl s{opacity:calc(1 - var(--p)*.6);transform:translate(calc(var(--dx)*var(--p)),calc(-30px*var(--p)))}
-.fx-sugg .fxl s{opacity:.8;transform:rotate(calc(var(--p)*360deg)) translateX(calc(6px + var(--p)*10px))}
-.fx-glyph .fxl s{opacity:.55}.fx-spark .fxl s{opacity:.8}
-.fx-shield .fxl svg{opacity:.35;-webkit-mask:none;mask:none}.fx-shield.on .fxl svg{opacity:.9}
+/* ---------- три кнопки без движения (Кинжал, Удар вслед, иллюзии): вместо бликов статичная картинка ---------- */
+.fx-illu .fxl::before,.fx-illu>b{animation:none!important}
+.fx-steel .fxl::before{display:none}
 .fx-illu .fxl::before{left:8%;width:84%;background:linear-gradient(100deg,transparent,rgba(255,140,210,.24),rgba(140,220,255,.26),rgba(255,240,150,.24),transparent)}
-.fx-msg .fxl svg,.fxl .pxa{position:absolute}
-.fx-msg .fxl svg{left:4px;right:4px;bottom:6px;width:calc(100% - 8px);height:10px}
+.fxl .pxa{position:absolute}
 .fxl .pxa{right:8px;top:50%;transform:translateY(-50%);height:76%;width:auto;aspect-ratio:1;opacity:.5;shape-rendering:crispEdges}
 .fxl .pxa.flee{aspect-ratio:auto}
 </style>
@@ -1739,10 +1723,7 @@ const _fxL2=fxLayer;
 fxLayer=function(el){
  if(el==='steel')return pxArt(DAGGER,{w:'#fbf7ee',l:'#cfc8bc',d:'#7d776c',b:'#e9e4da',g:'#e9bd6c',h:'#8a5a32',p:'#e9bd6c'});
  if(el==='flee')return pxArt(FLEE.map(r=>'.....'+r),{o:'#e9dcc0'},'flee')+`<svg class="pxa flee" viewBox="0 0 17 12" style="aspect-ratio:17/12;opacity:.3"><rect x="1" y="3" width="4" height="1" fill="#e9dcc0"/><rect x="0" y="6" width="5" height="1" fill="#e9dcc0"/><rect x="2" y="9" width="3" height="1" fill="#e9dcc0"/></svg>`;
- if(el==='msg')return '<svg viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q12 0 25 5 T50 5 T75 5 T100 5" fill="none" stroke="#d38b55" stroke-width="1.2" stroke-dasharray="2 3" vector-effect="non-scaling-stroke" opacity=".7"/></svg>';
  return _fxL2(el)};
-const _fxOn=fxOn;
-fxOn=function(b,el){const had=b&&b.dataset.fx===el;_fxOn(b,el);if(had||!b)return;b.querySelectorAll(':scope>.fxl s,:scope>.fxl u').forEach(e=>e.style.setProperty('--p',RN(.15,.85).toFixed(2)))};
 const _fxD2=fxDecor;
 fxDecor=function(){if(RM)return;_fxD2();document.querySelectorAll('[data-info="opp"]').forEach(b=>fxOn(b,'flee'))};
 {const _rf=renderFight,_oi=openInfo;renderFight=function(){_rf.apply(this,arguments);fxDecor()};openInfo=function(){_oi.apply(this,arguments);fxDecor()}}
@@ -2010,7 +1991,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-19';
+const BUILD='2026-11-25-20';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
