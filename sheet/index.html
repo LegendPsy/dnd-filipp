@@ -569,6 +569,16 @@ function fixGap(){const st=navigator.standalone||matchMedia('(display-mode: stan
  if(g>8&&g<140)r.setProperty('--sb','4px');else r.removeProperty('--sb')}
 fixGap();addEventListener('resize',()=>{fixGap();fit()});addEventListener('orientationchange',()=>setTimeout(()=>{fixGap();fit()},300));
 renderAll();fit();setTimeout(fit,300);
+/* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
+   При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
+const BUILD='2026-11-25-1';
+function checkUpdate(){if(location.protocol==='file:')return;
+ fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
+  const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
+  let tried='';try{tried=sessionStorage.getItem('filipp-upd')||''}catch(e){}
+  if(tried===m[1])return;try{sessionStorage.setItem('filipp-upd',m[1])}catch(e){}
+  location.replace(location.pathname+'?v='+encodeURIComponent(m[1]))}).catch(()=>{})}
+checkUpdate();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate()});
 </script>
 </body>
 </html>
