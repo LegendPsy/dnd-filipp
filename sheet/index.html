@@ -484,7 +484,7 @@ body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards
 #p-fight.d4 .smh:not(:has(.pick)){display:none}
 #p-fight.d5 .atk.cmp b{font-size:13px!important}#p-fight.d5 .atk.cmp{padding-top:3px!important;padding-bottom:3px!important}
 #p-fight.d7 .fxh{display:none}#p-fight.d7 .fres4 .fc{padding:4px 9px!important}#p-fight.d7 .fq{padding:3px 2px}#p-fight.d7 .mode button{padding:2px}#p-fight.d7 .fvit .tok .k{min-height:12px}
-#p-fight.d8 .atk.cmp .hit{flex-wrap:nowrap}#p-fight.d8 .atk.cmp .hit .dm{white-space:nowrap!important}#p-fight.d8 .flexp{padding-top:3px!important;padding-bottom:3px!important}#p-fight.d8 .flexp .fr{margin:0!important}#p-fight.d8 .fres4{margin-top:3px!important}#p-fight.d8 .fsect{margin:3px 0 2px!important}#p-fight.d8 #fAct{gap:3px!important}#p-fight.d8 .fvit{margin-bottom:3px!important}
+#p-fight.d8 .atk.cmp .hit{flex-wrap:nowrap}#p-fight.d8 .atk.cmp .hit .dm{white-space:nowrap!important}#p-fight.d8 .flexp{padding-top:3px!important;padding-bottom:3px!important}#p-fight.d8 .flexp .fr{margin:0!important}#p-fight.d8 .fres4{margin-top:3px!important}#p-fight.d8 .fsect{margin:3px 0 2px!important}#p-fight.d8 #fAct{gap:3px!important}#p-fight.d8 .fvit{margin-bottom:3px!important}#p-fight.d8 .atk.cmp{padding-top:2px!important;padding-bottom:2px!important}#p-fight.d8 .atk.cmp b{line-height:.98!important}#p-fight.d8 .atk.cmp .hit{margin-top:0}#p-fight.d8 .fq{padding:2px!important}
 #p-fight.d6 .smh{display:none}#p-fight.d6 .it small{display:none}#p-fight.d4 .atk .hit .dm{display:none}
 
 /* ---------- эффекты заклинаний: у каждой стихии свой материал ---------- */
@@ -1201,7 +1201,7 @@ const TEST10={v:2,test:1,name:'Филипп',race:'Человек',cls:'Чаро
  money:{pp:3,gp:640,sp:25,cp:12},log:[],
  slots:{max:4,used:0,extra:0},hi:{2:{max:3,used:0},3:{max:3,used:0},4:{max:3,used:0},5:{max:2,used:0}},spt:{max:10,used:0},
  known:['fire_bolt','friends','minor_illusion','message','mage_hand','prestidigitation','shield','chromatic_orb','charm_person','suggestion','misty_step','hold_person','counterspell','fireball','hypnotic_pattern','greater_invisibility','dominate_person'],
- fSpellShow:['fire_bolt','fireball','hold_person','hypnotic_pattern','misty_step','chromatic_orb','shield','counterspell'],
+ fSpellShow:['fire_bolt','fireball','hold_person','hypnotic_pattern','misty_step','chromatic_orb','greater_invisibility','shield','counterspell'],
  smagShow:['friends','message','charm_person','suggestion','dominate_person','minor_illusion'],
  items:{dagger:{q:2,fight:1},pouch:{q:1},explorer:{q:1},fine:{q:1,soc:1},kit:{q:1,soc:1},trinket:{q:1,soc:1},symbol:{q:1,soc:1},
   heal:{q:3,fight:1},heal2:{q:1,fight:1},holy:{q:3,fight:1},oil:{q:2,fight:1},scroll:{q:1,fight:1},dust:{q:1,fight:1},
@@ -1214,7 +1214,7 @@ let TEST=false;try{TEST=localStorage.getItem('filipp-test10')==='1'}catch(e){}
 const SKEY=TEST?'filipp-sheet-test10':'filipp-sheet-v2';
 let S;try{S=JSON.parse(localStorage.getItem(SKEY))}catch(e){}
 if(!S||S.v!==2)S=structuredClone(TEST?TEST10:DEFAULT);
-if(!S.cond)S.cond={};if(!S.condShow)S.condShow=COND_MAIN.slice();if(S.exh==null)S.exh=0;if(!S.slots)S.slots={max:3,used:0};if(S.conc===undefined)S.conc=null;if(!S.spt)S.spt={max:2,used:0};if(S.slots.extra==null)S.slots.extra=0;if(!S.death)S.death={s:0,f:0};if(!S.orbT)S.orbT='огонь';if(S.shieldOn==null)S.shieldOn=0;if(!S.fSpellShow)S.fSpellShow=['fire_bolt','chromatic_orb','shield'];if(!S.inv)S.inv=[];if(!S.sItemShow)S.sItemShow=[];if(!S.fItemShow)S.fItemShow=[];if(!S.smagShow)S.smagShow=['friends','minor_illusion','message','charm_person'];S.smagShow=S.smagShow.filter(k=>SPELLS[k]&&SPELLS[k].soc);
+if(!S.cond)S.cond={};if(!S.condShow)S.condShow=COND_MAIN.slice();if(S.exh==null)S.exh=0;if(!S.slots)S.slots={max:3,used:0};if(S.conc===undefined)S.conc=null;if(!S.spt)S.spt={max:2,used:0};if(S.slots.extra==null)S.slots.extra=0;if(!S.death)S.death={s:0,f:0};if(!S.orbT)S.orbT='огонь';if(S.shieldOn==null)S.shieldOn=0;if(!S.fSpellShow)S.fSpellShow=['fire_bolt','chromatic_orb','shield'];if(S.test&&!S.fs9){S.fs9=1;if(!S.fSpellShow.includes('greater_invisibility')&&S.fSpellShow.length<9)S.fSpellShow.push('greater_invisibility')}if(!S.inv)S.inv=[];if(!S.sItemShow)S.sItemShow=[];if(!S.fItemShow)S.fItemShow=[];if(!S.smagShow)S.smagShow=['friends','minor_illusion','message','charm_person'];S.smagShow=S.smagShow.filter(k=>SPELLS[k]&&SPELLS[k].soc);
 if(!S.items){S.items=structuredClone(KIT);if(!S.fItemShow.length)S.fItemShow=['holy','oil'];if(!S.sItemShow.length)S.sItemShow=['symbol','trinket']}
 syncItems();
 const save=()=>{try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}};
@@ -2029,7 +2029,7 @@ document.addEventListener('click',e=>{
   return rollFromDrawer(t.dataset.roll);
  }
  if(t.dataset.cnd)return toggleCnd(t.dataset.cnd);
- if(t.dataset.fshow){const k=t.dataset.fshow,i=S.fSpellShow.indexOf(k);if(i>=0)S.fSpellShow.splice(i,1);else if(S.fSpellShow.length<8)S.fSpellShow.push(k);else{toast('В бою помещается 8 заклинаний. Сними галочку с другого.');vib([20,40,20]);return}save();renderFight();openInfo('fspellpick',true);vib(8);return}
+ if(t.dataset.fshow){const k=t.dataset.fshow,i=S.fSpellShow.indexOf(k);if(i>=0)S.fSpellShow.splice(i,1);else if(S.fSpellShow.length<9)S.fSpellShow.push(k);else{toast('В бою помещается 9 заклинаний. Сними галочку с другого.');vib([20,40,20]);return}save();renderFight();openInfo('fspellpick',true);vib(8);return}
  if(t.dataset.ishow){const [kind,k]=t.dataset.ishow.split(':'),arr=kind==='soc'?S.sItemShow:S.fItemShow,i=arr.indexOf(k);if(i>=0)arr.splice(i,1);else if(arr.length<ITMAX)arr.push(k);else{toast('Помещается '+ITMAX+' предмета. Сними галочку с другого.');vib([20,40,20]);return}save();renderItems(kind);openInfo('itempick_'+kind,true);vib(8);return}
  if(t.dataset.sshow){const k=t.dataset.sshow,i=S.smagShow.indexOf(k);if(i>=0)S.smagShow.splice(i,1);else if(S.smagShow.length<6)S.smagShow.push(k);else{toast('На экране помещается 6 заклинаний. Сними галочку с другого.');vib([20,40,20]);return}save();renderSmag();openInfo('smagpick',true);vib(8);return}
  if(t.dataset.cshow){const k=t.dataset.cshow,i=S.condShow.indexOf(k);if(i>=0)S.condShow.splice(i,1);else S.condShow.push(k);save();renderConds();openInfo('conds',true);vib(8);return}
@@ -2046,7 +2046,7 @@ document.addEventListener('click',e=>{
 });
 const INFO={
 
- fspellpick:()=>({t:'Заклинания в бою',sub:`галочка = показать во вкладке «Бой» · ${S.fSpellShow.length} из 8`,body:known().filter(k=>SPELLS[k]&&SPELLS[k].fight).map(k=>{const sh=S.fSpellShow.includes(k),p=SPELLS[k];return `<button class="crow ck ${sh?'on':''}" data-fshow="${k}"><span><i class="box">${sh?'✓':''}</i>${p.n}</span><small>${p.lv?p.lv+' круг':'заговор'}${p.react?' · реакция':''}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">Здесь только боевые заклинания Филиппа. Отметь любимые, до 8: они встанут в «Действие», а реакции (как Щит) в «Реакцию». Кинжал, удар вслед и другие действия остаются всегда.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
+ fspellpick:()=>({t:'Заклинания в бою',sub:`галочка = показать во вкладке «Бой» · ${S.fSpellShow.length} из 9`,body:known().filter(k=>SPELLS[k]&&SPELLS[k].fight).map(k=>{const sh=S.fSpellShow.includes(k),p=SPELLS[k];return `<button class="crow ck ${sh?'on':''}" data-fshow="${k}"><span><i class="box">${sh?'✓':''}</i>${p.n}</span><small>${p.lv?p.lv+' круг':'заговор'}${p.react?' · реакция':''}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">Здесь только боевые заклинания Филиппа. Отметь любимые, до 9: они встанут в «Действие», а реакции (как Щит) в «Реакцию». Кинжал, удар вслед и другие действия остаются всегда.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
  itempick_soc:()=>itemPick('soc'),itempick_fight:()=>itemPick('fight'),
  turn:()=>({t:'Как устроен ход',sub:'бой идёт по кругу, раунд ≈ 6 секунд',body:`<p>Порядок ходов задаёт <b>инициатива</b>: в начале боя все бросают её, мастер записывает.</p>
   <p>В свой ход у тебя есть:</p><p>• <b>Перемещение</b> до ${String(effSpeed()).replace('.',',')} м. Можно делить: пройти, ударить, пройти дальше.<br>• <b>Одно действие</b>: заклинание, атака кинжалом или что-то из «Других действий».<br>• <b>Бонусное действие</b>, только если что-то его даёт (у тебя: Гибкое колдовство).<br>• Одно мелкое дело бесплатно: открыть дверь, достать кинжал.</p>
@@ -2278,7 +2278,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-29';
+const BUILD='2026-11-25-30';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
