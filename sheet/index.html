@@ -245,7 +245,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .sg i{font-style:normal;font-size:10px;line-height:1;color:var(--mute)}.sg.z i{opacity:.5}
 .fxh{font:600 10.5px/1.2 Alegreya,serif;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);padding:2px 2px 0;border-top:1px solid var(--line)}
 .fxh .mlink{text-transform:none;letter-spacing:0;color:var(--gold);font:italic 500 13px "Cormorant Garamond",serif}
-.fxr{display:flex;align-items:stretch;gap:4px}.fxr .mlb{background:none;border:0;padding:0;text-align:left;color:var(--gold);font:italic 500 13px/1.05 "Cormorant Garamond",serif}.fq.mq{background:rgba(233,189,108,.14)!important;border-color:rgba(233,189,108,.45)}
+.fxr{display:flex;align-items:stretch;gap:4px}.fxr .mlb{background:none;border:0;padding:0;text-align:left;color:var(--gold);font:italic 500 13px/1.05 "Cormorant Garamond",serif}#p-fight .atk.cmp b.lw{font-size:12px!important;letter-spacing:-.02em}.rn{font-style:normal;font-weight:700;color:#c7a4ff;text-shadow:0 0 6px rgba(160,110,255,.55);margin-right:4px;letter-spacing:.02em}.fq.mq{background:rgba(233,189,108,.14)!important;border-color:rgba(233,189,108,.45)}
 .fxr .lb{flex:none;width:62px;font-size:10px;line-height:1.1;color:var(--mute);align-self:center}
 .fq{flex:1;min-width:0;border:1px solid rgba(233,189,108,.4);border-radius:9px;background:rgba(233,189,108,.08);color:var(--gold2);font:600 13px/1.1 "Cormorant Garamond",serif;padding:5px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
 .fq.dn{border-color:rgba(165,124,255,.4);background:rgba(165,124,255,.08);color:#e3d4ff}
@@ -880,10 +880,11 @@ const SPELLS={
   d:()=>`<p>На 1 час ты понимаешь <b>буквальный смысл любой речи</b> на любом языке. Можешь читать любой текст, касаясь его, примерно минута на страницу.</p><p>Тайные шифры и магические знаки не расшифровывает.</p><p class="mu">Ритуал: можно сотворить за 10 минут без ячейки.</p>`}
 };
 const known=()=>S.known||KNOWN;
+const ROM=['','I','II','III','IV','V','VI','VII','VIII','IX'],rn=p=>p.lv?`<i class="rn">${ROM[p.lv]}</i>`:'';
 const CAP={fireball:'спасбросок Ловкости',misty_step:'телепорт 9 м',hold_person:'гуманоид',dominate_person:'гуманоид',hypnotic_pattern:'',counterspell:'сорвать заклинание',greater_invisibility:'невидим и в атаке',shield:'к классу доспеха'};
 const KNOWN=['fire_bolt','friends','minor_illusion','message','shield','chromatic_orb','charm_person'];
 function renderSmag(){const list=known().filter(k=>SPELLS[k]&&SPELLS[k].soc&&S.smagShow.includes(k)),sl=S.slots;
- $('smag').innerHTML=`<div class="smh">Магия<span class="lg"> в разговоре</span><i></i><button class="dc" data-info="spelldc">сложность заклинаний ${spellDC()}</button><span class="sl" title="ячейки 1 круга">${Array.from({length:slotsTot()},(_,i)=>`<span class="charge v ${i<sl.used?'used':''}"></span>`).join('')}</span></div><div class="spl">${list.map(k=>{const p=SPELLS[k],on=S.conc===k;return `<button class="sp ${p.lv?'lv':''} ${on?'on':''}" data-info="sp_${k}"><b>${p.n}</b><small>${on?'действует · концентрация':p.short}</small></button>`}).join('')}<button class="sp more" data-info="smagpick">${list.length?'выбрать заклинания ›':'+ выбрать заклинания для этого экрана'}</button></div>`}
+ $('smag').innerHTML=`<div class="smh">Магия<span class="lg"> в разговоре</span><i></i><button class="dc" data-info="spelldc">сложность заклинаний ${spellDC()}</button><span class="sl" title="ячейки 1 круга">${Array.from({length:slotsTot()},(_,i)=>`<span class="charge v ${i<sl.used?'used':''}"></span>`).join('')}</span></div><div class="spl">${list.map(k=>{const p=SPELLS[k],on=S.conc===k;return `<button class="sp ${p.lv?'lv':''} ${on?'on':''}" data-info="sp_${k}"><b>${rn(p)}${p.n}</b><small>${on?'действует · концентрация':p.short}</small></button>`}).join('')}<button class="sp more" data-info="smagpick">${list.length?'выбрать заклинания ›':'+ выбрать заклинания для этого экрана'}</button></div>`}
 
 
 /* ---------- бой ---------- */
@@ -912,8 +913,8 @@ function renderFight(){
  const fs=known().filter(k=>SPELLS[k]&&SPELLS[k].fight&&S.fSpellShow.includes(k));
  const nAct=fs.filter(k=>!SPELLS[k].react).length+2,cmpA=nAct>4;let cmp=cmpA;
  const scard=k=>{const p=SPELLS[k],off=p.lv&&!firstC(p.lv)&&!(k==='shield'&&S.shieldOn);
-  if(k==='shield')return `<button class="atk ${cmp?'cmp':''} ${S.shieldOn?'on':''} ${off?'off':''}" data-info="sp_shield"><b>Щит</b><div class="hit"><span class="d" style="color:#e3d4ff">+5</span><span class="dm">к классу доспеха</span></div><small>${S.shieldOn?'действует до твоего хода':'реакция · 1 круг'}</small></button>`;
-  return `<button class="atk ${cmp?'cmp':''} ${off?'off':''}" data-info="sp_${k}">${p.lv?`<span class="tg">${p.lv} круг</span>`:''}<b>${p.n}</b>${p.atk?`<div class="hit"><span class="d">${sg(spellAtk())}</span><span class="dm">${p.hit()}</span></div>`:(cmp?(CAP[k]?`<div class="hit"><span class="dm">${CAP[k]}</span></div>`:''):`<div class="hit"><span class="dm">${p.short}</span></div>`)}<small>${p.lv?(p.where||'')+' · тратит ячейку':'заговор · '+(p.where||'')}</small></button>`};
+  if(k==='shield')return `<button class="atk ${cmp?'cmp':''} ${S.shieldOn?'on':''} ${off?'off':''}" data-info="sp_shield"><b>${rn(SPELLS.shield)}Щит</b><div class="hit"><span class="d" style="color:#e3d4ff">+5</span><span class="dm">к классу доспеха</span></div><small>${S.shieldOn?'действует до твоего хода':'реакция · 1 круг'}</small></button>`;
+  return `<button class="atk ${cmp?'cmp':''} ${off?'off':''}" data-info="sp_${k}"><b${!p.n.includes(' ')&&p.n.length>12?' class="lw"':''}>${rn(p)}${p.n}</b>${p.atk?`<div class="hit"><span class="d">${sg(spellAtk())}</span><span class="dm">${p.hit()}</span></div>`:(cmp?(CAP[k]?`<div class="hit"><span class="dm">${CAP[k]}</span></div>`:''):`<div class="hit"><span class="dm">${p.short}</span></div>`)}<small>${p.lv?(p.where||'')+' · тратит ячейку':'заговор · '+(p.where||'')}</small></button>`};
  const acts=fs.filter(k=>!SPELLS[k].react).map(scard);cmp=cmpA;
  acts.push(`<button class="atk steel ${cmp?'cmp':''}" data-info="w_dagger"><b>Кинжал</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">урон 1к4${sg(mod(S.ab.dex))}</span></div><small>1,5 м или бросок 6 м</small></button>`);
  acts.push(`<button class="atk plain ${cmp?'cmp':''}" data-info="actions"><b>Другие действия</b><small style="white-space:normal">Рывок, Отход, Уклонение, Помощь, Засада, Поиск</small></button>`);
