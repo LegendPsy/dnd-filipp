@@ -1749,6 +1749,35 @@ function castWave(k){if(RM)return;const W=innerWidth,H=innerHeight,cx=W/2,cy=H*.
  if(k==='misty_step'){/* серебристый туман проходит по экрану снизу вверх и рассеивается */
   for(let i=0;i<16;i++){const x=RN(-.1,1.1)*W,y=H+RN(10,120);spawn({k:'puff',x,y,vx:RN(-30,30),vy:-RN(700,1000),dr:2.2,m:RN(1,1.4),s:RN(50,90),gr:.8,c:'rgba(225,222,240,.22)',fin:.15,fp:1.4})}
   vib(20);return}}
+/* волны сотворения для остальных «включаемых» заклинаний */
+{const _cw=castWave;castWave=function(k){if(RM)return;const W=innerWidth,H=innerHeight,cx=W/2,cy=H*.45,pg=document.querySelector('.page.on');
+ const shake=()=>{document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake')};
+ if(k==='counterspell'){/* знак встаёт посреди экрана, его сдавливает, и он разлетается осколками */
+  const d=document.createElement('div');d.className='cwave';d.style.cssText=`width:220px;height:220px;margin:-110px 0 0 -110px;top:${cy}px;mix-blend-mode:normal;border-radius:0`;
+  d.innerHTML='<svg viewBox="0 0 40 40" style="width:100%;height:100%;stroke:#e3d4ff;stroke-width:1;fill:none;filter:drop-shadow(0 0 6px #a57cff)"><circle cx="20" cy="20" r="14" stroke-dasharray="3 2"/><path d="M20 6 L28 31 L7 15 L33 15 L12 31 Z"/></svg>';document.body.appendChild(d);
+  d.animate([{transform:'scale(.4) rotate(-40deg)',opacity:0},{transform:'scale(1) rotate(0)',opacity:.9,offset:.45},{transform:'scale(.92,1.06)',opacity:.9,offset:.6},{transform:'scale(1.1)',opacity:0}],{duration:720,easing:'cubic-bezier(.2,.8,.3,1)',fill:'forwards'}).onfinish=()=>d.remove();
+  setTimeout(()=>{burst('counter',cx,cy,3,H*.8);shake();vib([40,20,60])},440);return}
+ if(k==='greater_invisibility'){/* всё вокруг на миг становится прозрачным: тебя не видно */
+  if(pg)pg.animate([{opacity:1,filter:'none'},{opacity:.18,filter:'blur(1.5px)',offset:.35},{opacity:.18,filter:'blur(1.5px)',offset:.6},{opacity:1,filter:'none'}],{duration:1100,easing:'ease-in-out'});
+  for(let i=0;i<40;i++)spawn({x:RN(0,W),y:RN(H*.1,H*.85),vx:RN(-10,10),vy:RN(-30,-8),m:RN(.6,1.2),s:2,c:EL.invis.c,a:.8,fin:.3});vib(15);return}
+ if(k==='dominate_person'){/* сверху падают нити и натягиваются */
+  for(let i=0;i<5;i++){const x0=W*(.15+i*.175),xt=cx+(i-2)*14;setTimeout(()=>{spawn({k:'zap',pts:zapPts(x0,0,xt,cy,10,6),m:.7,c:'#f0e0ff',sc:'#d58cff',w:1.2,fp:2})},i*50)}
+  setTimeout(()=>{burst('dom',cx,cy,2,cy+60);vib([30,15,50])},320);return}
+ if(k==='charm_person'||k==='friends'||k==='suggestion'){/* тёплая волна снизу и искры своего цвета */
+  const col=k==='charm_person'?'rgba(255,122,168,.32)':k==='friends'?'rgba(246,213,142,.3)':'rgba(213,140,255,.3)',el=k==='charm_person'?'charm':k==='friends'?'friend':'sugg';
+  spawn({k:'flash',x:cx,y:H+40,s:H*.5,gr:.6,m:.9,c:col,fp:1.4,fin:.2});
+  for(let i=0;i<30;i++)spawn({x:RN(0,W),y:H+RN(0,40),vx:RN(-20,20),vy:-RN(250,520),dr:1.2,m:RN(.8,1.4),s:RN(2,4),c:EL[el].c,add:1});
+  if(k==='suggestion'){for(let i=0;i<24;i++){const a0=i/24*6.283,r0=Math.max(W,H)*.6;spawn({x:cx,y:cy,m:1,s:2.5,c:EL.sugg.c,add:1,tick:(p,dt)=>{p.tt=(p.tt||0)+dt;const r=r0*(1-p.tt),a=a0+p.tt*5;p.vx=p.vy=0;p.x=cx+Math.cos(a)*r;p.y=cy+Math.sin(a)*r*.8}})}}
+  vib(15);return}
+ if(k==='minor_illusion'||k==='disguise_self'){/* радужное кольцо идёт по экрану, мир на миг сдвигается в цвете */
+  for(let i=0;i<48;i++){const a=i/48*6.283,v=RN(380,460);spawn({x:cx,y:cy,vx:Math.cos(a)*v,vy:Math.sin(a)*v,dr:.8,m:.9,s:3,c:['#ffb0e0','#a0e8ff','#fff0a0'][i%3],add:1})}
+  if(pg)pg.animate([{filter:'none',transform:'none'},{filter:'hue-rotate(60deg) saturate(1.4)',transform:'translateX(3px)',offset:.3},{filter:'hue-rotate(-30deg)',transform:'translateX(-2px)',offset:.6},{filter:'none',transform:'none'}],{duration:600});vib(12);return}
+ if(k==='message'){/* медная искра пролетает через экран волной */
+  for(let i=0;i<10;i++){const ph=i*.35,y0=cy+RN(-20,20);spawn({x:-10,y:y0,m:1,s:3.5,c:EL.msg.c,add:1,tick:(p,dt)=>{p.tt=(p.tt||0)+dt;p.vx=p.vy=0;p.x=-10+p.tt*(W+40)*1.1-i*6;p.y=y0+Math.sin(p.tt*12+ph)*14;spawn({x:p.x,y:p.y,m:.35,s:2,c:'#e9b88a',add:1})}})}vib(8);return}
+ if(k==='comprehend_languages'){for(let i=0;i<5;i++)setTimeout(()=>burst('glyph',RN(.15,.85)*W,RN(.3,.7)*H,1.6,H),i*90);return}
+ if(k==='prestidigitation'){for(let i=0;i<4;i++)setTimeout(()=>burst('spark',RN(.2,.8)*W,RN(.25,.65)*H,1.4,H),i*110);vib(8);return}
+ if(k==='mage_hand'){spawn({k:'flash',x:W*.8,y:H*.7,s:160,gr:.4,m:.8,c:'rgba(143,232,200,.3)',fin:.2,fp:1.4});burst('hand',W*.8,H*.7,2.2,H);return}
+ return _cw(k)}}
 {const _rf=renderFight,_oi=openInfo;renderFight=function(){_rf.apply(this,arguments);fxDecor()};openInfo=function(){_oi.apply(this,arguments);fxDecor()}}
 /* ---------- броски из шторки ---------- */
 function rollFromDrawer(what){
@@ -2014,7 +2043,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-20';
+const BUILD='2026-11-25-21';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
