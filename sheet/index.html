@@ -531,19 +531,23 @@ function throwDie(sides,final,other,m,done){
  ov.classList.add('on');res.classList.remove('on');res.innerHTML='';ov.querySelectorAll('.dust,.die2').forEach(e=>e.remove());die.style.filter='';
  const W=innerWidth,H=innerHeight,sx=lastPt?lastPt.x:W/2,sy=lastPt?lastPt.y:H*.8,ex=W/2,ey=H/2-80;
  shd.style.left=ex+'px';shd.style.top=(ey+62)+'px';
- const dur=820,t0=performance.now(),spin=(sx<ex?1:-1)*(620+Math.random()*300),tint=m==='dis'?'dis':'n';let last=0,hit=0,hit2=0;
+ /* Результат известен заранее. Кубик крутится ровно на целое число оборотов и ложится прямо, без доворота.
+    Грань меняется, когда кубик перекатывается через ребро (каждые 70°); последний перекат кладёт нужную грань. */
+ const dur=820,t0=performance.now(),spin=(sx<ex?1:-1)*360*(2+(Math.random()<.5?0:1)),tint=m==='dis'?'dis':'n';let edge=-1,hit=0,hit2=0;
+ const other1=()=>{let v;do{v=r(sides)}while(v===final&&sides>1);return v};
  function f(t){const k=Math.min(1,(t-t0)/dur);let x,y,sq=1,sc;
   if(k<.5){const q=k/.5;x=sx+(ex-sx)*q;y=sy+(ey-sy)*q-Math.sin(Math.PI*q)*Math.min(220,H*.28);sc=.45+.55*q+Math.sin(Math.PI*q)*.25}
   else if(k<.78){const q=(k-.5)/.28;x=ex;y=ey-50*Math.sin(Math.PI*q);sc=1+.06*Math.sin(Math.PI*q)}
   else{const q=(k-.78)/.22;x=ex;y=ey-9*Math.sin(Math.PI*q);sc=1}
   if(k>.49&&k<.56)sq=.8;else if(k>.77&&k<.81)sq=.92;
-  die.style.transform=`translate(${x}px,${y}px) rotate(${spin*(1-Math.pow(1-k,2.6))}deg) scale(${sc/sq*.98+.02},${sc*sq})`;
+  const rot=spin*(1-Math.pow(1-k,2.6));
+  die.style.transform=`translate(${x}px,${y}px) rotate(${rot}deg) scale(${sc/sq*.98+.02},${sc*sq})`;
   const air=Math.max(0,Math.min(1,(ey-y)/260));shd.style.opacity=k<.5?k*1.6*(1-air):1-air*.7;shd.style.transform=`scale(${1-air*.5})`;
-  if(t-last>35+k*k*240&&k<.94){last=t;die.innerHTML=dieSvg(r(sides),tint)}
+  const e=Math.floor(Math.abs(rot)/70);if(e!==edge){edge=e;die.innerHTML=dieSvg(Math.abs(spin)-Math.abs(rot)<70?final:other1(),tint)}
   if(!hit&&k>=.5){hit=1;vib(final===20?[30,40,70]:40);document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake');dust(ex,ey+56,final===20&&sides===20)}
   if(!hit2&&k>=.78){hit2=1;vib(12)}
   if(k<1)requestAnimationFrame(f);else{
-   die.innerHTML=dieSvg(final,tint);die.style.transform=`translate(${ex}px,${ey}px)`;
+   die.style.transform=`translate(${ex}px,${ey}px)`;
    if(sides===20&&final===20)die.style.filter='drop-shadow(0 0 26px #f6d58e)';
    if(sides===20&&final===1){die.style.filter='drop-shadow(0 0 18px #b3233a) grayscale(.5)'}
    if(other!=null){const d2=document.createElement('div');d2.className='die2';d2.innerHTML=dieSvg(other,'n');d2.style.left=(ex+92)+'px';d2.style.top=(ey-40)+'px';ov.appendChild(d2);d2.animate([{transform:'translate(-60px,20px) rotate(-90deg)',opacity:0},{transform:'none',opacity:.5}],{duration:300,easing:'cubic-bezier(.3,1.5,.5,1)'})}
@@ -707,7 +711,7 @@ fixGap();addEventListener('resize',()=>{fixGap();fit()});addEventListener('orien
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-3';
+const BUILD='2026-11-25-4';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
