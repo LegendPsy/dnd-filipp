@@ -56,6 +56,12 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .log{color:var(--mute);font-size:14px}
 .log div{padding:7px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}
 .log b{color:var(--ink);font-weight:500}
+.fairbtn{margin-top:12px;color:var(--gold);font-size:14px;padding:6px 0}
+.hist{display:flex;align-items:flex-end;gap:2px;height:110px;margin:8px 0 2px}
+.hist i{flex:1;background:linear-gradient(0deg,#7b4dff,#d58cff);border-radius:2px 2px 0 0;min-height:1px}
+.hist i.t{background:linear-gradient(0deg,#e9bd6c,#fff3cf)}
+.hlab{display:flex;gap:2px;font-size:9.5px;color:var(--mute);text-align:center}.hlab span{flex:1}
+.testmode{position:fixed;left:50%;top:calc(4px + env(safe-area-inset-top));transform:translateX(-50%);z-index:150;background:var(--blood);color:#fff;font-size:12.5px;padding:3px 10px;border-radius:999px;pointer-events:none}
 .senses{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .sense{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:4px 6px;display:flex;align-items:center;gap:6px;transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
 .sense b{font:700 21px/1 "Cormorant Garamond",serif;color:var(--gold2)}
@@ -290,8 +296,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .cflash{position:absolute;inset:0;opacity:0;background:radial-gradient(circle at var(--fx) var(--fy),#fff 0,#fff3d0 22%,rgba(165,124,255,.55) 55%,rgba(6,4,8,0) 85%)}
 .cring{position:absolute;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;border:3px solid #f6d58e;box-shadow:0 0 18px #f6d58e,inset 0 0 14px #a57cff;opacity:0}
 .cfront{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
-.fl{position:absolute;transform-origin:50% 100%}
-.fl img{width:100%;height:100%;display:block;transform-origin:50% 100%}
+.cfront canvas{position:absolute;left:0;top:0;width:100%;height:100%}
 .cword{position:absolute;left:0;right:0;text-align:center;z-index:3;pointer-events:none;font:700 92px/1 "Cormorant Garamond",serif;letter-spacing:.03em;white-space:nowrap;margin-top:-46px}
 .cword span{display:inline-block;color:#fff4d6;text-shadow:0 0 4px #fff,0 0 14px #f6d58e,0 0 30px #e9bd6c,0 0 58px #a57cff}
 .cword span.idle{animation:cglow 2.2s ease-in-out infinite}
@@ -354,7 +359,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 
   <div class="fate" id="fate"></div>
  </div>
- <div class="below"><h2>Последние броски</h2><div class="log" id="log"></div></div>
+ <div class="below"><h2>Последние броски</h2><div class="log" id="log"></div><button class="fairbtn" data-info="fair">🎲 Честность кубика ›</button></div>
 </section>
 
 <section class="page" id="p-social"><div class="screen">
@@ -573,7 +578,10 @@ $('dim').addEventListener('click',closeDrawer);
 
 
 /* ---------- кубик: вылетает из-под пальца, бьётся о стол ---------- */
-const r=s=>1+Math.floor(Math.random()*s);
+/* честный кубик: криптографический генератор браузера (тот же, что для паролей), без перекоса граней:
+   берём случайное 32-битное число и отбрасываем «хвост», который не делится на число граней поровну */
+const rbuf=new Uint32Array(1);
+const r=s=>{const lim=Math.floor(4294967296/s)*s;let x;do{crypto.getRandomValues(rbuf);x=rbuf[0]}while(x>=lim);return 1+x%s};
 function dieSvg(n,tint){const a=tint==='dis'?['#5a1b26','#36101a']:['#5a2a4a','#33142c'];return `<svg viewBox="0 0 100 100"><defs><linearGradient id="g${tint}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a[0]}"/><stop offset=".55" stop-color="${a[1]}"/><stop offset="1" stop-color="#160912"/></linearGradient></defs>
  <path d="M50 4 L92 28 L92 72 L50 96 L8 72 L8 28Z" fill="url(#g${tint})" stroke="#e9bd6c" stroke-width="3" stroke-linejoin="round"/>
  <path d="M50 4 L26 46 L74 46Z M26 46 L50 96 M74 46 L50 96 M8 28 L26 46 M92 28 L74 46 M8 72 L26 46 M92 72 L74 46" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.5"/>
@@ -592,6 +600,7 @@ function d20(spec){
  spec.note=notes.join(' · ');
  const m=adv&&dis?'norm':adv?'adv':dis?'dis':'norm';
  const a=FORCE20?20:r(20),b=FORCE20?20:r(20);let used=a,other=null;
+ if(!FORCE20){if(!S.d20s||S.d20s.length!==20)S.d20s=Array(20).fill(0);S.d20s[a-1]++;if(m!=='norm')S.d20s[b-1]++}
  if(m==='adv'){used=Math.max(a,b);other=Math.min(a,b)}else if(m==='dis'){used=Math.min(a,b);other=Math.max(a,b)}
  cur={spec,m,used,other,bonus:spec.bonus.reduce((s,x)=>s+x.v,0)};
  throwDie(20,used,other,m,showRes);
@@ -637,7 +646,8 @@ function throwDie(sides,final,other,m,done){
 }
 /* ---------- КРИТ: печать хаоса, из неё прорывается живое пламя, кубик парит внутри ---------- */
 const QS=new URLSearchParams(location.search),FORCE20=QS.has('nat20');
-['sigil','burst','flame1','flame2'].forEach(n=>{const i=new Image();i.src='fx/'+n+'.webp'});
+if(FORCE20){const b=document.createElement('div');b.className='testmode';b.textContent='режим проверки: каждый бросок 20';document.body.appendChild(b)}
+const FXI={};['sigil','burst','flame1','flame2'].forEach(n=>{const i=new Image();i.src='fx/'+n+'.webp';FXI[n]=i});
 let critStop=null;
 function critClear(){if(critStop){critStop();critStop=null}document.querySelectorAll('#cfx,.cfront,.cword').forEach(e=>e.remove());[$('die'),$('shd')].forEach(e=>e.getAnimations().forEach(a=>a.cancel()))}
 function bigShake(){document.body.classList.remove('shake','shake2');void document.body.offsetWidth;document.body.classList.add('shake2')}
@@ -654,12 +664,28 @@ function critFx(ex,ey,done){
  const img=(n,w,h,x,y,flat,par)=>{const b=el('im',{width:w+'px',height:h+'px',transform:`translate(${x-w/2}px,${y-h/2}px)${flat?' scaleY(.42)':''}`},par);const i=document.createElement('img');i.src='fx/'+n+'.webp';b.appendChild(i);return i};
  const ring=(x,y,col,dur,to)=>{const r=el('cring',{left:x+'px',top:y+'px',borderColor:col});r.animate([{transform:'scale(.3)',opacity:1},{transform:`scale(${to||5})`,opacity:0}],{duration:dur||480,easing:'cubic-bezier(.1,.7,.3,1)',fill:'forwards'})};
  const debris=(x,y,n,sp,cols)=>{for(let i=0;i<n;i++){const a=-Math.PI*Math.random(),s=sp*rnd(.35,1);P.push({k:'deb',x,y,vx:Math.cos(a)*s*(Math.random()<.5?1.2:.8),vy:Math.sin(a)*s,l:0,m:rnd(1.3,2.5),c:pick(cols||GOLD.concat(VIO)),s:rnd(1.4,3.6)})}};
- /* пламя: каждый язык отдельно, со своим дыханием */
- function flame(par,ang,h,delay,op){const w=h*.34,b=el('fl',{left:(ex-w/2)+'px',top:(floor-h)+'px',width:w+'px',height:h+'px',transform:`rotate(${ang}deg)`,opacity:op},par);
-  const i=document.createElement('img');i.src='fx/flame'+(Math.random()<.5?1:2)+'.webp';b.appendChild(i);
-  i.animate([{transform:'scale(.2,0)',opacity:0},{transform:'scale(1.1,1.25)',opacity:1,offset:.55},{transform:'scale(1,1)',opacity:1}],{duration:520,delay,easing:'cubic-bezier(.2,.9,.3,1)',fill:'backwards'}).onfinish=()=>{if(!run)return;
-   const d=rnd(700,1500),k=[];for(let j=0;j<6;j++)k.push({transform:`scale(${rnd(.86,1.12).toFixed(2)},${rnd(.78,1.18).toFixed(2)}) rotate(${rnd(-5,5).toFixed(1)}deg) skewX(${rnd(-6,6).toFixed(1)}deg)`,opacity:rnd(.65,1).toFixed(2)});k.push(k[0]);
-   i.animate(k,{duration:d*3,iterations:Infinity,easing:'ease-in-out'})}}
+ /* пламя: каждый язык живой сам по себе. Рисуем его полосками: по полоскам снизу вверх бегут волны,
+    кончик гуляет сильнее основания, язык то вытягивается, то оседает, а два рисунка огня перетекают друг в друга */
+ const FL=[],fcv=document.createElement('canvas');fcv.width=cv.width;fcv.height=cv.height;front.appendChild(fcv);
+ const fg=fcv.getContext('2d');fg.setTransform(dpr,0,0,dpr,0,0);
+ function flame(isFront,ang,h,delay,op){FL.push({c:isFront?fg:g,ang:ang*Math.PI/180,h,w:h*.34,t0:performance.now()+delay,op,ph:rnd(0,6.28),sp:rnd(.8,1.25),sw:Math.random()<.5?1:2})}
+ const sc=document.createElement('canvas'),sg=sc.getContext('2d');let scw=0,sch=0;
+ function drawFlame(f,now){const c=f.c,i1=FXI.flame1,i2=FXI.flame2;if(!i1.complete||!i2.complete)return;
+  const age=(now-f.t0)/1000;if(age<=0)return;const k=Math.min(1,age/.55),gr=1+2.2*Math.pow(k-1,3)+1.2*Math.pow(k-1,2),t=now/1000*f.sp+f.ph;
+  const Hh=f.h*gr*(1+.08*Math.sin(t*1.9)+.04*Math.sin(t*3.3+1)),Ww=f.w*(.93+.07*Math.sin(t*2.3+2)),N=44,mix=.5+.5*Math.sin(t*1.1);
+  if(Hh<2)return;
+  /* 1) язык рисуется в отдельный холст: полоски без швов */
+  const bw=Math.ceil(Ww*2.2),bh=Math.ceil(Hh+4);if(bw>scw||bh>sch){scw=Math.max(scw,bw);sch=Math.max(sch,bh);sc.width=Math.ceil(scw*dpr);sc.height=Math.ceil(sch*dpr)}
+  sg.setTransform(dpr,0,0,dpr,0,0);sg.globalCompositeOperation='source-over';sg.clearRect(0,0,bw,bh);
+  const cx=bw/2;
+  for(let pass=0;pass<2;pass++){const im=pass?i2:i1;sg.globalAlpha=pass?mix:1;const iw=im.naturalWidth,ih=im.naturalHeight,sh=Hh/N;
+   for(let s=0;s<N;s++){const u=1-s/N,amp=Math.pow(u,1.3)*Ww,
+     dx=(Math.sin(u*4-t*4.2)*.15+Math.sin(u*7.5-t*6.3+2)*.05+Math.sin(t*1.5)*.10*u)*amp,
+     w=Ww*(1+.10*Math.sin(u*5-t*5+1));
+     sg.drawImage(im,0,s/N*ih,iw,ih/N,cx-w/2+dx,2+s*sh,w,sh+.6)}}
+  /* 2) готовый язык кладётся на сцену светом */
+  c.save();c.translate(ex,floor);c.rotate(f.ang+.05*Math.sin(t*1.3));c.globalAlpha=f.op*Math.min(1,k*1.5);
+  c.drawImage(sc,0,0,bw*dpr,bh*dpr,-cx,-bh+2,bw,bh);c.restore()}
  /* 1. кубик дрожит: магия рвётся наружу */
  svg.animate([{transform:'none'},{transform:'translate(-2px,1px) scale(1.04)'},{transform:'translate(2px,-1px) scale(1.07)'},{transform:'translate(-2px,-1px) scale(1.1)'},{transform:'none'}],{duration:170});
  die.animate([{filter:'drop-shadow(0 0 8px #f6d58e) brightness(1)'},{filter:'drop-shadow(0 0 30px #fff) brightness(1.8)'}],{duration:170,fill:'forwards'});vib(10);
@@ -676,8 +702,8 @@ function critFx(ex,ey,done){
   svg.animate([{transform:'none'},{transform:'translateY(-44px)',offset:.6},{transform:'translateY(-32px)'}],{duration:560,easing:'cubic-bezier(.2,.9,.3,1.2)',fill:'forwards'}).onfinish=()=>{if(run)svg.animate([{transform:'translateY(-32px) rotate(0)'},{transform:'translateY(-42px) rotate(3deg)'},{transform:'translateY(-32px) rotate(0)'}],{duration:2600,iterations:Infinity,easing:'ease-in-out'})};
   shd.animate([{transform:'scale(1)',opacity:1},{transform:'scale(.7)',opacity:.45}],{duration:520,fill:'forwards'});
   /* 4. из центра печати вырывается пламя: веер сзади, пара тонких языков спереди */
-  const N=11;for(let i=0;i<N;i++){const t=i/(N-1)-.5,ang=t*120+rnd(-5,5),h=(Math.min(420,H*.48))*(1-Math.abs(t)*.8)*rnd(.85,1.1);flame(fx,ang,h,220+Math.abs(t)*260+rnd(0,60),1)}
-  [-16,-3,13].forEach((a,i)=>flame(front,a,Math.min(230,H*.28)*rnd(.9,1.1),300+i*90,i===1?.45:.75));
+  const N=11;for(let i=0;i<N;i++){const t=i/(N-1)-.5,ang=t*120+rnd(-5,5),h=(Math.min(420,H*.48))*(1-Math.abs(t)*.8)*rnd(.85,1.1);flame(false,ang,h,220+Math.abs(t)*260+rnd(0,60),1)}
+  [-16,-3,13].forEach((a,i)=>flame(true,a,Math.min(230,H*.28)*rnd(.9,1.1),300+i*90,i===1?.45:.75));
   setTimeout(()=>{if(run)vib(30)},260);
   for(let i=0;i<24;i++)P.push({k:'mote',a:Math.random()*6.28,r:rnd(.55,1),w:rnd(.5,1.5)*(Math.random()<.5?1:-1),l:0,m:1e9,c:pick(GOLD.concat(VIO)),s:rnd(1.4,3.2),ph:Math.random()*6,S:SG});
   /* 5. буквы прилетают по одной и бьют */
@@ -692,7 +718,8 @@ function critFx(ex,ey,done){
  },170);
  /* частицы: осколки падают и отскакивают от стола, искры поднимаются, огоньки кружат над печатью */
  let tp=0;function frame(now){if(!run)return;const t=now/1000,dt=Math.min(.05,tp?(now-tp)/1000:0);tp=now;
-  g.clearRect(0,0,W,H);g.globalCompositeOperation='lighter';
+  g.clearRect(0,0,W,H);fg.clearRect(0,0,W,H);g.globalCompositeOperation=fg.globalCompositeOperation='lighter';
+  FL.forEach(f=>drawFlame(f,now));g.globalAlpha=1;
   if(Math.random()<.4)P.push({k:'emb',x:ex+rnd(-70,70),y:floor-rnd(0,40),vy:-rnd(50,120),l:0,m:rnd(1.4,2.8),c:pick(Math.random()<.6?VIO:GOLD),s:rnd(1,2.2),ph:Math.random()*6});
   for(let i=P.length-1;i>=0;i--){const p=P[i];p.l+=dt;if(p.l>p.m){P.splice(i,1);continue}let al=1-p.l/p.m;
    if(p.k==='deb'){p.vy+=1500*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.y>floor&&p.vy>0&&p.y-p.vy*dt<=floor+2){p.y=floor;p.vy*=-.42;p.vx*=.7}}
@@ -785,6 +812,13 @@ const INFO={
   <p>После него возвращается:</p><p>• все <b>хиты</b><br>• половина <b>костей хитов</b> (минимум 1)<br>• все очки <b>Везунчика</b><br>• <b>Поток хаоса</b><br>• снимается 1 уровень <b>истощения</b>, если ты поел и попил<br>• все ячейки заклинаний и единицы чародейства (будут во вкладке «Бой»)</p>`,acts:`<button data-act="longRest">Отдохнуть до утра</button>`}),
  smagpick:()=>({t:'Заклинания на экране',sub:`галочка = показать в «Общении» · ${S.smagShow.length} из 6`,body:KNOWN.filter(k=>SPELLS[k]&&SPELLS[k].soc).map(k=>{const sh=S.smagShow.includes(k),p=SPELLS[k];return `<button class="crow ck ${sh?'on':''}" data-sshow="${k}"><span><i class="box">${sh?'✓':''}</i>${p.n}</span><small>${p.lv?'1 круг':'заговор'}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">Здесь только заклинания Филиппа, которые помогают в разговоре: очарование, иллюзии, послания. Боевые (Огненный снаряд, Щит, Цветной шарик) сюда не попадают. Отметь до 6.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
  spelldc:()=>({t:'Сложность заклинаний',sub:`${spellDC()} = 8 + мастерство ${prof()} + Харизма ${sg(mod(S.ab.cha))}`,body:`<p>Когда твоё заклинание действует на кого-то (Очарование личности, иллюзия), цель делает <b>спасбросок</b>. Если выбросит <b>${spellDC()} или больше</b>, заклинание её не берёт.</p><p>Чем выше число, тем труднее устоять.</p><div class="how">Бросать ничего не нужно: число называешь мастеру, бросает он.</div>`,acts:''}),
+ fair:()=>{const d=S.d20s||Array(20).fill(0),n=d.reduce((a,b)=>a+b,0),sim=window.__sim;
+  const bars=(arr)=>{const mx=Math.max(1,...arr);return `<div class="hist">${arr.map((v,i)=>`<i class="${i===19?'t':''}" style="height:${(v/mx*100).toFixed(1)}%"></i>`).join('')}</div><div class="hlab">${arr.map((_,i)=>`<span>${i+1}</span>`).join('')}</div>`};
+  return{t:'Честность кубика',sub:'как лист бросает к20',body:`<p>Кубик в листе берёт числа из <b>криптографического генератора</b> телефона (crypto.getRandomValues). Это стандарт браузеров, на нём держатся пароли и шифрование. Каждая грань выпадает с шансом ровно <b>1 из 20 (5%)</b>, перекоса нет.</p>
+  <p><b>Твои броски к20:</b> ${n?`${n} шт., двадцаток ${d[19]} (${(d[19]/n*100).toFixed(1)}%)`:'пока нет'}</p>${n?bars(d):''}
+  ${sim?`<p style="margin-top:12px"><b>Проверка: 10 000 бросков.</b> Двадцаток ${sim[19]} (${(sim[19]/100).toFixed(1)}%). Любая грань: от ${Math.min(...sim)} до ${Math.max(...sim)} раз, в среднем 500.</p>${bars(sim)}`:''}
+  <div class="how">На малом числе бросков бывают серии, это нормально: настоящий кубик тоже может выдать три двадцатки подряд. Чем больше бросков, тем ровнее столбики. Нажми проверку и покажи игрокам: все грани около 500 из 10 000.</div>`,
+  acts:`<button data-act="fairSim">Бросить 10 000 раз</button>`}},
  conds:()=>({t:'Состояния',sub:'галочка = значок на экране',body:CORDER.map(k=>{const sh=S.condShow.includes(k);return `<button class="crow ck ${sh?'on':''}" data-cshow="${k}"><span><i class="box">${sh?'✓':''}</i>${k==='exh'?'Истощение':COND[k].n}</span><small>${cndOn(k)?(k==='exh'?'уровень '+S.exh:'на мне'):''}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">На экране нажатие на значок сразу включает или выключает состояние. Истощение: каждое нажатие +1 уровень, после 6 снова 0. Помехи и скорость лист считает сам.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
  exh:()=>({t:'Истощение',sub:`уровень ${S.exh} из 6`,body:`<p>Уровни складываются: на 3 уровне действуют и 1, и 2.</p>`+EXH.slice(1).map((t,i)=>`<p${S.exh>=i+1?' class="warn"':''}>${S.exh>=i+1?'●':'○'} <b>${i+1}</b>: ${t}</p>`).join('')+`<div class="how">Долгий отдых, если ты поел и попил, снимает 1 уровень. Лист снимет его сам при долгом отдыхе.</div>`,acts:`<button data-act="exhUp" ${S.exh>=6?'disabled':''}>Добавить уровень</button><button class="ghost" data-act="exhDown" ${S.exh?'':'disabled'}>Снять уровень</button>`}),
  heart:()=>({t:'Сердце тьмы',sub:'умение предыстории «Преследуемый»',body:`<p>Кто посмотрит тебе в глаза, видит: ты встречался с невообразимым ужасом и тьма тебе не чужда.</p><p>Простые люди могут тебя побаиваться, но будут <b>вежливы</b> и сделают всё, чтобы <b>помочь</b>: подскажут дорогу, накормят, спрячут.</p><p>Если ты не угрожал им и остался один против врага, они даже могут <b>взяться за оружие и драться рядом с тобой</b>.</p><div class="how">Бросать ничего не нужно. Это работает в разговоре: напомни мастеру, что у тебя есть это умение, когда просишь помощи у крестьян, трактирщиков, стражи.</div>`,acts:''}),
@@ -808,6 +842,7 @@ function openInfo(k,re){const d=INFO[k]();openAb=null;openInfoKey=k;
  if(!re){$('drawer').style.transform='';$('drawer').classList.add('on');$('dim').classList.add('on');vib(10)}}
 function act(a){
  const re=()=>{save();renderAll()};
+ if(a==='fairSim'){const c=Array(20).fill(0);for(let i=0;i<10000;i++)c[r(20)-1]++;window.__sim=c;vib([10,30,10]);openInfo('fair',true);return}
  if(a.startsWith('cast:')){const k=a.slice(5),p=SPELLS[k];
   if(p.lv){if(S.slots.used>=S.slots.max)return;S.slots.used++}
   if(p.conc)S.conc=k;save();renderAll();
@@ -877,7 +912,7 @@ fixGap();addEventListener('resize',()=>{fixGap();fit()});addEventListener('orien
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-9';
+const BUILD='2026-11-25-10';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
