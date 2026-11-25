@@ -50,7 +50,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 /* ===== экран ===== */
 .page{position:fixed;inset:0 0 calc(var(--tabh) - var(--gap)) 0;z-index:1;display:none;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .page.on{display:block;animation:pg .28s ease-out}
-.screen{height:calc(100svh + var(--gap) - var(--tabh));display:flex;flex-direction:column;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;gap:8px;max-width:560px;margin:0 auto}
+.screen{height:calc(100svh + var(--gap) - var(--tabh));display:flex;flex-direction:column;padding:calc(18px + env(safe-area-inset-top)) 12px 8px;gap:8px;max-width:560px;margin:0 auto}
 .below{max-width:560px;margin:0 auto;padding:6px 14px 30px}
 .below h2{font-size:22px;margin:4px 0 6px;color:var(--mute)}
 .log{color:var(--mute);font-size:14px}
@@ -153,9 +153,11 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 
 /* ===== магия в разговоре ===== */
 .smag{flex:none;display:flex;flex-direction:column;gap:5px;overflow:hidden}
-.smh{display:flex;align-items:center;gap:8px;font:600 11px/1 Alegreya,serif;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.smh{white-space:nowrap;display:flex;align-items:center;gap:8px;font:600 11px/1 Alegreya,serif;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
 .smh i{flex:1;height:1px;background:var(--line)}
-.smh .dc{text-transform:none;letter-spacing:0;color:var(--violet);font-size:12.5px}
+.smh .dc{text-transform:none;letter-spacing:0;color:var(--violet);font-size:12.5px;padding:4px 0}
+.sp.more{grid-column:1/-1;text-align:center;background:none;border:1px dashed rgba(165,124,255,.35);color:var(--violet);font-size:13px;line-height:1.1;padding:3px}
+.sp b,.sp small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .smh .sl{display:flex;gap:4px}
 .smh .sl .charge{width:10px;height:10px}
 .spl{display:grid;grid-template-columns:1fr 1fr;gap:6px}
@@ -165,6 +167,8 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .sp.lv b::after{content:" · 1 круг";font:400 11px Alegreya,serif;color:var(--violet)}
 .sp.on{border-color:var(--violet);box-shadow:0 0 0 1px var(--violet),0 0 16px rgba(165,124,255,.4)}
 .sp.on small{color:#d9c6ff}
+@media (max-height:760px){.sp small{display:none}.sp{padding:6px 8px}.sp b{font-size:15px}.spl{grid-template-columns:repeat(3,1fr)}.sp.lv b::after{content:" •";color:var(--violet)}.fc.heart small{display:none}#p-social .screen{gap:6px}}
+@media (max-height:600px){.sp b{font-size:14px}.sp{padding:5px 7px}.smh .lg,.smh.lgh{display:none}}
 
 /* ===== общение ===== */
 .shead{display:flex;align-items:center;gap:10px}
@@ -278,6 +282,22 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .shake{animation:shake .3s}
 @keyframes shake{15%{transform:translate(-6px,3px)}35%{transform:translate(5px,-3px)}55%{transform:translate(-3px,2px)}75%{transform:translate(2px,-1px)}}
 
+/* крит */
+.cfx{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.cfx canvas{position:absolute;left:0;top:0;width:100%;height:100%}
+.cfx .im{position:absolute;left:0;top:0;will-change:transform,opacity}
+.cfx .im>img,.cfx .im>div{width:100%;height:100%;display:block}
+.cflash{position:absolute;inset:0;opacity:0;background:radial-gradient(circle at var(--fx) var(--fy),#fff 0,#fff3d0 22%,rgba(165,124,255,.55) 55%,rgba(6,4,8,0) 85%)}
+.cring{position:absolute;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;border:3px solid #f6d58e;box-shadow:0 0 18px #f6d58e,inset 0 0 14px #a57cff;opacity:0}
+.cword{position:absolute;left:0;right:0;text-align:center;z-index:3;pointer-events:none;font:700 92px/1 "Cormorant Garamond",serif;letter-spacing:.03em;white-space:nowrap;margin-top:-46px}
+.cword span{display:inline-block;color:#fff4d6;text-shadow:0 0 4px #fff,0 0 14px #f6d58e,0 0 30px #e9bd6c,0 0 58px #a57cff}
+.cword span.idle{animation:cglow 2.2s ease-in-out infinite}
+@keyframes cglow{50%{text-shadow:0 0 3px #fff,0 0 10px #f6d58e,0 0 24px #a57cff,0 0 80px #a57cff;filter:brightness(1.18)}}
+.roll .res{z-index:3;text-shadow:0 1px 6px #000,0 0 14px rgba(6,4,8,.9)}
+.res .tot.gold{color:#fff4d6;text-shadow:0 0 18px rgba(246,213,142,.7)}
+.shake2{animation:shake2 .5s}
+@keyframes shake2{10%{transform:translate(-12px,7px)}25%{transform:translate(11px,-8px)}40%{transform:translate(-7px,5px)}55%{transform:translate(5px,-3px)}70%{transform:translate(-3px,2px)}85%{transform:translate(1px,-1px)}}
+
 /* ввод чисел */
 .sheetbg{position:fixed;inset:0 0 calc(-1*var(--gap)) 0;z-index:90;display:none;background:rgba(6,4,8,.7);align-items:flex-end}
 .sheetbg.on{display:flex}
@@ -344,6 +364,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
   <div class="slips" id="slips"></div>
   <div class="smag" id="smag"></div>
   <button class="fc heart" data-info="heart"><span class="t">Сердце тьмы<small>умение предыстории: простые люди тебе помогают</small></span><span class="eye">◉</span></button>
+  <div class="smh lgh">Языки и характер<i></i></div>
   <div class="langs" id="langs"></div>
   <div class="chars" id="chars"></div>
  </div></section>
@@ -428,14 +449,18 @@ const SPELLS={
   d:()=>`<p>Ты бросаешь сгусток огня в существо или предмет в пределах 36 м. Это <b>дальнобойная атака заклинанием: к20 ${sg(spellAtk())}</b>. При попадании <b>1к10 урона огнём</b>. Горючие предметы, которые никто не держит, загораются.</p>`},
  charm_person:{n:'Очарование личности',lv:1,soc:1,short:'гуманоид считает тебя другом, 1 час',meta:'1 круг · 1 действие · 9 м · 1 час · В, С',
   d:()=>`<p>Ты пытаешься очаровать <b>гуманоида</b>, которого видишь в пределах 9 м. Он делает <b>спасбросок Мудрости против Сл ${spellDC()}</b>. С преимуществом, если ты или твои спутники с ним сражаетесь.</p><p>При провале он <b>очарован на 1 час</b> или пока ты или спутники не причините ему вред. Очарованный <b>считает тебя другом</b>.</p><p>Когда заклинание кончится, он <b>знает, что ты его очаровал</b>.</p><p class="mu">Ячейкой 2 круга и выше: +1 цель за каждый круг выше первого (цели в 9 м друг от друга).</p>`},
+ shield:{n:'Щит',lv:1,short:'+5 к КД до твоего хода, реакция',meta:'1 круг · реакция · на себя · 1 раунд · В, С',
+  d:()=>`<p>Реакция: когда по тебе <b>попадает атака</b> или ты становишься целью <b>волшебной стрелы</b>.</p><p>Перед тобой встаёт невидимый барьер. До начала твоего следующего хода у тебя <b>+5 к КД</b>, в том числе против той самой атаки, и ты <b>не получаешь урон от волшебной стрелы</b>.</p>`},
+ chromatic_orb:{n:'Цветной шарик',lv:1,short:'атака 3к8 урона, стихия на выбор',meta:'1 круг · 1 действие · 27 м · мгновенно · В, С, М (бриллиант 50 зм)',
+  d:()=>`<p>Ты бросаешь сферу энергии в существо в пределах 27 м. Выбери вид урона: <b>звук, кислота, огонь, холод, электричество или яд</b>.</p><p>Это <b>дальнобойная атака заклинанием: к20 ${sg(spellAtk())}</b>. При попадании <b>3к8 урона</b> выбранного вида.</p><p class="mu">Нужен бриллиант стоимостью 50 зм (он не тратится). Ячейкой 2 круга и выше: +1к8 за каждый круг выше первого.</p>`},
  disguise_self:{n:'Маскировка',lv:1,soc:1,short:'другая внешность на 1 час',meta:'1 круг · 1 действие · на себя · 1 час · В, С',
   d:()=>`<p>Ты и всё твоё снаряжение <b>выглядите иначе</b> на 1 час, или пока ты не закончишь действием. Можно стать на 30 см выше или ниже, худее или полнее. Нельзя менять строение тела: столько же рук и ног.</p><p>Иллюзия не выдерживает касания: рука пройдёт сквозь шляпу или упрётся в тебя раньше, чем ждёт.</p><p>Чтобы раскусить, существо должно действием тебя изучить и пройти проверку Интеллекта (Анализ) против <b>Сл ${spellDC()}</b>.</p>`},
  comprehend_languages:{n:'Понимание языков',lv:1,soc:1,short:'понимаешь любую речь и текст',meta:'1 круг · 1 действие · на себя · 1 час · ритуал · В, С, М (сажа и соль)',
   d:()=>`<p>На 1 час ты понимаешь <b>буквальный смысл любой речи</b> на любом языке. Можешь читать любой текст, касаясь его, примерно минута на страницу.</p><p>Тайные шифры и магические знаки не расшифровывает.</p><p class="mu">Ритуал: можно сотворить за 10 минут без ячейки.</p>`}
 };
 const KNOWN=['fire_bolt','friends','minor_illusion','message','shield','chromatic_orb','charm_person'];
-function renderSmag(){const list=KNOWN.filter(k=>SPELLS[k]&&SPELLS[k].soc),sl=S.slots;
- $('smag').innerHTML=`<div class="smh">Магия в разговоре<i></i><span class="dc">Сл ${spellDC()}</span><span class="sl" title="ячейки 1 круга">${Array.from({length:sl.max},(_,i)=>`<span class="charge v ${i<sl.used?'used':''}"></span>`).join('')}</span></div><div class="spl">${list.map(k=>{const p=SPELLS[k],on=S.conc===k;return `<button class="sp ${p.lv?'lv':''} ${on?'on':''}" data-info="sp_${k}"><b>${p.n}</b><small>${on?'действует · концентрация':p.short}</small></button>`}).join('')}</div>`}
+function renderSmag(){const list=KNOWN.filter(k=>SPELLS[k]&&S.smagShow.includes(k)),sl=S.slots;
+ $('smag').innerHTML=`<div class="smh">Магия<span class="lg"> в разговоре</span><i></i><button class="dc" data-info="spelldc">сложность заклинаний ${spellDC()}</button><span class="sl" title="ячейки 1 круга">${Array.from({length:sl.max},(_,i)=>`<span class="charge v ${i<sl.used?'used':''}"></span>`).join('')}</span></div><div class="spl">${list.map(k=>{const p=SPELLS[k],on=S.conc===k;return `<button class="sp ${p.lv?'lv':''} ${on?'on':''}" data-info="sp_${k}"><b>${p.n}</b><small>${on?'действует · концентрация':p.short}</small></button>`}).join('')}<button class="sp more" data-info="smagpick">${list.length?'выбрать заклинания ›':'+ выбрать заклинания для этого экрана'}</button></div>`}
 
 /* ---------- общение ---------- */
 const SOC=[['deception','cha'],['insight','wis'],['persuasion','cha'],['intimidation','cha'],['performance','cha']];
@@ -447,7 +472,7 @@ const CHAR={
  traits:{t:'Черты',full:'<p>«Я не говорю о том, что терзает меня. Предпочитаю не взваливать на других своё проклятие.»</p><p>«Я ожидаю опасности за каждым углом.»</p>',short:'Молчит о том, что терзает. Ждёт опасности за каждым углом.'},
  ideal:{t:'Идеал',full:'<p>«Я остановлю духов, что преследуют меня, или погибну в попытках сделать это.»</p><p class="mu">Мировоззрение идеала: любое.</p>',short:'Остановить духов, что преследуют его, или погибнуть.'},
  bond:{t:'Привязанность',full:'<p>«Мои мучения лишили меня любимого человека. Я жажду вернуть утраченную любовь.»</p>',short:'Вернуть утраченную любовь.'},
- flaw:{t:'Слабость',full:'<p>«У меня есть определённый ритуал, который я должен выполнять каждый день. Я никогда не должен его нарушать.»</p><p class="mu">Ритуал Филиппа: тщательно и спокойно, «как лекарь», мыть руки.</p>',short:'Каждый день моет руки «как лекарь». Не может нарушить ритуал.'}
+ flaw:{t:'Слабость',full:'<p>«У меня есть определённый ритуал, который я должен выполнять каждый день. Я никогда не должен его нарушать.»</p><p class="mu">Ритуал Филиппа: тщательно и спокойно, «как лекарь», мыть руки.</p><p><b>Дети</b>: тоже его слабость.</p>',short:'Не может без ежедневного ритуала. Дети.'}
 };
 const SRC={medicine:'раса',deception:'класс',insight:'класс',arcana:'предыстория',investigation:'предыстория'};
 const DEFAULT={v:2,name:'Филипп',race:'Человек',cls:'Чародей',sub:'Дикая магия',bg:'Преследуемый',level:2,
@@ -458,7 +483,7 @@ const DEFAULT={v:2,name:'Филипп',race:'Человек',cls:'Чародей
  money:{pp:0,gp:10,sp:1,cp:0},log:[]};
 let S;try{S=JSON.parse(localStorage.getItem('filipp-sheet-v2'))}catch(e){}
 if(!S||S.v!==2)S=structuredClone(DEFAULT);
-if(!S.cond)S.cond={};if(!S.condShow)S.condShow=COND_MAIN.slice();if(S.exh==null)S.exh=0;if(!S.slots)S.slots={max:3,used:0};if(S.conc===undefined)S.conc=null;
+if(!S.cond)S.cond={};if(!S.condShow)S.condShow=COND_MAIN.slice();if(S.exh==null)S.exh=0;if(!S.slots)S.slots={max:3,used:0};if(S.conc===undefined)S.conc=null;if(!S.smagShow)S.smagShow=['friends','minor_illusion','message','charm_person'];
 const save=()=>{try{localStorage.setItem('filipp-sheet-v2',JSON.stringify(S))}catch(e){}};
 const $=id=>document.getElementById(id);
 const mod=s=>Math.floor((s-10)/2);
@@ -563,7 +588,7 @@ function d20(spec){
  if(adv&&dis)notes.push('преимущество и помеха гасят друг друга');
  spec.note=notes.join(' · ');
  const m=adv&&dis?'norm':adv?'adv':dis?'dis':'norm';
- const a=r(20),b=r(20);let used=a,other=null;
+ const a=FORCE20?20:r(20),b=FORCE20?20:r(20);let used=a,other=null;
  if(m==='adv'){used=Math.max(a,b);other=Math.min(a,b)}else if(m==='dis'){used=Math.min(a,b);other=Math.max(a,b)}
  cur={spec,m,used,other,bonus:spec.bonus.reduce((s,x)=>s+x.v,0)};
  throwDie(20,used,other,m,showRes);
@@ -579,7 +604,7 @@ function dice(spec){
 }
 function throwDie(sides,final,other,m,done){
  busy=true;const ov=$('roll'),die=$('die'),shd=$('shd'),res=$('res');
- ov.classList.add('on');res.classList.remove('on');res.innerHTML='';ov.querySelectorAll('.dust,.die2').forEach(e=>e.remove());die.style.filter='';
+ critClear();ov.classList.add('on');res.classList.remove('on');res.innerHTML='';ov.querySelectorAll('.dust,.die2').forEach(e=>e.remove());die.style.filter='';
  const W=innerWidth,H=innerHeight,sx=lastPt?lastPt.x:W/2,sy=lastPt?lastPt.y:H*.8,ex=W/2,ey=H/2-80;
  shd.style.left=ex+'px';shd.style.top=(ey+62)+'px';
  /* Результат известен заранее. Кубик крутится ровно на целое число оборотов и ложится прямо, без доворота.
@@ -602,10 +627,113 @@ function throwDie(sides,final,other,m,done){
    if(sides===20&&final===20)die.style.filter='drop-shadow(0 0 26px #f6d58e)';
    if(sides===20&&final===1){die.style.filter='drop-shadow(0 0 18px #b3233a) grayscale(.5)'}
    if(other!=null){const d2=document.createElement('div');d2.className='die2';d2.innerHTML=dieSvg(other,'n');d2.style.left=(ex+92)+'px';d2.style.top=(ey-40)+'px';ov.appendChild(d2);d2.animate([{transform:'translate(-60px,20px) rotate(-90deg)',opacity:0},{transform:'none',opacity:.5}],{duration:300,easing:'cubic-bezier(.3,1.5,.5,1)'})}
+   if(sides===20&&final===20&&CRIT_V&&!matchMedia('(prefers-reduced-motion:reduce)').matches){critFx(ex,ey,()=>{done();if(cur&&!cur.dice){const t=$('res').querySelector('.tot');if(t)t.classList.add('gold')}setTimeout(()=>busy=false,250)});return}
    done();setTimeout(()=>busy=false,150);
   }}
  requestAnimationFrame(f);
 }
+/* ---------- КРИТ: из кубика вырывается дикая магия ---------- */
+/* пока вариант не выбран, крит показывается только по ссылке ?crit=a|b|c (&nat20 = каждый бросок 20, для пробы) */
+const QS=new URLSearchParams(location.search),CRIT_V=QS.get('crit')||null,FORCE20=QS.has('nat20');
+['sigil','burst'].forEach(n=>{const i=new Image();i.src='fx/'+n+'.webp'});
+let critStop=null;
+function critClear(){if(critStop){critStop();critStop=null}document.querySelectorAll('#cfx,.cword').forEach(e=>e.remove());[$('die'),$('shd')].forEach(e=>e.getAnimations().forEach(a=>a.cancel()))}
+function bigShake(){document.body.classList.remove('shake','shake2');void document.body.offsetWidth;document.body.classList.add('shake2')}
+function critFx(ex,ey,done){
+ critClear();
+ const v=CRIT_V,ov=$('roll'),die=$('die'),shd=$('shd'),svg=die.querySelector('svg'),W=innerWidth,H=innerHeight,dpr=Math.min(2,devicePixelRatio||1);
+ const fx=document.createElement('div');fx.className='cfx';fx.id='cfx';ov.insertBefore(fx,ov.firstChild);
+ const pix=v==='c',sc=pix?4:1/dpr,q=x=>pix?Math.round(x/4)*4:x;
+ const cv=document.createElement('canvas');cv.width=Math.ceil(W/sc);cv.height=Math.ceil(H/sc);if(pix)cv.style.imageRendering='pixelated';fx.appendChild(cv);
+ const g=cv.getContext('2d');g.setTransform(1/sc,0,0,1/sc,0,0);
+ const P=[],floor=ey+58,GOLD=['#fff3cf','#f6d58e','#e9bd6c'],VIO=['#a57cff','#d58cff','#7b4dff'],pick=a=>a[Math.floor(Math.random()*a.length)];
+ let run=true,t0=performance.now(),rays=0,flash=0,word=null,glyphs=null,txt=null;
+ critStop=()=>{run=false};
+ const el=(cls,css)=>{const d=document.createElement('div');d.className=cls;Object.assign(d.style,css||{});fx.appendChild(d);return d};
+ const img=(n,size,x,y,flat)=>{const w=el('im',{width:size+'px',height:size+'px',transform:`translate(${x-size/2}px,${y-size/2}px)${flat?' scaleY(.42)':''}`});const i=document.createElement('img');i.src='fx/'+n+'.webp';w.appendChild(i);return i};
+ const ring=(x,y,col,dur,to)=>{const r=el('cring',{left:x+'px',top:y+'px',borderColor:col});r.animate([{transform:'scale(.3)',opacity:1},{transform:`scale(${to||5})`,opacity:0}],{duration:dur||480,easing:'cubic-bezier(.1,.7,.3,1)',fill:'forwards'})};
+ const debris=(x,y,n,sp,cols)=>{for(let i=0;i<n;i++){const a=-Math.PI*Math.random(),s=sp*(.35+Math.random()*.65);P.push({k:'deb',x,y,vx:Math.cos(a)*s*(Math.random()<.5?1.2:.8),vy:Math.sin(a)*s,l:0,m:1.3+Math.random()*1.2,c:pick(cols||GOLD.concat(VIO)),s:pix?4:1.4+Math.random()*2.2})}};
+ const ember=()=>P.push({k:'emb',x:ex+(Math.random()-.5)*120,y:ey+40,vx:0,vy:-(35+Math.random()*70),l:0,m:2+Math.random()*2.2,c:pick(Math.random()<.5?GOLD:VIO),s:pix?4:1.2+Math.random()*1.6,ph:Math.random()*6});
+ /* 1. кубик дрожит, магия рвётся наружу */
+ svg.animate([{transform:'none'},{transform:'translate(-2px,1px) scale(1.04)'},{transform:'translate(2px,-1px) scale(1.07)'},{transform:'translate(-2px,-1px) scale(1.1)'},{transform:'none'}],{duration:170});
+ die.animate([{filter:'drop-shadow(0 0 8px #f6d58e) brightness(1)'},{filter:'drop-shadow(0 0 30px #fff) brightness(1.8)'}],{duration:170,fill:'forwards'});vib(10);
+ setTimeout(()=>{if(!run)return;
+  die.animate([{filter:'drop-shadow(0 0 30px #fff) brightness(1.8)'},{filter:'drop-shadow(0 0 22px #f6d58e) brightness(1.05)'}],{duration:500,fill:'forwards'});
+  if(v==='a')boomA();else if(v==='b')boomB();else boomC();
+  setTimeout(()=>{if(run)done()},v==='b'?950:720);
+ },170);
+ function boomA(){
+  const f=el('cflash');f.style.setProperty('--fx',ex+'px');f.style.setProperty('--fy',ey+'px');f.animate([{opacity:1},{opacity:0}],{duration:380,easing:'ease-out',fill:'forwards'});
+  vib([70,30,120]);bigShake();ring(ex,ey,'#f6d58e',520,6);
+  const B=Math.min(W*1.15,480),bi=img('burst',B,ex,ey);
+  bi.animate([{transform:'scale(.1) rotate(-35deg)',opacity:0},{transform:'scale(1.35) rotate(5deg)',opacity:1,offset:.35},{transform:'scale(1) rotate(0)',opacity:.75}],{duration:760,easing:'cubic-bezier(.2,.9,.3,1)'}).onfinish=()=>{if(!run)return;
+   bi.animate([{opacity:.75,transform:'scale(1) rotate(0)'},{opacity:.45,transform:'scale(1.05) rotate(2deg)',offset:.13},{opacity:.8,transform:'scale(.98) rotate(-1deg)',offset:.3},{opacity:.6,transform:'scale(1.07) rotate(3deg)',offset:.52},{opacity:.85,transform:'scale(1.01) rotate(0)',offset:.7},{opacity:.5,transform:'scale(1.04) rotate(-2deg)',offset:.85},{opacity:.75,transform:'scale(1) rotate(0)'}],{duration:2600,iterations:Infinity})};
+  debris(ex,ey,70,950);
+  word=mkWord(ey-150);
+  setTimeout(()=>{if(!run)return;word.style.opacity=1;
+   word.animate([{transform:'scale(3.2) rotate(-7deg)',opacity:0,filter:'blur(8px)'},{transform:'scale(.88) rotate(1deg)',opacity:1,filter:'blur(0)',offset:.62},{transform:'scale(1.05)',offset:.82},{transform:'none'}],{duration:400,easing:'cubic-bezier(.55,0,.8,.4)'});
+   setTimeout(()=>{if(!run)return;vib(45);bigShake();debris(ex,ey-110,22,420,GOLD);ring(ex,ey-150,'#a57cff',420,3.5);idleWord()},250);
+  },230);
+ }
+ function boomB(){
+  vib([30,40,30]);ring(ex,ey,'#a57cff',520,5);
+  const S=Math.min(W*.98,400),si=img('sigil',S,ex,floor,true),halo=img('sigil',250,ex,ey,false);halo.parentNode.style.opacity=.32;
+  si.animate([{transform:'scale(0) rotate(260deg)',opacity:0},{transform:'scale(1.12) rotate(-12deg)',opacity:1,offset:.7},{transform:'scale(1) rotate(0)',opacity:1}],{duration:820,easing:'cubic-bezier(.2,.8,.3,1)'}).onfinish=()=>{if(run){si.animate([{transform:'rotate(0)'},{transform:'rotate(360deg)'}],{duration:36000,iterations:Infinity});si.parentNode.animate([{filter:'brightness(1)'},{filter:'brightness(1.45)'},{filter:'brightness(1)'}],{duration:2400,iterations:Infinity})}};
+  halo.animate([{transform:'scale(.2) rotate(0)',opacity:0},{transform:'scale(1) rotate(-90deg)',opacity:1}],{duration:900,easing:'cubic-bezier(.2,.8,.3,1)',fill:'forwards'}).onfinish=()=>{if(run)halo.animate([{transform:'rotate(-90deg)'},{transform:'rotate(-450deg)'}],{duration:48000,iterations:Infinity})};
+  svg.animate([{transform:'none'},{transform:'translateY(-40px)',offset:.6},{transform:'translateY(-30px)'}],{duration:520,easing:'cubic-bezier(.2,.9,.3,1.2)',fill:'forwards'}).onfinish=()=>{if(run)svg.animate([{transform:'translateY(-30px) rotate(0)'},{transform:'translateY(-40px) rotate(3deg)'},{transform:'translateY(-30px) rotate(0)'}],{duration:2600,iterations:Infinity,easing:'ease-in-out'})};
+  shd.animate([{transform:'scale(1)',opacity:1},{transform:'scale(.7)',opacity:.45}],{duration:520,fill:'forwards'});
+  for(let i=0;i<26;i++)P.push({k:'mote',a:Math.random()*6.28,r:.55+Math.random()*.45,w:(.5+Math.random())*(Math.random()<.5?1:-1),l:0,m:1e9,c:pick(GOLD.concat(VIO)),s:1.4+Math.random()*1.8,ph:Math.random()*6,S});
+  word=mkWord(ey-160);word.style.opacity=1;const L=[...word.children];
+  const from=[[-W,-40],[0,-H*.6],[W,-30],[-W*.4,H*.5]];
+  L.forEach((sp,i)=>{sp.style.opacity=0;setTimeout(()=>{if(!run)return;sp.style.opacity=1;
+   const [dx,dy]=from[i%4];
+   sp.animate([{transform:`translate(${dx}px,${dy}px) rotate(${(i%2?1:-1)*120}deg) scale(.4)`,opacity:.2},{transform:'none',opacity:1}],{duration:300,easing:'cubic-bezier(.6,0,.9,.45)'}).onfinish=()=>{if(!run)return;
+    vib(i===L.length-1?[30,20,70]:24);const r=sp.getBoundingClientRect();debris(r.left+r.width/2,r.bottom-14,12,300);
+    sp.animate([{transform:'scale(1.3,.7)'},{transform:'scale(.9,1.12)'},{transform:'none'}],{duration:240,easing:'ease-out'});
+    if(i===L.length-1){bigShake();ring(ex,ey-160,'#f6d58e',460,4);idleWord()}}},230+i*150)});
+ }
+ function boomC(){
+  flash=1;vib([60,30,100]);bigShake();rays=performance.now();
+  debris(ex,ey,60,900);
+  glyphs=mkGlyphs('КРИТ!');const tw=glyphs.reduce((s,gl)=>s+gl.w,0)+(glyphs.length-1)*1;
+  txt={x:Math.round((W/4-tw)/2),y:-30,vy:0,ty:Math.round((ey-175)/4),land:0,t:0};
+ }
+ function mkWord(y){const w=document.createElement('div');w.className='cword';w.style.top=y+'px';w.style.opacity=0;w.innerHTML=[...'КРИТ'].map(c=>`<span>${c}</span>`).join('');ov.appendChild(w);return w}
+ function idleWord(){[...word.children].forEach((sp,i)=>{sp.classList.add('idle');sp.style.animationDelay=(i*.18)+'s';sp.animate([{transform:'translateY(0)'},{transform:'translateY(-4px)'},{transform:'translateY(0)'}],{duration:2200,delay:i*180,iterations:Infinity,easing:'ease-in-out'})})}
+ function mkGlyphs(s){const fs=26;return [...s].map(ch=>{const c=document.createElement('canvas'),x=c.getContext('2d');x.font=`700 ${fs}px "Cormorant Garamond",serif`;const w=Math.ceil(x.measureText(ch).width)+2,h=fs+6;c.width=w;c.height=h;x.font=`700 ${fs}px "Cormorant Garamond",serif`;x.textBaseline='top';x.fillStyle='#fff';x.fillText(ch,1,2);
+  const d=x.getImageData(0,0,w,h).data,on=(i,j)=>i>=0&&j>=0&&i<w&&j<h&&d[(j*w+i)*4+3]>110;let top=h,bot=0;for(let j=0;j<h;j++)for(let i=0;i<w;i++)if(on(i,j)){top=Math.min(top,j);bot=Math.max(bot,j)}
+  const px=[];for(let j=-1;j<=h;j++)for(let i=-1;i<=w;i++){if(on(i,j)){const r=(j-top)/Math.max(1,bot-top);px.push([i,j,r<.28?0:r<.72?1:2])}else if(on(i-1,j)||on(i+1,j)||on(i,j-1)||on(i,j+1))px.push([i,j,3])}
+  return {w,px,top}})}
+ /* кадр */
+ function frame(now){if(!run)return;const t=(now-t0)/1000,dt=Math.min(.05,(now-(frame.p||now))/1000);frame.p=now;
+  g.clearRect(0,0,W,H);
+  if(pix&&rays){const k=Math.min(1,(now-rays)/320),a0=Math.floor((now-rays)/130)*Math.PI/24,R=Math.max(W,H)*k;
+   for(let i=0;i<12;i++){const a=a0+i*Math.PI/6;g.fillStyle=i%2?'rgba(165,124,255,.15)':'rgba(246,213,142,.17)';g.beginPath();g.moveTo(ex,ey);g.lineTo(ex+Math.cos(a-.11)*R,ey+Math.sin(a-.11)*R);g.lineTo(ex+Math.cos(a+.11)*R,ey+Math.sin(a+.11)*R);g.fill()}
+   if(Math.random()<.25)P.push({k:'star',x:Math.random()*W,y:Math.random()*H*.7,l:0,m:.6+Math.random()*.6,c:pick(GOLD.concat(['#fff'])),s:4})}
+  if(flash){g.fillStyle=`rgba(255,250,235,${Math.max(0,1-flash/6)})`;g.fillRect(0,0,W,H);flash++;if(flash>6)flash=0}
+  if(!pix)g.globalCompositeOperation='lighter';
+  if(t>.9&&Math.random()<(v==='b'?.25:.45))ember();
+  for(let i=P.length-1;i>=0;i--){const p=P[i];p.l+=dt;if(p.l>p.m){P.splice(i,1);continue}
+   let al=1-p.l/p.m;
+   if(p.k==='deb'){p.vy+=1500*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.y>floor&&p.vy>0&&p.y-p.vy*dt<=floor+2){p.y=floor;p.vy*=-.42;p.vx*=.7}}
+   else if(p.k==='emb'){p.y+=p.vy*dt;p.x+=Math.sin(t*2+p.ph)*18*dt;al=Math.min(1,p.l*3)*al}
+   else if(p.k==='mote'){p.a+=p.w*dt;p.x=ex+Math.cos(p.a)*p.S*.5*p.r;p.y=floor+Math.sin(p.a)*p.S*.21*p.r-(Math.sin(t*1.5+p.ph)+1)*14;al=Math.min(1,p.l*2)*(.55+.45*Math.sin(t*3+p.ph))}
+   else if(p.k==='star'){al=Math.sin(Math.PI*p.l/p.m)}
+   g.globalAlpha=Math.max(0,al);g.fillStyle=p.c;
+   if(pix){const x=q(p.x),y=q(p.y);if(p.k==='star'){g.fillRect(x,y-4,4,12);g.fillRect(x-4,y,12,4)}else g.fillRect(x,y,4,4)}
+   else{g.beginPath();g.arc(p.x,p.y,p.s,0,6.283);g.fill()}}
+  g.globalAlpha=1;g.globalCompositeOperation='source-over';
+  if(txt){/* пиксельные буквы падают сверху и отскакивают */
+   if(!txt.land){txt.vy+=90*dt*20;txt.y+=txt.vy*dt;if(txt.y>=txt.ty){txt.y=txt.ty;if(Math.abs(txt.vy)<25){txt.land=1;}else{if(!txt.hit){txt.hit=1;vib(45);bigShake();debris(ex,txt.ty*4+60,24,420,GOLD)}txt.vy*=-.38}}}
+   else txt.t+=dt;
+   const pal=['#fff3cf','#f6d58e','#c9873a','#2a0f33'];let x=txt.x;
+   glyphs.forEach((gl,i)=>{const wy=txt.land?Math.round(Math.sin(txt.t*4-i*.8)*1.6):0,shine=txt.land&&Math.floor(txt.t*6)%14===i;
+    gl.px.forEach(([px,py,c])=>{g.fillStyle=shine&&c<3?'#ffffff':pal[c];g.fillRect((x+px)*4,(Math.round(txt.y)+py-gl.top+wy)*4,4,4)});x+=gl.w+1});
+   if(txt.land&&Math.random()<.2)P.push({k:'star',x:(txt.x+Math.random()*(x-txt.x))*4,y:(txt.y+Math.random()*24)*4,l:0,m:.5,c:'#fff',s:4})}
+  requestAnimationFrame(frame)}
+ requestAnimationFrame(frame);
+}
+
 function dust(x,y,gold){const ov=$('roll');for(let i=0;i<(gold?28:14);i++){const d=document.createElement('div');d.className='dust';d.style.left=x+'px';d.style.top=y+'px';if(gold)d.style.background=Math.random()<.5?'#f6d58e':'#fff';else d.style.opacity=.55;ov.appendChild(d);
  const dir=Math.random()<.5?-1:1,dx=dir*(30+Math.random()*90),dy=-(Math.random()*(gold?90:30));
  d.animate([{transform:'translate(0,0)',opacity:1},{transform:`translate(${dx}px,${dy}px)`,opacity:0}],{duration:420+Math.random()*380,easing:'cubic-bezier(.2,.8,.4,1)',fill:'forwards'})}}
@@ -634,7 +762,7 @@ $('roll').addEventListener('click',e=>{
  if(e.target.closest('[data-luck]')){useLuck();return}
  const p=e.target.closest('[data-pick]');if(p){const v=+p.dataset.pick+cur.bonus;S.log[0]={l:cur.spec.label+' (Везунчик)',t:v};save();$('res').innerHTML=`<div class="lbl">${esc(cur.spec.label)}</div><div class="tot">${v}</div><div class="br">оставлен кубик <b>${p.dataset.pick}</b></div><div class="hint">нажми, чтобы закрыть</div>`;vib(15);return}
  if(e.target.closest('.res button'))return;
- $('roll').classList.remove('on');
+ $('roll').classList.remove('on');critClear();
 });
 
 /* ---------- броски из шторки ---------- */
@@ -653,6 +781,7 @@ document.addEventListener('click',e=>{
   return rollFromDrawer(t.dataset.roll);
  }
  if(t.dataset.cnd)return toggleCnd(t.dataset.cnd);
+ if(t.dataset.sshow){const k=t.dataset.sshow,i=S.smagShow.indexOf(k);if(i>=0)S.smagShow.splice(i,1);else if(S.smagShow.length<6)S.smagShow.push(k);else{toast('На экране помещается 6 заклинаний. Сними галочку с другого.');vib([20,40,20]);return}save();renderSmag();openInfo('smagpick',true);vib(8);return}
  if(t.dataset.cshow){const k=t.dataset.cshow,i=S.condShow.indexOf(k);if(i>=0)S.condShow.splice(i,1);else S.condShow.push(k);save();renderConds();openInfo('conds',true);vib(8);return}
  if(t.dataset.sroll)return rollSkill(t.dataset.sroll);
  if(t.dataset.coin){const k=t.dataset.coin;S.money[k]=Math.max(0,S.money[k]+ +t.dataset.d);save();renderCoins();vib(8);return}
@@ -685,6 +814,8 @@ const INFO={
   <p>Везунчик, Поток хаоса и ячейки заклинаний короткий отдых <b>не возвращает</b>.</p>`,acts:`<button data-act="toHd">Открыть кости хитов</button>`}),
  long:()=>({t:'Долгий отдых',sub:'8 часов, раз в сутки',body:`<p>Не меньше <b>8 часов</b>: сон и спокойные дела. Не чаще раза в сутки. Если отдых прервал бой больше чем на час, его надо начать заново.</p>
   <p>После него возвращается:</p><p>• все <b>хиты</b><br>• половина <b>костей хитов</b> (минимум 1)<br>• все очки <b>Везунчика</b><br>• <b>Поток хаоса</b><br>• снимается 1 уровень <b>истощения</b>, если ты поел и попил<br>• все ячейки заклинаний и единицы чародейства (будут во вкладке «Бой»)</p>`,acts:`<button data-act="longRest">Отдохнуть до утра</button>`}),
+ smagpick:()=>({t:'Заклинания на экране',sub:`галочка = показать в «Общении» · ${S.smagShow.length} из 6`,body:KNOWN.filter(k=>SPELLS[k]).map(k=>{const sh=S.smagShow.includes(k),p=SPELLS[k];return `<button class="crow ck ${sh?'on':''}" data-sshow="${k}"><span><i class="box">${sh?'✓':''}</i>${p.n}</span><small>${p.lv?'1 круг':'заговор'}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">Здесь все заклинания, которые знает Филипп. Отметь до 6, которые нужны в разговоре.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
+ spelldc:()=>({t:'Сложность заклинаний',sub:`${spellDC()} = 8 + мастерство ${prof()} + Харизма ${sg(mod(S.ab.cha))}`,body:`<p>Когда твоё заклинание действует на кого-то (Очарование личности, иллюзия), цель делает <b>спасбросок</b>. Если выбросит <b>${spellDC()} или больше</b>, заклинание её не берёт.</p><p>Чем выше число, тем труднее устоять.</p><div class="how">Бросать ничего не нужно: число называешь мастеру, бросает он.</div>`,acts:''}),
  conds:()=>({t:'Состояния',sub:'галочка = значок на экране',body:CORDER.map(k=>{const sh=S.condShow.includes(k);return `<button class="crow ck ${sh?'on':''}" data-cshow="${k}"><span><i class="box">${sh?'✓':''}</i>${k==='exh'?'Истощение':COND[k].n}</span><small>${cndOn(k)?(k==='exh'?'уровень '+S.exh:'на мне'):''}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">На экране нажатие на значок сразу включает или выключает состояние. Истощение: каждое нажатие +1 уровень, после 6 снова 0. Помехи и скорость лист считает сам.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
  exh:()=>({t:'Истощение',sub:`уровень ${S.exh} из 6`,body:`<p>Уровни складываются: на 3 уровне действуют и 1, и 2.</p>`+EXH.slice(1).map((t,i)=>`<p${S.exh>=i+1?' class="warn"':''}>${S.exh>=i+1?'●':'○'} <b>${i+1}</b>: ${t}</p>`).join('')+`<div class="how">Долгий отдых, если ты поел и попил, снимает 1 уровень. Лист снимет его сам при долгом отдыхе.</div>`,acts:`<button data-act="exhUp" ${S.exh>=6?'disabled':''}>Добавить уровень</button><button class="ghost" data-act="exhDown" ${S.exh?'':'disabled'}>Снять уровень</button>`}),
  heart:()=>({t:'Сердце тьмы',sub:'умение предыстории «Преследуемый»',body:`<p>Кто посмотрит тебе в глаза, видит: ты встречался с невообразимым ужасом и тьма тебе не чужда.</p><p>Простые люди могут тебя побаиваться, но будут <b>вежливы</b> и сделают всё, чтобы <b>помочь</b>: подскажут дорогу, накормят, спрячут.</p><p>Если ты не угрожал им и остался один против врага, они даже могут <b>взяться за оружие и драться рядом с тобой</b>.</p><div class="how">Бросать ничего не нужно. Это работает в разговоре: напомни мастеру, что у тебя есть это умение, когда просишь помощи у крестьян, трактирщиков, стражи.</div>`,acts:''}),
@@ -777,13 +908,13 @@ fixGap();addEventListener('resize',()=>{fixGap();fit()});addEventListener('orien
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-6';
+const BUILD='2026-11-25-7';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
   let tried='';try{tried=sessionStorage.getItem('filipp-upd')||''}catch(e){}
   if(tried===m[1])return;try{sessionStorage.setItem('filipp-upd',m[1])}catch(e){}
-  location.replace(location.pathname+'?v='+encodeURIComponent(m[1]))}).catch(()=>{})}
+  {const q=new URLSearchParams(location.search);q.set('v',m[1]);location.replace(location.pathname+'?'+q)}}).catch(()=>{})}
 checkUpdate();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate()});
 </script>
 </body>
