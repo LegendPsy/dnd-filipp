@@ -626,7 +626,12 @@ body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards
 .fxl .elm{position:absolute;left:auto!important;top:auto!important;right:10px;bottom:8px;width:16px;height:22px;opacity:.7;pointer-events:none}
 .fxl .elm svg{width:100%;height:100%;overflow:visible}
 .fxl .elm.flame{transform-origin:50% 100%;animation:esway 4.8s ease-in-out infinite alternate!important}
-.fx-hyp .fxl::before{animation-duration:90s!important}.fx-hyp .fxl::after{animation-duration:18s!important}
+.fx-hyp .fxl::before{animation-duration:150s!important}.fx-hyp .fxl::after{animation-duration:28s!important}
+.fx-chaos .fxl::before{display:none!important}
+.dacts .fxl{display:none!important}
+.atk.fxb:is(:has(.elm),:has(.rimg)) .hit,.atk.fxb:is(:has(.elm),:has(.rimg)) small{padding-right:34px;overflow:hidden}
+.atk.fxb:has(.rimg) .hit,.atk.fxb:has(.rimg) small{padding-right:52px}
+.atk.fxb .hit .dm{overflow:hidden;text-overflow:ellipsis;min-width:0}
 .fx-hold .fxl u{animation-duration:70s!important}.fx-hold .fxl u+u{animation-duration:50s!important}
 .fxl .elm.fball{width:32px;height:32px;right:6px;bottom:-7px;opacity:.75}
 .fxl .elm.fball .tg{transform-origin:0 0;animation:fhspin 24s linear infinite!important}
@@ -2188,7 +2193,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-25';
+const BUILD='2026-11-25-26';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
