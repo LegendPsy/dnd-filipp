@@ -612,6 +612,12 @@ body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards
 .fx-msg .fxl svg{left:4px;right:4px;bottom:6px;width:calc(100% - 8px);height:10px}
 .fxl .pxa{right:8px;top:50%;transform:translateY(-50%);height:76%;width:auto;aspect-ratio:1;opacity:.5;shape-rendering:crispEdges}
 .fxl .pxa.flee{aspect-ratio:auto}
+/* ---------- волна сотворения: один раз на весь экран ---------- */
+.cwave{position:fixed;left:50%;top:50%;z-index:125;pointer-events:none;border-radius:50%;mix-blend-mode:screen;opacity:0}
+.cwave.hyp{background:repeating-conic-gradient(rgba(200,150,255,.5) 0 8deg,transparent 8deg 16deg);-webkit-mask:radial-gradient(circle,transparent 0 4%,#000 5% 30%,transparent 60%);mask:radial-gradient(circle,transparent 0 4%,#000 5% 30%,transparent 60%)}
+.cwave.hyp2{background:repeating-radial-gradient(circle,rgba(240,170,255,.42) 0 4px,transparent 4px 16px);-webkit-mask:radial-gradient(circle,#000 0 24%,transparent 56%);mask:radial-gradient(circle,#000 0 24%,transparent 56%)}
+.cwave.ring{border:3px dashed rgba(200,165,255,.85);mix-blend-mode:normal;box-shadow:0 0 18px rgba(165,124,255,.5),inset 0 0 18px rgba(165,124,255,.4)}
+.cwave.ring.b{border:2px dotted rgba(240,225,255,.8)}
 </style>
 </head>
 <body>
@@ -1745,6 +1751,23 @@ const _fxOn=fxOn;
 fxOn=function(b,el){const had=b&&b.dataset.fx===el;_fxOn(b,el);if(had||!b)return;b.querySelectorAll(':scope>.fxl s,:scope>.fxl u').forEach(e=>e.style.setProperty('--p',RN(.15,.85).toFixed(2)))};
 const _fxD2=fxDecor;
 fxDecor=function(){if(RM)return;_fxD2();document.querySelectorAll('[data-info="opp"]').forEach(b=>fxOn(b,'flee'))};
+/* волна сотворения: «включаемое» заклинание один раз прокатывается по экрану и гаснет */
+function castWave(k){if(RM)return;const W=innerWidth,H=innerHeight,cx=W/2,cy=H*.45,D=Math.hypot(W,H)*1.3;
+ const mk=(cls,size)=>{const d=document.createElement('div');d.className='cwave '+cls;d.style.width=d.style.height=size+'px';d.style.margin=`-${size/2}px 0 0 -${size/2}px`;d.style.top=cy+'px';document.body.appendChild(d);return d};
+ const gone=(d,a)=>a.onfinish=()=>d.remove();
+ if(k==='hypnotic_pattern'){/* узор раскрывается из центра, проворачивается и тает */
+  const a=mk('hyp',D),b=mk('hyp2',D);
+  gone(a,a.animate([{transform:'scale(.15) rotate(-30deg)',opacity:0},{transform:'scale(.7) rotate(10deg)',opacity:.75,offset:.3},{transform:'scale(1.25) rotate(40deg)',opacity:0}],{duration:1150,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'}));
+  gone(b,b.animate([{transform:'scale(1.3)',opacity:0},{transform:'scale(.85)',opacity:.6,offset:.35},{transform:'scale(.4)',opacity:0}],{duration:1150,easing:'cubic-bezier(.3,.6,.4,1)',fill:'forwards'}));
+  vib([10,40,10,40,10]);return}
+ if(k==='hold_person'){/* два кольца рун сжимаются к центру и защёлкиваются */
+  const a=mk('ring',260),b=mk('ring b',200);
+  gone(a,a.animate([{transform:'scale(3.2) rotate(0)',opacity:0},{transform:'scale(1.6) rotate(60deg)',opacity:.9,offset:.4},{transform:'scale(.28) rotate(150deg)',opacity:1,offset:.78},{transform:'scale(.22) rotate(155deg)',opacity:0}],{duration:820,easing:'cubic-bezier(.6,0,.9,.6)',fill:'forwards'}));
+  gone(b,b.animate([{transform:'scale(3.6) rotate(0)',opacity:0},{transform:'scale(1.8) rotate(-50deg)',opacity:.8,offset:.4},{transform:'scale(.3) rotate(-140deg)',opacity:1,offset:.78},{transform:'scale(.24) rotate(-145deg)',opacity:0}],{duration:820,easing:'cubic-bezier(.6,0,.9,.6)',fill:'forwards'}));
+  setTimeout(()=>{burst('hold',cx,cy,1.6,cy+60);spawn({k:'flash',x:cx,y:cy,s:60,gr:.5,m:.3,c:'rgba(200,170,255,.7)',add:1});vib([50,20,30]);document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake')},640);return}
+ if(k==='misty_step'){/* серебристый туман проходит по экрану снизу вверх и рассеивается */
+  for(let i=0;i<16;i++){const x=RN(-.1,1.1)*W,y=H+RN(10,120);spawn({k:'puff',x,y,vx:RN(-30,30),vy:-RN(700,1000),dr:2.2,m:RN(1,1.4),s:RN(50,90),gr:.8,c:'rgba(225,222,240,.22)',fin:.15,fp:1.4})}
+  vib(20);return}}
 {const _rf=renderFight,_oi=openInfo;renderFight=function(){_rf.apply(this,arguments);fxDecor()};openInfo=function(){_oi.apply(this,arguments);fxDecor()}}
 /* ---------- броски из шторки ---------- */
 function rollFromDrawer(what){
@@ -1898,7 +1921,7 @@ function act(a){
   if(k==='shield'){closeDrawer();barrier();flash('#fVit .tok.shield','#a57cff');toast(`Щит: класс доспеха ${effAC()} до твоего хода. Мастер может попросить к20 на волну`);return}
   if(k==='fire_bolt'||k==='chromatic_orb'){closeDrawer();return d20(atkSpec(k,c))}
   if(p.roll){closeDrawer();const n=p.roll.n+Math.max(0,c-p.lv)*(p.roll.up||0);return dice({label:`${p.n}${c>p.lv?' ('+c+' круг)':''}: урон`,n,s:p.roll.s,min:0,fx:k==='fireball'?'fireball':null,after:()=>`<div class="br">${p.roll.t}, сложность ${spellDC()}: при успехе половина</div>`})}
-  closeDrawer();vib([15,30,15]);toast(p.lv?`${p.n}: ячейка ${c} круга потрачена. Мастер может попросить к20 на волну`:p.conc?`${p.n} действует`:`${p.n} сотворено`);return}
+  closeDrawer();vib([15,30,15]);castWave(k);toast(p.lv?`${p.n}: ячейка ${c} круга потрачена. Мастер может попросить к20 на волну`:p.conc?`${p.n} действует`:`${p.n} сотворено`);return}
  if(a==='concEnd'){const k=S.conc;S.conc=null;save();renderAll();closeDrawer();vib(10);if(k==='friends')toast('Существо поняло, что на него влияли магией');return}
  if(a.startsWith('condOn:')){const k=a.slice(7);S.cond[k]=1;save();renderAll();closeDrawer();vib([20,40,30]);setTimeout(()=>{const c=document.querySelector(`.cnd[data-info="c_${k}"]`);if(c){c.classList.remove('stamp');void c.offsetWidth;c.classList.add('stamp')}},30);return}
  if(a.startsWith('condOff:')){delete S.cond[a.slice(8)];save();renderAll();closeDrawer();vib(10);return}
