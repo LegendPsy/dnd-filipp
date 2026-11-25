@@ -1902,6 +1902,20 @@ const SKFX={
   const d=sfx(`<svg viewBox="-110 -150 220 200"><path data-d="80" d="M-70 40 C-90 -60 -40 -130 0 -132 C40 -130 90 -60 70 40" stroke-dasharray=""/><path data-d="200" d="M-56 44 C-70 -40 -30 -110 0 -112" stroke="#d58cff"/></svg>`,ex,ey-50,220,200,{life:1100});
   sDraw(d,0,620);wspT.push(setTimeout(()=>{vib(30);dust(ex,fl-4,false)},720))}
 };
+/* Убеждение: весы за кубиком. Чаша качается, в неё падают монеты, и она тяжело опускается на твою сторону */
+SKFX['Убеждение']=(ex,ey,fl,die,used)=>{const win=used>=10,L=110,CH=58,dish='M-26 0 Q0 16 26 0 Z';
+ const pan=s=>`<g class="pn${s}"><path d="M0 0 L-22 ${CH} M0 0 L22 ${CH}" stroke="#cbb48a" stroke-width="1"/><g transform="translate(0 ${CH})"><path d="${dish}" fill="rgba(165,124,255,.22)"/><path d="M-26 0 L26 0"/></g></g>`;
+ const d=sfx(`<svg viewBox="-150 -20 300 194"><path d="M0 -6 L0 154 M-34 154 L34 154 M-18 146 L18 146" /><circle cy="-10" r="4" fill="rgba(233,189,108,.3)"/><g class="bm"><path d="M-${L} 0 L${L} 0" stroke-width="2"/><path d="M-${L} 0 L-${L-14} -4 M${L} 0 L${L-14} -4"/></g>${pan('l')}${pan('r')}<circle r="3.5" fill="#e9bd6c"/></svg>`,ex,ey-15,300,194,{u:1,life:3000});
+ const bm=d.querySelector('.bm'),pl=d.querySelector('.pnl'),pr=d.querySelector('.pnr'),Y=ey-92;
+ let a=win?-.2:.12,v=0,tgt=0,t0=performance.now(),last=t0;const goal=win?.2:-.1;
+ const set=()=>{const c=Math.cos(a)*L,s=Math.sin(a)*L;bm.setAttribute('transform',`rotate(${(a*57.3).toFixed(2)})`);pl.setAttribute('transform',`translate(${-c} ${-s})`);pr.setAttribute('transform',`translate(${c} ${s})`)};
+ const step=now=>{if(!d.isConnected)return;const dt=Math.min(.04,(now-last)/1000);last=now;v+=((tgt-a)*38-v*4.2)*dt;a+=v*dt;set();if(now-t0<2900)requestAnimationFrame(step)};set();
+ d.animate([{opacity:0},{opacity:1}],{duration:260,fill:'forwards'});requestAnimationFrame(step);
+ /* монеты падают в правую чашу по одной, каждая толкает её вниз */
+ const n=win?5:2;for(let i=0;i<n;i++)wspT.push(setTimeout(()=>{const x=ex+Math.cos(a)*L,y=Y+Math.sin(a)*L+CH;
+  spawn({x:x+RN(-8,8),y:y-110,vy:120,g:1500,m:.36,s:5,c:['#fff6d8','#f6d58e','#e9bd6c'],u:1,fl:y,bo:.2,tick:p=>{if(p.y>=y-1&&!p.hit){p.hit=1;v+=win?.75:.4;tgt=Math.min(goal,tgt+goal/n*1.1);spawn({k:'flash',x:p.x,y,s:10,m:.2,c:'rgba(246,213,142,.8)',add:1,u:1});vib(8)}}})},350+i*230));
+ if(win)wspT.push(setTimeout(()=>{tgt=goal;spawn({k:'ring',x:ex,y:fl,r0:20,r1:120,m:.9,c:'#f6d58e',w:1.5,fp:1,fy:.3});vib([20,40,30])},350+n*230+250));
+ else wspT.push(setTimeout(()=>{tgt=-.12;v-=1.2},350+n*230+250))};
 {const _sf=skillFx;skillFx=function(spec,used){if(RM)return;const f=SKFX[spec.label];if(f){const W=innerWidth,H=innerHeight,ex=W/2,ey=H/2-80;return f(ex,ey,ey+62,$('die'),used)}return _sf(spec,used)}}
 /* три огненных кнопки различаются: снаряд — огонёк, шар — шар пламени, цветной шарик — шар из шести стихий */
 EL.fball=EL.fire;EL.chroma=EL.fire;
@@ -2193,7 +2207,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-26';
+const BUILD='2026-11-25-27';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
