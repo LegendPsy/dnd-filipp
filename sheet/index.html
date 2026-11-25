@@ -113,7 +113,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .ab .s{font-size:11.5px;color:var(--paperMute);margin-top:2px;display:flex;gap:4px;align-items:center}
 .ab .s .dot{width:7px;height:7px;border-radius:50%;border:1.3px solid var(--paperMute)}
 .ab .s .dot.on{background:var(--blood);border-color:var(--blood)}
-.slip.pressed,.lang.pressed,.chr.pressed,.pressed{transform:scale(.93) translateY(2px)!important}
+.cnd.pressed,.slip.pressed,.lang.pressed,.chr.pressed,.pressed{transform:scale(.93) translateY(2px)!important}
 
 /* судьба */
 .fate{display:grid;grid-template-columns:1fr 1fr;gap:6px}
@@ -129,6 +129,23 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .fc.rest{justify-content:center;min-height:34px;padding:3px 8px}
 .fc.rest .t{font-size:15px}
 .fc.rest .t{flex:none;text-align:center}
+
+/* ===== состояния ===== */
+.spare{display:flex;flex-direction:column;gap:5px;overflow:hidden}
+.cnh{display:flex;align-items:center;gap:8px;font:600 11px/1 Alegreya,serif;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.cnh i{flex:1;height:1px;background:var(--line)}
+.cnh button{font:600 12px/1 Alegreya,serif;letter-spacing:.04em;text-transform:none;color:var(--gold);padding:4px 2px}
+.cnds{display:flex;flex-wrap:wrap;gap:6px;overflow:hidden;min-height:0;align-content:flex-start}
+.cnd{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:7px 10px;font:600 15px/1 "Cormorant Garamond",serif;color:var(--mute);transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
+.cnd.on{color:#ffe3e7;border-color:var(--red2);background:linear-gradient(160deg,rgba(120,20,38,.55),rgba(50,10,20,.6));box-shadow:0 0 0 1px rgba(224,72,94,.35),0 0 14px rgba(224,72,94,.35)}
+.cnd.on::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red2);margin-right:6px;vertical-align:middle;box-shadow:0 0 6px var(--red2)}
+.cnd.stamp{animation:stamp .42s cubic-bezier(.2,1.6,.4,1)}
+@keyframes stamp{0%{transform:scale(1.35) rotate(-3deg);opacity:.4}60%{transform:scale(.94)}100%{transform:none}}
+.crow{display:flex;justify-content:space-between;align-items:center;width:100%;padding:11px 4px;border-top:1px solid var(--line);text-align:left;font-size:16px}
+.crow small{color:var(--mute);font-size:12.5px}
+.crow.on{color:#ffb3bf}
+.crow.on small{color:var(--red2)}
+.warn{color:var(--red2)!important}
 
 /* ===== общение ===== */
 .shead{display:flex;align-items:center;gap:10px}
@@ -158,6 +175,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .chr b{display:block;font:600 11px/1 Alegreya,serif;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin-bottom:3px}
 .chr span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font:500 14.5px/1.12 "Cormorant Garamond",serif}
 .chr.c2{border-left-color:var(--violet)}.chr.c3{border-left-color:var(--blood)}.chr.c4{border-left-color:#6f6458}
+@media (max-height:700px){.cnd{padding:5px 8px;font-size:14px}.spare{gap:3px}}
 @media (max-height:700px){.shead img{width:32px;height:32px}.shead h1{font-size:23px}.chr{padding:4px 8px}.lang{padding:4px 2px}.fc.heart{min-height:36px}}
 @media (max-height:600px){.slip .h{display:none}.shead .cls{display:none}}
 
@@ -333,6 +351,41 @@ const SK={
  wis:[['perception','Восприятие','заметить, услышать'],['insight','Проницательность','понять, лжёт ли собеседник'],['medicine','Медицина','перевязать, понять причину смерти'],['survival','Выживание','следы, путь, охота'],['animal','Уход за животными','успокоить лошадь']],
  cha:[['deception','Обман','соврать убедительно'],['persuasion','Убеждение','уговорить, договориться'],['intimidation','Запугивание','напугать, надавить'],['performance','Выступление','стихи, песня, рассказ']]
 };
+/* ---------- состояния (PHB 2014, dnd.su) ---------- */
+// fx: chk/atk/svdex = 'dis'|'adv', spd0 = скорость 0, fail = автопровал спасбросков Силы и Ловкости
+const COND={
+ frightened:{n:'Испуган',fx:{chk:'dis',atk:'dis'},d:'<p>• <b>Помеха</b> на проверки характеристик и броски атаки, пока источник страха у тебя в поле зрения.</p><p>• Ты не можешь добровольно приближаться к источнику страха.</p>'},
+ poisoned:{n:'Отравлен',fx:{chk:'dis',atk:'dis'},d:'<p>• <b>Помеха</b> на броски атаки и проверки характеристик.</p>'},
+ charmed:{n:'Очарован',fx:{},d:'<p>• Ты не можешь атаковать того, кто тебя очаровал, и делать его целью вредных умений и магии.</p><p>• У очаровавшего <b>преимущество</b> на проверки, когда он общается с тобой.</p>'},
+ prone:{n:'Сбит с ног',fx:{atk:'dis'},d:'<p>• Ты лежишь ничком. Можешь только ползти (каждый метр стоит 2 м скорости), пока не встанешь. Встать стоит половину скорости.</p><p>• Твои атаки с <b>помехой</b>.</p><p>• Атаки по тебе с <b>преимуществом</b>, если враг в пределах 1,5 м. Если дальше, то с помехой.</p>'},
+ grappled:{n:'Схвачен',fx:{spd0:1},d:'<p>• Твоя <b>скорость 0</b>, бонусы к скорости не действуют.</p><p>• Кончается, если схвативший стал недееспособен или тебя вынесло из его досягаемости.</p><p>• Вырваться: действие, проверка Атлетики или Акробатики против Атлетики схватившего.</p>'},
+ restrained:{n:'Опутан',fx:{spd0:1,atk:'dis',svdex:'dis'},d:'<p>• Твоя <b>скорость 0</b>.</p><p>• Твои атаки с <b>помехой</b>, атаки по тебе с <b>преимуществом</b>.</p><p>• <b>Помеха</b> на спасброски Ловкости.</p>'},
+ blinded:{n:'Ослеплён',fx:{atk:'dis'},d:'<p>• Ты ничего не видишь и автоматически проваливаешь проверки, где нужно зрение.</p><p>• Твои атаки с <b>помехой</b>, атаки по тебе с <b>преимуществом</b>.</p>'},
+ deafened:{n:'Оглох',fx:{},d:'<p>• Ты ничего не слышишь и автоматически проваливаешь проверки, где нужен слух.</p>'},
+ incapacitated:{n:'Недееспособен',fx:{},d:'<p>• Ты не можешь совершать <b>действия и реакции</b>.</p>'},
+ invisible:{n:'Невидим',fx:{atk:'adv'},d:'<p>• Тебя нельзя увидеть без магии или особого чувства. Тебя всё ещё можно услышать или найти по следам.</p><p>• Твои атаки с <b>преимуществом</b>, атаки по тебе с <b>помехой</b>.</p>'},
+ paralyzed:{n:'Парализован',fx:{spd0:1,fail:1},d:'<p>• Ты <b>недееспособен</b>: нет действий и реакций. Не можешь двигаться и говорить.</p><p>• <b>Автоматически проваливаешь</b> спасброски Силы и Ловкости.</p><p>• Атаки по тебе с <b>преимуществом</b>. Попадание с 1,5 м становится <b>критическим</b>.</p>'},
+ stunned:{n:'Ошеломлён',fx:{spd0:1,fail:1},d:'<p>• Ты <b>недееспособен</b>, не можешь двигаться, говоришь запинаясь.</p><p>• <b>Автоматически проваливаешь</b> спасброски Силы и Ловкости.</p><p>• Атаки по тебе с <b>преимуществом</b>.</p>'},
+ unconscious:{n:'Без сознания',fx:{spd0:1,fail:1},d:'<p>• Ты <b>недееспособен</b>, не двигаешься, не говоришь и не понимаешь, что вокруг. Роняешь то, что держал, и падаешь ничком.</p><p>• <b>Автоматически проваливаешь</b> спасброски Силы и Ловкости.</p><p>• Атаки по тебе с <b>преимуществом</b>. Попадание с 1,5 м становится <b>критическим</b>.</p>'},
+ petrified:{n:'Окаменел',fx:{spd0:1,fail:1},d:'<p>• Ты превращён в камень вместе с вещами, весишь в 10 раз больше, не стареешь.</p><p>• <b>Недееспособен</b>, не двигаешься, не говоришь, не понимаешь, что вокруг.</p><p>• <b>Автоматически проваливаешь</b> спасброски Силы и Ловкости. Атаки по тебе с <b>преимуществом</b>.</p><p>• <b>Сопротивление</b> всем видам урона, иммунитет к яду и болезням (уже действующие замирают).</p>'}
+};
+const COND_MAIN=['frightened','poisoned','charmed','prone','grappled','restrained','blinded'];
+const EXH=['нет','помеха на проверки характеристик','скорость вдвое меньше','помеха на атаки и спасброски','максимум хитов вдвое меньше','скорость 0','смерть'];
+function condFx(spec){const dis=[],adv=[];let fail=null;const C=S.cond||{},kind=spec.kind,ab=spec.ab;
+ for(const k in C){if(!C[k]||!COND[k])continue;const f=COND[k].fx,n=COND[k].n;
+  if(kind==='check'&&f.chk==='dis')dis.push(n);
+  if(kind==='atk'&&f.atk==='dis')dis.push(n);if(kind==='atk'&&f.atk==='adv')adv.push(n);
+  if(kind==='save'&&ab==='dex'&&f.svdex==='dis')dis.push(n);
+  if(kind==='save'&&(ab==='str'||ab==='dex')&&f.fail)fail=n}
+ const e=S.exh||0;if(e>=1&&kind==='check')dis.push('Истощение');if(e>=3&&(kind==='atk'||kind==='save'))dis.push('Истощение');
+ return{dis,adv,fail}}
+function effSpeed(){const C=S.cond||{},e=S.exh||0;if(e>=5||Object.keys(C).some(k=>C[k]&&COND[k]&&COND[k].fx.spd0))return 0;return e>=2?S.speed/2:S.speed}
+function effMax(){return (S.exh||0)>=4?Math.floor(S.hp.max/2):S.hp.max}
+function renderConds(){const C=S.cond||{},act=Object.keys(C).filter(k=>C[k]&&COND[k]);
+ const list=[...act,...COND_MAIN.filter(k=>!C[k])];
+ const exh=S.exh?`<button class="cnd on" data-info="exh">Истощение ${S.exh}</button>`:'';
+ $('spare').innerHTML=`<div class="cnh">Состояния${act.length||S.exh?` · <span class="warn">${act.length+(S.exh?1:0)}</span>`:''}<i></i><button data-info="conds">все ›</button></div><div class="cnds">${act.map(k=>`<button class="cnd on" data-info="c_${k}">${COND[k].n}</button>`).join('')}${exh}${list.slice(act.length).map(k=>`<button class="cnd" data-info="c_${k}">${COND[k].n}</button>`).join('')}${S.exh?'':`<button class="cnd" data-info="exh">Истощение</button>`}</div>`}
+
 /* ---------- общение ---------- */
 const SOC=[['deception','cha'],['insight','wis'],['persuasion','cha'],['intimidation','cha'],['performance','cha']];
 const LANGS=[['Общий',0,'Язык всех людей и большинства народов. На нём говорят в Баровии и почти везде.'],
@@ -354,6 +407,7 @@ const DEFAULT={v:2,name:'Филипп',race:'Человек',cls:'Чародей
  money:{pp:0,gp:10,sp:1,cp:0},log:[]};
 let S;try{S=JSON.parse(localStorage.getItem('filipp-sheet-v2'))}catch(e){}
 if(!S||S.v!==2)S=structuredClone(DEFAULT);
+if(!S.cond)S.cond={};if(S.exh==null)S.exh=0;
 const save=()=>{try{localStorage.setItem('filipp-sheet-v2',JSON.stringify(S))}catch(e){}};
 const $=id=>document.getElementById(id);
 const mod=s=>Math.floor((s-10)/2);
@@ -373,9 +427,9 @@ const d20i='<svg class="d20" viewBox="0 0 24 24" fill="none" stroke="currentColo
 function renderHead(){
  $('nm').textContent=S.name;
  $('cl').innerHTML=`<b>${S.cls}</b> · ${S.sub} · ${S.level} ур. · мастерство ${sg(prof())}`;
- $('hpCur').textContent=S.hp.cur;$('hpMax').textContent=S.hp.max;$('hpTemp').textContent=S.hp.temp?'+'+S.hp.temp:'';
- $('hpBar').style.width=Math.max(0,Math.min(100,S.hp.cur/S.hp.max*100))+'%';
- $('acV').textContent=S.ac;$('spV').innerHTML=`${S.speed}<small>м</small>`;$('initV').textContent=sg(mod(S.ab.dex));
+ const em=effMax();$('hpCur').textContent=Math.min(S.hp.cur,em);$('hpMax').textContent=em;$('hpMax').classList.toggle('warn',em<S.hp.max);$('hpTemp').textContent=S.hp.temp?'+'+S.hp.temp:'';
+ $('hpBar').style.width=Math.max(0,Math.min(100,Math.min(S.hp.cur,em)/em*100))+'%';
+ $('acV').textContent=S.ac;{const sp=effSpeed();$('spV').innerHTML=`${String(sp).replace('.',',')}<small>м</small>`;$('spV').classList.toggle('warn',sp!==S.speed)}$('initV').textContent=sg(mod(S.ab.dex));
 }
 function renderAbil(){
  const p=prof();
@@ -401,7 +455,7 @@ function renderSenses(){$('senses').innerHTML=[['perception','Пассивное
 function renderLog(){if(S.log.length>7){S.log=S.log.slice(0,7);save()}$('log').innerHTML=S.log.length?S.log.map(l=>`<div><span>${esc(l.l)}</span><b>${l.t}</b></div>`).join(''):'<div><span>Пока ни одного броска</span></div>'}
 function skAb(id){for(const k in SK)if(SK[k].some(x=>x[0]===id))return k}
 function skMod(id){const k=skAb(id);return mod(S.ab[k])+(S.skills[id]?prof():0)}
-function rollSkill(id){const k=skAb(id),[,n,s3]=ABN[k],sk=SK[k].find(x=>x[0]===id),b=[{l:s3,v:mod(S.ab[k])}];if(S.skills[id])b.push({l:'мастерство',v:prof()});d20({label:sk[1],bonus:b})}
+function rollSkill(id){const k=skAb(id),[,n,s3]=ABN[k],sk=SK[k].find(x=>x[0]===id),b=[{l:s3,v:mod(S.ab[k])}];if(S.skills[id])b.push({l:'мастерство',v:prof()});d20({label:sk[1],bonus:b,kind:'check',ab:k})}
 function renderSocial(){
  $('chaMod').textContent=sg(mod(S.ab.cha));$('profS').textContent='+'+prof();
  $('slips').innerHTML=SOC.map(([id,k])=>{const sk=SK[k].find(x=>x[0]===id),o=S.skills[id];return `<button class="slip" data-sroll="${id}"><div class="sheet"><span class="n"><i class="dot ${o?'on':''}"></i>${sk[1]==='Проницательность'?'Проницат.':sk[1]}</span><span class="m">${sg(skMod(id))}</span><span class="h">${sk[2]}</span></div></button>`}).join('')
@@ -409,7 +463,7 @@ function renderSocial(){
  $('langs').innerHTML=LANGS.map(([n,ex],i)=>`<button class="lang ${ex?'ex':''}" data-info="lang">${n}</button>`).join('');
  $('chars').innerHTML=['traits','ideal','bond','flaw'].map((k,i)=>`<button class="chr c${i+1}" data-info="ch_${k}"><b>${CHAR[k].t}</b><span>${CHAR[k].short}</span></button>`).join('');
 }
-function renderAll(){renderSocial();renderHead();renderSenses();renderAbil();renderFate();renderCoins();renderLog();if(openAb)renderDrawer();else if(openInfoKey)openInfo(openInfoKey,true)}
+function renderAll(){renderSocial();renderConds();renderHead();renderSenses();renderAbil();renderFate();renderCoins();renderLog();if(openAb)renderDrawer();else if(openInfoKey)openInfo(openInfoKey,true)}
 
 /* ---------- шторка характеристики ---------- */
 function renderDrawer(){
@@ -446,14 +500,18 @@ function dieSvg(n,tint){const a=tint==='dis'?['#5a1b26','#36101a']:['#5a2a4a','#
  <path d="M50 4 L26 46 L74 46Z M26 46 L50 96 M74 46 L50 96 M8 28 L26 46 M92 28 L74 46 M8 72 L26 46 M92 72 L74 46" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.5"/>
  <text class="num" x="50" y="52">${n}</text></svg>`}
 let busy=false,lastPt=null,cur=null;
-document.addEventListener('pointerdown',e=>{lastPt={x:e.clientX,y:e.clientY};const c=e.target.closest('.ab,.tok,.fc,.row,.slip,.lang,.chr');if(c){c.classList.add('pressed');vib(6)}},{passive:true});
+document.addEventListener('pointerdown',e=>{lastPt={x:e.clientX,y:e.clientY};const c=e.target.closest('.ab,.tok,.fc,.row,.slip,.lang,.chr,.cnd');if(c){c.classList.add('pressed');vib(6)}},{passive:true});
 ['pointerup','pointercancel'].forEach(ev=>document.addEventListener(ev,()=>setTimeout(()=>document.querySelectorAll('.pressed').forEach(c=>c.classList.remove('pressed')),60),{passive:true}));
 
 function d20(spec){
  if(busy)return;
- let m=spec.mode||rollMode;
- if(chaosArmed){m=m==='dis'?'norm':'adv';chaosArmed=false;S.chaos.used=Math.min(S.chaos.max,S.chaos.used+1);save();renderFate();spec.note='Поток хаоса'}
- else if(inspArmed){m=m==='dis'?'norm':'adv';inspArmed=false;S.insp=0;save();renderFate();spec.note='Вдохновение'}
+ const m0=spec.mode||rollMode;let adv=m0==='adv',dis=m0==='dis';const notes=[];
+ if(spec.kind){const cf=condFx(spec);if(cf.dis.length){dis=true;notes.push('помеха: '+[...new Set(cf.dis)].join(', '))}if(cf.adv.length){adv=true;notes.push('преимущество: '+cf.adv.join(', '))}if(cf.fail)notes.push('по правилам автопровал: '+cf.fail)}
+ if(chaosArmed){adv=true;chaosArmed=false;S.chaos.used=Math.min(S.chaos.max,S.chaos.used+1);save();renderFate();notes.unshift('Поток хаоса')}
+ else if(inspArmed){adv=true;inspArmed=false;S.insp=0;save();renderFate();notes.unshift('Вдохновение')}
+ if(adv&&dis)notes.push('преимущество и помеха гасят друг друга');
+ spec.note=notes.join(' · ');
+ const m=adv&&dis?'norm':adv?'adv':dis?'dis':'norm';
  const a=r(20),b=r(20);let used=a,other=null;
  if(m==='adv'){used=Math.max(a,b);other=Math.min(a,b)}else if(m==='dis'){used=Math.min(a,b);other=Math.max(a,b)}
  cur={spec,m,used,other,bonus:spec.bonus.reduce((s,x)=>s+x.v,0)};
@@ -527,9 +585,9 @@ $('roll').addEventListener('click',e=>{
 /* ---------- броски из шторки ---------- */
 function rollFromDrawer(what){
  const k=openAb,[,n,s3]=ABN[k],m=mod(S.ab[k]),b=[{l:s3,v:m}];
- if(what==='check')return d20({label:`Проверка: ${n}`,bonus:b});
- if(what==='save'){if(S.saves[k])b.push({l:'мастерство',v:prof()});return d20({label:`Спасбросок: ${n}`,bonus:b})}
- const sk=SK[k].find(x=>x[0]===what);if(S.skills[what])b.push({l:'мастерство',v:prof()});d20({label:sk[1],bonus:b});
+ if(what==='check')return d20({label:`Проверка: ${n}`,bonus:b,kind:'check',ab:k});
+ if(what==='save'){if(S.saves[k])b.push({l:'мастерство',v:prof()});return d20({label:`Спасбросок: ${n}`,bonus:b,kind:'save',ab:k})}
+ const sk=SK[k].find(x=>x[0]===what);if(S.skills[what])b.push({l:'мастерство',v:prof()});d20({label:sk[1],bonus:b,kind:'check',ab:k});
 }
 
 document.addEventListener('click',e=>{
@@ -543,7 +601,7 @@ document.addEventListener('click',e=>{
  if(t.dataset.coin){const k=t.dataset.coin;S.money[k]=Math.max(0,S.money[k]+ +t.dataset.d);save();renderCoins();vib(8);return}
  if(t.dataset.info)return openInfo(t.dataset.info);
  if(t.dataset.act)return act(t.dataset.act);
- if(t.id==='initTok')return d20({label:'Инициатива',bonus:[{l:'ЛОВ',v:mod(S.ab.dex)}]});
+ if(t.id==='initTok')return d20({label:'Инициатива',bonus:[{l:'ЛОВ',v:mod(S.ab.dex)}],kind:'check',ab:'dex'});
  if(t.id==='hpTok')return hpSheet();
  if(t.id==='editBtn')return editSheet();
 });
@@ -569,7 +627,9 @@ const INFO={
  short:()=>({t:'Короткий отдых',sub:'около часа',body:`<p>Час покоя: перевязать раны, поесть, отдышаться. Во время короткого отдыха можно тратить <b>кости хитов</b>, чтобы лечиться.</p>
   <p>Везунчик, Поток хаоса и ячейки заклинаний короткий отдых <b>не возвращает</b>.</p>`,acts:`<button data-act="toHd">Открыть кости хитов</button>`}),
  long:()=>({t:'Долгий отдых',sub:'8 часов, раз в сутки',body:`<p>Не меньше <b>8 часов</b>: сон и спокойные дела. Не чаще раза в сутки. Если отдых прервал бой больше чем на час, его надо начать заново.</p>
-  <p>После него возвращается:</p><p>• все <b>хиты</b><br>• половина <b>костей хитов</b> (минимум 1)<br>• все очки <b>Везунчика</b><br>• <b>Поток хаоса</b><br>• все ячейки заклинаний и единицы чародейства (будут во вкладке «Бой»)</p>`,acts:`<button data-act="longRest">Отдохнуть до утра</button>`}),
+  <p>После него возвращается:</p><p>• все <b>хиты</b><br>• половина <b>костей хитов</b> (минимум 1)<br>• все очки <b>Везунчика</b><br>• <b>Поток хаоса</b><br>• снимается 1 уровень <b>истощения</b>, если ты поел и попил<br>• все ячейки заклинаний и единицы чародейства (будут во вкладке «Бой»)</p>`,acts:`<button data-act="longRest">Отдохнуть до утра</button>`}),
+ conds:()=>{const C=S.cond;return{t:'Состояния',sub:'нажми, чтобы прочитать и отметить',body:Object.keys(COND).map(k=>`<button class="crow ${C[k]?'on':''}" data-info="c_${k}"><span>${COND[k].n}</span><small>${C[k]?'на мне':''}</small></button>`).join('')+`<button class="crow ${S.exh?'on':''}" data-info="exh"><span>Истощение</span><small>${S.exh?'уровень '+S.exh:''}</small></button><div class="how" style="margin-top:10px">Состояния накладывает мастер. Отметь его здесь, и лист сам добавит помеху или преимущество в нужные броски и поправит скорость.</div>`,acts:''}},
+ exh:()=>({t:'Истощение',sub:`уровень ${S.exh} из 6`,body:`<p>Уровни складываются: на 3 уровне действуют и 1, и 2.</p>`+EXH.slice(1).map((t,i)=>`<p${S.exh>=i+1?' class="warn"':''}>${S.exh>=i+1?'●':'○'} <b>${i+1}</b>: ${t}</p>`).join('')+`<div class="how">Долгий отдых, если ты поел и попил, снимает 1 уровень. Лист снимет его сам при долгом отдыхе.</div>`,acts:`<button data-act="exhUp" ${S.exh>=6?'disabled':''}>Добавить уровень</button><button class="ghost" data-act="exhDown" ${S.exh?'':'disabled'}>Снять уровень</button>`}),
  heart:()=>({t:'Сердце тьмы',sub:'умение предыстории «Преследуемый»',body:`<p>Кто посмотрит тебе в глаза, видит: ты встречался с невообразимым ужасом и тьма тебе не чужда.</p><p>Простые люди могут тебя побаиваться, но будут <b>вежливы</b> и сделают всё, чтобы <b>помочь</b>: подскажут дорогу, накормят, спрячут.</p><p>Если ты не угрожал им и остался один против врага, они даже могут <b>взяться за оружие и драться рядом с тобой</b>.</p><div class="how">Бросать ничего не нужно. Это работает в разговоре: напомни мастеру, что у тебя есть это умение, когда просишь помощи у крестьян, трактирщиков, стражи.</div>`,acts:''}),
  lang:()=>({t:'Языки',sub:'говоришь, читаешь и пишешь',body:LANGS.map(([n,ex,d])=>`<p><b>${n==='Инферн.'?'Инфернальный':n}</b>${ex?' <span class="mu">· редкий</span>':''}<br>${d}</p>`).join('')+`<div class="how">Бросать ничего не нужно: на этих языках ты просто понимаешь речь и тексты. Происхождение: Общий от рождения, Инфернальный от расы, Бездны и Драконий от предыстории.</div>`,acts:''}),
  senses:()=>({t:'Чутьё',sub:'пассивные проверки',body:`<p>Это то, что Филипп замечает <b>без броска</b>. Число = 10 + модификатор + мастерство, если владеешь навыком.</p>
@@ -579,11 +639,16 @@ const INFO={
   <div class="how">Эти числа нужны мастеру, нажимать их не надо. Если хочешь искать активно, открой Мудрость или Интеллект и бросай навык.</div>`,acts:''})
 };
 ['traits','ideal','bond','flaw'].forEach(k=>INFO['ch_'+k]=()=>({t:CHAR[k].t,sub:'характер Филиппа',body:CHAR[k].full+`<div class="how">Это подсказка для отыгрыша, бросать ничего не нужно. Если ты сыграл Филиппа по этой черте, особенно когда ему это мешает, мастер может дать <b>вдохновение</b>.</div>`,acts:S.insp?'':`<button data-act="inspGet">Мастер дал вдохновение</button>`}));
+Object.keys(COND).forEach(k=>INFO['c_'+k]=()=>{const on=S.cond[k];return{t:COND[k].n,sub:on?'сейчас на тебе':'состояние',body:COND[k].d+`<div class="how">${COND[k].fx.chk||COND[k].fx.atk||COND[k].fx.svdex||COND[k].fx.spd0||COND[k].fx.fail?'Если отметишь, лист сам учтёт это в бросках и скорости.':'Это работает в сцене, мастер следит за этим. Отметь, чтобы не забыть.'}</div>`,acts:on?`<button class="ghost" data-act="condOff:${k}">Снять: больше не ${COND[k].n.toLowerCase()}</button>`:`<button data-act="condOn:${k}">На мне</button>`}});
 function openInfo(k,re){const d=INFO[k]();openAb=null;openInfoKey=k;
  $('dbody').innerHTML=`<div class="dh"><h2>${d.t}</h2><div class="sc">${d.sub}</div></div><div class="drows" style="border:0;background:none"><div class="info">${d.body}</div></div><div class="dacts">${d.acts}</div>`;
  if(!re){$('drawer').style.transform='';$('drawer').classList.add('on');$('dim').classList.add('on');vib(10)}}
 function act(a){
  const re=()=>{save();renderAll()};
+ if(a.startsWith('condOn:')){const k=a.slice(7);S.cond[k]=1;save();renderAll();closeDrawer();vib([20,40,30]);setTimeout(()=>{const c=document.querySelector(`.cnd[data-info="c_${k}"]`);if(c){c.classList.remove('stamp');void c.offsetWidth;c.classList.add('stamp')}},30);return}
+ if(a.startsWith('condOff:')){delete S.cond[a.slice(8)];save();renderAll();closeDrawer();vib(10);return}
+ if(a==='exhUp'){S.exh=Math.min(6,S.exh+1);re();vib([20,40,30]);return}
+ if(a==='exhDown'){S.exh=Math.max(0,S.exh-1);re();vib(10);return}
  if(a==='luckSpend'){S.luck.used++;re();toast('Очко удачи потрачено');vib(15)}
  if(a==='luckBack'){S.luck.used=Math.max(0,S.luck.used-1);re()}
  if(a==='chaosOn'){chaosArmed=true;re();closeDrawer();toast('Следующий бросок будет с преимуществом');vib(15)}
@@ -596,7 +661,7 @@ function act(a){
  if(a==='toHd')openInfo('hd',true);
  if(a==='hdRoll'){if(S.hd.used>=S.level)return;S.hd.used++;save();const c=mod(S.ab.con);
   dice({label:'Кость хитов',n:1,s:S.hd.die,k:c,kl:'ТЕЛ',min:1,after:v=>{const before=S.hp.cur;S.hp.cur=Math.min(S.hp.max,S.hp.cur+v);save();renderAll();return `<div class="br">хиты ${before} → <b>${S.hp.cur}</b></div>`}})}
- if(a==='longRest'){S.hp.cur=S.hp.max;S.hp.temp=0;S.luck.used=0;S.chaos.used=0;S.hd.used=Math.max(0,S.hd.used-Math.max(1,Math.floor(S.level/2)));save();closeDrawer();renderAll();flash('#hpTok','#86c79c');toast('Утро. Силы вернулись');vib([10,60,10])}
+ if(a==='longRest'){if(S.exh)S.exh--;S.hp.cur=S.hp.max;S.hp.temp=0;S.luck.used=0;S.chaos.used=0;S.hd.used=Math.max(0,S.hd.used-Math.max(1,Math.floor(S.level/2)));save();closeDrawer();renderAll();flash('#hpTok','#86c79c');toast('Утро. Силы вернулись');vib([10,60,10])}
 }
 function hpSheet(){
  const f=$('form');f.innerHTML=`<h2>Хиты: ${S.hp.cur} из ${S.hp.max}</h2><input class="big" name="n" type="number" inputmode="numeric" placeholder="сколько?" required>
@@ -642,7 +707,7 @@ fixGap();addEventListener('resize',()=>{fixGap();fit()});addEventListener('orien
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-2';
+const BUILD='2026-11-25-3';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
