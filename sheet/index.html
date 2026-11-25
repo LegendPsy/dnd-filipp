@@ -1471,16 +1471,12 @@ function critFx(ex,ey,done){
   /* 2. прорыв: вспышка, удар, взрыв молний, гаснет */
   const f=el('cflash');f.style.setProperty('--fx',ex+'px');f.style.setProperty('--fy',ey+'px');f.animate([{opacity:1},{opacity:0}],{duration:380,easing:'ease-out',fill:'forwards'});
   vib([70,30,120]);bigShake();ring(ex,ey,'#f6d58e',520,6);debris(ex,ey,60,900);
-  const B=Math.min(W*1.15,480),bi=img('burst',B,B,ex,ey);
-  bi.animate([{transform:'scale(.1) rotate(-35deg)',opacity:0},{transform:'scale(1.3) rotate(5deg)',opacity:1,offset:.3},{transform:'scale(1.5) rotate(10deg)',opacity:0}],{duration:900,easing:'cubic-bezier(.2,.9,.3,1)',fill:'forwards'});
   /* 3. печать раскрывается на столе, кубик всплывает */
   const SG=Math.min(W*.98,400),si=img('sigil',SG,SG,ex,floor,true);
   si.animate([{transform:'scale(0) rotate(260deg)',opacity:0},{transform:'scale(1.12) rotate(-12deg)',opacity:1,offset:.7},{transform:'scale(1) rotate(0)',opacity:1}],{duration:820,delay:120,easing:'cubic-bezier(.2,.8,.3,1)',fill:'backwards'}).onfinish=()=>{if(run){si.animate([{transform:'rotate(0)'},{transform:'rotate(360deg)'}],{duration:36000,iterations:Infinity});si.parentNode.animate([{filter:'brightness(1)'},{filter:'brightness(1.45)'},{filter:'brightness(1)'}],{duration:2400,iterations:Infinity})}};
   svg.animate([{transform:'none'},{transform:'translateY(-44px)',offset:.6},{transform:'translateY(-32px)'}],{duration:560,easing:'cubic-bezier(.2,.9,.3,1.2)',fill:'forwards'}).onfinish=()=>{if(run)svg.animate([{transform:'translateY(-32px) rotate(0)'},{transform:'translateY(-42px) rotate(3deg)'},{transform:'translateY(-32px) rotate(0)'}],{duration:2600,iterations:Infinity,easing:'ease-in-out'})};
   shd.animate([{transform:'scale(1)',opacity:1},{transform:'scale(.7)',opacity:.45}],{duration:520,fill:'forwards'});
   /* 4. из центра печати вырывается пламя: веер сзади, пара тонких языков спереди */
-  const N=11;for(let i=0;i<N;i++){const t=i/(N-1)-.5,ang=t*120+rnd(-5,5),h=(Math.min(420,H*.48))*(1-Math.abs(t)*.8)*rnd(.85,1.1);flame(false,ang,h,220+Math.abs(t)*260+rnd(0,60),1)}
-  [-16,-3,13].forEach((a,i)=>flame(true,a,Math.min(230,H*.28)*rnd(.9,1.1),300+i*90,i===1?.45:.75));
   setTimeout(()=>{if(run)vib(30)},260);
   for(let i=0;i<24;i++)P.push({k:'mote',a:Math.random()*6.28,r:rnd(.55,1),w:rnd(.5,1.5)*(Math.random()<.5?1:-1),l:0,m:1e9,c:pick(GOLD.concat(VIO)),s:rnd(1.4,3.2),ph:Math.random()*6,S:SG});
   /* 5. буквы прилетают по одной и бьют */
@@ -2007,6 +2003,30 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act="longR
  d.querySelectorAll('.kn').forEach((c,i)=>{c.style.opacity=0;c.animate([{opacity:0},{opacity:1}],{duration:150,delay:650+i*50,fill:'forwards'})});
  vg.animate([{transform:'translateY(-180px)',opacity:1,offset:0},{transform:'translateY(8px)',offset:.22},{transform:'translateY(0)',offset:.3},{transform:'translateY(0)',offset:.55},{transform:'translateY(-30px)',offset:.62},{transform:'translateY(-22px)',offset:.7},{transform:'translateY(-22px)',opacity:1,offset:.8},{transform:'translateY(-260px)',opacity:0}],{duration:2300,easing:'cubic-bezier(.3,.6,.3,1)',fill:'forwards'}).onfinish=()=>d.remove();
  setTimeout(()=>{vib([40,20,60]);if(pg)pg.animate([{transform:'none'},{transform:'translateY(-6px) scale(.995)'},{transform:'none'}],{duration:320,easing:'cubic-bezier(.3,1.4,.5,1)'});ends.forEach(([x,y])=>spawn({k:'flash',x,y,s:14,m:.3,c:'rgba(213,140,255,.8)',add:1}))},1260)}}
+/* Подчинение личности 2: нити марионетки. DOMV='page' — весь лист становится куклой; 'doll' — золотая марионетка поднимается на нитях */
+let DOMV='page';
+{const _cw=castWave;castWave=function(k){if(k!=='dominate_person'||RM)return _cw(k);
+ const W=innerWidth,H=innerHeight,cx=W/2,pg=document.querySelector('.page.on'),NS='http://www.w3.org/2000/svg';
+ const d=document.createElement('div');d.className='domw';d.innerHTML=`<svg viewBox="0 0 ${W} ${H}"></svg>`;document.body.appendChild(d);const sv=d.firstChild;
+ const mk=(tag,at)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);sv.appendChild(e);return e};
+ const sp=(x,v,tg,kk,dd,dt)=>{v+=((tg-x)*kk-v*dd)*dt;return [x+v*dt,v]};
+ const T0=performance.now();let last=T0;
+ d.animate([{background:'rgba(6,4,8,0)'},{background:'rgba(6,4,8,.4)',offset:.2},{background:'rgba(6,4,8,.4)',offset:.75},{background:'rgba(6,4,8,0)'}],{duration:2600,fill:'forwards'});
+ if(DOMV==='page'){/* нити падают сверху, цепляются за лист, натягиваются — лист повисает на них и качается */
+  const N=5,ax=Array.from({length:N},(_,i)=>W*(.12+i*.19)),ay=H*.3;
+  const th=ax.map(()=>mk('path',{stroke:'#efe4ff','stroke-width':1.6,fill:'none'})),kn=ax.map(()=>mk('circle',{r:4,fill:'rgba(213,140,255,.35)',stroke:'#d58cff','stroke-width':1.6}));
+  let sag=60,sv_=0,ey=-20,ev=0,lift=0,lv=0,rot=0,rv=0,hooked=false,tug=false,rel=false;
+  const step=now=>{const tt=now-T0,dt=Math.min(.04,(now-last)/1000);last=now;
+   if(!hooked){[ey,ev]=sp(ey,ev,ay,60,9,dt);if(tt>520){hooked=true;vib(12);ax.forEach((x,i)=>spawn({k:'flash',x,y:ay,s:12,m:.25,c:'rgba(213,140,255,.8)',add:1}))}}
+   if(tt>900&&!tug){tug=true;lv=-260;rv=2.2;vib([40,20,60])}
+   if(tug){[sag,sv_]=sp(sag,sv_,0,90,10,dt);[lift,lv]=sp(lift,lv,rel?0:-10,70,5,dt);[rot,rv]=sp(rot,rv,0,40,3.2,dt)}
+   if(tt>1900&&!rel){rel=true}
+   const off=rel?-(tt-1900)*1.4:0;
+   if(pg)pg.style.transform=`translateY(${lift.toFixed(1)}px) rotate(${rot.toFixed(2)}deg)`;
+   th.forEach((p,i)=>{const x=ax[i]+(i-2)*rot*3,y=(hooked?ay+lift:ey)+off;p.setAttribute('d',`M${ax[i]} -10 Q${ax[i]+(i%2?sag*.4:-sag*.4)} ${y*.55+sag} ${x} ${y}`);kn[i].setAttribute('cx',x);kn[i].setAttribute('cy',y)});
+   if(tt<2500)requestAnimationFrame(step);else{if(pg)pg.style.transform='';d.remove()}};
+  d.animate([{opacity:1,offset:.85},{opacity:0}],{duration:2600,fill:'forwards'});requestAnimationFrame(step);return}
+ }}
 {const _sf=skillFx;skillFx=function(spec,used){if(RM)return;const f=SKFX[spec.label];if(f){const W=innerWidth,H=innerHeight,ex=W/2,ey=H/2-80;return f(ex,ey,ey+62,$('die'),used)}return _sf(spec,used)}}
 /* три огненных кнопки различаются: снаряд — огонёк, шар — шар пламени, цветной шарик — шар из шести стихий */
 EL.fball=EL.fire;EL.chroma=EL.fire;
@@ -2306,7 +2326,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-41';
+const BUILD='2026-11-25-43';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
