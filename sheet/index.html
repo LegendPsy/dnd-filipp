@@ -544,6 +544,11 @@ body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards
 .wsp{position:absolute;left:0;top:0;z-index:4;pointer-events:none}
 .wsp canvas{position:absolute;left:-6px;top:-2px;width:65px;height:35px;image-rendering:pixelated;filter:drop-shadow(0 0 6px rgba(0,0,0,.9)) drop-shadow(0 0 10px rgba(150,30,60,.35))}
 .wsp .o{opacity:0}
+.wsp .lp{position:absolute;left:-6px;top:-2px;width:65px;height:36px}.wsp .lp svg{width:100%;height:100%;overflow:visible;fill:none;stroke:#e9bd6c;stroke-width:1.2;stroke-linejoin:round;filter:drop-shadow(0 0 4px rgba(233,189,108,.5)) drop-shadow(0 0 8px #000)}
+.wsp.seye svg{width:91px;height:49px;overflow:visible;fill:none;stroke:#e9bd6c;stroke-width:1.4;filter:drop-shadow(0 0 6px rgba(233,189,108,.5))}
+.sfx{position:absolute;pointer-events:none;z-index:4}.sfx.u{z-index:1}
+.sfx svg{width:100%;height:100%;overflow:visible;fill:none;stroke:#e9bd6c;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px rgba(233,189,108,.55))}
+.sfx.beam{background:linear-gradient(to bottom,rgba(246,213,142,0),rgba(246,213,142,.16) 60%,rgba(246,213,142,.05));-webkit-mask:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent);mask:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent)}
 .wsp i{position:absolute;white-space:nowrap;font:italic 600 18px/1 "Cormorant Garamond",serif;color:#f6ead0;letter-spacing:.03em;text-shadow:0 0 4px #000,0 0 12px #000,0 0 18px rgba(150,30,60,.5);opacity:0}
 /* ---------- эффекты, часть 2: остальные заклинания и умения ---------- */
 .fx-steel .fxl::before{content:"";position:absolute;top:-20%;bottom:-20%;left:-60%;width:50%;background:linear-gradient(100deg,transparent,rgba(255,250,235,.2) 45%,rgba(255,255,255,.32) 50%,rgba(255,250,235,.2) 55%,transparent);transform:skewX(-18deg);animation:fsheen 4.2s cubic-bezier(.5,0,.3,1) infinite}
@@ -1563,7 +1568,7 @@ document.addEventListener('pointerdown',e=>{if(RM)return;const b=e.target.closes
 function spellStrike(el,dies,done){
  const W=innerWidth,H=innerHeight,C=EL[el],xs=dies.map(d=>d._x),ys=dies.map(d=>d._y),cx=xs.reduce((a,b)=>a+b,0)/xs.length,cy=ys.reduce((a,b)=>a+b,0)/ys.length,sz=dies[0]._sz,fl=Math.max(...ys)+sz*.46;
  const sx=W/2+RN(-.22,.22)*W,sy=H+12,lob=el==='acid'||el==='poi',T=el==='elec'?0:lob?520:el==='snd'?300:340,t0=performance.now();
- const hit=()=>{burst(el,cx,cy,2.3,fl);if(el==='fire')spawn({k:'scorch',x:cx,y:fl+2,s:Math.min(W*.42,sz*(dies.length>1?1.6:.9)),m:2.4,fp:4});
+ const hit=()=>{burst(el,cx,cy,2.3,fl);
   vib(el==='elec'?[15,20,15,20,40]:el==='snd'?[50,30,30]:[45,20,25]);
   if(el==='snd'||el==='fire'){document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake')}
   dies.forEach((d,i)=>{const b=`translate(${d._x}px,${d._y}px)`,ox=d._x-cx,oy=d._y-cy,od=Math.hypot(ox,oy)||1;d.classList.add('t-'+el);dieCoat(d,el);
@@ -1664,7 +1669,7 @@ fxDecor=function(){if(RM)return;_fxD();
 const _burst=burst;
 burst=function(el,x,y,pw,fl){const C=EL[el];if(!C)return;
  if(['fire','cold','acid','elec','snd','poi'].includes(el))return _burst(el,x,y,pw,fl);
- if(el==='fireball'){_burst('fire',x,y,pw*1.6,fl);spawn({k:'ring',x,y,r0:10,r1:90*pw,m:.5,c:'#ffd36a',w:4,fp:1,fy:.6});spawn({k:'flash',x,y,s:40*pw,gr:1,m:.35,c:'rgba(255,170,60,.95)',add:1});return}
+ if(el==='fireball'){_burst('fire',x,y,pw*1.6,fl);spawn({k:'ring',x,y,r0:10,r1:Math.min(innerWidth*.42,60*pw),m:.4,c:'#ffd36a',w:3,fp:1.5,fy:.45});spawn({k:'flash',x,y,s:40*pw,gr:1,m:.35,c:'rgba(255,170,60,.95)',add:1});return}
  const A=-Math.PI,sq=Math.sqrt(pw),sp=(n,v0,v1,o)=>{for(let i=0;i<n;i++){const a=o&&o.a!=null?o.a+RN(-.4,.4):RN(A,0),v=RN(v0,v1)*sq;spawn(Object.assign({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,m:RN(.5,1),s:RN(2,3.2),c:C.c,add:1},o||{}))}};
  if(el==='steel'){const L=26*pw,a=RN(-.6,-.3);spawn({k:'zap',pts:[[x-Math.cos(a)*L,y-Math.sin(a)*L],[x+Math.cos(a)*L,y+Math.sin(a)*L]],m:.14,c:'#ffffff',sc:'#fff6d8',w:2.5,fp:1});sp(10*pw,180,460,{g:1300,dr:1.5,fl,bo:.4,m:RN(.3,.6)});return}
  if(el==='shield'){spawn({k:'ring',x,y,r0:6,r1:40*pw,m:.4,c:'#c9a8ff',w:3,fp:1});spawn({k:'flash',x,y,s:14*pw,gr:.5,m:.2,c:'rgba(165,124,255,.8)',add:1});sp(8*pw,120,300,{g:900,fl,bo:.3});return}
@@ -1704,7 +1709,7 @@ spellStrike=function(el,dies,done){
   (function f(now){const q=Math.min(1,(now-t0)/T),x=sx+(cx-sx)*q,y=sy+(cy-sy)*q-Math.sin(Math.PI*q)*H*.2;
    spawn({k:'flash',x,y,s:8,m:.06,c:'#ff8a2a',add:1});spawn({x,y,s:4,m:.05,c:'#fff',add:1});spawn({x:x+RN(-2,2),y:y+RN(-2,2),vx:RN(-20,20),vy:RN(-10,30),dr:2,m:RN(.2,.4),s:2,c:EL.fire.c,add:1});
    if(q<1)return requestAnimationFrame(f);
-   burst('fireball',cx,cy,2.4,fl);spawn({k:'scorch',x:cx,y:fl+2,s:Math.min(W*.46,sz*2.4),m:3,fp:4});
+   burst('fireball',cx,cy,2.4,fl);
    document.body.classList.remove('shake2');void document.body.offsetWidth;document.body.classList.add('shake2');vib([70,30,120]);
    react(26,0,0,560);dies.forEach(d=>dieCoat(d,'fire'));setTimeout(done,520)})(t0);return}
  if(el==='chaos'){/* дикая магия: вспышки разных цветов вокруг кубиков, кубики дёргает */
@@ -1835,6 +1840,73 @@ let fxCalm=true;
    return `<span class="elm orb"><svg viewBox="0 0 16 16"><defs><radialGradient id="${id}" cx="38%" cy="35%" r="65%"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></radialGradient></defs><circle cx="8" cy="8" r="7" fill="url(#${id})"/></svg></span>`}
   return _l(el)}}
 {const _rf=renderFight,_oi=openInfo;renderFight=function(){_rf.apply(this,arguments);fxDecor()};openInfo=function(){_oi.apply(this,arguments);fxDecor()}}
+/* ---------- эффекты навыков в стиле кубика: тонкие золотые линии, фиолет, мягкое свечение ---------- */
+function sfx(svg,x,y,w,h,o){o=o||{};const ov=$('roll'),d=document.createElement('div');d.className='sfx'+(o.u?' u':'');
+ d.style.cssText=`left:${x-w/2}px;top:${y-h/2}px;width:${w}px;height:${h}px`;d.innerHTML=svg;
+ if(o.u)ov.insertBefore(d,ov.querySelector('.die'));else ov.appendChild(d);
+ const life=o.life||2400;wspT.push(setTimeout(()=>{d.animate([{opacity:1,filter:'blur(0)'},{opacity:0,filter:'blur(2px)'}],{duration:600,fill:'forwards'}).onfinish=()=>d.remove()},life));return d}
+function sDraw(d,t0,dur,sel){d.querySelectorAll(sel||'[data-d]').forEach((p,i)=>{p.setAttribute('pathLength','1');p.style.strokeDasharray='1';p.style.strokeDashoffset='1';
+ const dl=t0+(p.dataset.d?+p.dataset.d:i*120);p.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:dur,delay:dl,easing:'cubic-bezier(.3,.6,.3,1)',fill:'forwards'})})}
+function sPop(d,sel,t0,gap){d.querySelectorAll(sel).forEach((e,i)=>{e.style.opacity=0;e.style.transformBox='fill-box';e.style.transformOrigin='50% 100%';
+ e.animate([{opacity:0,transform:'scale(.2)'},{opacity:1,transform:'scale(1.15)',offset:.6},{opacity:1,transform:'scale(1)'}],{duration:380,delay:t0+i*gap,easing:'cubic-bezier(.3,1.5,.5,1)',fill:'forwards'})})}
+const LEAF='M0 0 C3 -5 9 -6 13 -2 C9 3 3 3 0 0Z';
+const SKFX={
+ 'Природа':(ex,ey,fl)=>{/* из стола вокруг кубика прорастают лозы с листьями */
+  const L=(s)=>`<path data-d="0" d="M${s*10} 48 C${s*40} 40 ${s*62} 14 ${s*96} 8 C${s*118} 4 ${s*128} -14 ${s*122} -36"/><path data-d="250" d="M${s*30} 50 C${s*54} 56 ${s*80} 50 ${s*104} 38"/>`+
+   [[48,32,-30],[80,12,-10],[110,0,-50],[122,-36,-80],[70,52,10],[104,38,-20]].map(([x,y,r])=>`<g class="lf"><path d="${LEAF}" transform="translate(${s*x} ${y}) rotate(${s<0?180-r:r}) scale(${s<0?'1.5 -1.5':'1.5'})" fill="rgba(143,232,170,.25)" stroke="#bfe3a0"/></g>`).join('');
+  const d=sfx(`<svg viewBox="-150 -60 300 120">${L(-1)}${L(1)}</svg>`,ex,fl-28,300,120,{u:1,life:2600});sDraw(d,0,900);sPop(d,'.lf',300,110);vib(10)},
+ 'Религия':(ex,ey,fl)=>{/* за кубиком встаёт ореол с лучами, сверху падает столб света */
+  const rays=Array.from({length:16},(_,i)=>{const a=i/16*6.283,r1=i%2?92:88,r2=i%2?104:122;return `<path data-d="${200+i*40}" d="M${(Math.cos(a)*r1).toFixed(1)} ${(Math.sin(a)*r1).toFixed(1)} L${(Math.cos(a)*r2).toFixed(1)} ${(Math.sin(a)*r2).toFixed(1)}"/>`}).join('');
+  const d=sfx(`<svg viewBox="-130 -130 260 260"><circle data-d="0" r="82"/><circle data-d="120" r="76" stroke="#d58cff" stroke-dasharray="2 5" style="stroke-dasharray:2 5"/>${rays}</svg>`,ex,ey,260,260,{u:1,life:2600});
+  sDraw(d,0,700,'[data-d]:not([stroke-dasharray])');d.firstChild.animate([{transform:'rotate(-8deg) scale(.9)'},{transform:'rotate(8deg) scale(1)'}],{duration:3000,easing:'ease-out',fill:'forwards'});
+  const b=document.createElement('div');b.className='sfx u beam';b.style.cssText=`left:${ex-60}px;top:0;width:120px;height:${fl}px`;$('roll').insertBefore(b,$('die'));
+  b.animate([{opacity:0},{opacity:1,offset:.25},{opacity:0}],{duration:2400,fill:'forwards'}).onfinish=()=>b.remove();vib([10,60,10])},
+ 'История':(ex,ey,fl)=>{/* под кубиком разворачивается свиток, проступают строки и годы */
+  const lines=[-14,-4,6].map((y,i)=>`<path data-d="${500+i*220}" d="M-96 ${y} L${i===2?30:96} ${y}" stroke="#cbb48a" stroke-dasharray="7 4" style="stroke-dasharray:7 4"/>`).join('');
+  const d=sfx(`<svg viewBox="-140 -40 280 80"><path class="sc" d="M-110 -26 L110 -26 M-110 18 L110 18"/><ellipse class="sc" cx="-114" cy="-4" rx="8" ry="23"/><ellipse class="sc" cx="114" cy="-4" rx="8" ry="23"/>${lines}</svg>`,ex,fl+22,280,80,{u:1,life:2700});
+  const g=d.firstChild;g.animate([{transform:'scaleX(.06)'},{transform:'scaleX(1)'}],{duration:620,easing:'cubic-bezier(.2,.9,.3,1)',fill:'forwards'});
+  d.querySelectorAll('[stroke-dasharray]').forEach((p,i)=>{p.style.opacity=0;p.animate([{opacity:0,clipPath:'inset(0 100% 0 0)'},{opacity:1,clipPath:'inset(0 0 0 0)'}],{duration:600,delay:500+i*220,fill:'forwards'})});
+  ['MCCXL','год Пепла','DCCIX'].forEach((t,i)=>wspT.push(setTimeout(()=>spawn({k:'txt',t,x:ex+[-90,0,90][i],y:ey-70+[10,-30,14][i],vy:-14,m:2,s:16,c:'#e9dcc0',fp:2,fin:.25}),700+i*260)));vib(8)},
+ 'Выживание':(ex,ey,fl)=>{/* по столу к кубику тянется цепочка следов */
+  const paw=(x,y,r)=>`<g class="pw" transform="translate(${x} ${y}) rotate(${r})"><path d="M-5 4 C-6 -1 6 -1 5 4 C4 8 -4 8 -5 4Z" fill="rgba(233,189,108,.35)"/><g fill="rgba(233,189,108,.6)" stroke="none"><circle cx="-6" cy="-4" r="1.8"/><circle cx="-2" cy="-7" r="1.8"/><circle cx="2.5" cy="-7" r="1.8"/><circle cx="6.5" cy="-4" r="1.8"/></g></g>`;
+  const P=[[-160,30,80],[-128,10,70],[-96,30,82],[-64,10,72],[-32,30,86]].map(([x,y,r])=>paw(x,y,r)).join('');
+  const d=sfx(`<svg viewBox="-180 -30 200 60" style="stroke-width:1.2"><g transform="scale(1.7) translate(70 0)">${P}</g></svg>`,ex-60,fl+10,200,60,{u:1,life:2600});
+  d.querySelectorAll('.pw').forEach((e,i)=>{e.style.opacity=0;e.animate([{opacity:0},{opacity:1}],{duration:200,delay:i*170,fill:'forwards'});wspT.push(setTimeout(()=>spawn({x:ex-60+((+e.getAttribute('transform').match(/-?\d+/)[0])+70)*1.7+70,y:fl+12,vx:RN(-10,10),vy:RN(-20,-8),m:.6,s:2,c:'#8a7a6a',u:1}),i*170))});vib(6)},
+ 'Уход за животными':(ex,ey,fl,die)=>{/* прилетает птица из золотых линий, садится на кубик и улетает */
+  const up='M0 0 C-4 -9 -12 -12 -18 -10 M0 0 C4 -9 12 -12 18 -10',dn='M0 0 C-5 3 -12 8 -18 12 M0 0 C5 3 12 8 18 12',fold='M0 0 C-5 -1 -9 1 -12 3 M0 0 C5 -1 9 1 12 3';
+  const d=sfx(`<svg viewBox="-30 -30 60 60"><path class="bd" d="M-9 2 C-4 -3 6 -4 10 -1 L15 -3 L11 1 C8 4 -4 6 -9 2Z" fill="rgba(165,124,255,.3)"/><path class="wg" d="${up}"/></svg>`,0,0,96,96,{life:3400});
+  const wg=d.querySelector('.wg'),W=innerWidth,top=ey-74;let f=0,flap=on=>{f=0;const t=()=>{if(!d.isConnected||!on())return;wg.setAttribute('d',f++%2?dn:up);wspT.push(setTimeout(t,120))};t()};
+  let flying=true;flap(()=>flying);
+  d.animate([{transform:`translate(${W+40}px,${top-120}px)`},{transform:`translate(${ex+60}px,${top-50}px)`,offset:.6},{transform:`translate(${ex}px,${top}px)`}],{duration:1000,easing:'cubic-bezier(.3,.7,.4,1)',fill:'forwards'});
+  wspT.push(setTimeout(()=>{flying=false;wg.setAttribute('d',fold);die.animate([{transform:`translate(${ex}px,${ey+4}px) scale(1.02,.97)`},{transform:`translate(${ex}px,${ey}px)`}],{duration:240,easing:'cubic-bezier(.3,1.6,.5,1)'});vib(12);
+   wspT.push(setTimeout(()=>{d.firstChild.animate([{transform:'rotate(0)'},{transform:'rotate(-10deg)'},{transform:'rotate(0)'}],{duration:400})},500))},1000));
+  wspT.push(setTimeout(()=>{flying=true;flap(()=>flying);d.animate([{transform:`translate(${ex}px,${top}px)`},{transform:`translate(${ex-80}px,${top-60}px)`,offset:.4},{transform:`translate(-60px,${top-200}px)`}],{duration:1100,easing:'cubic-bezier(.5,0,.7,.4)',fill:'forwards'})},2100));
+  d.style.left=d.style.top='-48px';d.firstChild.style.strokeWidth='1.3'},
+ 'Атлетика':(ex,ey,fl,die)=>{/* кубик давит в стол всем весом: стол прогибается, расходится волна */
+  die.animate([{transform:`translate(${ex}px,${ey-26}px) scale(.96,1.05)`},{transform:`translate(${ex}px,${ey+10}px) scale(1.14,.82)`,offset:.35},{transform:`translate(${ex}px,${ey-4}px) scale(.97,1.04)`,offset:.65},{transform:`translate(${ex}px,${ey}px)`}],{duration:520,easing:'cubic-bezier(.5,0,.3,1)'});
+  wspT.push(setTimeout(()=>{bigShake();vib([60,30,90]);dust(ex,fl-4,false);for(let i=0;i<2;i++)spawn({k:'ring',x:ex,y:fl,r0:30,r1:150+i*40,m:.7+i*.2,c:i?'#a57cff':'#e9bd6c',w:2.4,fp:1,fy:.3});
+   const d=sfx(`<svg viewBox="-150 -40 300 80"><path data-d="0" d="M-40 -6 C-70 -20 -100 -20 -130 -8"/><path data-d="60" d="M-44 6 C-80 0 -110 6 -140 16"/><path data-d="0" d="M40 -6 C70 -20 100 -20 130 -8"/><path data-d="60" d="M44 6 C80 0 110 6 140 16"/></svg>`,ex,fl-10,300,80,{u:1,life:700});sDraw(d,0,300)},180))},
+ 'Акробатика':(ex,ey,fl,die)=>{/* кубик делает сальто, за ним остаётся золотая дуга */
+  die.animate([{transform:`translate(${ex}px,${ey}px)`},{transform:`translate(${ex}px,${ey+6}px) scale(1.08,.9)`,offset:.12},{transform:`translate(${ex}px,${ey-90}px) rotate(180deg)`,offset:.5},{transform:`translate(${ex}px,${ey+4}px) rotate(360deg) scale(1.06,.93)`,offset:.88},{transform:`translate(${ex}px,${ey}px) rotate(360deg)`}],{duration:820,easing:'cubic-bezier(.4,0,.5,1)'});
+  const d=sfx(`<svg viewBox="-110 -150 220 200"><path data-d="80" d="M-70 40 C-90 -60 -40 -130 0 -132 C40 -130 90 -60 70 40" stroke-dasharray=""/><path data-d="200" d="M-56 44 C-70 -40 -30 -110 0 -112" stroke="#d58cff"/></svg>`,ex,ey-50,220,200,{life:1100});
+  sDraw(d,0,620);wspT.push(setTimeout(()=>{vib(30);dust(ex,fl-4,false)},720))}
+};
+{const _sf=skillFx;skillFx=function(spec,used){if(RM)return;const f=SKFX[spec.label];if(f){const W=innerWidth,H=innerHeight,ex=W/2,ey=H/2-80;return f(ex,ey,ey+62,$('die'),used)}return _sf(spec,used)}}
+{const _wc=wspClear;wspClear=function(){_wc();document.querySelectorAll('#roll .sfx').forEach(e=>e.remove())}}
+/* Обман: губы теперь в стиле кубика — тонкая золотая линия и фиолет, без пикселей */
+lipsCv=function(rows){const open=rows===LIPS.o,s=document.createElement('span');s.className='lp';
+ s.innerHTML=`<svg viewBox="0 0 40 22"><path d="M2 11 C8 5 14 3 20 7 C26 3 32 5 38 11 C30 ${open?10:12} 10 ${open?10:12} 2 11Z" fill="rgba(165,124,255,.28)"/><path d="M2 11 C10 ${open?20:18} 30 ${open?20:18} 38 11 C30 ${open?17:12} 10 ${open?17:12} 2 11Z" fill="rgba(165,124,255,.22)"/>${open?'<path d="M5 11 C14 10 26 10 35 11 C26 16 14 16 5 11Z" fill="#0b080c" stroke="none"/>':''}</svg>`;return s};
+/* Проницательность и Восприятие: глаз из золотых линий, зрачок бегает, веко моргает */
+eyeFx=function(x,y){const ov=$('roll'),w=document.createElement('div');w.className='wsp seye';w.style.transform=`translate(${x-45}px,${y-24}px)`;
+ w.innerHTML=`<svg viewBox="-46 -25 92 50"><g class="lid"><path d="M-42 0 C-24 -24 24 -24 42 0 C24 24 -24 24 -42 0Z" fill="rgba(20,12,26,.75)"/><g class="iris"><circle r="13" fill="rgba(165,124,255,.35)" stroke="#d58cff"/><circle r="5.5" fill="#0b080c" stroke="#e9bd6c"/><circle cx="-4" cy="-4" r="1.6" fill="#f6ead0" stroke="none"/></g><path d="M-42 0 C-24 -24 24 -24 42 0 C24 24 -24 24 -42 0Z"/></g><path d="M-30 -18 L-34 -24 M-15 -24 L-16 -31 M0 -26 L0 -33 M15 -24 L16 -31 M30 -18 L34 -24" stroke="#cbb48a" stroke-width="1"/></svg>`;ov.appendChild(w);
+ const lid=w.querySelector('.lid'),ir=w.querySelector('.iris');lid.style.transformOrigin='50% 50%';lid.style.transformBox='fill-box';
+ w.animate([{opacity:0,transform:w.style.transform+' scale(.6)'},{opacity:1,transform:w.style.transform}],{duration:240,easing:'cubic-bezier(.3,1.4,.5,1)',fill:'forwards'});
+ lid.animate([{transform:'scaleY(.05)'},{transform:'scaleY(1)'}],{duration:260,delay:120,easing:'cubic-bezier(.3,1.3,.5,1)',fill:'both'});
+ const look=[[0,500],[-16,700],[-16,1000],[16,1250],[16,1600],[0,1850]];
+ look.forEach(([dx,t])=>wspT.push(setTimeout(()=>ir.animate([{transform:getComputedStyle(ir).transform==='none'?'translate(0,0)':getComputedStyle(ir).transform},{transform:`translate(${dx}px,0)`}],{duration:200,easing:'cubic-bezier(.3,.8,.4,1)',fill:'forwards'}),t)));
+ wspT.push(setTimeout(()=>lid.animate([{transform:'scaleY(1)'},{transform:'scaleY(.05)'},{transform:'scaleY(1)'}],{duration:220}),1450));
+ wspT.push(setTimeout(()=>{spawn({k:'ring',x,y,r0:10,r1:70,m:.6,c:'#e9bd6c',w:1.5,fp:1,fy:.55})},330));
+ wspT.push(setTimeout(()=>w.animate([{opacity:1},{opacity:0,filter:'blur(3px)'}],{duration:500,fill:'forwards'}),2300))};
 /* ---------- броски из шторки ---------- */
 function rollFromDrawer(what){
  const k=openAb,[,n,s3]=ABN[k],m=mod(S.ab[k]),b=[{l:s3,v:m}];
@@ -2099,7 +2171,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-23';
+const BUILD='2026-11-25-24';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
