@@ -232,6 +232,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .atk .hit .dm{font-size:12px;color:#ddd3c4}
 .atk small{display:block;font-size:11px;line-height:1.15;color:var(--mute);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .atk .tg{position:absolute;right:8px;top:7px;font-size:10px;color:var(--violet)}
+.fgrid.c3x .atk .tg{right:6px;top:5px}.fgrid.c3x .atk .tg~b,.fgrid.c3 .atk .tg~b{padding-right:34px}
 .atk.on{border-color:var(--violet);box-shadow:0 0 0 1px var(--violet),0 0 16px rgba(165,124,255,.45)}
 .atk.off{opacity:.45}
 .fres{flex:none;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
@@ -391,6 +392,70 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 @media (max-height:700px){.screen{gap:6px}.head .face{width:34px;height:34px}.head h1{font-size:23px}.tok .v{font-size:21px}.fate{gap:5px}.fc{min-height:36px}}
 @media (max-height:600px){.head .cls{display:none}.fate .fc .t small{display:none}.fc{min-height:32px;padding:3px 9px}.ab .n{font-size:13px}.ab .s{font-size:10.5px}
  .ab .sheet{flex-direction:row;flex-wrap:wrap;justify-content:center;align-content:center;gap:0 4px}.ab .ic{width:30px!important;height:30px!important}.ab .n{width:100%}.ab .m{font-size:24px}}
+
+/* ===== инвентарь ===== */
+.facebtn{flex:none;border-radius:50%;transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
+.facebtn:active{transform:scale(.9)}
+.facebtn .face{display:block}
+body.test .head .face{border-color:var(--violet);box-shadow:0 0 0 2px rgba(165,124,255,.3),0 0 16px rgba(165,124,255,.55)}
+.tbadge{display:inline-block;font:700 10px/1 Alegreya,serif;letter-spacing:.08em;text-transform:uppercase;color:#1a1026;background:var(--violet);border-radius:5px;padding:2px 5px;vertical-align:2px;margin-right:4px}
+body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards}
+@keyframes flip{to{transform:perspective(900px) rotateY(88deg) scale(.92);filter:brightness(1.8) saturate(1.4);opacity:.2}}
+.page.on.unflip .screen{animation:unflip .5s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes unflip{from{transform:perspective(900px) rotateY(-80deg) scale(.94);opacity:.3}}
+.coins2{flex:none;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.coin2{display:flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:5px 7px;transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
+.coin2 .c{width:20px;height:20px;flex:none}
+.coin2 b{font:700 18px/1 "Cormorant Garamond",serif}
+.coin2 small{display:none}
+.ifilt{flex:none;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:3px}
+.ifilt button{padding:4px 2px;border-radius:8px;font-size:12.5px;color:var(--mute);border:1px solid transparent}
+.ifilt button.on{color:var(--ink);border-color:var(--gold);box-shadow:inset 0 0 0 1px rgba(233,189,108,.35)}
+.ifilt button.on[data-f="soc"]{border-color:var(--gold2)}.ifilt button.on[data-f="fight"]{border-color:var(--red2);color:#ffb3bf}.ifilt button.on[data-f="mag"]{border-color:var(--violet);color:#e3d4ff}
+.igrid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:min-content;align-content:start;gap:5px;overflow:hidden}
+.itm{position:relative;text-align:left;background:linear-gradient(160deg,rgba(44,36,30,.92),rgba(22,17,15,.92));border:1px solid rgba(233,189,108,.22);border-radius:10px;padding:5px 9px 6px;transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
+.itm .top{display:flex;align-items:baseline;gap:5px}
+.itm b{flex:1;font:600 15.5px/1.1 "Cormorant Garamond",serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.itm .q{flex:none;font-size:12px;color:var(--gold)}.itm .q.v{color:#cdb8ff}
+.itm small{display:block;font-size:11px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.itm .tg{font-style:normal;margin-right:6px}.itm .tg.s{color:var(--gold2)}.itm .tg.f{color:#ff9aa9}
+.itm.mag{border-color:rgba(165,124,255,.45);background:linear-gradient(160deg,rgba(46,32,66,.92),rgba(20,14,28,.92))}
+.itm.att::after{content:"";position:absolute;top:5px;right:5px;width:6px;height:6px;transform:rotate(45deg);background:var(--violet);box-shadow:0 0 6px var(--violet)}
+.itm.att .top{padding-right:8px}
+.itm.out{opacity:.45}
+.itm.add{border-style:dashed;background:none;text-align:center;color:var(--gold)}.itm.add b{color:var(--gold)}
+.igrid.tight{gap:4px}.igrid.tight .itm{padding:3px 8px 4px}.igrid.tight .itm b{font-size:14.5px}.igrid.tight .itm small{font-size:10.5px}
+.igrid.tiny{grid-template-columns:repeat(3,1fr)}.igrid.tiny .itm small{display:none}.igrid.tiny .itm b{font-size:13.5px}
+.itags{display:grid;gap:0;margin-top:6px}
+.iqty{display:flex;align-items:center;gap:10px;padding:10px 4px;border-top:1px solid var(--line)}
+.iqty span:first-child{flex:1;color:var(--mute);font-size:14px}
+.iqty button{width:38px;height:34px;border-radius:9px;background:#221a22;border:1px solid var(--line);font-size:20px}
+.iqty button:disabled{opacity:.35}
+.iqty b{min-width:26px;text-align:center;font:700 22px/1 "Cormorant Garamond",serif;color:var(--ink)!important}
+.iqty .ich{display:flex;gap:4px;margin-left:6px}
+.cpm{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px}
+.cpm button{background:#221a22;border:1px solid var(--line);border-radius:11px;padding:12px 0;font-size:17px}
+.dacts button.danger{border-color:var(--red2);color:#ffb3bf}
+.sheetbg label.chk{flex-direction:row;align-items:center;justify-content:center;gap:6px;font-size:14px;color:var(--ink)}
+.sheetbg label.chk input{width:20px;height:20px}
+.ch:has(>:nth-child(7)){gap:3px}.ch:has(>:nth-child(7))>.charge{width:9px;height:9px;border-width:1.2px}
+.slc{display:flex;gap:4px}
+.slc span{display:grid;justify-items:center;line-height:1}
+.slc b{font:700 15px/1 "Cormorant Garamond",serif;color:#e3d4ff}.slc b.z{color:#5d5068}
+.slc i{font-style:normal;font-size:9px;color:var(--mute);margin-top:2px}
+.slrow{display:flex;align-items:center;gap:10px;padding:8px 2px;border-top:1px solid var(--line)}
+.slrow span:first-child{flex:1}
+.slrow .ch{display:flex;gap:5px}
+.slrow button{border:1px solid var(--line);border-radius:9px;padding:4px 9px;font-size:13px;color:var(--mute)}
+.slrow button:disabled{opacity:.3}
+.mtw{display:flex;gap:6px;margin:6px 0 2px}.mtw button{flex:1;border:1px solid rgba(165,124,255,.5);border-radius:9px;padding:7px 0;color:#e3d4ff}.mtw button:disabled{opacity:.3}
+@media (max-height:700px){.coin2{padding:3px 6px}.coin2 b{font-size:16px}.itm b{font-size:14.5px}}
+
+/* бой ужимается сам, когда карточек много (тестовый 10 уровень) */
+#p-fight.d1 .atk small{display:none}#p-fight.d1 .atk{padding:4px 8px 5px}#p-fight.d1 .screen{gap:5px}
+#p-fight.d2 .fvit .tok{padding-top:2px;padding-bottom:2px}#p-fight.d2 .fvit .tok .k{min-height:14px;font-size:10px}#p-fight.d2 .fvit .tok .v{font-size:20px}#p-fight.d2 .mode button{padding:3px 2px}#p-fight.d2 .fres .fc{min-height:32px}
+#p-fight.d3 .atk .hit .dm{font-size:11px;line-height:1.1}#p-fight.d3 .atk b{font-size:14px}#p-fight.d3 .shead .cls{display:none}#p-fight.d3 .shead img{width:28px;height:28px}#p-fight.d3 .shead h1{font-size:22px}
+#p-fight.d4 .smh:not(:has(.pick)){display:none}#p-fight.d4 .atk .hit .dm{display:none}
 </style>
 </head>
 <body>
@@ -401,7 +466,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 <section class="page on" id="p-char">
  <div class="screen">
   <div class="head">
-    <img class="face" src="art/face.webp" alt="">
+    <button class="facebtn" id="faceBtn" aria-label="Переключить тестовый 10 уровень"><img class="face" src="art/face.webp" alt=""></button>
     <div class="who"><h1 id="nm">Филипп</h1><div class="cls" id="cl"></div></div>
     <button class="iconbtn" id="editBtn" aria-label="Изменить цифры"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/></svg></button>
   </div>
@@ -461,7 +526,12 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
   <div class="smh">Запасы<i></i></div>
   <div class="fres" id="fRes"></div>
  </div></section>
-<section class="page" id="p-inv"><div class="screen"><div class="soon"><div><img class="px" src="art/ab-int.webp" alt=""><h2>Инвентарь</h2><p>Пока здесь только кошель. Остальное скоро.</p><div class="coins" id="coins"></div></div></div></div></section>
+<section class="page" id="p-inv"><div class="screen">
+  <div class="shead"><img class="px" src="art/ab-int.webp" alt=""><div><h1>Инвентарь</h1><div class="cls" id="iSub"></div></div><button class="turnq" data-act="iadd">+ предмет</button></div>
+  <div class="coins2" id="coins"></div>
+  <div class="ifilt" id="iFilt"><button data-f="all" class="on">Всё</button><button data-f="soc">Разговор</button><button data-f="fight">Бой</button><button data-f="mag">Магия</button></div>
+  <div class="igrid" id="igrid"></div>
+ </div></section>
 
 <nav class="tabs" id="tabs">
   <button data-p="p-char" class="on" aria-label="Персонаж"><img class="ti fc2" src="art/face.webp" alt=""></button>
@@ -532,6 +602,14 @@ function toggleCnd(k){if(k==='exh')S.exh=S.exh>=6?0:S.exh+1;else if(S.cond[k])de
 const spellDC=()=>8+prof()+mod(S.ab.cha),spellAtk=()=>prof()+mod(S.ab.cha);
 const slotsTot=()=>S.slots.max+(S.slots.extra||0),slotsLeft=()=>slotsTot()-S.slots.used;
 function useSlot(){if(slotsLeft()<=0)return false;if(S.slots.extra>0)S.slots.extra--;else S.slots.used++;return true}
+/* ячейки 2 круга и выше (есть только у тестового 10 уровня): S.hi[круг]={max,used,extra} */
+const cantN=()=>1+(S.level>=5)+(S.level>=11)+(S.level>=17);
+const hiC=()=>S.hi?Object.keys(S.hi).map(Number).sort((a,b)=>a-b):[];
+function cTot(c){if(c===1)return slotsTot();const h=S.hi&&S.hi[c];return h?h.max+(h.extra||0):0}
+function cLeft(c){if(c===1)return slotsLeft();const h=S.hi&&S.hi[c];return h?cTot(c)-h.used:0}
+function firstC(lv){for(let c=Math.max(1,lv);c<=9;c++)if(cLeft(c)>0)return c;return 0}
+function useSlotC(c){if(c===1)return useSlot();const h=S.hi&&S.hi[c];if(!h||cLeft(c)<=0)return false;if(h.extra>0)h.extra--;else h.used++;return true}
+const FONT={2:3,3:5,4:6,5:7};
 const effAC=()=>S.ac+(S.shieldOn?5:0);
 const SPELLS={
  friends:{n:'Дружба',lv:0,soc:1,conc:1,short:'преимущество на Харизму к одному',meta:'заговор · 1 действие · на себя · концентрация до 1 мин · С, М (грим)',
@@ -540,8 +618,8 @@ const SPELLS={
   d:()=>`<p>Ты создаёшь <b>звук</b> или <b>образ предмета</b> в пределах 9 м на 1 минуту.</p><p><b>Звук</b>: от шёпота до крика. Твой голос, чужой голос, рык, барабаны, что угодно. Может звучать всё время или отдельными звуками.</p><p><b>Образ</b>: предмет не больше куба 1,5 м (стул, сундук, след в грязи). Без звука, света и запаха. Если до него дотронуться, рука пройдёт насквозь, и обман раскроется.</p><p>Существо может действием изучить иллюзию: проверка Интеллекта (Анализ) против <b>Сл ${spellDC()}</b>. Если поняло, иллюзия для него становится полупрозрачной.</p>`},
  message:{n:'Сообщение',lv:0,soc:1,short:'шёпот, который слышит только цель',meta:'заговор · 1 действие · 36 м · 1 раунд · В, С, М (медная проволока)',
   d:()=>`<p>Ты указываешь на существо в пределах 36 м и <b>шепчешь послание</b>. Слышит только цель, и она может так же шёпотом ответить, а услышишь только ты.</p><p>Работает сквозь стены, если ты знаешь цель и знаешь, что она там. Огибает углы. Не пройдёт через магическую тишину, 30 см камня, 2,5 см металла, тонкий свинец или 90 см дерева.</p>`},
- fire_bolt:{n:'Огненный снаряд',lv:0,fight:1,atk:1,hit:()=>'1к10 огнём',where:'36 м',short:'атака огнём 1к10',meta:'заговор · 1 действие · 36 м · мгновенно · В, С',
-  d:()=>`<p>Ты бросаешь сгусток огня в существо или предмет в пределах 36 м. Это <b>дальнобойная атака заклинанием: к20 ${sg(spellAtk())}</b>. При попадании <b>1к10 урона огнём</b>. Горючие предметы, которые никто не держит, загораются.</p>`},
+ fire_bolt:{n:'Огненный снаряд',lv:0,fight:1,atk:1,hit:()=>cantN()+'к10 огнём',where:'36 м',short:'атака огнём',meta:'заговор · 1 действие · 36 м · мгновенно · В, С',
+  d:()=>`<p>Ты бросаешь сгусток огня в существо или предмет в пределах 36 м. Это <b>дальнобойная атака заклинанием: к20 ${sg(spellAtk())}</b>. При попадании <b>${cantN()}к10 урона огнём</b>${cantN()>1?' (заговор растёт с уровнем)':''}. Горючие предметы, которые никто не держит, загораются.</p>`},
  charm_person:{n:'Очарование личности',lv:1,soc:1,short:'гуманоид считает тебя другом, 1 час',meta:'1 круг · 1 действие · 9 м · 1 час · В, С',
   d:()=>`<p>Ты пытаешься очаровать <b>гуманоида</b>, которого видишь в пределах 9 м. Он делает <b>спасбросок Мудрости против Сл ${spellDC()}</b>. С преимуществом, если ты или твои спутники с ним сражаетесь.</p><p>При провале он <b>очарован на 1 час</b> или пока ты или спутники не причините ему вред. Очарованный <b>считает тебя другом</b>.</p><p>Когда заклинание кончится, он <b>знает, что ты его очаровал</b>.</p><p class="mu">Ячейкой 2 круга и выше: +1 цель за каждый круг выше первого (цели в 9 м друг от друга).</p>`},
  shield:{n:'Щит',lv:1,fight:1,react:1,short:'+5 к КД до твоего хода, реакция',meta:'1 круг · реакция · на себя · 1 раунд · В, С',
@@ -550,6 +628,26 @@ const SPELLS={
   d:()=>`<p>Ты бросаешь сферу энергии в существо в пределах 27 м. Выбери вид урона: <b>звук, кислота, огонь, холод, электричество или яд</b>.</p><p>Это <b>дальнобойная атака заклинанием: к20 ${sg(spellAtk())}</b>. При попадании <b>3к8 урона</b> выбранного вида.</p><p class="mu">Нужен бриллиант стоимостью 50 зм (он не тратится). Ячейкой 2 круга и выше: +1к8 за каждый круг выше первого.</p>`},
  disguise_self:{n:'Маскировка',lv:1,soc:1,short:'другая внешность на 1 час',meta:'1 круг · 1 действие · на себя · 1 час · В, С',
   d:()=>`<p>Ты и всё твоё снаряжение <b>выглядите иначе</b> на 1 час, или пока ты не закончишь действием. Можно стать на 30 см выше или ниже, худее или полнее. Нельзя менять строение тела: столько же рук и ног.</p><p>Иллюзия не выдерживает касания: рука пройдёт сквозь шляпу или упрётся в тебя раньше, чем ждёт.</p><p>Чтобы раскусить, существо должно действием тебя изучить и пройти проверку Интеллекта (Анализ) против <b>Сл ${spellDC()}</b>.</p>`},
+ mage_hand:{n:'Волшебная рука',lv:0,short:'призрачная рука до 9 м',meta:'заговор · 1 действие · 9 м · 1 минута · В, С',
+  d:()=>`<p>В точке до 9 м появляется <b>призрачная парящая рука</b> на 1 минуту. Действием ты двигаешь её до 9 м и делаешь ею что-то простое: открыть незапертую дверь, достать вещь из сундука, вылить флягу.</p><p>Рука поднимает не больше <b>5 кг</b>. Она не атакует, не включает магические предметы и не уходит дальше 9 м от тебя.</p>`},
+ prestidigitation:{n:'Фокусы',lv:0,soc:1,short:'мелкое волшебство: искра, запах, чистота',meta:'заговор · 1 действие · 3 м · до 1 часа · В, С',
+  d:()=>`<p>Мелкий трюк в пределах 3 м, на выбор:</p><p>• безвредные искры, дуновение ветра, тихая музыка или запах;<br>• зажечь или погасить свечу, факел, костерок;<br>• мгновенно почистить или испачкать предмет до 30 см;<br>• остудить, согреть или придать вкус еде на 1 час;<br>• цвет, пятнышко или знак на предмете или поверхности на 1 час;<br>• в руке появляется крохотная безделушка или иллюзорный образ до конца твоего следующего хода.</p><p class="mu">Одновременно действует до трёх эффектов.</p>`},
+ suggestion:{n:'Внушение',lv:2,soc:1,conc:1,short:'цель делает то, что ты предложил',meta:'2 круг · 1 действие · 9 м · концентрация до 8 часов · В, М (змеиный язык и мёд)',
+  d:()=>`<p>Ты внушаешь существу в пределах 9 м, которое тебя слышит и понимает, <b>разумный образ действий</b> одной-двумя фразами. Оно делает <b>спасбросок Мудрости против Сл ${spellDC()}</b>.</p><p>При провале существо следует внушению, пока длится заклинание. Явно опасное для него внушение не сработает, а вот «сторожи этот мост» или «отдай мне ключ, это для твоего же блага» сработает.</p><p class="mu">Существа, которых нельзя очаровать, не подвержены. Если ты или спутники ранят цель, заклинание кончается.</p>`},
+ misty_step:{n:'Туманный шаг',lv:2,fight:1,where:'на себя',short:'телепорт на 9 м, бонусное действие',meta:'2 круг · бонусное действие · на себя · мгновенно · В',
+  d:()=>`<p>Тебя окутывает серебристый туман, и ты <b>телепортируешься</b> до 9 м в свободное место, которое видишь.</p><p class="mu">Это бонусное действие: в тот же ход можно ещё сотворить заговор действием. Уход телепортом не провоцирует Удар вслед.</p>`},
+ hold_person:{n:'Удержание личности',lv:2,fight:1,conc:1,where:'18 м',short:'гуманоид парализован',meta:'2 круг · 1 действие · 18 м · концентрация до 1 минуты · В, С, М (кусочек железа)',
+  d:()=>`<p>Выбери <b>гуманоида</b>, которого видишь в пределах 18 м. Он делает <b>спасбросок Мудрости против Сл ${spellDC()}</b>. При провале он <b>парализован</b>: не двигается, не действует, атаки по нему с преимуществом, а удар вплотную становится критическим.</p><p>В конце каждого своего хода цель снова делает спасбросок и при успехе освобождается.</p><p><b>Ячейкой выше 2 круга</b>: ещё одна цель за каждый круг выше, все в пределах 9 м друг от друга.</p>`},
+ counterspell:{n:'Контрзаклинание',lv:3,fight:1,react:1,where:'18 м',short:'сорвать чужое заклинание, реакция',meta:'3 круг · реакция · 18 м · мгновенно · С',
+  d:()=>`<p>Реакция: когда ты видишь, как существо в пределах 18 м <b>творит заклинание</b>.</p><p>Заклинание <b>3 круга и ниже</b> срывается без броска. Если круг выше, сделай проверку <b>Харизмы ${sg(mod(S.ab.cha))}</b> против Сл 10 + круг того заклинания. При успехе оно тоже срывается.</p><p><b>Ячейкой выше 3 круга</b>: без броска срываются заклинания до круга этой ячейки.</p>`},
+ fireball:{n:'Огненный шар',lv:3,fight:1,where:'45 м',short:'спасбросок Ловкости, 8к6 огнём',roll:{n:8,s:6,up:1,t:'огнём, спасбросок Ловкости'},meta:'3 круг · 1 действие · 45 м · сфера радиусом 6 м · В, С, М (сера и гуано)',
+  d:()=>`<p>Яркая искра летит в точку до 45 м и взрывается сферой <b>радиусом 6 м</b>, огонь огибает углы. Каждый в сфере делает <b>спасбросок Ловкости против Сл ${spellDC()}</b>: при провале <b>8к6 урона огнём</b>, при успехе половина.</p><p>Горючие предметы, которые никто не держит, загораются.</p><p><b>Ячейкой выше 3 круга</b>: +1к6 за каждый круг выше.</p>`},
+ hypnotic_pattern:{n:'Гипнотический узор',lv:3,fight:1,conc:1,where:'36 м',short:'видящие узор замирают',meta:'3 круг · 1 действие · 36 м · куб 9 м · концентрация до 1 минуты · С, М (светящаяся палочка)',
+  d:()=>`<p>В кубе со стороной 9 м в пределах 36 м вспыхивает переливчатый узор. Каждый, кто его видит, делает <b>спасбросок Мудрости против Сл ${spellDC()}</b>.</p><p>При провале существо <b>очаровано</b>: оно <b>недееспособно</b> и его скорость 0. Оно приходит в себя, если получит урон или кто-то действием его встряхнёт.</p><p class="mu">Слепых и тех, кого нельзя очаровать, узор не берёт.</p>`},
+ greater_invisibility:{n:'Высшая невидимость',lv:4,fight:1,conc:1,where:'касание',short:'невидим, даже когда атакуешь',meta:'4 круг · 1 действие · касание · концентрация до 1 минуты · В, С',
+  d:()=>`<p>Ты или существо, которого ты касаешься, становится <b>невидимым</b> на минуту. Всё, что цель несёт, тоже невидимо.</p><p>В отличие от обычной невидимости, она <b>не спадает</b>, когда цель атакует или творит заклинания. Атаки невидимого с преимуществом, по нему с помехой.</p>`},
+ dominate_person:{n:'Подчинение личности',lv:5,soc:1,fight:1,conc:1,where:'18 м',short:'гуманоид слушается твоих приказов',meta:'5 круг · 1 действие · 18 м · концентрация до 1 минуты · В, С',
+  d:()=>`<p>Гуманоид в пределах 18 м делает <b>спасбросок Мудрости против Сл ${spellDC()}</b>, с преимуществом, если вы с ним сражаетесь. При провале он <b>очарован</b> тобой.</p><p>Между вами телепатическая связь: ты отдаёшь приказы без действия, и он старается их выполнить. Действием можно управлять им полностью, тогда он делает только то, что ты скажешь.</p><p>Каждый раз, получив урон, цель снова делает спасбросок и при успехе освобождается.</p><p><b>Ячейкой 6 круга</b> до 10 минут, 7 круга до 1 часа, 8 круга и выше до 8 часов.</p>`},
  comprehend_languages:{n:'Понимание языков',lv:1,soc:1,short:'понимаешь любую речь и текст',meta:'1 круг · 1 действие · на себя · 1 час · ритуал · В, С, М (сажа и соль)',
   d:()=>`<p>На 1 час ты понимаешь <b>буквальный смысл любой речи</b> на любом языке. Можешь читать любой текст, касаясь его, примерно минута на страницу.</p><p>Тайные шифры и магические знаки не расшифровывает.</p><p class="mu">Ритуал: можно сотворить за 10 минут без ячейки.</p>`}
 };
@@ -565,12 +663,14 @@ const ORBDMG={'звук':'звуком','кислота':'кислотой','о�
 const WEAP={dagger:{n:'Кинжал',meta:'простое оружие · фехтовальное, лёгкое, метательное',
  d:()=>`<p><b>Рукопашная атака: к20 ${sg(daggerHit())}</b> (Ловкость ${sg(mod(S.ab.dex))} + мастерство ${prof()}). Цель в пределах 1,5 м.</p><p>Можно <b>метнуть</b>: дальность 6 м, до 18 м с помехой. Брошенный кинжал надо потом поднять.</p><p>При попадании <b>1к4 ${sg(mod(S.ab.dex))} колющего урона</b>.</p><p class="mu">У чародея по стартовому снаряжению всегда два кинжала. Второй можно держать в другой руке: тогда бонусным действием атакуешь и им, но без прибавки Ловкости к урону.</p>`}};
 const daggerHit=()=>mod(S.ab.dex)+prof();
-function atkSpec(k){
+function atkSpec(k,c){
  const ch=[{l:'Харизма',v:mod(S.ab.cha)},{l:'мастерство',v:prof()}];
- if(k==='fire_bolt')return{label:'Огненный снаряд: атака',bonus:ch,kind:'atk',dmg:{n:'Огненный снаряд',dn:1,ds:10,k:0,t:'огнём'}};
- if(k==='chromatic_orb')return{label:'Цветной шарик: атака',bonus:ch,kind:'atk',dmg:{n:'Цветной шарик',dn:3,ds:8,k:0,t:ORBDMG[S.orbT]}};
+ if(k==='fire_bolt')return{label:'Огненный снаряд: атака',bonus:ch,kind:'atk',dmg:{n:'Огненный снаряд',dn:cantN(),ds:10,k:0,t:'огнём'}};
+ if(k==='chromatic_orb')return{label:'Цветной шарик: атака',bonus:ch,kind:'atk',dmg:{n:'Цветной шарик',dn:3+Math.max(0,(c||1)-1),ds:8,k:0,t:ORBDMG[S.orbT]}};
  const dx=mod(S.ab.dex);return{label:'Кинжал: атака',bonus:[{l:'Ловкость',v:dx},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:'Кинжал',dn:1,ds:4,k:dx,kl:'Ловкость',t:'колющий'}};
 }
+function fitFight(){const pg=$('p-fight');if(!pg||!pg.classList.contains('on'))return;const sc=pg.querySelector('.screen');
+ pg.classList.remove('d1','d2','d3','d4');for(const c of ['d1','d2','d3','d4']){if(sc.scrollHeight<=sc.clientHeight+1)break;pg.classList.add(c)}}
 function renderFight(){
  if(!$('fVit'))return;
  $('fSub').textContent=`атака заклинанием ${sg(spellAtk())} · сложность ${spellDC()}`;
@@ -581,7 +681,7 @@ function renderFight(){
  <button class="tok" data-info="move"><div class="k">Скорость</div><div class="v ${sp!==S.speed?'warn':''}">${String(sp).replace('.',',')}<small>м</small></div></button>`;
  const left=slotsLeft();
  const fs=known().filter(k=>SPELLS[k]&&SPELLS[k].fight&&S.fSpellShow.includes(k));
- const scard=k=>{const p=SPELLS[k],off=p.lv&&!left&&!(k==='shield'&&S.shieldOn);
+ const scard=k=>{const p=SPELLS[k],off=p.lv&&!firstC(p.lv)&&!(k==='shield'&&S.shieldOn);
   if(k==='shield')return `<button class="atk ${S.shieldOn?'on':''} ${off?'off':''}" data-info="sp_shield"><b>Щит</b><div class="hit"><span class="d" style="color:#e3d4ff">+5</span><span class="dm">к классу доспеха</span></div><small>${S.shieldOn?'действует до твоего хода':'реакция · 1 круг'}</small></button>`;
   return `<button class="atk ${off?'off':''}" data-info="sp_${k}">${p.lv?`<span class="tg">${p.lv} круг</span>`:''}<b>${p.n}</b><div class="hit">${p.atk?`<span class="d">${sg(spellAtk())}</span><span class="dm">${p.hit()}</span>`:`<span class="dm">${p.short}</span>`}</div><small>${p.lv?(p.where||'')+' · тратит ячейку':'заговор · '+(p.where||'')}</small></button>`};
  const acts=fs.filter(k=>!SPELLS[k].react).map(scard);
@@ -589,12 +689,13 @@ function renderFight(){
  acts.push(`<button class="atk plain" data-info="actions"><b>Другие действия</b><small style="white-space:normal">Рывок, Отход, Уклонение, Помощь, Засада, Поиск</small></button>`);
  $('fAct').className='fgrid'+(acts.length>4?' c3x':'');$('fAct').innerHTML=acts.join('');
  $('fRe').innerHTML=fs.filter(k=>SPELLS[k].react).map(scard).join('')+`<button class="atk steel" data-info="opp"><b>Удар вслед</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">кинжалом</span></div><small>реакция, враг уходит</small></button>
- <button class="atk" data-info="flex"><b>Гибкое колдовство</b><div class="hit"><span class="dm">ячейка ↔ единицы</span></div><small>бонусное действие</small></button>`;
+ `+(S.meta&&S.meta.length?'':`<button class="atk" data-info="flex"><b>Гибкое колдовство</b><div class="hit"><span class="dm">ячейка ↔ единицы</span></div><small>бонусное действие</small></button>`);
  renderItems('fight');
+ requestAnimationFrame(fitFight);
  const pips=(n,u,cls)=>Array.from({length:n},(_,i)=>`<span class="charge ${cls} ${i<u?'used':''}"></span>`).join('');
  const dz=S.hp.cur<=0,D=S.death,dp=(n,c)=>Array.from({length:3},(_,i)=>`<span class="charge ${i<n?c:'used'}"></span>`).join('');
- $('fRes').innerHTML=`<button class="fc" data-info="slots"><div class="t">Ячейки 1 круга<small>осталось ${left}</small></div><div class="ch">${pips(slotsTot(),S.slots.used,'v')}</div></button>
- <button class="fc" data-info="flex"><div class="t">Единицы чародейства<small>осталось ${S.spt.max-S.spt.used}</small></div><div class="ch">${pips(S.spt.max,S.spt.used,'')}</div></button>
+ $('fRes').innerHTML=(S.hi?`<button class="fc" data-info="slots"><div class="t">Ячейки<small>осталось по кругам</small></div><div class="slc">${[1,...hiC()].map(c=>`<span><b class="${cLeft(c)?'':'z'}">${cLeft(c)}</b><i>${c} круг</i></span>`).join('')}</div></button>`:`<button class="fc" data-info="slots"><div class="t">Ячейки 1 круга<small>осталось ${left}</small></div><div class="ch">${pips(slotsTot(),S.slots.used,'v')}</div></button>`)+`
+ <button class="fc" data-info="flex"><div class="t">Единицы чародейства<small>${S.meta&&S.meta.length?'гибкое колдовство, метамагия':'осталось '+(S.spt.max-S.spt.used)}</small></div><div class="ch">${pips(S.spt.max,S.spt.used,'')}</div></button>
  <button class="fc ${chaosArmed?'armed':''}" data-info="chaos"><div class="t">Поток хаоса<small>${chaosArmed?'готов!':'преимущество'}</small></div><div class="ch">${pips(S.chaos.max,S.chaos.used,'v')}</div></button>
  <button class="fc surge" data-info="surge"><div class="t">Волна дикой магии<small>к20, на 1 таблица</small></div><span class="ic">✺</span></button>
  <button class="fc ${S.conc?'armed':''}" data-info="conc"><div class="t">Концентрация<small>${S.conc?SPELLS[S.conc].n:'ничего не держишь'}</small></div></button>
@@ -684,6 +785,154 @@ function renderSRes(){const el=$('sres');if(!el)return;
  <button class="fc ${chaosArmed?'armed':''}" data-info="chaos"><div class="t">Поток хаоса<small>${chaosArmed?'готов!':'преимущество'}</small></div><div class="ch">${Array.from({length:S.chaos.max},(_,i)=>`<span class="charge v ${i<S.chaos.used?'used':''}"></span>`).join('')}</div></button>`;
  renderItems('soc')}
 
+/* ---------- предметы: справочник. Что у Филиппа есть и где помечено, лежит в S.items ----------
+   ключ: n имя, short строка на плитке, meta подзаголовок шторки, d() описание механики,
+   soc/fight где пригодится по умолчанию, cons расходуется, use как применить, ch заряды, att нужна настройка, mag магический */
+const IMP=()=>mod(S.ab.dex); /* импровизированное оружие: без мастерства */
+const ICAT={
+ dagger:{n:'Кинжал',short:'1к4 колющий',fight:1,meta:'простое оружие · фехтовальное, лёгкое, метательное',
+  d:()=>WEAP.dagger.d(),use:'weapon'},
+ pouch:{n:'Мешочек с компонентами',short:'для заклинаний',meta:'снаряжение',
+  d:()=>`<p>Поясная сумка с отделениями: травы, пыль, перья, кусочки воска. Заменяет все <b>материальные компоненты</b> заклинаний, у которых не указана цена и которые не расходуются.</p><p class="mu">Нужен для Дружбы (немного косметики) и Малой иллюзии (клок шерсти). Если сумку отнимут, такие заклинания творить нельзя.</p>`},
+ explorer:{n:'Набор путешественника',short:'рюкзак, верёвка, еда',meta:'снаряжение · набор',
+  d:()=>`<p>В рюкзаке: спальник, столовый набор, трутница, 10 факелов, 10 дней рационов, бурдюк с водой и пеньковая верёвка 15 м.</p><p class="mu">Еда и вода нужны для долгого отдыха: без них не снимается истощение.</p>`},
+ clothes:{n:'Обычная одежда',short:'не выделяться',meta:'снаряжение',d:()=>`<p>Простая одежда горожанина или селянина. В ней Филипп не привлекает внимания в деревне.</p>`},
+ fine:{n:'Дорогая одежда',short:'для знати',soc:1,meta:'снаряжение',d:()=>`<p>Камзол, шёлк, хорошие сапоги. В ней тебя пустят туда, куда простолюдина не пустят, и знать говорит с тобой как с равным. Мастер может дать <b>преимущество</b> на проверку Убеждения при дворе, если одежда к месту.</p>`},
+ trinket:{n:'Безделушка',short:'выбрать с мастером',soc:1,meta:'предыстория Преследуемый',
+  d:()=>`<p>Странная вещица из прошлого: её дал <b>мастер</b> или выпал бросок по таблице безделушек готического ужаса.</p><p class="mu">Пока не выбрана. Когда узнаешь, что это, поправь название и описание.</p>`},
+ chest:{n:'Сундук',short:'для добычи',meta:'набор охотника на монстров',d:()=>`<p>Окованный сундук, в нём лежит весь набор охотника. Тяжёлый: обычно его оставляют в повозке или на постоялом дворе.</p>`},
+ crowbar:{n:'Лом',short:'вскрыть, поднять',meta:'набор охотника на монстров',d:()=>`<p>Если рычаг помогает (поднять плиту, вскрыть ящик, сорвать доски с окна), проверка <b>Силы</b> идёт с <b>преимуществом</b>.</p>`},
+ hammer:{n:'Молоток',short:'вбить кол',meta:'набор охотника на монстров',d:()=>`<p>Обычный молоток. Нужен, чтобы вбить кол, гвоздь или крюк.</p>`},
+ stake:{n:'Деревянный кол',short:'против вампира',fight:1,cons:1,meta:'набор охотника на монстров',
+  d:()=>`<p>Острый осиновый кол. В бою это <b>импровизированное оружие</b>: к20 ${sg(IMP())} (Ловкость, без мастерства), урон <b>1к4</b>.</p><p>Против вампира кол в сердце обездвиженного или поверженного вампира, по сюжету Баровии, может его остановить. Что именно случится, решает <b>мастер</b>.</p>`,
+  use:{k:'atk',l:'Удар колом',dmg:{n:'Кол',dn:1,ds:4,k:0,t:'колющий'}}},
+ symbol:{n:'Святой символ',short:'знак веры',soc:1,meta:'набор охотника на монстров',
+  d:()=>`<p>Амулет или эмблема бога. Филипп не жрец, магию через символ он не творит.</p><p>Его можно <b>показать</b>: священнику, селянам, иногда нежити. Сработает ли это, решает <b>мастер</b>, а ты, скорее всего, бросишь <b>Убеждение</b> или <b>Религию</b>.</p>`},
+ holy:{n:'Святая вода',short:'2к6 нежити',fight:1,cons:1,meta:'расходуется · действие',
+  d:()=>`<p><b>Действием</b> выплесни флягу на существо в пределах 1,5 м или <b>брось</b> её до 6 м, тогда фляга разбивается.</p><p>Это дальнобойная атака импровизированным оружием: <b>к20 ${sg(IMP())}</b> (Ловкость, без мастерства).</p><p>При попадании <b>исчадие или нежить</b> получает <b>2к6 урона излучением</b>. Живым она не вредит.</p>`,
+  use:{k:'atk',l:'Святая вода: бросок',dmg:{n:'Святая вода',dn:2,ds:6,k:0,t:'излучением, только нежити и исчадию'}}},
+ manacles:{n:'Кандалы',short:'сковать пленника',fight:1,meta:'набор охотника на монстров',
+  d:()=>`<p>Сковывают существо Маленького или Среднего размера. Надеть их можно на того, кто <b>схвачен, обездвижен или недееспособен</b>.</p><p>Вырваться: проверка <b>Ловкости Сл 20</b>. Разорвать: проверка <b>Силы Сл 20</b>. Без ключа замок вскрывают воровскими инструментами, Сл 15.</p>`},
+ mirror:{n:'Стальное зеркало',short:'кто без отражения',meta:'набор охотника на монстров',
+  d:()=>`<p>Небольшое зеркальце. Можно заглянуть за угол, не высовываясь, или подать блик.</p><p class="mu">Вампиры в Баровии <b>не отражаются</b> в зеркале.</p>`},
+ oil:{n:'Масло',short:'облить и поджечь',fight:1,cons:1,meta:'расходуется · действие',
+  d:()=>`<p><b>Действием</b> облей существо в пределах 1,5 м или <b>брось</b> флягу до 6 м: дальнобойная атака импровизированным оружием, <b>к20 ${sg(IMP())}</b>.</p><p>При попадании цель облита. Если до конца минуты она получит урон огнём (например, от Огненного снаряда), то ещё <b>5 урона огнём</b> от масла.</p><p>Или разлей на землю квадратом 1,5 м и подожги: 2 раунда горит, кто входит или заканчивает там ход, получает 5 урона огнём.</p>`,
+  use:{k:'atk',l:'Масло: бросок',dmg:null,hit:'при попадании цель облита: следующий урон огнём +5'}},
+ tinder:{n:'Трутница',short:'огонь',meta:'снаряжение',d:()=>`<p>Огниво и трут. Зажечь факел, лампу или костёр <b>действием</b>. Другой огонь разжигается около минуты.</p>`},
+ torch:{n:'Факел',short:'свет 6 м',fight:1,cons:1,meta:'расходуется · горит 1 час',
+  d:()=>`<p>Горит <b>1 час</b>: яркий свет на 6 м и тусклый ещё на 6 м.</p><p>Им можно ударить как импровизированным оружием: <b>к20 ${sg(IMP())}</b>, при попадании <b>1 урон огнём</b>.</p>`,
+  use:{k:'atk',l:'Удар факелом',dmg:null,hit:'при попадании 1 урон огнём'}},
+ /* ---- для тестового 10 уровня ---- */
+ kit:{n:'Набор для грима',short:'изменить лицо',soc:1,meta:'инструменты',d:()=>`<p>Краска, пудра, накладные брови и парики. С ним можно изменить внешность без магии. Если ты владеешь им, бонус мастерства добавляется к проверкам, где грим помогает.</p><p class="mu">Филипп им не владеет: бросай просто Харизму.</p>`},
+ heal:{n:'Зелье лечения',short:'2к4 + 2 хитов',fight:1,cons:1,mag:1,meta:'зелье · обычное · действие',
+  d:()=>`<p><b>Действием</b> выпей сам или влей в рот союзнику рядом.</p><p>Восстанавливает <b>2к4 + 2 хитов</b>. Лист сам прибавит их к твоим хитам, если пьёшь ты.</p>`,use:{k:'heal',l:'Зелье лечения',n:2,s:4,b:2}},
+ heal2:{n:'Зелье большого лечения',short:'4к4 + 4 хитов',fight:1,cons:1,mag:1,meta:'зелье · необычное · действие',
+  d:()=>`<p><b>Действием</b> выпей сам или влей в рот союзнику рядом.</p><p>Восстанавливает <b>4к4 + 4 хитов</b>. Лист сам прибавит их к твоим хитам.</p>`,use:{k:'heal',l:'Зелье большого лечения',n:4,s:4,b:4}},
+ cloak:{n:'Плащ защиты',short:'+1 КД и спасброски',fight:1,mag:1,att:1,meta:'чудесный предмет · необычный · нужна настройка',
+  d:()=>`<p>Пока ты настроен на плащ и носишь его, у тебя <b>+1 к классу доспеха</b> и <b>+1 ко всем спасброскам</b>.</p><p class="mu">В тестовом листе этот +1 уже вписан в класс доспеха.</p>`},
+ wand:{n:'Палочка волшебных снарядов',short:'1–3 заряда за раз',fight:1,mag:1,ch:7,rg:{n:1,s:6,b:1},meta:'палочка · необычная · 7 зарядов',
+  d:()=>`<p><b>Действием</b> потрать 1 заряд: вылетают <b>3 светящихся дротика</b>, каждый без промаха бьёт выбранную цель на 1к4 + 1 урона силовым полем. Каждый лишний заряд даёт ещё один дротик.</p><p>На рассвете восстанавливается <b>1к6 + 1</b> заряд. Если потратил последний, брось к20: на 1 палочка рассыпается в пепел.</p>`,
+  use:{k:'dice',l:'Волшебные снаряды: 3 дротика',n:3,s:4,b:3,t:'силовым полем, без промаха'}},
+ hat:{n:'Шляпа маскировки',short:'Маскировка без ячеек',soc:1,mag:1,att:1,meta:'чудесный предмет · необычный · нужна настройка',
+  d:()=>`<p>Пока шляпа на тебе, можешь <b>действием</b> сотворить на себя <b>Маскировку</b> сколько угодно раз, без ячеек. Если шляпу снять, маскировка спадает.</p><p class="mu">Другой рост, голос не меняется. Кто трогает или пристально изучает, может раскусить проверкой Анализа против твоей сложности заклинаний.</p>`},
+ amulet:{n:'Медальон мыслей',short:'читать мысли',soc:1,mag:1,att:1,ch:3,rg:{n:1,s:3,b:0},meta:'чудесный предмет · необычный · нужна настройка · 3 заряда',
+  d:()=>`<p><b>Действием</b> потрать 1 заряд и сотвори <b>Обнаружение мыслей</b> (сложность 13). Первые мысли существа рядом видны сразу, а глубже нужна новая попытка, и существо делает спасбросок Мудрости.</p><p>На рассвете восстанавливается <b>1к3</b> заряда.</p>`,use:{k:'charge',l:'Обнаружение мыслей'}},
+ eyes:{n:'Глаза очарования',short:'Очарование, 3 заряда',soc:1,mag:1,att:1,ch:3,meta:'чудесный предмет · необычный · нужна настройка',
+  d:()=>`<p>Хрустальные линзы на глаза. <b>Действием</b> потрать 1 заряд: <b>Очарование личности</b> (сложность 13) на гуманоида в пределах 9 м, если вы видите друг друга.</p><p>Все заряды возвращаются на рассвете.</p>`,use:{k:'charge',l:'Очарование личности'}},
+ stones:{n:'Камни послания',short:'связь с другом',soc:1,mag:1,meta:'чудесный предмет · необычный · пара камней',
+  d:()=>`<p>Пара гладких камней. Раз в день, держа один, можешь <b>действием</b> сотворить <b>Послание</b> тому, у кого второй камень: 25 слов и ответ.</p>`,use:{k:'charge',l:'Послание через камень'},ch:1},
+ dust:{n:'Пыль исчезновения',short:'невидим на 2к4 минуты',fight:1,cons:1,mag:1,meta:'чудесный предмет · необычный · действие',
+  d:()=>`<p><b>Действием</b> подбрось пыль: ты и все в пределах 3 м становитесь <b>невидимы</b> на <b>2к4 минуты</b>. Невидимость кончается, если существо атакует или творит заклинание.</p>`,use:{k:'dice',l:'Пыль исчезновения: минут',n:2,s:4,b:0,t:'минут невидимости'}},
+ scroll:{n:'Свиток Огненного шара',short:'8к6 огнём',fight:1,cons:1,mag:1,meta:'свиток · необычный · действие',
+  d:()=>`<p>Прочитай свиток <b>действием</b>: это Огненный шар 3 круга без ячейки. Взрыв радиусом 6 м в точке до 45 м. Каждый в нём делает спасбросок <b>Ловкости Сл ${spellDC()}</b>: при провале <b>8к6 огнём</b>, при успехе половина.</p><p>После прочтения свиток рассыпается.</p>`,use:{k:'dice',l:'Огненный шар со свитка',n:8,s:6,b:0,t:'огнём, при успехе спасброска половина'}}
+};
+
+/* ---------- ИНВЕНТАРЬ ----------
+   S.items[ключ] = {q сколько, soc, fight где пригодится, used потрачено зарядов, on настроен, а у своих предметов ещё n, short, txt}.
+   Порядок в S.inv. ITEMS (для блоков в «Общении» и «Бою») собирается из справочника ICAT и S.items в syncItems(). */
+let invFilter='all',delArm=null;
+const ATT_MAX=3;
+function syncItems(){S.inv=Object.keys(S.items);
+ for(const k in ITEMS)if(!S.items[k])delete ITEMS[k];
+ S.inv.forEach(k=>{const o=S.items[k],c=ICAT[k]||{};
+  ITEMS[k]=Object.assign(ITEMS[k]||{},{n:o.n||c.n||'Предмет',short:o.short??c.short??'',soc:o.soc?1:0,fight:o.fight?1:0,meta:itemMeta(k),d:()=>itemBody(k),acts:()=>itemActs(k)})});
+ S.sItemShow=S.sItemShow.filter(k=>S.items[k]);S.fItemShow=S.fItemShow.filter(k=>S.items[k])}
+const icat=k=>ICAT[k]||{};
+const chMax=k=>icat(k).ch||0,chLeft=k=>chMax(k)-(S.items[k].used||0);
+const attN=()=>S.inv.filter(k=>S.items[k].on).length;
+function itemMeta(k){const o=S.items[k],c=icat(k);let m=c.meta||'свой предмет';if(o.q>1||c.cons)m+=` · ${o.q} шт.`;if(c.ch)m+=` · зарядов ${chLeft(k)} из ${c.ch}`;if(c.att)m+=o.on?' · настроен':' · не настроен';return m}
+function itemBody(k){const o=S.items[k],c=icat(k);
+ let h=c.d?c.d():`<p>${esc(o.txt||o.short||'Описания пока нет. Нажми «Изменить» и впиши, что предмет делает.')}</p>`;
+ h+=`<div class="itags"><button class="crow ck ${o.soc?'on':''}" data-itag="${k}:soc"><span><i class="box">${o.soc?'✓':''}</i>Пригодится в разговоре</span></button><button class="crow ck ${o.fight?'on':''}" data-itag="${k}:fight"><span><i class="box">${o.fight?'✓':''}</i>Пригодится в бою</span></button></div>`;
+ h+=`<div class="iqty"><span>Сколько</span><button data-iq="${k}:-1" ${o.q>0?'':'disabled'}>−</button><b>${o.q}</b><button data-iq="${k}:1">+</button>${c.ch?`<span class="ich">${Array.from({length:c.ch},(_,i)=>`<span class="charge v ${i<(o.used||0)?'used':''}"></span>`).join('')}</span>`:''}</div>`;
+ if(c.att)h+=`<div class="how">Настройка: короткий отдых рядом с предметом. Настроенных предметов не больше ${ATT_MAX}, сейчас <b>${attN()}</b>.</div>`;
+ return h}
+function itemActs(k){const o=S.items[k],c=icat(k),u=c.use;let a='';
+ if(u==='weapon')a+=`<button data-act="atk:dagger">Атаковать: к20 ${sg(daggerHit())}</button>`;
+ else if(u&&u.k==='atk')a+=`<button data-act="iuse:${k}" ${o.q>0?'':'disabled'}>${c.cons?'Бросить':'Ударить'}: к20 ${sg(IMP())}${c.cons?` (останется ${Math.max(0,o.q-1)})`:''}</button>`;
+ else if(u&&u.k==='heal')a+=`<button data-act="iuse:${k}" ${o.q>0?'':'disabled'}>Выпить: ${u.n}к${u.s} + ${u.b} хитов</button>`;
+ else if(u&&(u.k==='dice'||u.k==='charge')){const ok=c.ch?chLeft(k)>0:o.q>0;a+=`<button data-act="iuse:${k}" ${ok?'':'disabled'}>${c.ch?'Потратить заряд':'Использовать'}${u.k==='dice'?`: ${u.n}к${u.s}${u.b?' + '+u.b:''}`:''}</button>`}
+ if(c.att)a+=`<button class="${o.on?'ghost':''}" data-act="iatt:${k}">${o.on?'Снять настройку':'Настроиться'}</button>`;
+ if(c.ch&&o.used)a+=`<button class="ghost" data-act="ichg:${k}">Вернуть заряд</button>`;
+ a+=`<button class="ghost" data-act="iedit:${k}">Изменить</button><button class="ghost ${delArm===k?'danger':''}" data-act="idel:${k}">${delArm===k?'Точно убрать? Нажми ещё раз':'Убрать из инвентаря'}</button>`;
+ return a}
+function useItem(k){const o=S.items[k],c=icat(k),u=c.use;if(!u)return;
+ const spend=()=>{if(c.ch)S.items[k].used=(o.used||0)+1;else if(c.cons)o.q=Math.max(0,o.q-1)};
+ if(c.ch?chLeft(k)<=0:o.q<=0)return;
+ spend();save();renderAll();closeDrawer();
+ if(u.k==='atk'){const dx=IMP();return d20({label:u.l,bonus:[{l:'Ловкость',v:dx}],kind:'atk',ab:'dex',dmg:u.dmg,after:u.hit?()=>`<div class="br">${u.hit}</div>`:null})}
+ if(u.k==='heal')return dice({label:u.l,n:u.n,s:u.s,k:u.b,min:0,after:v=>{const b=S.hp.cur;if(S.hp.cur<=0)S.death={s:0,f:0};S.hp.cur=Math.min(S.hp.max,S.hp.cur+v);save();renderAll();flash('#hpTok','#86c79c');return `<div class="br">хиты ${b} → <b>${S.hp.cur}</b></div>`}});
+ if(u.k==='dice')return dice({label:u.l,n:u.n,s:u.s,k:u.b,min:0,after:()=>`<div class="br">${u.t||''}</div>`});
+ vib([15,30,15]);toast(`${u.l}: заряд потрачен, осталось ${chLeft(k)}`)}
+/* долгий отдых = рассвет: заряды предметов возвращаются (палочка и медальон по своему броску) */
+function dawnItems(){let msg=[];S.inv.forEach(k=>{const c=icat(k),o=S.items[k];if(!c.ch||!o.used)return;
+ const g=c.rg?Array.from({length:c.rg.n},()=>r(c.rg.s)).reduce((a,b)=>a+b,0)+c.rg.b:c.ch;const was=o.used;o.used=Math.max(0,o.used-g);if(c.rg)msg.push(`${c.n}: +${was-o.used}`)});return msg}
+
+const COINW={pp:'платина',gp:'золото',sp:'серебро',cp:'медь'};
+function coinSvg(c){return `<svg class="c" viewBox="0 0 12 12" shape-rendering="crispEdges"><rect x="4" y="1" width="4" height="1" fill="${c[1]}"/><rect x="2" y="2" width="8" height="8" fill="${c[1]}"/><rect x="1" y="4" width="10" height="4" fill="${c[1]}"/><rect x="4" y="10" width="4" height="1" fill="${c[1]}"/><rect x="3" y="3" width="6" height="6" fill="${c[0]}"/><rect x="2" y="4" width="8" height="4" fill="${c[0]}"/><rect x="5" y="4" width="2" height="4" fill="${c[1]}"/><rect x="3" y="3" width="1" height="1" fill="#fff"/></svg>`}
+function renderInv(){const g=$('igrid');if(!g)return;
+ $('coins').innerHTML=COINS.map(([k,n,c])=>`<button class="coin2" data-info="coin_${k}">${coinSvg(c)}<b>${S.money[k]}</b><small>${n}</small></button>`).join('');
+ const n=S.inv.length,mg=S.inv.filter(k=>icat(k).att).length;
+ $('iSub').textContent=`предметов ${n}`+(mg?` · настроено ${attN()} из ${ATT_MAX}`:'');
+ $('iFilt').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.f===invFilter));
+ const list=S.inv.filter(k=>invFilter==='all'||(invFilter==='mag'?icat(k).mag:S.items[k][invFilter]));
+ g.className='igrid';
+ g.innerHTML=list.map(k=>{const o=S.items[k],c=icat(k);
+  const tags=(o.soc?'<i class="tg s">разговор</i>':'')+(o.fight?'<i class="tg f">бой</i>':'');
+  return `<button class="itm ${c.mag?'mag':''} ${o.on?'att':''} ${o.q<=0?'out':''}" data-info="it_${k}"><span class="top"><b>${esc(ITEMS[k].n)}</b>${o.q!==1||c.cons?`<span class="q">×${o.q}</span>`:''}${c.ch?`<span class="q v">${chLeft(k)}/${c.ch}</span>`:''}</span><small>${tags||esc(ITEMS[k].short)}</small></button>`}).join('')
+  +`<button class="itm add" data-act="iadd"><b>+ Предмет</b></button>`;
+ /* всё на одном экране: если не помещается, плитки ужимаются */
+ requestAnimationFrame(()=>{if(g.scrollHeight>g.clientHeight+1)g.classList.add('tight');if(g.scrollHeight>g.clientHeight+1)g.classList.add('tiny')})}
+function itemForm(k){const o=k?S.items[k]:{q:1},c=k?icat(k):{};const f=$('form');
+ f.innerHTML=`<h2>${k?'Изменить предмет':'Новый предмет'}</h2>
+ <label>Название<input name="n" value="${esc(o.n||c.n||'')}" style="text-align:left"></label>
+ <label>Коротко, что даёт<input name="sh" value="${esc(o.short??c.short??'')}" style="text-align:left"></label>
+ ${c.d?'':`<label>Описание<input name="tx" value="${esc(o.txt||'')}" style="text-align:left"></label>`}
+ <div class="three"><label>Сколько<input name="q" type="number" inputmode="numeric" value="${o.q}"></label><label class="chk"><input type="checkbox" name="soc" ${o.soc?'checked':''}> разговор</label><label class="chk"><input type="checkbox" name="fight" ${o.fight?'checked':''}> бой</label></div>
+ <button class="go gold" type="submit">Сохранить</button>`;
+ closeDrawer();$('sheet').classList.add('on');
+ f.onsubmit=e=>{e.preventDefault();const nm=f.n.value.trim();if(!nm){toast('Впиши название');return}
+  const key=k||('u'+Date.now().toString(36));const it=S.items[key]||(S.items[key]={});
+  if(!c.n||nm!==c.n)it.n=nm;else delete it.n;const sh=f.sh.value.trim();if(sh!==(c.short??''))it.short=sh;else delete it.short;if(f.tx)it.txt=f.tx.value.trim();
+  it.q=Math.max(0,parseInt(f.q.value)||0);it.soc=f.soc.checked?1:0;it.fight=f.fight.checked?1:0;
+  syncItems();save();renderAll();$('sheet').classList.remove('on');vib([10,40,15]);toast(k?'Сохранено':'Предмет в сумке')}}
+function invAct(a){const [w,k]=a.split(':');
+ if(w==='iuse')return useItem(k),true;
+ if(w==='iadd')return itemForm(null),true;
+ if(w==='iedit')return itemForm(k),true;
+ if(w==='idel'){if(delArm!==k){delArm=k;openInfo('it_'+k,true);vib([20,30,20]);return true}
+  delArm=null;delete S.items[k];syncItems();save();renderAll();closeDrawer();vib([30,20,10]);toast('Предмет убран');return true}
+ if(w==='iatt'){const o=S.items[k];if(!o.on&&attN()>=ATT_MAX){toast(`Настроиться можно не больше чем на ${ATT_MAX} предмета. Сначала сними настройку с другого.`);vib([20,40,20]);return true}
+  o.on=o.on?0:1;save();renderAll();openInfo('it_'+k,true);vib(o.on?[15,40,60]:10);toast(o.on?'Предмет откликнулся: настройка есть':'Настройка снята');return true}
+ if(w==='ichg'){const o=S.items[k];o.used=Math.max(0,(o.used||0)-1);save();renderAll();openInfo('it_'+k,true);vib(10);return true}
+ return false}
+/* нажатия внутри шторки предмета: метки, количество; фильтр на экране инвентаря */
+document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
+ if(t.dataset.itag){const [k,f]=t.dataset.itag.split(':');S.items[k][f]=S.items[k][f]?0:1;syncItems();save();renderAll();openInfo('it_'+k,true);vib(8);e.stopImmediatePropagation();return}
+ if(t.dataset.iq){const [k,d]=t.dataset.iq.split(':');const o=S.items[k];o.q=Math.max(0,o.q+ +d);save();renderAll();openInfo('it_'+k,true);vib(8);e.stopImmediatePropagation();return}
+ if(t.dataset.f&&t.closest('#iFilt')){invFilter=t.dataset.f;renderInv();vib(6);e.stopImmediatePropagation();return}
+},true);
+
 /* ---------- общение ---------- */
 const SOC=[['deception','cha'],['insight','wis'],['persuasion','cha'],['intimidation','cha'],['performance','cha']];
 const LANGS=[['Общий',0,'Язык всех людей и большинства народов. На нём говорят в Баровии и почти везде.'],
@@ -703,10 +952,36 @@ const DEFAULT={v:2,name:'Филипп',race:'Человек',cls:'Чародей
  hp:{max:14,cur:14,temp:0},ac:12,speed:9,hd:{die:6,used:0},
  luck:{max:3,used:0},chaos:{max:1,used:0},insp:0,
  money:{pp:0,gp:10,sp:1,cp:0},log:[]};
-let S;try{S=JSON.parse(localStorage.getItem('filipp-sheet-v2'))}catch(e){}
-if(!S||S.v!==2)S=structuredClone(DEFAULT);
+/* стартовое снаряжение Филиппа (допущение, пока не выбрано с мастером): чародей + набор охотника на монстров (Преследуемый).
+   q сколько, soc/fight где пригодится (игрок меняет в шторке предмета) */
+const KIT={dagger:{q:2,fight:1},pouch:{q:1},explorer:{q:1},clothes:{q:1},trinket:{q:1,soc:1},symbol:{q:1,soc:1},
+ holy:{q:1,fight:1},oil:{q:1,fight:1},stake:{q:3,fight:1},hammer:{q:1},manacles:{q:1,fight:1},mirror:{q:1},crowbar:{q:1},tinder:{q:1},torch:{q:3,fight:1},chest:{q:1}};
+/* тестовый 10 уровень: чтобы посмотреть, как лист выглядит, когда всего много */
+const TEST10={v:2,test:1,name:'Филипп',race:'Человек',cls:'Чародей',sub:'Дикая магия',bg:'Преследуемый',level:10,
+ ab:{str:8,dex:14,con:14,int:12,wis:10,cha:20},saves:{con:1,cha:1},
+ skills:{medicine:1,deception:1,insight:1,arcana:1,investigation:1},
+ hp:{max:62,cur:62,temp:0},ac:13,speed:9,hd:{die:6,used:0},
+ luck:{max:3,used:0},chaos:{max:1,used:0},insp:0,
+ money:{pp:3,gp:640,sp:25,cp:12},log:[],
+ slots:{max:4,used:0,extra:0},hi:{2:{max:3,used:0},3:{max:3,used:0},4:{max:3,used:0},5:{max:2,used:0}},spt:{max:10,used:0},
+ known:['fire_bolt','friends','minor_illusion','message','mage_hand','prestidigitation','shield','chromatic_orb','charm_person','suggestion','misty_step','hold_person','counterspell','fireball','hypnotic_pattern','greater_invisibility','dominate_person'],
+ fSpellShow:['fire_bolt','fireball','hold_person','hypnotic_pattern','misty_step','chromatic_orb','shield','counterspell'],
+ smagShow:['friends','message','charm_person','suggestion','dominate_person','minor_illusion'],
+ items:{dagger:{q:2,fight:1},pouch:{q:1},explorer:{q:1},fine:{q:1,soc:1},kit:{q:1,soc:1},trinket:{q:1,soc:1},symbol:{q:1,soc:1},
+  heal:{q:3,fight:1},heal2:{q:1,fight:1},holy:{q:3,fight:1},oil:{q:2,fight:1},scroll:{q:1,fight:1},dust:{q:1,fight:1},
+  wand:{q:1,fight:1,used:2},cloak:{q:1,fight:1,on:1},hat:{q:1,soc:1,on:1},amulet:{q:1,soc:1,on:1,used:1},eyes:{q:1,soc:1},stones:{q:1,soc:1},
+  stake:{q:3,fight:1},manacles:{q:1,fight:1},mirror:{q:1},crowbar:{q:1},torch:{q:3,fight:1},tinder:{q:1},clothes:{q:1}},
+ sItemShow:['hat','amulet','eyes','stones'],fItemShow:['heal','wand','scroll','holy'],meta:['subtle','quickened','twinned']};
+/* тестовый 10 уровень: свои данные под отдельным ключом, настоящий лист не трогается.
+   Переключение: нажатие на круглую аватарку на вкладке «Персонаж». */
+let TEST=false;try{TEST=localStorage.getItem('filipp-test10')==='1'}catch(e){}
+const SKEY=TEST?'filipp-sheet-test10':'filipp-sheet-v2';
+let S;try{S=JSON.parse(localStorage.getItem(SKEY))}catch(e){}
+if(!S||S.v!==2)S=structuredClone(TEST?TEST10:DEFAULT);
 if(!S.cond)S.cond={};if(!S.condShow)S.condShow=COND_MAIN.slice();if(S.exh==null)S.exh=0;if(!S.slots)S.slots={max:3,used:0};if(S.conc===undefined)S.conc=null;if(!S.spt)S.spt={max:2,used:0};if(S.slots.extra==null)S.slots.extra=0;if(!S.death)S.death={s:0,f:0};if(!S.orbT)S.orbT='огонь';if(S.shieldOn==null)S.shieldOn=0;if(!S.fSpellShow)S.fSpellShow=['fire_bolt','chromatic_orb','shield'];if(!S.inv)S.inv=[];if(!S.sItemShow)S.sItemShow=[];if(!S.fItemShow)S.fItemShow=[];if(!S.smagShow)S.smagShow=['friends','minor_illusion','message','charm_person'];S.smagShow=S.smagShow.filter(k=>SPELLS[k]&&SPELLS[k].soc);
-const save=()=>{try{localStorage.setItem('filipp-sheet-v2',JSON.stringify(S))}catch(e){}};
+if(!S.items){S.items=structuredClone(KIT);if(!S.fItemShow.length)S.fItemShow=['holy','oil'];if(!S.sItemShow.length)S.sItemShow=['symbol','trinket']}
+syncItems();
+const save=()=>{try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}};
 const $=id=>document.getElementById(id);
 const mod=s=>Math.floor((s-10)/2);
 const sg=n=>(n>=0?'+':'−')+Math.abs(n);
@@ -723,8 +998,8 @@ const d20i='<svg class="d20" viewBox="0 0 24 24" fill="none" stroke="currentColo
 
 /* ---------- отрисовка ---------- */
 function renderHead(){
- $('nm').textContent=S.name;
- $('cl').innerHTML=`<b>${S.cls}</b> · ${S.sub} · ${S.level} ур. · мастерство ${sg(prof())}`;
+ $('nm').innerHTML=esc(S.name)+(TEST?' <span class="tbadge">тест</span>':'');
+ document.body.classList.toggle('test',TEST);$('cl').innerHTML=`<b>${S.cls}</b> · ${S.sub} · ${S.level} ур. · мастерство ${sg(prof())}`;
  const em=effMax();$('hpCur').textContent=Math.min(S.hp.cur,em);$('hpMax').textContent=em;$('hpMax').classList.toggle('warn',em<S.hp.max);$('hpTemp').textContent=S.hp.temp?'+'+S.hp.temp:'';
  $('hpBar').style.width=Math.max(0,Math.min(100,Math.min(S.hp.cur,em)/em*100))+'%';
  $('acV').textContent=effAC();$('acV').parentNode.classList.toggle('shield',!!S.shieldOn);{const sp=effSpeed();$('spV').innerHTML=`${String(sp).replace('.',',')}<small>м</small>`;$('spV').classList.toggle('warn',sp!==S.speed)}$('initV').textContent=sg(mod(S.ab.dex));
@@ -745,9 +1020,7 @@ function renderFate(){
  <button class="fc rest" data-info="short"><div class="t">☾ Короткий отдых</div></button><button class="fc rest" data-info="long"><div class="t">☀ Долгий отдых</div></button>`;
 }
 const COINS=[['pp','платина',['#c9c6d4','#7c7988']],['gp','золото',['#f3cf7a','#a8761e']],['sp','серебро',['#d9d0c2','#837a6c']],['cp','медь',['#d38b55','#6e3f22']]];
-function renderCoins(){
- $('coins').innerHTML=COINS.map(([k,n,c])=>`<div class="coin"><svg class="c" viewBox="0 0 12 12" shape-rendering="crispEdges"><rect x="4" y="1" width="4" height="1" fill="${c[1]}"/><rect x="2" y="2" width="8" height="8" fill="${c[1]}"/><rect x="1" y="4" width="10" height="4" fill="${c[1]}"/><rect x="4" y="10" width="4" height="1" fill="${c[1]}"/><rect x="3" y="3" width="6" height="6" fill="${c[0]}"/><rect x="2" y="4" width="8" height="4" fill="${c[0]}"/><rect x="5" y="4" width="2" height="4" fill="${c[1]}"/><rect x="3" y="3" width="1" height="1" fill="#fff"/></svg><div class="v">${S.money[k]}</div><div class="k">${n}</div><div class="pm"><button data-coin="${k}" data-d="-1">−</button><button data-coin="${k}" data-d="1">+</button></div></div>`).join('');
-}
+function renderCoins(){}
 function pas(k){const a={perception:'wis',insight:'wis',investigation:'int'}[k];return 10+mod(S.ab[a])+(S.skills[k]?prof():0)}
 function renderSenses(){$('senses').innerHTML=[['perception','Пассивное восприятие'],['insight','Пассивная проницат.'],['investigation','Пассивный анализ']].map(([k,n])=>`<button class="sense" data-info="senses"><b>${pas(k)}</b><span>${n}</span></button>`).join('')}
 function renderLog(){if(S.log.length>7){S.log=S.log.slice(0,7);save()}$('log').innerHTML=S.log.length?S.log.map(l=>`<div><span>${esc(l.l)}</span><b>${l.t}</b></div>`).join(''):'<div><span>Пока ни одного броска</span></div>'}
@@ -760,7 +1033,7 @@ function renderSocial(){
   +`<button class="slip pas" data-info="senses"><div class="sheet"><span class="top"><span class="n">Чутьё на ложь</span><span class="m">${pas('insight')}</span></span><span class="h">пассивно, без броска</span></div></button>`;
  $('langs').innerHTML=LANGS.map(([n,ex],i)=>`<button class="lang ${ex?'ex':''}" data-info="lang">${n}</button>`).join('');
 }
-function renderAll(){renderFight();renderSocial();renderSRes();renderSmag();renderConds();renderHead();renderSenses();renderAbil();renderFate();renderCoins();renderLog();if(openAb)renderDrawer();else if(openInfoKey)openInfo(openInfoKey,true)}
+function renderAll(){syncItems();renderFight();renderSocial();renderSRes();renderSmag();renderConds();renderHead();renderSenses();renderAbil();renderFate();renderLog();renderInv();if(openAb)renderDrawer();else if(openInfoKey)openInfo(openInfoKey,true)}
 
 /* ---------- шторка характеристики ---------- */
 function renderDrawer(){
@@ -779,7 +1052,7 @@ function renderDrawer(){
  $('dbody').innerHTML=h;
 }
 function openDrawer(k){openAb=k;openInfoKey=null;renderDrawer();$('drawer').style.transform='';$('drawer').classList.add('on');$('dim').classList.add('on');vib(10)}
-function closeDrawer(){openAb=null;openInfoKey=null;$('drawer').style.transform='';$('drawer').classList.remove('on');$('dim').classList.remove('on')}
+function closeDrawer(){delArm=null;openAb=null;openInfoKey=null;$('drawer').style.transform='';$('drawer').classList.remove('on');$('dim').classList.remove('on')}
 $('dim').addEventListener('click',closeDrawer);
 // шторку можно стянуть пальцем вниз
 (function(){const d=$('drawer');let sy=0,dy=0,drag=false;
@@ -1105,7 +1378,7 @@ const INFO={
   <p>Везунчик, Поток хаоса и ячейки заклинаний короткий отдых <b>не возвращает</b>.</p>`,acts:`<button data-act="toHd">Открыть кости хитов</button>`}),
  long:()=>({t:'Долгий отдых',sub:'8 часов, раз в сутки',body:`<p>Не меньше <b>8 часов</b>: сон и спокойные дела. Не чаще раза в сутки. Если отдых прервал бой больше чем на час, его надо начать заново.</p>
   <p>После него возвращается:</p><p>• все <b>хиты</b><br>• половина <b>костей хитов</b> (минимум 1)<br>• все очки <b>Везунчика</b><br>• <b>Поток хаоса</b><br>• снимается 1 уровень <b>истощения</b>, если ты поел и попил<br>• все ячейки заклинаний и единицы чародейства</p>`,acts:`<button data-act="longRest">Отдохнуть до утра</button>`}),
- smagpick:()=>({t:'Заклинания на экране',sub:`галочка = показать в «Общении» · ${S.smagShow.length} из 6`,body:known().filter(k=>SPELLS[k]&&SPELLS[k].soc).map(k=>{const sh=S.smagShow.includes(k),p=SPELLS[k];return `<button class="crow ck ${sh?'on':''}" data-sshow="${k}"><span><i class="box">${sh?'✓':''}</i>${p.n}</span><small>${p.lv?'1 круг':'заговор'}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">Здесь только заклинания Филиппа, которые помогают в разговоре: очарование, иллюзии, послания. Боевые (Огненный снаряд, Щит, Цветной шарик) сюда не попадают. Отметь до 6.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
+ smagpick:()=>({t:'Заклинания на экране',sub:`галочка = показать в «Общении» · ${S.smagShow.length} из 6`,body:known().filter(k=>SPELLS[k]&&SPELLS[k].soc).map(k=>{const sh=S.smagShow.includes(k),p=SPELLS[k];return `<button class="crow ck ${sh?'on':''}" data-sshow="${k}"><span><i class="box">${sh?'✓':''}</i>${p.n}</span><small>${p.lv?p.lv+' круг':'заговор'}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">Здесь только заклинания Филиппа, которые помогают в разговоре: очарование, иллюзии, послания. Боевые (Огненный снаряд, Щит, Цветной шарик) сюда не попадают. Отметь до 6.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
  spelldc:()=>({t:'Сложность заклинаний',sub:`${spellDC()} = 8 + мастерство ${prof()} + Харизма ${sg(mod(S.ab.cha))}`,body:`<p>Когда твоё заклинание действует на кого-то (Очарование личности, иллюзия), цель делает <b>спасбросок</b>. Если выбросит <b>${spellDC()} или больше</b>, заклинание её не берёт.</p><p>Чем выше число, тем труднее устоять.</p><div class="how">Бросать ничего не нужно: число называешь мастеру, бросает он.</div>`,acts:''}),
  fair:()=>{const d=S.d20s||Array(20).fill(0),n=d.reduce((a,b)=>a+b,0),sim=window.__sim;
   const bars=(arr)=>{const mx=Math.max(1,...arr);return `<div class="hist">${arr.map((v,i)=>`<i class="${i===19?'t':''}" style="height:${(v/mx*100).toFixed(1)}%"></i>`).join('')}</div><div class="hlab">${arr.map((_,i)=>`<span>${i+1}</span>`).join('')}</div>`};
@@ -1133,6 +1406,8 @@ Object.keys(SPELLS).forEach(k=>INFO['sp_'+k]=()=>{const p=SPELLS[k],on=S.conc===
  else if(k==='chromatic_orb')acts=`<button data-act="cast:${k}" ${left?'':'disabled'}>Атаковать: к20 ${sg(spellAtk())}, ${S.orbT} (ячеек ${left})</button>`;
  else if(p.lv)acts=`<button data-act="cast:${k}" ${left?'':'disabled'}>Сотворить: потратить ячейку 1 круга (осталось ${left})</button>`;
  else if(k==='fire_bolt')acts=`<button data-act="cast:${k}">Атаковать: к20 ${sg(spellAtk())}</button>`;
+ if(S.hi&&p.lv&&!(p.conc&&on)&&!(k==='shield'&&S.shieldOn)){const vb=k==='shield'?'Поднять Щит':p.atk?'Атаковать':'Сотворить';
+  const cs=[1,...hiC()].filter(c=>c>=p.lv);acts=cs.map(c=>`<button data-act="cast:${k}:${c}" ${cLeft(c)?'':'disabled'} class="${c>p.lv?'ghost':''}">${vb}: ячейка ${c} круга${c>p.lv?' (усиленное)':''} · осталось ${cLeft(c)}</button>`).join('')+(p.conc&&S.conc?`<div class="mu" style="text-align:center;font-size:12.5px">прервёт ${SPELLS[S.conc].n}</div>`:'')}
  return{t:p.n,sub:p.meta,body:p.d()+(k==='chromatic_orb'?`<div class="orbs">${ORB.map(o=>`<button class="${S.orbT===o?'on':''}" data-orb="${o}">${o}</button>`).join('')}</div>`:'')+(p.lv?`<div class="how">Ты чародей дикой магии: после заклинания 1 круга и выше мастер может попросить бросить к20. На <b>1</b> случается волна дикой магии. Ячейки возвращает долгий отдых.</div>`:'')+(k==='friends'?`<div class="how">В приложении: пока Дружба действует, все проверки Харизмы идут с преимуществом сами. Не забудь выключить, когда цель сменится или время выйдет.</div>`:''),acts}});
 
 /* полный текст заклинаний (PHB 2014, по смыслу dnd.su, ничего не упрощено) + ссылка на дословный текст */
@@ -1166,13 +1441,15 @@ function openInfo(k,re){if(!INFO[k]&&k.startsWith('it_')){const it=ITEMS[k.slice
  if(!re){$('drawer').style.transform='';$('drawer').classList.add('on');$('dim').classList.add('on');vib(10)}}
 function act(a){
  const re=()=>{save();renderAll()};
+ if(invAct(a)||hiAct(a))return;
  if(a==='fairSim'){const c=Array(20).fill(0);for(let i=0;i<10000;i++)c[r(20)-1]++;window.__sim=c;vib([10,30,10]);openInfo('fair',true);return}
- if(a.startsWith('cast:')){const k=a.slice(5),p=SPELLS[k];
-  if(p.lv&&!useSlot())return;
+ if(a.startsWith('cast:')){const [,k,cs]=a.split(':'),p=SPELLS[k];let c=0;
+  if(p.lv){c=cs?+cs:firstC(p.lv);if(!c||!useSlotC(c))return}
   if(p.conc)S.conc=k;if(k==='shield')S.shieldOn=1;save();renderAll();
   if(k==='shield'){closeDrawer();barrier();flash('#fVit .tok.shield','#a57cff');toast(`Щит: класс доспеха ${effAC()} до твоего хода. Мастер может попросить к20 на волну`);return}
-  if(k==='fire_bolt'||k==='chromatic_orb'){closeDrawer();return d20(atkSpec(k))}
-  closeDrawer();vib([15,30,15]);toast(p.lv?`${p.n}: ячейка потрачена. Мастер может попросить к20 на волну`:p.conc?`${p.n} действует`:`${p.n} сотворено`);return}
+  if(k==='fire_bolt'||k==='chromatic_orb'){closeDrawer();return d20(atkSpec(k,c))}
+  if(p.roll){closeDrawer();const n=p.roll.n+Math.max(0,c-p.lv)*(p.roll.up||0);return dice({label:`${p.n}${c>p.lv?' ('+c+' круг)':''}: урон`,n,s:p.roll.s,min:0,after:()=>`<div class="br">${p.roll.t}, сложность ${spellDC()}: при успехе половина</div>`})}
+  closeDrawer();vib([15,30,15]);toast(p.lv?`${p.n}: ячейка ${c} круга потрачена. Мастер может попросить к20 на волну`:p.conc?`${p.n} действует`:`${p.n} сотворено`);return}
  if(a==='concEnd'){const k=S.conc;S.conc=null;save();renderAll();closeDrawer();vib(10);if(k==='friends')toast('Существо поняло, что на него влияли магией');return}
  if(a.startsWith('condOn:')){const k=a.slice(7);S.cond[k]=1;save();renderAll();closeDrawer();vib([20,40,30]);setTimeout(()=>{const c=document.querySelector(`.cnd[data-info="c_${k}"]`);if(c){c.classList.remove('stamp');void c.offsetWidth;c.classList.add('stamp')}},30);return}
  if(a.startsWith('condOff:')){delete S.cond[a.slice(8)];save();renderAll();closeDrawer();vib(10);return}
@@ -1202,7 +1479,7 @@ function act(a){
  if(a==='toHd')openInfo('hd',true);
  if(a==='hdRoll'){if(S.hd.used>=S.level)return;S.hd.used++;save();const c=mod(S.ab.con);
   dice({label:'Кость хитов',n:1,s:S.hd.die,k:c,kl:'ТЕЛ',min:1,after:v=>{const before=S.hp.cur;S.hp.cur=Math.min(S.hp.max,S.hp.cur+v);save();renderAll();return `<div class="br">хиты ${before} → <b>${S.hp.cur}</b></div>`}})}
- if(a==='longRest'){if(S.exh)S.exh--;S.slots.used=0;S.slots.extra=0;S.spt.used=0;S.shieldOn=0;S.death={s:0,f:0};S.conc=null;S.hp.cur=S.hp.max;S.hp.temp=0;S.luck.used=0;S.chaos.used=0;S.hd.used=Math.max(0,S.hd.used-Math.max(1,Math.floor(S.level/2)));save();closeDrawer();renderAll();flash('#hpTok','#86c79c');toast('Утро. Силы вернулись');vib([10,60,10])}
+ if(a==='longRest'){if(S.exh)S.exh--;S.slots.used=0;S.slots.extra=0;hiC().forEach(c=>{S.hi[c].used=0;S.hi[c].extra=0});const dw=dawnItems();setTimeout(()=>{if(dw.length)toast('Рассвет: '+dw.join(', '))},2600);S.spt.used=0;S.shieldOn=0;S.death={s:0,f:0};S.conc=null;S.hp.cur=S.hp.max;S.hp.temp=0;S.luck.used=0;S.chaos.used=0;S.hd.used=Math.max(0,S.hd.used-Math.max(1,Math.floor(S.level/2)));save();closeDrawer();renderAll();flash('#hpTok','#86c79c');toast('Утро. Силы вернулись');vib([10,60,10])}
 }
 function hpSheet(){
  const f=$('form');f.innerHTML=`<h2>Хиты: ${S.hp.cur} из ${S.hp.max}</h2><input class="big" name="n" type="number" inputmode="numeric" placeholder="сколько?" required>
@@ -1235,7 +1512,7 @@ function flash(sel,c){document.querySelector(sel).animate([{boxShadow:`0 0 0 2px
 let tt;function toast(s){const t=$('toast');t.textContent=s;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2400)}
 
 ['mode','mode2','mode3'].forEach(id=>$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;rollMode=b.dataset.m;document.querySelectorAll('.mode button').forEach(x=>x.classList.toggle('on',x.dataset.m===rollMode));vib(8)}));
-$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;closeDrawer();$('tabs').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p));vib(6)});
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;closeDrawer();$('tabs').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p));if(b.dataset.p==='p-inv')renderInv();if(b.dataset.p==='p-fight')fitFight();vib(6)});
 function fit(){const ic=innerHeight<=600?46:innerHeight<=700?54:62;document.documentElement.style.setProperty('--ic',ic+'px')}
 /* iPhone-ярлык на экране «Домой»: иногда система рисует страницу не до самого низа экрана,
    нижняя полоса остаётся пустой и туда ничего не нарисовать. Тогда полоска «Домой» лежит
@@ -1245,10 +1522,46 @@ function fixGap(){const st=navigator.standalone||matchMedia('(display-mode: stan
  const g=st?full-innerHeight:0,r=document.documentElement.style;
  if(g>8&&g<140)r.setProperty('--sb','4px');else r.removeProperty('--sb')}
 fixGap();addEventListener('resize',()=>{fixGap();fit()});addEventListener('orientationchange',()=>setTimeout(()=>{fixGap();fit()},300));
+
+/* ---------- тестовый 10 уровень: ячейки всех кругов, метамагия, подчинение удачи ---------- */
+const META={
+ subtle:{n:'Неприметное заклинание',c:'1 единица',d:'Заклинание творится <b>без вербальных и соматических компонентов</b>: ни слов, ни жестов. Никто не поймёт, что ты колдуешь. Лучший друг Внушения и Очарования посреди разговора.'},
+ quickened:{n:'Ускоренное заклинание',c:'2 единицы',d:'Заклинание, которое творится за <b>1 действие</b>, ты творишь <b>бонусным действием</b>. Помни правило: тогда другим заклинанием в этот ход может быть только заговор.'},
+ twinned:{n:'Удвоенное заклинание',c:'единиц столько, какой круг (заговор: 1)',d:'Заклинание, которое целится только в <b>одно существо</b> и не «на себя», получает <b>вторую цель</b> в пределах дистанции.'}};
+INFO.meta=()=>{const L=S.spt.max-S.spt.used;return{t:'Метамагия',sub:`единицы чародейства: ${L} из ${S.spt.max}`,body:`<p>Пока творишь заклинание, можешь потратить единицы чародейства и изменить его. На одно заклинание одна метамагия.</p>`+S.meta.map(m=>`<p><b>${META[m].n}</b> · ${META[m].c}<br>${META[m].d}</p>`).join('')+(S.meta.includes('twinned')?`<div class="mtw">${[1,2,3,4,5].map(n=>`<button data-act="meta:twinned:${n}" ${L>=n?'':'disabled'}>${n===1?'заговор, 1':n+' круг'}</button>`).join('')}</div>`:''),
+ acts:(S.meta.includes('subtle')?`<button data-act="meta:subtle:1" ${L>=1?'':'disabled'}>Неприметное: потратить 1 единицу</button>`:'')+(S.meta.includes('quickened')?`<button data-act="meta:quickened:2" ${L>=2?'':'disabled'}>Ускоренное: потратить 2 единицы</button>`:'')}};
+INFO.bend=()=>({t:'Подчинение удачи',sub:`дикая магия, 6 уровень · единиц ${S.spt.max-S.spt.used}`,body:`<p>Когда другое существо, которое ты видишь, делает бросок атаки, проверку или спасбросок, ты можешь <b>реакцией</b> потратить <b>2 единицы чародейства</b> и бросить <b>1к4</b>.</p><p>Результат ты <b>прибавляешь или вычитаешь</b> из его броска, на выбор. Решать нужно после того, как существо бросило, но до того, как мастер сказал, что вышло.</p>`,
+ acts:`<button data-act="bend" ${S.spt.max-S.spt.used>=2?'':'disabled'}>Потратить 2 единицы и бросить 1к4</button>`});
+const _slotsInfo=INFO.slots;
+INFO.slots=()=>S.hi?{t:'Ячейки заклинаний',sub:'по кругам · возвращает долгий отдых',body:`<p>Заклинание тратит ячейку своего круга или выше. Ячейкой выше многие заклинания становятся сильнее: в шторке заклинания такие кнопки помечены «усиленное».</p>`+[1,...hiC()].map(c=>{const t=cTot(c),l=cLeft(c);return `<div class="slrow"><span>${c} круг <small class="mu">${l} из ${t}</small></span><span class="ch">${Array.from({length:t},(_,i)=>`<span class="charge v ${i>=l?'used':''}"></span>`).join('')}</span><button data-act="slotBackC:${c}" ${l<t?'':'disabled'}>вернуть</button></div>`}).join(''),
+ acts:`<button data-info="flex">Гибкое колдовство ›</button>`}:_slotsInfo();
+const _flexInfo=INFO.flex;
+INFO.flex=()=>{const d=_flexInfo();if(!S.hi)return d;const L=S.spt.max-S.spt.used;
+ if(S.meta&&S.meta.length)d.acts=`<button data-info="meta">Метамагия ›</button>`+(S.level>=6?`<button data-info="bend">Подчинение удачи ›</button>`:'')+d.acts;
+ d.body+=`<p><b>Цена ячеек выше</b>: 2 круг 3 единицы, 3 круг 5, 4 круг 6, 5 круг 7. Погасив ячейку, получаешь столько единиц, какой у неё круг.</p>`+hiC().map(c=>`<div class="slrow"><span>${c} круг</span><button data-act="pt2slotC:${c}" ${L>=FONT[c]?'':'disabled'}>${FONT[c]} единиц → ячейка</button><button data-act="slot2ptC:${c}" ${cLeft(c)&&S.spt.used>=1?'':'disabled'}>ячейка → ${c}</button></div>`).join('');return d};
+function hiAct(a){const [w,x,y]=a.split(':'),c=+x,L=S.spt.max-S.spt.used,re=k=>{save();renderAll();openInfo(k,true)};
+ if(w==='slotBackC'){if(c===1){if(S.slots.used>0)S.slots.used--}else if(S.hi[c].used>0)S.hi[c].used--;re('slots');vib(10);return true}
+ if(w==='pt2slotC'){if(L<FONT[c])return true;S.spt.used+=FONT[c];const h=S.hi[c];if(h.used>0)h.used--;else h.extra=(h.extra||0)+1;re('flex');vib([15,30,40]);toast(`${FONT[c]} единиц сплавлены в ячейку ${c} круга`);return true}
+ if(w==='slot2ptC'){if(!useSlotC(c))return true;S.spt.used=Math.max(0,S.spt.used-c);re('flex');vib([15,30,40]);toast(`Ячейка ${c} круга рассыпалась в единицы`);return true}
+ if(w==='meta'){const n=+y;if(L<n)return true;S.spt.used+=n;save();renderAll();closeDrawer();vib([15,30,40]);toast(`${META[x].n}: потрачено ${n}, осталось ${S.spt.max-S.spt.used}`);return true}
+ if(w==='bend'){if(L<2)return true;S.spt.used+=2;save();renderAll();closeDrawer();vib([20,30,40]);dice({label:'Подчинение удачи',n:1,s:4,k:0,min:0,after:v=>`<div class="br">прибавь или вычти ${v} из броска того существа</div>`});return true}
+ return false}
+
+/* монеты: тап открывает шторку, где можно прибавить или убавить */
+COINS.forEach(([k,n])=>INFO['coin_'+k]=()=>({t:n[0].toUpperCase()+n.slice(1),sub:`${S.money[k]} монет`,body:`<p class="mu">1 платиновая = 10 золотых = 100 серебряных = 1000 медных.</p><div class="cpm">${[-10,-1,1,10].map(d=>`<button data-coin="${k}" data-d="${d}">${d>0?'+':'−'}${Math.abs(d)}</button>`).join('')}</div>`,acts:`<button data-act="closeD">Готово</button>`}));
+document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
+ if(t.dataset.coin){const k=t.dataset.coin;S.money[k]=Math.max(0,S.money[k]+ +t.dataset.d);save();renderInv();if(openInfoKey==='coin_'+k)openInfo(openInfoKey,true);vib(8);e.stopImmediatePropagation();return}
+ if(t.id==='faceBtn'){e.stopImmediatePropagation();toggleTest()}
+},true);
+function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip');
+ try{localStorage.setItem('filipp-test10',TEST?'0':'1');sessionStorage.setItem('filipp-tmsg',TEST?'real':'test')}catch(e){}
+ setTimeout(()=>location.reload(),400)}
+{let m='';try{m=sessionStorage.getItem('filipp-tmsg')||'';sessionStorage.removeItem('filipp-tmsg')}catch(e){}
+ if(m){document.querySelector('.page.on').classList.add('unflip');setTimeout(()=>toast(m==='test'?'Тестовый 10 уровень. Настоящий лист сохранён, нажми на портрет, чтобы вернуться':`Снова настоящий лист: ${S.level} уровень`),500)}}
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-15';
+const BUILD='2026-11-25-16';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
