@@ -235,7 +235,27 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .fgrid.c3x .atk .tg{right:6px;top:5px}.fgrid.c3x .atk .tg~b,.fgrid.c3 .atk .tg~b{padding-right:34px}
 .atk.on{border-color:var(--violet);box-shadow:0 0 0 1px var(--violet),0 0 16px rgba(165,124,255,.45)}
 .atk.off{opacity:.45}
-.fres{flex:none;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.fres{flex:none;display:flex;flex-direction:column;gap:6px}
+.flexp{background:linear-gradient(160deg,rgba(40,26,52,.9),rgba(22,15,28,.9));border:1px solid rgba(165,124,255,.28);border-radius:13px;padding:5px 8px 6px;display:flex;flex-direction:column;gap:4px}
+.fr{display:flex;align-items:center;gap:8px;text-align:left;padding:1px 2px;transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
+.fr .t{flex:none;font:600 15.5px/1.05 "Cormorant Garamond",serif;color:#eadcff}.fr .t small{font:400 11px Alegreya,serif;color:var(--mute)}
+.fr .ch{flex:1;display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end}.fr .charge{width:10px;height:10px}
+.sgs{flex:1;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:3px 11px}
+.sg{display:flex;flex-direction:column;align-items:center;gap:3px}.sg .ch{display:flex;gap:4px}.sg .charge{width:11px;height:11px}
+.sg i{font-style:normal;font-size:10px;line-height:1;color:var(--mute)}.sg.z i{opacity:.5}
+.fxh{font:600 10.5px/1.2 Alegreya,serif;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);padding:2px 2px 0;border-top:1px solid var(--line)}
+.fxh .mlink{text-transform:none;letter-spacing:0;color:var(--gold);font:italic 500 13px "Cormorant Garamond",serif}
+.fxr{display:flex;align-items:stretch;gap:4px}
+.fxr .lb{flex:none;width:62px;font-size:10px;line-height:1.1;color:var(--mute);align-self:center}
+.fq{flex:1;min-width:0;border:1px solid rgba(233,189,108,.4);border-radius:9px;background:rgba(233,189,108,.08);color:var(--gold2);font:600 13px/1.1 "Cormorant Garamond",serif;padding:5px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
+.fq.dn{border-color:rgba(165,124,255,.4);background:rgba(165,124,255,.08);color:#e3d4ff}
+.fq small{font:400 10px Alegreya,serif;color:var(--mute)}
+.fq:active{transform:scale(.9)}.fq:disabled{opacity:.3}
+.fres4{display:flex;flex-wrap:wrap;gap:6px}
+.fres4 .fc{flex:1 1 auto;flex-direction:row!important;align-items:center!important;min-height:0!important;padding:6px 10px!important;gap:7px!important}
+.fres4 .fc .t{font-size:14.5px!important;line-height:1.05;white-space:nowrap}.fres4 .fc .charge{width:10px;height:10px}
+.fres4 .fc .ch.tw{flex-direction:column!important;gap:3px!important}.fres4 .fc .ch.tw span{display:flex;gap:3px}
+.fres4 .cc{font-size:10px;color:var(--violet)}
 .fres .fc{flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;padding:5px 9px}.fres .fc .t{font-size:14.5px!important;flex:none}.fres .fc .t small{display:none}.fres .fc .ch.tw{flex-direction:row;gap:7px}.fres .fc .ic{font-size:15px!important;line-height:1}
 .fgrid.c3 .atk .hit{white-space:nowrap!important}.fgrid.c3 .atk .dm{overflow:hidden;text-overflow:ellipsis}
 .fres .fc{min-height:44px}
@@ -263,6 +283,12 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .it b{display:block;font:600 15px/1.05 "Cormorant Garamond",serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .it small{display:block;font-size:11px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .it.empty{flex:1;max-width:none;background:none;border:1px dashed var(--line);color:var(--mute);font-size:12.5px;text-align:center;padding:7px}
+.atk.cmp{padding:4px 6px 5px 8px!important;min-height:0}
+.atk.cmp b{font-size:14px!important;line-height:1.02!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;position:relative;z-index:1}
+.atk.cmp .hit{margin-top:2px;gap:0 5px;display:flex;flex-wrap:wrap;align-items:baseline;white-space:normal!important}.atk.cmp .hit .dm{white-space:normal!important;line-height:1.1}
+.atk.cmp .hit .d{font-size:15px}.atk.cmp .hit .dm{display:inline!important}.atk.cmp .hit .dm{font-size:10.5px!important;overflow:hidden;text-overflow:ellipsis;color:#cbbfae}
+.atk.cmp .tg,.atk.cmp small{display:none!important}
+.atk.cmp.fxb .hit,.atk.cmp.fxb small{padding-right:0!important}.atk.cmp .fxl .elm,.atk.cmp .fxl .rimg{top:5px!important;bottom:auto!important;right:5px!important;transform:scale(.8);transform-origin:right top}.atk.cmp .fxl .elm.fball{top:2px!important;right:3px!important}.atk.cmp b{padding-right:18px}
 .fgrid.c3x{grid-template-columns:repeat(3,1fr)}.fgrid.c3x .atk b{white-space:normal;font-size:15px}.fgrid.c3x .atk .dm{font-size:11px}
 .soon{flex:1;display:grid;place-items:center;text-align:center}
 .soon h2{font-size:38px;font-weight:500}
@@ -455,7 +481,11 @@ body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards
 #p-fight.d1 .atk small{display:none}#p-fight.d1 .atk{padding:4px 8px 5px}#p-fight.d1 .screen{gap:5px}
 #p-fight.d2 .fvit .tok{padding-top:2px;padding-bottom:2px}#p-fight.d2 .fvit .tok .k{min-height:14px;font-size:10px}#p-fight.d2 .fvit .tok .v{font-size:20px}#p-fight.d2 .mode button{padding:3px 2px}#p-fight.d2 .fres .fc{min-height:32px}
 #p-fight.d3 .atk .hit .dm{font-size:11px;line-height:1.1}#p-fight.d3 .atk b{font-size:14px}#p-fight.d3 .shead .cls{display:none}#p-fight.d3 .shead img{width:28px;height:28px}#p-fight.d3 .shead h1{font-size:22px}
-#p-fight.d4 .smh:not(:has(.pick)){display:none}#p-fight.d4 .atk .hit .dm{display:none}
+#p-fight.d4 .smh:not(:has(.pick)){display:none}
+#p-fight.d5 .atk.cmp b{font-size:13px!important}#p-fight.d5 .atk.cmp{padding-top:3px!important;padding-bottom:3px!important}
+#p-fight.d7 .fxh{display:none}#p-fight.d7 .fres4 .fc{padding:4px 9px!important}#p-fight.d7 .fq{padding:3px 2px}#p-fight.d7 .mode button{padding:2px}#p-fight.d7 .fvit .tok .k{min-height:12px}
+#p-fight.d8 .atk.cmp .hit{flex-wrap:nowrap}#p-fight.d8 .atk.cmp .hit .dm{white-space:nowrap!important}#p-fight.d8 .flexp{padding-top:3px!important;padding-bottom:3px!important}#p-fight.d8 .flexp .fr{margin:0!important}#p-fight.d8 .fres4{margin-top:3px!important}#p-fight.d8 .fsect{margin:3px 0 2px!important}#p-fight.d8 #fAct{gap:3px!important}#p-fight.d8 .fvit{margin-bottom:3px!important}
+#p-fight.d6 .smh{display:none}#p-fight.d6 .it small{display:none}#p-fight.d4 .atk .hit .dm{display:none}
 
 /* ---------- эффекты заклинаний: у каждой стихии свой материал ---------- */
 .fxb{position:relative;isolation:isolate;overflow:hidden}
@@ -843,6 +873,7 @@ const SPELLS={
   d:()=>`<p>На 1 час ты понимаешь <b>буквальный смысл любой речи</b> на любом языке. Можешь читать любой текст, касаясь его, примерно минута на страницу.</p><p>Тайные шифры и магические знаки не расшифровывает.</p><p class="mu">Ритуал: можно сотворить за 10 минут без ячейки.</p>`}
 };
 const known=()=>S.known||KNOWN;
+const CAP={fireball:'спасбросок Ловкости',misty_step:'телепорт 9 м',hold_person:'гуманоид',dominate_person:'гуманоид',hypnotic_pattern:'',counterspell:'сорвать заклинание',greater_invisibility:'невидим и в атаке',shield:'к классу доспеха'};
 const KNOWN=['fire_bolt','friends','minor_illusion','message','shield','chromatic_orb','charm_person'];
 function renderSmag(){const list=known().filter(k=>SPELLS[k]&&SPELLS[k].soc&&S.smagShow.includes(k)),sl=S.slots;
  $('smag').innerHTML=`<div class="smh">Магия<span class="lg"> в разговоре</span><i></i><button class="dc" data-info="spelldc">сложность заклинаний ${spellDC()}</button><span class="sl" title="ячейки 1 круга">${Array.from({length:slotsTot()},(_,i)=>`<span class="charge v ${i<sl.used?'used':''}"></span>`).join('')}</span></div><div class="spl">${list.map(k=>{const p=SPELLS[k],on=S.conc===k;return `<button class="sp ${p.lv?'lv':''} ${on?'on':''}" data-info="sp_${k}"><b>${p.n}</b><small>${on?'действует · концентрация':p.short}</small></button>`}).join('')}<button class="sp more" data-info="smagpick">${list.length?'выбрать заклинания ›':'+ выбрать заклинания для этого экрана'}</button></div>`}
@@ -861,7 +892,7 @@ function atkSpec(k,c){
  const dx=mod(S.ab.dex);return{label:'Кинжал: атака',bonus:[{l:'Ловкость',v:dx},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:'Кинжал',dn:1,ds:4,k:dx,kl:'Ловкость',t:'колющий',fx:'steel'}};
 }
 function fitFight(){const pg=$('p-fight');if(!pg||!pg.classList.contains('on'))return;const sc=pg.querySelector('.screen');
- pg.classList.remove('d1','d2','d3','d4');for(const c of ['d1','d2','d3','d4']){if(sc.scrollHeight<=sc.clientHeight+1)break;pg.classList.add(c)}}
+ pg.classList.remove('d1','d2','d3','d4','d5','d6','d7','d8');for(const c of ['d1','d2','d3','d4','d5','d6','d7','d8']){if(sc.scrollHeight<=sc.clientHeight+1)break;pg.classList.add(c)}}
 function renderFight(){
  if(!$('fVit'))return;
  $('fSub').textContent=`атака заклинанием ${sg(spellAtk())} · сложность ${spellDC()}`;
@@ -872,25 +903,32 @@ function renderFight(){
  <button class="tok" data-info="move"><div class="k">Скорость</div><div class="v ${sp!==S.speed?'warn':''}">${String(sp).replace('.',',')}<small>м</small></div></button>`;
  const left=slotsLeft();
  const fs=known().filter(k=>SPELLS[k]&&SPELLS[k].fight&&S.fSpellShow.includes(k));
+ const nAct=fs.filter(k=>!SPELLS[k].react).length+2,cmpA=nAct>4;let cmp=cmpA;
  const scard=k=>{const p=SPELLS[k],off=p.lv&&!firstC(p.lv)&&!(k==='shield'&&S.shieldOn);
-  if(k==='shield')return `<button class="atk ${S.shieldOn?'on':''} ${off?'off':''}" data-info="sp_shield"><b>Щит</b><div class="hit"><span class="d" style="color:#e3d4ff">+5</span><span class="dm">к классу доспеха</span></div><small>${S.shieldOn?'действует до твоего хода':'реакция · 1 круг'}</small></button>`;
-  return `<button class="atk ${off?'off':''}" data-info="sp_${k}">${p.lv?`<span class="tg">${p.lv} круг</span>`:''}<b>${p.n}</b><div class="hit">${p.atk?`<span class="d">${sg(spellAtk())}</span><span class="dm">${p.hit()}</span>`:`<span class="dm">${p.short}</span>`}</div><small>${p.lv?(p.where||'')+' · тратит ячейку':'заговор · '+(p.where||'')}</small></button>`};
- const acts=fs.filter(k=>!SPELLS[k].react).map(scard);
- acts.push(`<button class="atk steel" data-info="w_dagger"><b>Кинжал</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">1к4${sg(mod(S.ab.dex))} колющий</span></div><small>1,5 м или бросок 6 м</small></button>`);
- acts.push(`<button class="atk plain" data-info="actions"><b>Другие действия</b><small style="white-space:normal">Рывок, Отход, Уклонение, Помощь, Засада, Поиск</small></button>`);
+  if(k==='shield')return `<button class="atk ${cmp?'cmp':''} ${S.shieldOn?'on':''} ${off?'off':''}" data-info="sp_shield"><b>Щит</b><div class="hit"><span class="d" style="color:#e3d4ff">+5</span><span class="dm">к классу доспеха</span></div><small>${S.shieldOn?'действует до твоего хода':'реакция · 1 круг'}</small></button>`;
+  return `<button class="atk ${cmp?'cmp':''} ${off?'off':''}" data-info="sp_${k}">${p.lv?`<span class="tg">${p.lv} круг</span>`:''}<b>${p.n}</b>${p.atk?`<div class="hit"><span class="d">${sg(spellAtk())}</span><span class="dm">${p.hit()}</span></div>`:(cmp?(CAP[k]?`<div class="hit"><span class="dm">${CAP[k]}</span></div>`:''):`<div class="hit"><span class="dm">${p.short}</span></div>`)}<small>${p.lv?(p.where||'')+' · тратит ячейку':'заговор · '+(p.where||'')}</small></button>`};
+ const acts=fs.filter(k=>!SPELLS[k].react).map(scard);cmp=cmpA;
+ acts.push(`<button class="atk steel ${cmp?'cmp':''}" data-info="w_dagger"><b>Кинжал</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">урон 1к4${sg(mod(S.ab.dex))}</span></div><small>1,5 м или бросок 6 м</small></button>`);
+ acts.push(`<button class="atk plain ${cmp?'cmp':''}" data-info="actions"><b>Другие действия</b><small style="white-space:normal">Рывок, Отход, Уклонение, Помощь, Засада, Поиск</small></button>`);
  $('fAct').className='fgrid'+(acts.length>4?' c3x':'');$('fAct').innerHTML=acts.join('');
- $('fRe').innerHTML=fs.filter(k=>SPELLS[k].react).map(scard).join('')+`<button class="atk steel" data-info="opp"><b>Удар вслед</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">кинжалом</span></div><small>реакция, враг уходит</small></button>
- `+(S.meta&&S.meta.length?'':`<button class="atk" data-info="flex"><b>Гибкое колдовство</b><div class="hit"><span class="dm">ячейка ↔ единицы</span></div><small>бонусное действие</small></button>`);
+ $('fRe').innerHTML=fs.filter(k=>SPELLS[k].react).map(scard).join('')+`<button class="atk steel ${cmp?'cmp':''}" data-info="opp"><b>Удар вслед</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">кинжалом</span></div><small>реакция, враг уходит</small></button>`;
  renderItems('fight');
  requestAnimationFrame(fitFight);
  const pips=(n,u,cls)=>Array.from({length:n},(_,i)=>`<span class="charge ${cls} ${i<u?'used':''}"></span>`).join('');
  const dz=S.hp.cur<=0,D=S.death,dp=(n,c)=>Array.from({length:3},(_,i)=>`<span class="charge ${i<n?c:'used'}"></span>`).join('');
- $('fRes').innerHTML=(S.hi?`<button class="fc" data-info="slots"><div class="t">Ячейки<small>осталось по кругам</small></div><div class="slc">${[1,...hiC()].map(c=>`<span><b class="${cLeft(c)?'':'z'}">${cLeft(c)}</b><i>${c} круг</i></span>`).join('')}</div></button>`:`<button class="fc" data-info="slots"><div class="t">Ячейки 1 круга<small>осталось ${left}</small></div><div class="ch">${pips(slotsTot(),S.slots.used,'v')}</div></button>`)+`
- <button class="fc" data-info="flex"><div class="t">Единицы чародейства<small>${S.meta&&S.meta.length?'гибкое колдовство, метамагия':'осталось '+(S.spt.max-S.spt.used)}</small></div><div class="ch">${pips(S.spt.max,S.spt.used,'')}</div></button>
- <button class="fc ${chaosArmed?'armed':''}" data-info="chaos"><div class="t">Поток хаоса<small>${chaosArmed?'готов!':'преимущество'}</small></div><div class="ch">${pips(S.chaos.max,S.chaos.used,'v')}</div></button>
- <button class="fc surge" data-info="surge"><div class="t">Волна дикой магии<small>к20, на 1 таблица</small></div><span class="ic">✺</span></button>
- <button class="fc ${S.conc?'armed':''}" data-info="conc"><div class="t">Концентрация<small>${S.conc?SPELLS[S.conc].n:'ничего не держишь'}</small></div></button>
- <button class="fc ${dz?'dead':''}" data-info="death"><div class="t">Спасброски от смерти<small>${dz?'0 хитов: бросай':'при 0 хитов'}</small></div><div class="ch tw"><span>${dp(D.s,'g')}</span><span>${dp(D.f,'r')}</span></div></button>`;
+ const circ=[1,...hiC()],L=S.spt.max-S.spt.used,cost=c=>c===1?2:FONT[c];
+ const one=circ.length<=2,mk=c=>`<button class="fq" data-act="${c===1?'pt2slot':'pt2slotC:'+c}" ${L>=cost(c)?'':'disabled'}>${one?`${cost(c)} единицы → ячейка ${c} круга`:`${c} круг <small>${cost(c)}</small>`}</button>`,br=c=>`<button class="fq dn" data-act="${c===1?'slot2pt':'slot2ptC:'+c}" ${cLeft(c)&&S.spt.used>=1?'':'disabled'}>${one?`ячейка ${c} круга → ${c} ${c===1?'единица':'единицы'}`:`${c} круг <small>+${c}</small>`}</button>`;
+ $('fRes').innerHTML=`<div class="flexp">
+  <button class="fr" data-info="slots"><span class="t">Ячейки</span><span class="sgs">${circ.map(c=>{const t=cTot(c),l=cLeft(c);return `<span class="sg ${l?'':'z'}"><span class="ch">${Array.from({length:t},(_,i)=>`<span class="charge v ${i>=l?'used':''}"></span>`).join('')}</span><i>${c} круг</i></span>`}).join('')}</span></button>
+  <button class="fr" data-info="flex"><span class="t">Единицы чародейства <small>${L} из ${S.spt.max}</small></span><span class="ch">${pips(S.spt.max,S.spt.used,'')}</span></button>
+  <div class="fxh">Гибкое колдовство · бонусное действие${S.meta&&S.meta.length?' · <button class="mlink" data-info="meta">метамагия ›</button>':''}</div>
+  ${one?`<div class="fxr">${circ.map(mk).join('')}${circ.map(br).join('')}</div>`:`<div class="fxr"><span class="lb">единицы → ячейка</span>${circ.map(mk).join('')}</div><div class="fxr"><span class="lb">ячейка → единицы</span>${circ.map(br).join('')}</div>`}
+ </div>
+ <div class="fres4">
+ <button class="fc ${chaosArmed?'armed':''}" data-info="chaos"><span class="t">Поток хаоса</span><span class="ch">${pips(S.chaos.max,S.chaos.used,'v')}</span></button>
+ <button class="fc surge" data-info="surge"><span class="t">Волна дикой магии</span><span class="ic">✺</span></button>
+ ${S.conc?`<button class="fc armed" data-info="conc"><span class="t">${SPELLS[S.conc].n}</span><small class="cc">концентрация</small></button>`:`<button class="fc" data-info="conc"><span class="t">Концентрация</span></button>`}
+ ${dz||D.s||D.f?`<button class="fc ${dz?'dead':''}" data-info="death"><span class="t">Спасброски от смерти</span><span class="ch tw"><span>${dp(D.s,'g')}</span><span>${dp(D.f,'r')}</span></span></button>`:''}</div>`;
 }
 function barrier(){const b=document.createElement('div');b.className='barrier';document.body.appendChild(b);
  b.animate([{opacity:0,transform:'scale(1.08)'},{opacity:1,transform:'scale(1)',offset:.25},{opacity:.0,transform:'scale(.99)'}],{duration:900,easing:'cubic-bezier(.2,.9,.3,1)'}).onfinish=()=>b.remove();
@@ -1966,6 +2004,7 @@ document.addEventListener('click',e=>{
  if(t.dataset.sroll)return rollSkill(t.dataset.sroll);
  if(t.dataset.coin){const k=t.dataset.coin;S.money[k]=Math.max(0,S.money[k]+ +t.dataset.d);save();renderCoins();vib(8);return}
  if(t.dataset.info)return openInfo(t.dataset.info);
+ if(t.classList.contains('fq')){act(t.dataset.act);if(openInfoKey==='flex'){openInfoKey=null}setTimeout(()=>{flash('#fRes .flexp','#a57cff')},20);return}
  if(t.dataset.act)return act(t.dataset.act);
  if(t.id==='initTok')return d20({label:'Инициатива',bonus:[{l:'ЛОВ',v:mod(S.ab.dex)}],kind:'check',ab:'dex'});
  if(t.id==='hpTok'||t.dataset.hp)return hpSheet();
@@ -2207,7 +2246,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-27';
+const BUILD='2026-11-25-29';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
