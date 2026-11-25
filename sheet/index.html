@@ -340,7 +340,7 @@ function renderCoins(){
 }
 function pas(k){const a={perception:'wis',insight:'wis',investigation:'int'}[k];return 10+mod(S.ab[a])+(S.skills[k]?prof():0)}
 function renderSenses(){$('senses').innerHTML=[['perception','Пассивное восприятие'],['insight','Пассивная проницат.'],['investigation','Пассивный анализ']].map(([k,n])=>`<button class="sense" data-info="senses"><b>${pas(k)}</b><span>${n}</span></button>`).join('')}
-function renderLog(){$('log').innerHTML=S.log.length?S.log.slice(0,12).map(l=>`<div><span>${esc(l.l)}</span><b>${l.t}</b></div>`).join(''):'<div><span>Пока ни одного броска</span></div>'}
+function renderLog(){if(S.log.length>7){S.log=S.log.slice(0,7);save()}$('log').innerHTML=S.log.length?S.log.map(l=>`<div><span>${esc(l.l)}</span><b>${l.t}</b></div>`).join(''):'<div><span>Пока ни одного броска</span></div>'}
 function renderAll(){renderHead();renderSenses();renderAbil();renderFate();renderCoins();renderLog();if(openAb)renderDrawer();else if(openInfoKey)openInfo(openInfoKey,true)}
 
 /* ---------- шторка характеристики ---------- */
@@ -447,7 +447,7 @@ function useLuck(){
   $('res').classList.add('on');
  });
 }
-function pushLog(l,t){S.log.unshift({l,t});S.log=S.log.slice(0,20);save();renderLog()}
+function pushLog(l,t){S.log.unshift({l,t});S.log=S.log.slice(0,7);save();renderLog()}
 $('roll').addEventListener('click',e=>{
  if(busy)return;
  if(e.target.closest('[data-luck]')){useLuck();return}
