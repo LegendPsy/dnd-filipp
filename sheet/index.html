@@ -245,7 +245,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .sg i{font-style:normal;font-size:10px;line-height:1;color:var(--mute)}.sg.z i{opacity:.5}
 .fxh{font:600 10.5px/1.2 Alegreya,serif;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);padding:2px 2px 0;border-top:1px solid var(--line)}
 .fxh .mlink{text-transform:none;letter-spacing:0;color:var(--gold);font:italic 500 13px "Cormorant Garamond",serif}
-.fxr{display:flex;align-items:stretch;gap:4px}.fxr .mlb{background:none;border:0;padding:0;text-align:left;color:var(--gold);font:italic 500 13px/1.05 "Cormorant Garamond",serif}#p-fight .atk.cmp b.lw{font-size:12px!important;letter-spacing:-.02em}.rn{font-style:normal;font-weight:700;color:#c7a4ff;text-shadow:0 0 6px rgba(160,110,255,.55);margin-right:4px;letter-spacing:.02em}.fq.mq{background:rgba(233,189,108,.14)!important;border-color:rgba(233,189,108,.45)}
+.fxr{display:flex;align-items:stretch;gap:4px}.fxr .mlb{background:none;border:0;padding:0;text-align:left;color:var(--gold);font:italic 500 13px/1.05 "Cormorant Garamond",serif}#p-fight .atk.cmp b.lw{font-size:12px!important;letter-spacing:-.02em}.rn{font-style:normal;font-weight:700;color:#c7a4ff;text-shadow:0 0 6px rgba(160,110,255,.55);margin-right:4px;letter-spacing:.02em}.fq.mq.armed{background:linear-gradient(180deg,rgba(233,189,108,.55),rgba(165,124,255,.45))!important;border-color:var(--gold2);color:#fff;box-shadow:0 0 12px rgba(233,189,108,.45),inset 0 0 8px rgba(255,240,200,.25);transform:translateY(1px)}.sp.mno{opacity:.45}.fq .gv{color:#cdb0ff;text-shadow:0 0 6px rgba(160,110,255,.6);font-weight:700}.fq .gp2{color:var(--gold2);text-shadow:0 0 6px rgba(233,189,108,.5);font-weight:700}.fq small.gc{color:var(--gold2);opacity:.8}.cc.gp{color:var(--gold2)!important}.fq.mq{background:rgba(233,189,108,.14)!important;border-color:rgba(233,189,108,.45)}
 .fxr .lb{flex:none;width:62px;font-size:10px;line-height:1.1;color:var(--mute);align-self:center}
 .fq{flex:1;min-width:0;border:1px solid rgba(233,189,108,.4);border-radius:9px;background:rgba(233,189,108,.08);color:var(--gold2);font:600 13px/1.1 "Cormorant Garamond",serif;padding:5px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
 .fq.dn{border-color:rgba(165,124,255,.4);background:rgba(165,124,255,.08);color:#e3d4ff}
@@ -881,10 +881,18 @@ const SPELLS={
 };
 const known=()=>S.known||KNOWN;
 const ROM=['','I','II','III','IV','V','VI','VII','VIII','IX'],rn=p=>p.lv?`<i class="rn">${ROM[p.lv]}</i>`:'';
+/* метамагия: tw = можно удвоить (одна цель, не на себя); twUp = на круге выше цель и так не одна; nq = нельзя ускорить */
+['fire_bolt','chromatic_orb','hold_person','dominate_person','greater_invisibility','charm_person','friends','message','suggestion','counterspell'].forEach(k=>{if(SPELLS[k])SPELLS[k].tw=1});
+['hold_person','charm_person'].forEach(k=>{if(SPELLS[k])SPELLS[k].twUp=1});
+['shield','counterspell','misty_step'].forEach(k=>{if(SPELLS[k])SPELLS[k].nq=1});
+function metaOk(m,k,c){const p=SPELLS[k];if(m==='twinned')return !!p.tw&&!(p.twUp&&c&&c>p.lv);if(m==='quickened')return !p.nq;return true}
+function metaCost(m,k,c){return m==='subtle'?1:m==='quickened'?2:Math.max(1,c||SPELLS[k].lv||0)}
+const MWHY={twinned:'у этого заклинания не одна цель или цель ты сам',quickened:'оно и так творится не действием'};
+const MDO={subtle:'без слов и жестов, никто не заметит',quickened:'бонусным действием',twinned:'две цели'};
 const CAP={fireball:'спасбросок Ловкости',misty_step:'телепорт 9 м',hold_person:'гуманоид',dominate_person:'гуманоид',hypnotic_pattern:'',counterspell:'сорвать заклинание',greater_invisibility:'невидим и в атаке',shield:'к классу доспеха'};
 const KNOWN=['fire_bolt','friends','minor_illusion','message','shield','chromatic_orb','charm_person'];
 function renderSmag(){const list=known().filter(k=>SPELLS[k]&&SPELLS[k].soc&&S.smagShow.includes(k)),sl=S.slots;
- $('smag').innerHTML=`<div class="smh">Магия<span class="lg"> в разговоре</span><i></i><button class="dc" data-info="spelldc">сложность заклинаний ${spellDC()}</button><span class="sl" title="ячейки 1 круга">${Array.from({length:slotsTot()},(_,i)=>`<span class="charge v ${i<sl.used?'used':''}"></span>`).join('')}</span></div><div class="spl">${list.map(k=>{const p=SPELLS[k],on=S.conc===k;return `<button class="sp ${p.lv?'lv':''} ${on?'on':''}" data-info="sp_${k}"><b>${rn(p)}${p.n}</b><small>${on?'действует · концентрация':p.short}</small></button>`}).join('')}<button class="sp more" data-info="smagpick">${list.length?'выбрать заклинания ›':'+ выбрать заклинания для этого экрана'}</button></div>`}
+ $('smag').innerHTML=`<div class="smh">Магия<span class="lg"> в разговоре</span><i></i><button class="dc" data-info="spelldc">сложность заклинаний ${spellDC()}</button><span class="sl" title="ячейки 1 круга">${Array.from({length:slotsTot()},(_,i)=>`<span class="charge v ${i<sl.used?'used':''}"></span>`).join('')}</span></div><div class="spl">${list.map(k=>{const p=SPELLS[k],on=S.conc===k;return `<button class="sp ${p.lv?'lv':''} ${on?'on':''} ${metaArm&&!metaOk(metaArm,k,p.lv)?'mno':''}" data-info="sp_${k}"><b>${rn(p)}${p.n}</b><small>${on?'действует · концентрация':p.short}</small></button>`}).join('')}<button class="sp more" data-info="smagpick">${list.length?'выбрать заклинания ›':'+ выбрать заклинания для этого экрана'}</button></div>`}
 
 
 /* ---------- бой ---------- */
@@ -912,7 +920,7 @@ function renderFight(){
  const left=slotsLeft();
  const fs=known().filter(k=>SPELLS[k]&&SPELLS[k].fight&&S.fSpellShow.includes(k));
  const nAct=fs.filter(k=>!SPELLS[k].react).length+2,cmpA=nAct>4;let cmp=cmpA;
- const scard=k=>{const p=SPELLS[k],off=p.lv&&!firstC(p.lv)&&!(k==='shield'&&S.shieldOn);
+ const scard=k=>{const p=SPELLS[k],off=(p.lv&&!firstC(p.lv)&&!(k==='shield'&&S.shieldOn))||(metaArm&&!metaOk(metaArm,k,p.lv));
   if(k==='shield')return `<button class="atk ${cmp?'cmp':''} ${S.shieldOn?'on':''} ${off?'off':''}" data-info="sp_shield"><b>${rn(SPELLS.shield)}Щит</b><div class="hit"><span class="d" style="color:#e3d4ff">+5</span><span class="dm">к классу доспеха</span></div><small>${S.shieldOn?'действует до твоего хода':'реакция · 1 круг'}</small></button>`;
   return `<button class="atk ${cmp?'cmp':''} ${off?'off':''}" data-info="sp_${k}"><b${!p.n.includes(' ')&&p.n.length>12?' class="lw"':''}>${rn(p)}${p.n}</b>${p.atk?`<div class="hit"><span class="d">${sg(spellAtk())}</span><span class="dm">${p.hit()}</span></div>`:(cmp?(CAP[k]?`<div class="hit"><span class="dm">${CAP[k]}</span></div>`:''):`<div class="hit"><span class="dm">${p.short}</span></div>`)}<small>${p.lv?(p.where||'')+' · тратит ячейку':'заговор · '+(p.where||'')}</small></button>`};
  const acts=fs.filter(k=>!SPELLS[k].react).map(scard);cmp=cmpA;
@@ -925,18 +933,17 @@ function renderFight(){
  const pips=(n,u,cls)=>Array.from({length:n},(_,i)=>`<span class="charge ${cls} ${i<u?'used':''}"></span>`).join('');
  const dz=S.hp.cur<=0,D=S.death,dp=(n,c)=>Array.from({length:3},(_,i)=>`<span class="charge ${i<n?c:'used'}"></span>`).join('');
  const circ=[1,...hiC()],L=S.spt.max-S.spt.used,cost=c=>c===1?2:FONT[c];
- const mm=S.meta||[],one=circ.length<=2,mk=c=>`<button class="fq" data-act="${c===1?'pt2slot':'pt2slotC:'+c}" ${L>=cost(c)?'':'disabled'}>${one?`${cost(c)} единицы → ячейка ${c} круга`:`${c} круг <small>${cost(c)}</small>`}</button>`,br=c=>`<button class="fq dn" data-act="${c===1?'slot2pt':'slot2ptC:'+c}" ${cLeft(c)&&S.spt.used>=1?'':'disabled'}>${one?`ячейка ${c} круга → ${c} ${c===1?'единица':'единицы'}`:`${c} круг <small>+${c}</small>`}</button>`;
+ const mm=S.meta||[],one=circ.length<=2,mk=c=>`<button class="fq" data-act="${c===1?'pt2slot':'pt2slotC:'+c}" ${L>=cost(c)?'':'disabled'}><b class="gv">+${ROM[c]}</b>${one?` <small>ячейка за ${cost(c)} единицы</small>`:` <small class="gc">${cost(c)}</small>`}</button>`,br=c=>`<button class="fq dn" data-act="${c===1?'slot2pt':'slot2ptC:'+c}" ${cLeft(c)&&S.spt.used>=1?'':'disabled'}><b class="gp2">+${ROM[c]}</b>${one?` <small>${c===1?'единица':'единицы'} за ячейку</small>`:''}</button>`;
  $('fRes').innerHTML=`<div class="flexp">
   <button class="fr" data-info="slots"><span class="t">Ячейки</span><span class="sgs">${circ.map(c=>{const t=cTot(c),l=cLeft(c);return `<span class="sg ${l?'':'z'}"><span class="ch">${Array.from({length:t},(_,i)=>`<span class="charge v ${i>=l?'used':''}"></span>`).join('')}</span><i>${c} круг</i></span>`}).join('')}</span></button>
   <button class="fr" data-info="flex"><span class="t">Единицы чародейства <small>${L} из ${S.spt.max}</small></span><span class="ch">${pips(S.spt.max,S.spt.used,'')}</span></button>
   <div class="fxh">Гибкое колдовство · бонусное действие</div>
   ${one?`<div class="fxr">${circ.map(mk).join('')}${circ.map(br).join('')}</div>`:`<div class="fxr"><span class="lb">единицы → ячейка</span>${circ.map(mk).join('')}</div><div class="fxr"><span class="lb">ячейка → единицы</span>${circ.map(br).join('')}</div>`}
-  ${mm.length?`<div class="fxr"><button class="lb mlb" data-info="meta">метамагия ›</button>${mm.filter(m=>m!=='twinned').map(m=>{const n=m==='subtle'?1:2;return `<button class="fq mq" data-act="meta:${m}:${n}" ${L>=n?'':'disabled'}>${META[m].n.split(' ')[0]} <small>${n}</small></button>`}).join('')}</div>
-  ${mm.includes('twinned')?`<div class="fxr"><span class="lb">удвоенное</span>${[1,2,3,4,5].map(n=>`<button class="fq mq" data-act="meta:twinned:${n}" ${L>=n?'':'disabled'}>${n} круг <small>${n}</small></button>`).join('')}</div>`:''}`:''}
+  ${mm.length?`<div class="fxr"><button class="lb mlb" data-info="meta">метамагия ›</button>${mm.filter(m=>m!=='twinned').map(m=>{const n=m==='subtle'?1:2;return `<button class="fq mq ${metaArm===m?'armed':''}" data-act="arm:${m}" ${L>=n||metaArm===m?'':'disabled'}>${META[m].n.split(' ')[0]} <small>${n}</small></button>`}).join('')}${mm.includes('twinned')?`<button class="fq mq ${metaArm==='twinned'?'armed':''}" data-act="arm:twinned" ${L>=1||metaArm==='twinned'?'':'disabled'}>Удвоенное <small>= круг</small></button>`:''}</div>`:''}
  </div>
  <div class="fres4">
  <button class="fc ${chaosArmed?'armed':''}" data-info="chaos"><span class="t">Поток хаоса</span><span class="ch">${pips(S.chaos.max,S.chaos.used,'v')}</span></button>
- <button class="fc surge" data-info="surge"><span class="t">Волна дикой магии</span><span class="ic">✺</span></button>${S.hi&&S.level>=6?`<button class="fc" data-info="bend"><span class="t">Подчинение удачи</span><small class="cc">2 единицы</small></button>`:''}
+ <button class="fc surge" data-info="surge"><span class="t">Волна дикой магии</span><span class="ic">✺</span></button>${S.hi&&S.level>=6?`<button class="fc" data-info="bend"><span class="t">Подчинение удачи</span><small class="cc gp">2 единицы</small></button>`:''}
  ${S.conc?`<button class="fc armed" data-info="conc"><span class="t">${SPELLS[S.conc].n}</span><small class="cc">концентрация</small></button>`:`<button class="fc" data-info="conc"><span class="t">Концентрация</span></button>`}
  ${dz||D.s||D.f?`<button class="fc ${dz?'dead':''}" data-info="death"><span class="t">Спасброски от смерти</span><span class="ch tw"><span>${dp(D.s,'g')}</span><span>${dp(D.f,'r')}</span></span></button>`:''}</div>`;
 }
@@ -1226,7 +1233,7 @@ const mod=s=>Math.floor((s-10)/2);
 const sg=n=>(n>=0?'+':'−')+Math.abs(n);
 const prof=()=>Math.ceil(S.level/4)+1;
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let rollMode='norm',editing=false,chaosArmed=false,inspArmed=false,openAb=null,openInfoKey=null;
+let metaArm=null,twinPend=null,rollMode='norm',editing=false,chaosArmed=false,inspArmed=false,openAb=null,openInfoKey=null;
 const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
 const d20i='<svg class="d20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 2l-5 9h10z M7 11l5 11 5-11"/></svg>';
 
@@ -1512,8 +1519,10 @@ function showRes(){
   ${resExtra(used)}<div class="acts">${luckLeft&&!spec.noLuck?`<button data-luck>🍀 Везунчик: ещё к20 (осталось ${luckLeft})</button>`:''}</div><div class="hint">нажми мимо, чтобы закрыть</div>`;
  cur.final=used;res.classList.add('on');pushLog(spec.label,total);skillFx(spec,used);
 }
+function twBtn(){return twinPend?`<button data-twin style="background:linear-gradient(90deg,rgba(165,124,255,.35),rgba(233,189,108,.35));border-color:var(--gold2)">Удвоенное: атака по второй цели</button>`:''}
+function metaShow(n,mt){const res=$('res');cur={dice:true};$('roll').classList.add('on');res.innerHTML=`<div class="lbl">${esc(n)}</div><div class="tot" style="font-size:34px;color:var(--gold2)">${esc(mt.split(':')[0])}</div><div class="br">${esc(mt.split(': ')[1]||'')}</div><div class="hint">нажми, чтобы закрыть</div>`;res.classList.add('on')}
 function resExtra(die){const sp=cur.spec;let h=sp.after?sp.after(die):'';
- if(sp.dmg){const g=sp.dmg,crit=die===20,n=crit?g.dn*2:g.dn;h+=`<div class="acts">${die===1?'':`<button class="red" data-dmg="${n}">${crit?'Крит! ':''}Попал: урон ${n}к${g.ds}${g.k?sg(g.k):''}</button>`}</div>`}
+ if(sp.dmg){const g=sp.dmg,crit=die===20,n=crit?g.dn*2:g.dn;h+=`<div class="acts">${die===1?'':`<button class="red" data-dmg="${n}">${crit?'Крит! ':''}Попал: урон ${n}к${g.ds}${g.k?sg(g.k):''}</button>`}${twBtn()}</div>`}
  return h}
 function useLuck(){
  if(!cur||cur.dice||busy)return;S.luck.used++;save();renderFate();renderFight();
@@ -1530,7 +1539,8 @@ $('roll').addEventListener('click',e=>{
  if(busy)return;
  if(e.target.closest('[data-luck]')){useLuck();return}
  const p=e.target.closest('[data-pick]');if(p){const v=+p.dataset.pick+cur.bonus;cur.final=+p.dataset.pick;S.log[0]={l:cur.spec.label+' (Везунчик)',t:v};save();$('res').innerHTML=`<div class="lbl">${esc(cur.spec.label)}</div><div class="tot">${v}</div><div class="br">оставлен кубик <b>${p.dataset.pick}</b></div>${resExtra(cur.final)}<div class="hint">нажми, чтобы закрыть</div>`;vib(15);return}
- const dm=e.target.closest('[data-dmg]');if(dm){const g=cur.spec.dmg,n=+dm.dataset.dmg;lastPt={x:e.clientX,y:e.clientY};vib([20,30,40]);dice({label:`${g.n}: урон`,n,s:g.ds,k:g.k,kl:g.kl,min:0,fx:g.fx,after:()=>`<div class="br">${g.t}${n>g.dn?' · критическое попадание, кубиков вдвое':''}</div>`});return}
+ const dm=e.target.closest('[data-dmg]');if(dm){const g=cur.spec.dmg,n=+dm.dataset.dmg;lastPt={x:e.clientX,y:e.clientY};vib([20,30,40]);dice({label:`${g.n}: урон`,n,s:g.ds,k:g.k,kl:g.kl,min:0,fx:g.fx,after:()=>`<div class="br">${g.t}${n>g.dn?' · критическое попадание, кубиков вдвое':''}</div>${twinPend?`<div class="acts">${twBtn()}</div>`:''}`});return}
+ if(e.target.closest('[data-twin]')){const t=twinPend;twinPend=null;if(!t)return;lastPt={x:e.clientX,y:e.clientY};vib([15,30,40]);const sp=atkSpec(t.k,t.c);sp.label=sp.label.replace(': атака',': вторая цель')+' · Удвоенное';busy=false;return d20(sp)}
  if(e.target.closest('[data-surge]')){lastPt={x:e.clientX,y:e.clientY};vib([30,20,60]);surgeTable();return}
  if(e.target.closest('.res button'))return;
  if(cur&&cur.spec&&cur.spec.commit&&!cur.done){cur.done=1;cur.spec.commit(cur.final)}
@@ -2139,7 +2149,7 @@ Object.keys(SPELLS).forEach(k=>INFO['sp_'+k]=()=>{const p=SPELLS[k],on=S.conc===
  else if(k==='fire_bolt')acts=`<button data-act="cast:${k}">Атаковать: к20 ${sg(spellAtk())}</button>`;
  if(S.hi&&p.lv&&!(p.conc&&on)&&!(k==='shield'&&S.shieldOn)){const vb=k==='shield'?'Поднять Щит':p.atk?'Атаковать':'Сотворить';
   const cs=[1,...hiC()].filter(c=>c>=p.lv);acts=cs.map(c=>`<button data-act="cast:${k}:${c}" ${cLeft(c)?'':'disabled'} class="${c>p.lv?'ghost':''}">${vb}: ячейка ${c} круга${c>p.lv?' (усиленное)':''} · осталось ${cLeft(c)}</button>`).join('')+(p.conc&&S.conc?`<div class="mu" style="text-align:center;font-size:12.5px">прервёт ${SPELLS[S.conc].n}</div>`:'')}
- return{t:p.n,sub:p.meta,body:p.d()+(k==='chromatic_orb'?`<div class="orbs">${ORB.map(o=>`<button class="${S.orbT===o?'on':''}" data-orb="${o}">${o}</button>`).join('')}</div>`:'')+(p.lv?`<div class="how">Ты чародей дикой магии: после заклинания 1 круга и выше мастер может попросить бросить к20. На <b>1</b> случается волна дикой магии. Ячейки возвращает долгий отдых.</div>`:'')+(k==='friends'?`<div class="how">В приложении: пока Дружба действует, все проверки Харизмы идут с преимуществом сами. Не забудь выключить, когда цель сменится или время выйдет.</div>`:''),acts}});
+ return{t:p.n,sub:p.meta,body:p.d()+(k==='chromatic_orb'?`<div class="orbs">${ORB.map(o=>`<button class="${S.orbT===o?'on':''}" data-orb="${o}">${o}</button>`).join('')}</div>`:'')+(p.lv?`<div class="how">Ты чародей дикой магии: после заклинания 1 круга и выше мастер может попросить бросить к20. На <b>1</b> случается волна дикой магии. Ячейки возвращает долгий отдых.</div>`:'')+(metaArm?(metaOk(metaArm,k,p.lv)?`<div class="how" style="border-color:var(--gold2)"><b>Заряжено: ${META[metaArm].n}</b>. ${metaArm==='twinned'?'Две цели. Спишется столько единиц, какой круг ячейки'+(p.lv?'':' (заговор: 1)'):'Спишется '+META[metaArm].c}. ${metaArm==='twinned'&&p.twUp?'Только ячейкой '+p.lv+' круга: выше у заклинания и так несколько целей.':''}</div>`:`<div class="how"><b>${META[metaArm].n} сюда не подходит</b>: ${MWHY[metaArm]}. Заклинание сотворится без метамагии, единицы не спишутся.</div>`):'')+(k==='friends'?`<div class="how">В приложении: пока Дружба действует, все проверки Харизмы идут с преимуществом сами. Не забудь выключить, когда цель сменится или время выйдет.</div>`:''),acts}});
 
 /* полный текст заклинаний (PHB 2014, по смыслу dnd.su, ничего не упрощено) + ссылка на дословный текст */
 const SPFULL={
@@ -2176,11 +2186,13 @@ function act(a){
  if(a==='fairSim'){const c=Array(20).fill(0);for(let i=0;i<10000;i++)c[r(20)-1]++;window.__sim=c;vib([10,30,10]);openInfo('fair',true);return}
  if(a.startsWith('cast:')){const [,k,cs]=a.split(':'),p=SPELLS[k];let c=0;
   if(p.lv){c=cs?+cs:firstC(p.lv);if(!c||!useSlotC(c))return}
+  let mt='',mtw=false;if(metaArm){const m=metaArm;
+   if(metaOk(m,k,c)&&S.spt.max-S.spt.used>=metaCost(m,k,c)){metaArm=null;S.spt.used+=metaCost(m,k,c);mt=META[m].n.split(' ')[0]+': '+MDO[m];mtw=m==='twinned';setTimeout(()=>flash('#fRes .flexp','#e9bd6c'),30)}}
   if(p.conc)S.conc=k;if(k==='shield')S.shieldOn=1;save();renderAll();
   if(k==='shield'){closeDrawer();barrier();flash('#fVit .tok.shield','#a57cff');toast(`Щит: класс доспеха ${effAC()} до твоего хода. Мастер может попросить к20 на волну`);return}
-  if(k==='fire_bolt'||k==='chromatic_orb'){closeDrawer();return d20(atkSpec(k,c))}
-  if(p.roll){closeDrawer();const n=p.roll.n+Math.max(0,c-p.lv)*(p.roll.up||0);return dice({label:`${p.n}${c>p.lv?' ('+c+' круг)':''}: урон`,n,s:p.roll.s,min:0,fx:k==='fireball'?'fireball':null,after:()=>`<div class="br">${p.roll.t}, сложность ${spellDC()}: при успехе половина</div>`})}
-  closeDrawer();vib([15,30,15]);castWave(k);toast(p.lv?`${p.n}: ячейка ${c} круга потрачена. Мастер может попросить к20 на волну`:p.conc?`${p.n} действует`:`${p.n} сотворено`);return}
+  if(k==='fire_bolt'||k==='chromatic_orb'){closeDrawer();const sp=atkSpec(k,c);if(mt)sp.label+=' · '+mt;if(mtw){twinPend={k,c};sp.label=sp.label.replace(': атака',': первая цель')}return d20(sp)}
+  if(p.roll){closeDrawer();const n=p.roll.n+Math.max(0,c-p.lv)*(p.roll.up||0);return dice({label:`${p.n}${c>p.lv?' ('+c+' круг)':''}: урон`,n,s:p.roll.s,min:0,fx:k==='fireball'?'fireball':null,after:()=>`<div class="br">${p.roll.t}, сложность ${spellDC()}: при успехе половина</div>${mt?`<div class="br" style="color:var(--gold2)">${mt}</div>`:''}`})}
+  closeDrawer();vib([15,30,15]);castWave(k);if(mtw)setTimeout(()=>castWave(k),420);if(mt)metaShow(p.n,mt);toast(p.lv?`${p.n}: ячейка ${c} круга потрачена. Мастер может попросить к20 на волну`:p.conc?`${p.n} действует`:`${p.n} сотворено`);return}
  if(a==='concEnd'){const k=S.conc;S.conc=null;save();renderAll();closeDrawer();vib(10);if(k==='friends')toast('Существо поняло, что на него влияли магией');return}
  if(a.startsWith('condOn:')){const k=a.slice(7);S.cond[k]=1;save();renderAll();closeDrawer();vib([20,40,30]);setTimeout(()=>{const c=document.querySelector(`.cnd[data-info="c_${k}"]`);if(c){c.classList.remove('stamp');void c.offsetWidth;c.classList.add('stamp')}},30);return}
  if(a.startsWith('condOff:')){delete S.cond[a.slice(8)];save();renderAll();closeDrawer();vib(10);return}
@@ -2260,8 +2272,8 @@ const META={
  subtle:{n:'Неприметное заклинание',c:'1 единица',d:'Заклинание творится <b>без вербальных и соматических компонентов</b>: ни слов, ни жестов. Никто не поймёт, что ты колдуешь. Лучший друг Внушения и Очарования посреди разговора.'},
  quickened:{n:'Ускоренное заклинание',c:'2 единицы',d:'Заклинание, которое творится за <b>1 действие</b>, ты творишь <b>бонусным действием</b>. Помни правило: тогда другим заклинанием в этот ход может быть только заговор.'},
  twinned:{n:'Удвоенное заклинание',c:'единиц столько, какой круг (заговор: 1)',d:'Заклинание, которое целится только в <b>одно существо</b> и не «на себя», получает <b>вторую цель</b> в пределах дистанции.'}};
-INFO.meta=()=>{const L=S.spt.max-S.spt.used;return{t:'Метамагия',sub:`единицы чародейства: ${L} из ${S.spt.max}`,body:`<p>Пока творишь заклинание, можешь потратить единицы чародейства и изменить его. На одно заклинание одна метамагия.</p>`+S.meta.map(m=>`<p><b>${META[m].n}</b> · ${META[m].c}<br>${META[m].d}</p>`).join('')+(S.meta.includes('twinned')?`<div class="mtw">${[1,2,3,4,5].map(n=>`<button data-act="meta:twinned:${n}" ${L>=n?'':'disabled'}>${n===1?'заговор, 1':n+' круг'}</button>`).join('')}</div>`:''),
- acts:(S.meta.includes('subtle')?`<button data-act="meta:subtle:1" ${L>=1?'':'disabled'}>Неприметное: потратить 1 единицу</button>`:'')+(S.meta.includes('quickened')?`<button data-act="meta:quickened:2" ${L>=2?'':'disabled'}>Ускоренное: потратить 2 единицы</button>`:'')}};
+INFO.meta=()=>{const L=S.spt.max-S.spt.used;return{t:'Метамагия',sub:`единицы чародейства: ${L} из ${S.spt.max}`,body:`<p>Пока творишь заклинание, можешь потратить единицы чародейства и изменить его. На одно заклинание одна метамагия.</p>`+S.meta.map(m=>`<p><b>${META[m].n}</b> · ${META[m].c}<br>${META[m].d}</p>`).join('')+`<div class="how">Нажми метамагию, она загорится. Следующее заклинание получит её, а единицы спишутся в момент сотворения. Нажми ещё раз, чтобы снять.</div>`,
+ acts:S.meta.map(m=>`<button data-act="arm:${m}" class="${metaArm===m?'':'ghost'}">${metaArm===m?'Снять: '+META[m].n:'Зарядить: '+META[m].n+' · '+META[m].c}</button>`).join('')}};
 INFO.bend=()=>({t:'Подчинение удачи',sub:`дикая магия, 6 уровень · единиц ${S.spt.max-S.spt.used}`,body:`<p>Когда другое существо, которое ты видишь, делает бросок атаки, проверку или спасбросок, ты можешь <b>реакцией</b> потратить <b>2 единицы чародейства</b> и бросить <b>1к4</b>.</p><p>Результат ты <b>прибавляешь или вычитаешь</b> из его броска, на выбор. Решать нужно после того, как существо бросило, но до того, как мастер сказал, что вышло.</p>`,
  acts:`<button data-act="bend" ${S.spt.max-S.spt.used>=2?'':'disabled'}>Потратить 2 единицы и бросить 1к4</button>`});
 const _slotsInfo=INFO.slots;
@@ -2275,6 +2287,7 @@ function hiAct(a){const [w,x,y]=a.split(':'),c=+x,L=S.spt.max-S.spt.used,re=k=>{
  if(w==='slotBackC'){if(c===1){if(S.slots.used>0)S.slots.used--}else if(S.hi[c].used>0)S.hi[c].used--;re('slots');vib(10);return true}
  if(w==='pt2slotC'){if(L<FONT[c])return true;S.spt.used+=FONT[c];const h=S.hi[c];if(h.used>0)h.used--;else h.extra=(h.extra||0)+1;re('flex');vib([15,30,40]);toast(`${FONT[c]} единиц сплавлены в ячейку ${c} круга`);return true}
  if(w==='slot2ptC'){if(!useSlotC(c))return true;S.spt.used=Math.max(0,S.spt.used-c);re('flex');vib([15,30,40]);toast(`Ячейка ${c} круга рассыпалась в единицы`);return true}
+ if(w==='arm'){metaArm=metaArm===x?null:x;save();renderAll();if(openInfoKey==='meta')openInfo('meta',true);vib(metaArm?[15,30,40]:10);return true}
  if(w==='meta'){const n=+y;if(L<n)return true;S.spt.used+=n;save();renderAll();closeDrawer();vib([15,30,40]);toast(`${META[x].n}: потрачено ${n}, осталось ${S.spt.max-S.spt.used}`);return true}
  if(w==='bend'){if(L<2)return true;S.spt.used+=2;save();renderAll();closeDrawer();vib([20,30,40]);dice({label:'Подчинение удачи',n:1,s:4,k:0,min:0,after:v=>`<div class="br">прибавь или вычти ${v} из броска того существа</div>`});return true}
  return false}
@@ -2293,7 +2306,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-35';
+const BUILD='2026-11-25-36';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
