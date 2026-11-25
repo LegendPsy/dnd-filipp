@@ -119,7 +119,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .ab .s{font-size:11.5px;color:var(--paperMute);margin-top:2px;display:flex;gap:4px;align-items:center}
 .ab .s .dot{width:7px;height:7px;border-radius:50%;border:1.3px solid var(--paperMute)}
 .ab .s .dot.on{background:var(--blood);border-color:var(--blood)}
-.sp.pressed,.cnd.pressed,.slip.pressed,.lang.pressed,.chr.pressed,.pressed{transform:scale(.93) translateY(2px)!important}
+.atk.pressed,.sp.pressed,.cnd.pressed,.slip.pressed,.lang.pressed,.chr.pressed,.pressed{transform:scale(.93) translateY(2px)!important}
 
 /* судьба */
 .fate{display:grid;grid-template-columns:1fr 1fr;gap:6px}
@@ -211,6 +211,47 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 @media (max-height:600px){.cnh{display:none}.cnds{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.cnds::-webkit-scrollbar{display:none}.cnd{flex:none}.cnd.more{display:block}.sp small{display:none}.sp{padding:6px 9px}.slip .h{display:none}.shead .cls{display:none}}
 
 /* заглушки */
+/* бой */
+#p-fight .shead{position:relative}
+.turnq{margin-left:auto;align-self:flex-start;font:italic 500 14px "Cormorant Garamond",serif;color:var(--gold);padding:4px 0}
+.fvit{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:6px}
+.fvit .tok .k{font-size:9px;letter-spacing:.04em;line-height:1.1;min-height:20px;display:flex;align-items:center;justify-content:center}
+.fvit .tok.hp .k{justify-content:flex-start}
+.tok.shield{border-color:var(--violet);box-shadow:0 0 0 1px var(--violet),0 0 18px rgba(165,124,255,.45);background:linear-gradient(160deg,rgba(52,34,74,.95),rgba(24,16,34,.95))}
+.tok.shield .v{color:#e3d4ff}
+.fgrid{flex:none;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.fgrid.c3{grid-template-columns:repeat(3,1fr)}
+.fgrid.c3 .atk b{white-space:normal;font-size:16px}
+.atk{position:relative;background:linear-gradient(160deg,rgba(40,26,52,.92),rgba(22,15,28,.92));border:1px solid rgba(165,124,255,.3);border-radius:12px;padding:7px 10px 8px;text-align:left;transition:transform .12s cubic-bezier(.3,1.6,.5,1);overflow:hidden}
+.atk.steel{background:linear-gradient(160deg,rgba(44,36,30,.92),rgba(22,17,15,.92));border-color:rgba(233,189,108,.28)}
+.atk.plain{background:var(--bg2);border:1px dashed var(--line)}
+.atk b{display:block;font:600 17px/1.05 "Cormorant Garamond",serif;color:#eadcff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.atk.steel b,.atk.plain b{color:var(--ink)}
+.atk .hit{display:flex;align-items:baseline;gap:6px;margin-top:3px;white-space:nowrap}
+.atk .hit .d{font:700 20px/1 "Cormorant Garamond",serif;color:var(--gold2)}
+.atk .hit .dm{font-size:12px;color:#ddd3c4}
+.atk small{display:block;font-size:11px;line-height:1.15;color:var(--mute);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.atk .tg{position:absolute;right:8px;top:7px;font-size:10px;color:var(--violet)}
+.atk.on{border-color:var(--violet);box-shadow:0 0 0 1px var(--violet),0 0 16px rgba(165,124,255,.45)}
+.atk.off{opacity:.45}
+.fres{flex:none;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.fres .fc{min-height:44px}
+.fres .fc .t{font-size:16px}
+.charge.g{border-color:var(--green);background:radial-gradient(circle at 35% 35%,#dcffe6,var(--green) 55%,#2c6a42);box-shadow:0 0 8px rgba(134,199,156,.5)}
+.fc .ch.tw{flex-direction:column;gap:4px}.fc .ch.tw span{display:flex;gap:4px}.fc .ch.tw .charge{width:10px;height:10px}
+.fc.surge .ic{font-size:20px;color:var(--violet);text-shadow:0 0 10px rgba(165,124,255,.8)}
+.fc.dead{border-color:var(--blood);box-shadow:0 0 0 1px var(--blood),0 0 18px rgba(179,35,58,.4)}
+.orbs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:4px 0 10px}
+.orbs button{border:1px solid var(--line);border-radius:10px;padding:8px 2px;font-size:14px;background:#1d151e;color:var(--ink)}
+.orbs button.on{border-color:var(--violet);color:#eadcff;box-shadow:0 0 0 1px var(--violet),0 0 12px rgba(165,124,255,.35)}
+.res .acts button.red{border-color:rgba(224,72,94,.6);color:#ffb3bf;background:rgba(179,35,58,.12)}
+.res .acts button.vio{border-color:rgba(165,124,255,.6);color:#e3d4ff;background:rgba(165,124,255,.12)}
+.res .surge{max-width:34ch;margin:10px auto 0;font-size:15.5px;line-height:1.4;color:#eadcff}
+.barrier{position:fixed;inset:0;z-index:95;pointer-events:none;border:3px solid var(--violet);box-shadow:inset 0 0 60px rgba(165,124,255,.55),inset 0 0 0 9999px rgba(165,124,255,.06)}
+@media (max-height:760px){#p-fight .screen{gap:6px}.atk small{display:none}.fres .fc{min-height:38px}}
+@media (max-height:640px){.fres .fc .t small{display:none}.atk{padding:5px 8px}.atk b{font-size:15px}.turnq{display:none}}
+.fgrid.c3 .atk .hit{white-space:normal;align-items:center}.fgrid.c3 .atk .hit .dm{line-height:1.1}
+@media (max-height:600px){#p-fight .smh{display:none}#p-fight .screen{gap:5px}.fvit .tok{padding:3px 2px}.fvit .tok .v{font-size:20px}.fvit .tok .k{min-height:16px}.fres .fc{min-height:32px;padding:3px 8px}.fres .fc .t{font-size:14px}.fgrid.c3 .atk b{font-size:14px}.atk .hit .d{font-size:17px}.fc .ch.tw .charge{width:8px;height:8px}}
 .soon{flex:1;display:grid;place-items:center;text-align:center}
 .soon h2{font-size:38px;font-weight:500}
 .soon p{color:var(--mute);max-width:30ch;margin:8px auto 0}
@@ -242,6 +283,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .drawer .dh img{width:48px;height:48px}
 .drawer .dh h2{font-size:28px;flex:1}
 .drawer .dh .sc{font-size:13px;color:var(--mute);text-align:right}
+.drawer .dh.col{flex-direction:column;align-items:flex-start;gap:2px}.drawer .dh.col h2{flex:none}.drawer .dh.col .sc{text-align:left}
 .drawer .dh .sc b{display:block;font:700 26px/1 "Cormorant Garamond",serif;color:var(--ink)}
 .drows{flex:1 1 auto;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.2)}
 .row{display:flex;align-items:center;gap:10px;padding:13px 14px;width:100%;text-align:left;border-top:1px solid var(--line);transition:background .12s,transform .12s}
@@ -376,7 +418,21 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
   <div class="langs" id="langs"></div>
   <div class="chars" id="chars"></div>
  </div></section>
-<section class="page" id="p-fight"><div class="screen"><div class="soon"><div><img class="px" src="art/ab-dex.webp" alt=""><h2>Бой</h2><p>Заклинания, ячейки, действие и бонусное действие, дикая магия. Скоро.</p></div></div></div></section>
+<section class="page" id="p-fight"><div class="screen">
+  <div class="shead"><img class="px" src="art/ab-dex.webp" alt=""><div><h1>Бой</h1><div class="cls" id="fSub"></div></div><button class="turnq" data-info="turn">как устроен ход ›</button></div>
+  <div class="fvit" id="fVit"></div>
+  <div class="mode" id="mode3">
+    <button data-m="norm" class="on">Обычный</button>
+    <button data-m="adv">Преимущество</button>
+    <button data-m="dis">Помеха</button>
+  </div>
+  <div class="smh">Действие<i></i></div>
+  <div class="fgrid" id="fAct"></div>
+  <div class="smh">Реакция и бонусное действие<i></i></div>
+  <div class="fgrid c3" id="fRe"></div>
+  <div class="smh">Запасы<i></i></div>
+  <div class="fres" id="fRes"></div>
+ </div></section>
 <section class="page" id="p-inv"><div class="screen"><div class="soon"><div><img class="px" src="art/ab-int.webp" alt=""><h2>Инвентарь</h2><p>Пока здесь только кошель. Остальное скоро.</p><div class="coins" id="coins"></div></div></div></div></section>
 
 <nav class="tabs" id="tabs">
@@ -446,6 +502,9 @@ function toggleCnd(k){if(k==='exh')S.exh=S.exh>=6?0:S.exh+1;else if(S.cond[k])de
 
 /* ---------- заклинания (dnd.su, PHB 2014). Сл = 8 + мастерство + ХАР ---------- */
 const spellDC=()=>8+prof()+mod(S.ab.cha),spellAtk=()=>prof()+mod(S.ab.cha);
+const slotsTot=()=>S.slots.max+(S.slots.extra||0),slotsLeft=()=>slotsTot()-S.slots.used;
+function useSlot(){if(slotsLeft()<=0)return false;if(S.slots.extra>0)S.slots.extra--;else S.slots.used++;return true}
+const effAC=()=>S.ac+(S.shieldOn?5:0);
 const SPELLS={
  friends:{n:'Дружба',lv:0,soc:1,conc:1,short:'преимущество на Харизму к одному',meta:'заговор · 1 действие · на себя · концентрация до 1 мин · С, М (грим)',
   d:()=>`<p>Пока заклинание действует, у тебя <b>преимущество на все проверки Харизмы</b> (Обман, Убеждение, Запугивание, Выступление) против <b>одного</b> существа, которое к тебе не враждебно.</p><p>Когда заклинание кончается, существо <b>понимает, что ты влиял на него магией</b>, и становится к тебе враждебным. Склонное к насилию может напасть, другое потребует расплаты, как решит мастер.</p>`},
@@ -468,7 +527,113 @@ const SPELLS={
 };
 const KNOWN=['fire_bolt','friends','minor_illusion','message','shield','chromatic_orb','charm_person'];
 function renderSmag(){const list=KNOWN.filter(k=>SPELLS[k]&&SPELLS[k].soc&&S.smagShow.includes(k)),sl=S.slots;
- $('smag').innerHTML=`<div class="smh">Магия<span class="lg"> в разговоре</span><i></i><button class="dc" data-info="spelldc">сложность заклинаний ${spellDC()}</button><span class="sl" title="ячейки 1 круга">${Array.from({length:sl.max},(_,i)=>`<span class="charge v ${i<sl.used?'used':''}"></span>`).join('')}</span></div><div class="spl">${list.map(k=>{const p=SPELLS[k],on=S.conc===k;return `<button class="sp ${p.lv?'lv':''} ${on?'on':''}" data-info="sp_${k}"><b>${p.n}</b><small>${on?'действует · концентрация':p.short}</small></button>`}).join('')}<button class="sp more" data-info="smagpick">${list.length?'выбрать заклинания ›':'+ выбрать заклинания для этого экрана'}</button></div>`}
+ $('smag').innerHTML=`<div class="smh">Магия<span class="lg"> в разговоре</span><i></i><button class="dc" data-info="spelldc">сложность заклинаний ${spellDC()}</button><span class="sl" title="ячейки 1 круга">${Array.from({length:slotsTot()},(_,i)=>`<span class="charge v ${i<sl.used?'used':''}"></span>`).join('')}</span></div><div class="spl">${list.map(k=>{const p=SPELLS[k],on=S.conc===k;return `<button class="sp ${p.lv?'lv':''} ${on?'on':''}" data-info="sp_${k}"><b>${p.n}</b><small>${on?'действует · концентрация':p.short}</small></button>`}).join('')}<button class="sp more" data-info="smagpick">${list.length?'выбрать заклинания ›':'+ выбрать заклинания для этого экрана'}</button></div>`}
+
+
+/* ---------- бой ---------- */
+const ORB=['звук','кислота','огонь','холод','электричество','яд'];
+const ORBDMG={'звук':'звуком','кислота':'кислотой','огонь':'огнём','холод':'холодом','электричество':'электричеством','яд':'ядом'};
+const WEAP={dagger:{n:'Кинжал',meta:'простое оружие · фехтовальное, лёгкое, метательное',
+ d:()=>`<p><b>Рукопашная атака: к20 ${sg(daggerHit())}</b> (Ловкость ${sg(mod(S.ab.dex))} + мастерство ${prof()}). Цель в пределах 1,5 м.</p><p>Можно <b>метнуть</b>: дальность 6 м, до 18 м с помехой. Брошенный кинжал надо потом поднять.</p><p>При попадании <b>1к4 ${sg(mod(S.ab.dex))} колющего урона</b>.</p><p class="mu">У чародея по стартовому снаряжению всегда два кинжала. Второй можно держать в другой руке: тогда бонусным действием атакуешь и им, но без прибавки Ловкости к урону.</p>`}};
+const daggerHit=()=>mod(S.ab.dex)+prof();
+function atkSpec(k){
+ const ch=[{l:'Харизма',v:mod(S.ab.cha)},{l:'мастерство',v:prof()}];
+ if(k==='fire_bolt')return{label:'Огненный снаряд: атака',bonus:ch,kind:'atk',dmg:{n:'Огненный снаряд',dn:1,ds:10,k:0,t:'огнём'}};
+ if(k==='chromatic_orb')return{label:'Цветной шарик: атака',bonus:ch,kind:'atk',dmg:{n:'Цветной шарик',dn:3,ds:8,k:0,t:ORBDMG[S.orbT]}};
+ const dx=mod(S.ab.dex);return{label:'Кинжал: атака',bonus:[{l:'Ловкость',v:dx},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:'Кинжал',dn:1,ds:4,k:dx,kl:'Ловкость',t:'колющий'}};
+}
+function renderFight(){
+ if(!$('fVit'))return;
+ $('fSub').textContent=`атака заклинанием ${sg(spellAtk())} · сложность ${spellDC()}`;
+ const em=effMax(),hp=Math.min(S.hp.cur,em),sp=effSpeed();
+ $('fVit').innerHTML=`<button class="tok hp" data-hp="1"><div class="k">Хиты</div><div class="v">${hp} <small>/ ${em}</small>${S.hp.temp?` <span class="temp">+${S.hp.temp}</span>`:''}</div><div class="hpbar"><i style="width:${Math.max(0,Math.min(100,hp/em*100))}%"></i></div></button>
+ <button class="tok ${S.shieldOn?'shield':''}" data-info="ac"><div class="k">Класс доспеха</div><div class="v">${effAC()}</div></button>
+ <button class="tok" data-finit="1"><div class="k">Инициатива</div><div class="v">${sg(mod(S.ab.dex))}</div></button>
+ <button class="tok" data-info="move"><div class="k">Скорость</div><div class="v ${sp!==S.speed?'warn':''}">${String(sp).replace('.',',')}<small>м</small></div></button>`;
+ const left=slotsLeft();
+ $('fAct').innerHTML=`<button class="atk" data-info="sp_fire_bolt"><b>Огненный снаряд</b><div class="hit"><span class="d">${sg(spellAtk())}</span><span class="dm">1к10 огнём</span></div><small>заговор · 36 м · бесконечно</small></button>
+ <button class="atk ${left?'':'off'}" data-info="sp_chromatic_orb"><span class="tg">1 круг</span><b>Цветной шарик</b><div class="hit"><span class="d">${sg(spellAtk())}</span><span class="dm">3к8 ${ORBDMG[S.orbT]}</span></div><small>27 м · тратит ячейку</small></button>
+ <button class="atk steel" data-info="w_dagger"><b>Кинжал</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">1к4${sg(mod(S.ab.dex))} колющий</span></div><small>1,5 м или бросок 6 м</small></button>
+ <button class="atk plain" data-info="actions"><b>Другие действия</b><small style="white-space:normal">Рывок, Отход, Уклонение, Помощь, Засада, Поиск</small></button>`;
+ $('fRe').innerHTML=`<button class="atk ${S.shieldOn?'on':''} ${left||S.shieldOn?'':'off'}" data-info="sp_shield"><b>Щит</b><div class="hit"><span class="d" style="color:#e3d4ff">+5</span><span class="dm">к классу доспеха</span></div><small>${S.shieldOn?'действует до твоего хода':'реакция · 1 круг'}</small></button>
+ <button class="atk steel" data-info="opp"><b>Удар вслед</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">кинжалом</span></div><small>реакция, враг уходит</small></button>
+ <button class="atk" data-info="flex"><b>Гибкое колдовство</b><div class="hit"><span class="dm">ячейка ↔ единицы</span></div><small>бонусное действие</small></button>`;
+ const pips=(n,u,cls)=>Array.from({length:n},(_,i)=>`<span class="charge ${cls} ${i<u?'used':''}"></span>`).join('');
+ const dz=S.hp.cur<=0,D=S.death,dp=(n,c)=>Array.from({length:3},(_,i)=>`<span class="charge ${i<n?c:'used'}"></span>`).join('');
+ $('fRes').innerHTML=`<button class="fc" data-info="slots"><div class="t">Ячейки 1 круга<small>осталось ${left}</small></div><div class="ch">${pips(slotsTot(),S.slots.used,'v')}</div></button>
+ <button class="fc" data-info="flex"><div class="t">Единицы чародейства<small>осталось ${S.spt.max-S.spt.used}</small></div><div class="ch">${pips(S.spt.max,S.spt.used,'')}</div></button>
+ <button class="fc ${chaosArmed?'armed':''}" data-info="chaos"><div class="t">Поток хаоса<small>${chaosArmed?'готов!':'преимущество'}</small></div><div class="ch">${pips(S.chaos.max,S.chaos.used,'v')}</div></button>
+ <button class="fc surge" data-info="surge"><div class="t">Волна дикой магии<small>к20, на 1 таблица</small></div><span class="ic">✺</span></button>
+ <button class="fc ${S.conc?'armed':''}" data-info="conc"><div class="t">Концентрация<small>${S.conc?SPELLS[S.conc].n:'ничего не держишь'}</small></div></button>
+ <button class="fc ${dz?'dead':''}" data-info="death"><div class="t">Спасброски от смерти<small>${dz?'0 хитов: бросай':'при 0 хитов'}</small></div><div class="ch tw"><span>${dp(D.s,'g')}</span><span>${dp(D.f,'r')}</span></div></button>`;
+}
+function barrier(){const b=document.createElement('div');b.className='barrier';document.body.appendChild(b);
+ b.animate([{opacity:0,transform:'scale(1.08)'},{opacity:1,transform:'scale(1)',offset:.25},{opacity:.0,transform:'scale(.99)'}],{duration:900,easing:'cubic-bezier(.2,.9,.3,1)'}).onfinish=()=>b.remove();
+ vib([25,30,60]);document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake')}
+/* волна дикой магии, PHB 2014. 1,5 м = 5 футов */
+const SURGE=[
+ 'В начале каждого твоего хода в течение минуты бросай по этой таблице снова (этот результат при повторах игнорируй).',
+ 'Минуту ты видишь невидимых существ, если они у тебя на линии обзора.',
+ 'В 1,5 м от тебя появляется модрон (механическое существо), им управляет мастер. Через минуту исчезает.',
+ 'Ты творишь Огненный шар 3 круга с центром на себе.',
+ 'Ты творишь Волшебную стрелу 5 круга.',
+ 'Брось к10: твой рост меняется на столько дюймов (по 2,5 см). Нечётное: ты уменьшаешься. Чётное: вырастаешь.',
+ 'Ты творишь Смятение с центром на себе.',
+ 'Минуту в начале каждого своего хода ты восстанавливаешь 5 хитов.',
+ 'У тебя вырастает длинная борода из перьев. Держится, пока ты не чихнёшь: тогда перья разлетаются с лица.',
+ 'Ты творишь Скольжение (лужа жира) с центром на себе.',
+ 'Следующее заклинание со спасброском, которое ты сотворишь в течение минуты: цели делают спасбросок с помехой.',
+ 'Твоя кожа становится ярко-синей. Снять может заклинание Снятие проклятья.',
+ 'На лбу на минуту открывается третий глаз: преимущество на проверки Восприятия, где нужно зрение.',
+ 'Минуту все твои заклинания, которые творятся за 1 действие, творятся бонусным действием.',
+ 'Ты телепортируешься на 18 м в свободное место, которое видишь.',
+ 'Тебя уносит на Астральный план до конца твоего следующего хода. Потом возвращаешься туда же или в ближайшее свободное место.',
+ 'Следующее заклинание с уроном в течение минуты наносит максимум урона.',
+ 'Брось к10: твой возраст меняется на столько лет. Нечётное: молодеешь (минимум 1 год). Чётное: стареешь.',
+ 'В 18 м от тебя появляются 1к6 флампов (летающие существа-медузы), ими управляет мастер. Они тебя боятся. Через минуту исчезают.',
+ 'Ты восстанавливаешь 2к10 хитов.',
+ 'До начала твоего следующего хода ты становишься растением в горшке. Ты недееспособен и уязвим ко всему урону. Если хиты упадут до 0, горшок разбивается и ты снова человек.',
+ 'Минуту ты можешь бонусным действием телепортироваться на 6 м в каждый свой ход.',
+ 'Ты творишь Левитацию на себя.',
+ 'В 1,5 м от тебя появляется единорог, им управляет мастер. Через минуту исчезает.',
+ 'Минуту ты не можешь говорить. Когда пытаешься, изо рта вылетают розовые пузыри.',
+ 'Минуту рядом парит призрачный щит: +2 к классу доспеха и иммунитет к Волшебной стреле.',
+ 'Следующие 5к6 дней тебя не берёт алкоголь.',
+ 'Твои волосы выпадают, но за сутки отрастают.',
+ 'Минуту всё горючее, к чему ты прикасаешься (если это не надето и не в руках у другого), вспыхивает.',
+ 'Ты возвращаешь одну потраченную ячейку самого низкого круга.',
+ 'Минуту ты можешь говорить только криком.',
+ 'Ты творишь Туманное облако с центром на себе.',
+ 'До трёх существ на твой выбор в 9 м от тебя получают 4к10 урона электричеством.',
+ 'Ты испуган ближайшим существом до конца своего следующего хода.',
+ 'Все существа в 9 м от тебя становятся невидимыми на минуту. Невидимость существа кончается, когда оно атакует или колдует.',
+ 'Минуту у тебя сопротивление всему урону.',
+ 'Случайное существо в 18 м от тебя отравлено на 1к4 часа.',
+ 'Минуту ты ярко светишься в радиусе 9 м. Кто закончит ход в 1,5 м от тебя, ослеплён до конца своего следующего хода.',
+ 'Ты творишь Превращение на себя. Если провалишь спасбросок, становишься овцой на время заклинания.',
+ 'Минуту вокруг тебя в 3 м порхают иллюзорные бабочки и лепестки.',
+ 'Ты можешь сразу совершить ещё одно действие.',
+ 'Все существа в 9 м от тебя получают 1к10 некротического урона. Ты восстанавливаешь столько хитов, сколько урона нанёс всем вместе.',
+ 'Ты творишь Отражения (иллюзорные двойники).',
+ 'Ты творишь Полёт на случайное существо в 18 м от тебя.',
+ 'Минуту ты невидим, и тебя не слышно. Кончается, если ты атакуешь или колдуешь.',
+ 'Если в течение минуты ты умрёшь, то сразу возвращаешься к жизни, как от заклинания Перевоплощение (в новом теле).',
+ 'Минуту ты на одну категорию размера больше.',
+ 'Минуту ты и все существа в 9 м от тебя уязвимы к колющему урону.',
+ 'Минуту вокруг тебя звучит тихая призрачная музыка.',
+ 'Ты восстанавливаешь все потраченные единицы чародейства.'];
+function surgeTable(){dice({label:'Волна дикой магии: к100',n:1,s:100,after:v=>{const i=Math.min(49,Math.floor((v-1)/2)),lo=i*2+1,hi=i*2+2;let x='';
+ if(i===29&&S.slots.used>0){S.slots.used--;x='<div class="br">Лист уже вернул ячейку.</div>'}
+ if(i===49&&S.spt.used>0){S.spt.used=0;x='<div class="br">Лист уже вернул единицы.</div>'}
+ if(S.chaos.used>0){S.chaos.used=0;x+='<div class="br">Поток хаоса снова готов.</div>'}
+ save();setTimeout(renderAll,50);
+ return `<div class="br">строка ${String(lo).padStart(2,'0')}–${hi===100?'00':String(hi).padStart(2,'0')}</div><div class="surge">${SURGE[i]}</div>${x}`}})}
+function deathCommit(die){const D=S.death;let msg='';
+ if(die===20){S.hp.cur=Math.max(1,S.hp.cur);S.death={s:0,f:0};msg='Двадцатка! Филипп приходит в себя с 1 хитом';}
+ else{if(die===1)D.f+=2;else if(die>=10)D.s++;else D.f++;
+  if(D.s>=3){S.death={s:0,f:0};msg='Три успеха: Филипп стабилен. Без сознания, но не умирает'}
+  else if(D.f>=3){D.f=3;msg='Три провала. Мастер скажет, что дальше'}}
+ save();renderAll();if(msg){toast(msg);vib(die===20?[20,40,80]:[40,60,40])}}
 
 /* ---------- общение ---------- */
 const SOC=[['deception','cha'],['insight','wis'],['persuasion','cha'],['intimidation','cha'],['performance','cha']];
@@ -491,7 +656,7 @@ const DEFAULT={v:2,name:'Филипп',race:'Человек',cls:'Чародей
  money:{pp:0,gp:10,sp:1,cp:0},log:[]};
 let S;try{S=JSON.parse(localStorage.getItem('filipp-sheet-v2'))}catch(e){}
 if(!S||S.v!==2)S=structuredClone(DEFAULT);
-if(!S.cond)S.cond={};if(!S.condShow)S.condShow=COND_MAIN.slice();if(S.exh==null)S.exh=0;if(!S.slots)S.slots={max:3,used:0};if(S.conc===undefined)S.conc=null;if(!S.smagShow)S.smagShow=['friends','minor_illusion','message','charm_person'];S.smagShow=S.smagShow.filter(k=>SPELLS[k]&&SPELLS[k].soc);
+if(!S.cond)S.cond={};if(!S.condShow)S.condShow=COND_MAIN.slice();if(S.exh==null)S.exh=0;if(!S.slots)S.slots={max:3,used:0};if(S.conc===undefined)S.conc=null;if(!S.spt)S.spt={max:2,used:0};if(S.slots.extra==null)S.slots.extra=0;if(!S.death)S.death={s:0,f:0};if(!S.orbT)S.orbT='огонь';if(S.shieldOn==null)S.shieldOn=0;if(!S.smagShow)S.smagShow=['friends','minor_illusion','message','charm_person'];S.smagShow=S.smagShow.filter(k=>SPELLS[k]&&SPELLS[k].soc);
 const save=()=>{try{localStorage.setItem('filipp-sheet-v2',JSON.stringify(S))}catch(e){}};
 const $=id=>document.getElementById(id);
 const mod=s=>Math.floor((s-10)/2);
@@ -513,7 +678,7 @@ function renderHead(){
  $('cl').innerHTML=`<b>${S.cls}</b> · ${S.sub} · ${S.level} ур. · мастерство ${sg(prof())}`;
  const em=effMax();$('hpCur').textContent=Math.min(S.hp.cur,em);$('hpMax').textContent=em;$('hpMax').classList.toggle('warn',em<S.hp.max);$('hpTemp').textContent=S.hp.temp?'+'+S.hp.temp:'';
  $('hpBar').style.width=Math.max(0,Math.min(100,Math.min(S.hp.cur,em)/em*100))+'%';
- $('acV').textContent=S.ac;{const sp=effSpeed();$('spV').innerHTML=`${String(sp).replace('.',',')}<small>м</small>`;$('spV').classList.toggle('warn',sp!==S.speed)}$('initV').textContent=sg(mod(S.ab.dex));
+ $('acV').textContent=effAC();$('acV').parentNode.classList.toggle('shield',!!S.shieldOn);{const sp=effSpeed();$('spV').innerHTML=`${String(sp).replace('.',',')}<small>м</small>`;$('spV').classList.toggle('warn',sp!==S.speed)}$('initV').textContent=sg(mod(S.ab.dex));
 }
 function renderAbil(){
  const p=prof();
@@ -547,7 +712,7 @@ function renderSocial(){
  $('langs').innerHTML=LANGS.map(([n,ex],i)=>`<button class="lang ${ex?'ex':''}" data-info="lang">${n}</button>`).join('');
  $('chars').innerHTML=['traits','ideal','bond','flaw'].map((k,i)=>`<button class="chr c${i+1}" data-info="ch_${k}"><b>${CHAR[k].t}</b><span>${CHAR[k].short}</span></button>`).join('');
 }
-function renderAll(){renderSocial();renderSmag();renderConds();renderHead();renderSenses();renderAbil();renderFate();renderCoins();renderLog();if(openAb)renderDrawer();else if(openInfoKey)openInfo(openInfoKey,true)}
+function renderAll(){renderFight();renderSocial();renderSmag();renderConds();renderHead();renderSenses();renderAbil();renderFate();renderCoins();renderLog();if(openAb)renderDrawer();else if(openInfoKey)openInfo(openInfoKey,true)}
 
 /* ---------- шторка характеристики ---------- */
 function renderDrawer(){
@@ -594,7 +759,7 @@ function d20(spec){
  if(busy)return;
  const m0=spec.mode||rollMode;let adv=m0==='adv',dis=m0==='dis';const notes=[];
  if(spec.kind){const cf=condFx(spec);if(cf.dis.length){dis=true;notes.push('помеха: '+[...new Set(cf.dis)].join(', '))}if(cf.adv.length){adv=true;notes.push('преимущество: '+cf.adv.join(', '))}if(cf.fail)notes.push('по правилам автопровал: '+cf.fail)}
- if(chaosArmed){adv=true;chaosArmed=false;S.chaos.used=Math.min(S.chaos.max,S.chaos.used+1);save();renderFate();notes.unshift('Поток хаоса')}
+ if(spec.noLuck){}else if(chaosArmed){adv=true;chaosArmed=false;S.chaos.used=Math.min(S.chaos.max,S.chaos.used+1);save();renderFate();notes.unshift('Поток хаоса')}
  else if(inspArmed){adv=true;inspArmed=false;S.insp=0;save();renderFate();notes.unshift('Вдохновение')}
  if(adv&&dis)notes.push('преимущество и помеха гасят друг друга');
  spec.note=notes.join(' · ');
@@ -739,9 +904,12 @@ function showRes(){
  const crit=used===20?'<div class="crit" style="color:var(--gold2)">Природная двадцатка!</div>':used===1?'<div class="crit" style="color:var(--red2)">Природная единица…</div>':'';
  const luckLeft=S.luck.max-S.luck.used;
  res.innerHTML=`<div class="lbl">${esc(spec.label)}${spec.note?` · ${spec.note}`:''}</div><div class="tot">${total}</div><div class="br">${br}</div>${crit}
-  <div class="acts">${luckLeft?`<button data-luck>🍀 Везунчик: ещё к20 (осталось ${luckLeft})</button>`:''}</div><div class="hint">нажми мимо, чтобы закрыть</div>`;
- res.classList.add('on');pushLog(spec.label,total);
+  ${resExtra(used)}<div class="acts">${luckLeft&&!spec.noLuck?`<button data-luck>🍀 Везунчик: ещё к20 (осталось ${luckLeft})</button>`:''}</div><div class="hint">нажми мимо, чтобы закрыть</div>`;
+ cur.final=used;res.classList.add('on');pushLog(spec.label,total);
 }
+function resExtra(die){const sp=cur.spec;let h=sp.after?sp.after(die):'';
+ if(sp.dmg){const g=sp.dmg,crit=die===20,n=crit?g.dn*2:g.dn;h+=`<div class="acts">${die===1?'':`<button class="red" data-dmg="${n}">${crit?'Крит! ':''}Попал: урон ${n}к${g.ds}${g.k?sg(g.k):''}</button>`}</div>`}
+ return h}
 function useLuck(){
  if(!cur||cur.dice||busy)return;S.luck.used++;save();renderFate();
  const extra=r(20),{used,bonus,spec}=cur;
@@ -756,8 +924,11 @@ function pushLog(l,t){S.log.unshift({l,t});S.log=S.log.slice(0,7);save();renderL
 $('roll').addEventListener('click',e=>{
  if(busy)return;
  if(e.target.closest('[data-luck]')){useLuck();return}
- const p=e.target.closest('[data-pick]');if(p){const v=+p.dataset.pick+cur.bonus;S.log[0]={l:cur.spec.label+' (Везунчик)',t:v};save();$('res').innerHTML=`<div class="lbl">${esc(cur.spec.label)}</div><div class="tot">${v}</div><div class="br">оставлен кубик <b>${p.dataset.pick}</b></div><div class="hint">нажми, чтобы закрыть</div>`;vib(15);return}
+ const p=e.target.closest('[data-pick]');if(p){const v=+p.dataset.pick+cur.bonus;cur.final=+p.dataset.pick;S.log[0]={l:cur.spec.label+' (Везунчик)',t:v};save();$('res').innerHTML=`<div class="lbl">${esc(cur.spec.label)}</div><div class="tot">${v}</div><div class="br">оставлен кубик <b>${p.dataset.pick}</b></div>${resExtra(cur.final)}<div class="hint">нажми, чтобы закрыть</div>`;vib(15);return}
+ const dm=e.target.closest('[data-dmg]');if(dm){const g=cur.spec.dmg,n=+dm.dataset.dmg;lastPt={x:e.clientX,y:e.clientY};vib([20,30,40]);dice({label:`${g.n}: урон`,n,s:g.ds,k:g.k,kl:g.kl,min:0,after:()=>`<div class="br">${g.t}${n>g.dn?' · критическое попадание, кубиков вдвое':''}</div>`});return}
+ if(e.target.closest('[data-surge]')){lastPt={x:e.clientX,y:e.clientY};vib([30,20,60]);surgeTable();return}
  if(e.target.closest('.res button'))return;
+ if(cur&&cur.spec&&cur.spec.commit&&!cur.done){cur.done=1;cur.spec.commit(cur.final)}
  $('roll').classList.remove('on');critClear();
 });
 
@@ -770,7 +941,7 @@ function rollFromDrawer(what){
 }
 
 document.addEventListener('click',e=>{
- const t=e.target.closest('button');if(!t||t.closest('#roll')||t.closest('#tabs')||t.closest('#mode')||t.closest('form'))return;
+ const t=e.target.closest('button');if(!t||t.closest('#roll')||t.closest('#tabs')||t.closest('.mode')||t.closest('form'))return;
  if(t.dataset.ab)return openDrawer(t.dataset.ab);
  if(t.dataset.roll){
   if(editing){const w=t.dataset.roll;if(w==='save')S.saves[openAb]=S.saves[openAb]?0:1;else if(w!=='check')S.skills[w]=S.skills[w]?0:1;save();renderAll();vib(8);return}
@@ -784,10 +955,37 @@ document.addEventListener('click',e=>{
  if(t.dataset.info)return openInfo(t.dataset.info);
  if(t.dataset.act)return act(t.dataset.act);
  if(t.id==='initTok')return d20({label:'Инициатива',bonus:[{l:'ЛОВ',v:mod(S.ab.dex)}],kind:'check',ab:'dex'});
- if(t.id==='hpTok')return hpSheet();
+ if(t.id==='hpTok'||t.dataset.hp)return hpSheet();
+ if(t.dataset.finit)return d20({label:'Инициатива',bonus:[{l:'Ловкость',v:mod(S.ab.dex)}],kind:'check',ab:'dex'});
+ if(t.dataset.orb){S.orbT=t.dataset.orb;save();renderFight();openInfo('sp_chromatic_orb',true);vib(8);return}
  if(t.id==='editBtn')return editSheet();
 });
 const INFO={
+ turn:()=>({t:'Как устроен ход',sub:'бой идёт по кругу, раунд ≈ 6 секунд',body:`<p>Порядок ходов задаёт <b>инициатива</b>: в начале боя все бросают её, мастер записывает.</p>
+  <p>В свой ход у тебя есть:</p><p>• <b>Перемещение</b> до ${String(effSpeed()).replace('.',',')} м. Можно делить: пройти, ударить, пройти дальше.<br>• <b>Одно действие</b>: заклинание, атака кинжалом или что-то из «Других действий».<br>• <b>Бонусное действие</b>, только если что-то его даёт (у тебя: Гибкое колдовство).<br>• Одно мелкое дело бесплатно: открыть дверь, достать кинжал.</p>
+  <p><b>Реакция</b> одна на раунд, и её можно потратить даже в чужой ход: Щит, Удар вслед.</p>
+  <p class="mu">Правило бонусного заклинания: если в этот ход ты сотворил заклинание бонусным действием, то другим заклинанием в этот ход может быть только заговор за 1 действие.</p>`,acts:''}),
+ ac:()=>({t:'Класс доспеха',sub:S.shieldOn?`${S.ac} + 5 от Щита = ${effAC()}`:`${S.ac} = 10 + Ловкость ${sg(mod(S.ab.dex))}`,body:`<p>Сколько должен выбросить враг (к20 + его бонус), чтобы <b>попасть</b> по тебе. Меньше этого числа: промах.</p>${S.shieldOn?'<p><b>Щит действует</b>: +5 до начала твоего следующего хода.</p>':''}<div class="how">Если по тебе попали и итог врага меньше ${S.ac+5}, Щит превратит попадание в промах. Спроси мастера, сколько выпало.</div>`,
+  acts:S.shieldOn?`<button class="ghost" data-act="shieldOff">Мой ход начался: Щит исчез</button>`:`<button data-info="sp_shield">Открыть Щит</button>`}),
+ move:()=>({t:'Скорость',sub:`${String(effSpeed()).replace('.',',')} м за ход`,body:`<p>Столько метров можешь пройти за свой ход. Одна клетка на карте обычно 1,5 м, значит <b>${Math.floor(effSpeed()/1.5)} клеток</b>.</p><p>Труднопроходимая местность (завал, болото, лестница) стоит вдвое: 1 метр съедает 2.</p><p>Встать, если сбит с ног, стоит половину скорости.</p><div class="how">Если уходишь от врага, который стоит рядом, он может ударить вслед. Чтобы этого не было, используй действие <b>Отход</b>.</div>`,acts:''}),
+ actions:()=>({t:'Другие действия',sub:'вместо атаки или заклинания',body:`<p><b>Рывок</b>: ещё раз столько же движения (всего ${String(effSpeed()*2).replace('.',',')} м).</p>
+  <p><b>Отход</b>: до конца хода уход от врагов не провоцирует удар вслед.</p>
+  <p><b>Уклонение</b>: до твоего следующего хода атаки по тебе с <b>помехой</b> (если ты видишь атакующего), а спасброски Ловкости с <b>преимуществом</b>.</p>
+  <p><b>Помощь</b>: союзник получает <b>преимущество</b> на следующую проверку или на атаку по врагу рядом с тобой.</p>
+  <p><b>Засада</b> (подготовка): «когда случится X, сделаю Y». Тратишь реакцию, когда X случится. Заклинание при этом держишь концентрацией.</p>
+  <p><b>Поиск</b>: проверка Восприятия или Анализа. <b>Засесть</b> (Скрытность), <b>Использовать предмет</b> (зелье, масло).</p>`,acts:''}),
+ w_dagger:()=>({t:'Кинжал',sub:WEAP.dagger.meta,body:WEAP.dagger.d(),acts:`<button data-act="atk:dagger">Атаковать: к20 ${sg(daggerHit())}</button>`}),
+ opp:()=>({t:'Удар вслед',sub:'атака по возможности · реакция',body:`<p>Когда враг, которого ты видишь, <b>уходит</b> из досягаемости твоего оружия (1,5 м), можешь реакцией один раз ударить его в рукопашную.</p><p>Кинжалом: <b>к20 ${sg(daggerHit())}</b>, урон 1к4 ${sg(mod(S.ab.dex))} колющий.</p><p class="mu">Не срабатывает, если враг использовал Отход, телепортировался или его двигают силой. Реакция одна на раунд: потратил на удар, Щит до твоего хода уже нельзя.</p>`,acts:`<button data-act="atk:dagger">Ударить вслед: к20 ${sg(daggerHit())}</button>`}),
+ slots:()=>({t:'Ячейки 1 круга',sub:`осталось ${slotsLeft()} из ${slotsTot()}`,body:`<p>Ячейка это «заряд» для заклинания 1 круга: Щит, Цветной шарик, Очарование личности. Сотворил, и одна ячейка погасла.</p><p><b>Заговоры</b> (Огненный снаряд, Дружба и другие) ячеек не тратят, их можно творить без конца.</p><p>Ячейки возвращает <b>долгий отдых</b>. В бою ячейку можно создать из 2 единиц чародейства (Гибкое колдовство).</p>${S.slots.extra?`<p class="mu">Из них созданных из единиц: ${S.slots.extra}. Они пропадут после долгого отдыха.</p>`:''}`,
+  acts:`<button data-info="flex">Гибкое колдовство ›</button><button class="ghost" data-act="slotBack" ${S.slots.used?'':'disabled'}>Вернуть одну ячейку (ошибся)</button>`}),
+ flex:()=>({t:'Гибкое колдовство',sub:`единицы чародейства: ${S.spt.max-S.spt.used} из ${S.spt.max}`,body:`<p>Чародей носит в себе запас сырой магии: <b>единицы чародейства</b>. Их ${S.spt.max}, возвращаются после долгого отдыха.</p><p><b>Бонусным действием</b> в свой ход можно:</p><p>• потратить <b>2 единицы</b> и создать <b>ячейку 1 круга</b>. Созданная ячейка исчезает после долгого отдыха;<br>• погасить <b>ячейку 1 круга</b> и получить <b>1 единицу</b>.</p><p class="mu">С 3 уровня единицы ещё понадобятся для метамагии: менять заклинания на лету.</p>`,
+  acts:`<button data-act="pt2slot" ${S.spt.max-S.spt.used>=2?'':'disabled'}>2 единицы → ячейка 1 круга</button><button class="ghost" data-act="slot2pt" ${slotsLeft()&&S.spt.used?'':'disabled'}>Ячейка → 1 единица</button>`}),
+ surge:()=>({t:'Волна дикой магии',sub:'дикая магия чародея',body:`<p>Магия Филиппа плохо слушается. <b>Сразу после заклинания 1 круга и выше</b> мастер может сказать бросить к20. На <b>1</b> случается волна: бросаешь к100 по таблице, и происходит что-то странное. От огненного шара вокруг себя до бороды из перьев.</p><p>Если <b>Поток хаоса</b> уже потрачен, мастер может сразу сказать бросить по таблице, без к20. После этого Поток хаоса возвращается.</p><div class="how">В таблице 50 строк, лист прочтёт нужную. Вернуть ячейку или единицы лист сделает сам.</div>`,
+  acts:`<button data-act="surgeD20">Мастер попросил: бросить к20</button><button class="ghost" data-act="surgeD100">Сразу к100 по таблице</button>`}),
+ conc:()=>{const c=mod(S.ab.con)+(S.saves.con?prof():0);return{t:'Концентрация',sub:S.conc?`держишь: ${SPELLS[S.conc].n}`:'сейчас ничего',body:`<p>Некоторые заклинания действуют, пока ты <b>держишь их вниманием</b>. Держать можно только одно: новое такое заклинание обрывает старое.</p><p>Когда тебя <b>ранят</b>, делаешь спасбросок Телосложения <b>${sg(c)}</b>. Сложность <b>10</b> или половина урона, если она больше. Провал: заклинание обрывается.</p><p>Также обрывается, если ты без сознания или погиб.</p>`,
+  acts:`<button data-act="concSave">Меня ранили: спасбросок ${sg(c)}</button>${S.conc?`<button class="ghost" data-act="concEnd">Закончить ${SPELLS[S.conc].n}</button>`:''}`}},
+ death:()=>({t:'Спасброски от смерти',sub:`успехи ${S.death.s} из 3 · провалы ${S.death.f} из 3`,body:`<p>Когда хиты падают до <b>0</b>, Филипп без сознания. В начале каждого своего хода бросаешь <b>к20 без бонусов</b>:</p><p>• <b>10 и больше</b>: успех. Три успеха: ты стабилен, больше не бросаешь.<br>• <b>9 и меньше</b>: провал. Три провала: смерть.<br>• <b>1</b>: два провала сразу.<br>• <b>20</b>: ты приходишь в себя с 1 хитом.</p><p>Урон при 0 хитах: один провал, от крита два. Любое лечение сразу поднимает на ноги.</p>`,
+  acts:`<button data-act="deathRoll">Бросить спасбросок от смерти</button><button class="ghost" data-act="deathHit">Меня ударили на 0 хитах: +1 провал</button><button class="ghost" data-act="deathReset" ${S.death.s||S.death.f?'':'disabled'}>Сбросить: стабилен или вылечен</button>`}),
  luck:()=>({t:'Везунчик',sub:'черта · 3 очка удачи',body:`<p>У тебя <b>3 очка удачи</b>. Осталось: <b>${S.luck.max-S.luck.used}</b>.</p>
   <p>Когда ты бросаешь к20 на <b>атаку, проверку или спасбросок</b>, можешь потратить одно очко и бросить <b>ещё один к20</b>. Потом сам выбираешь, какой из двух кубиков засчитать. Решать можно уже увидев первый кубик, но до того, как мастер скажет итог.</p>
   <p>Ещё очко можно потратить, когда <b>враг атакует тебя</b>: бросаешь свой к20 и выбираешь, какой кубик возьмёт враг, его или твой.</p>
@@ -809,7 +1007,7 @@ const INFO={
  short:()=>({t:'Короткий отдых',sub:'около часа',body:`<p>Час покоя: перевязать раны, поесть, отдышаться. Во время короткого отдыха можно тратить <b>кости хитов</b>, чтобы лечиться.</p>
   <p>Везунчик, Поток хаоса и ячейки заклинаний короткий отдых <b>не возвращает</b>.</p>`,acts:`<button data-act="toHd">Открыть кости хитов</button>`}),
  long:()=>({t:'Долгий отдых',sub:'8 часов, раз в сутки',body:`<p>Не меньше <b>8 часов</b>: сон и спокойные дела. Не чаще раза в сутки. Если отдых прервал бой больше чем на час, его надо начать заново.</p>
-  <p>После него возвращается:</p><p>• все <b>хиты</b><br>• половина <b>костей хитов</b> (минимум 1)<br>• все очки <b>Везунчика</b><br>• <b>Поток хаоса</b><br>• снимается 1 уровень <b>истощения</b>, если ты поел и попил<br>• все ячейки заклинаний и единицы чародейства (будут во вкладке «Бой»)</p>`,acts:`<button data-act="longRest">Отдохнуть до утра</button>`}),
+  <p>После него возвращается:</p><p>• все <b>хиты</b><br>• половина <b>костей хитов</b> (минимум 1)<br>• все очки <b>Везунчика</b><br>• <b>Поток хаоса</b><br>• снимается 1 уровень <b>истощения</b>, если ты поел и попил<br>• все ячейки заклинаний и единицы чародейства</p>`,acts:`<button data-act="longRest">Отдохнуть до утра</button>`}),
  smagpick:()=>({t:'Заклинания на экране',sub:`галочка = показать в «Общении» · ${S.smagShow.length} из 6`,body:KNOWN.filter(k=>SPELLS[k]&&SPELLS[k].soc).map(k=>{const sh=S.smagShow.includes(k),p=SPELLS[k];return `<button class="crow ck ${sh?'on':''}" data-sshow="${k}"><span><i class="box">${sh?'✓':''}</i>${p.n}</span><small>${p.lv?'1 круг':'заговор'}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">Здесь только заклинания Филиппа, которые помогают в разговоре: очарование, иллюзии, послания. Боевые (Огненный снаряд, Щит, Цветной шарик) сюда не попадают. Отметь до 6.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
  spelldc:()=>({t:'Сложность заклинаний',sub:`${spellDC()} = 8 + мастерство ${prof()} + Харизма ${sg(mod(S.ab.cha))}`,body:`<p>Когда твоё заклинание действует на кого-то (Очарование личности, иллюзия), цель делает <b>спасбросок</b>. Если выбросит <b>${spellDC()} или больше</b>, заклинание её не берёт.</p><p>Чем выше число, тем труднее устоять.</p><div class="how">Бросать ничего не нужно: число называешь мастеру, бросает он.</div>`,acts:''}),
  fair:()=>{const d=S.d20s||Array(20).fill(0),n=d.reduce((a,b)=>a+b,0),sim=window.__sim;
@@ -831,27 +1029,41 @@ const INFO={
 };
 ['traits','ideal','bond','flaw'].forEach(k=>INFO['ch_'+k]=()=>({t:CHAR[k].t,sub:'характер Филиппа',body:CHAR[k].full+`<div class="how">Это подсказка для отыгрыша, бросать ничего не нужно. Если ты сыграл Филиппа по этой черте, особенно когда ему это мешает, мастер может дать <b>вдохновение</b>.</div>`,acts:S.insp?'':`<button data-act="inspGet">Мастер дал вдохновение</button>`}));
 Object.keys(COND).forEach(k=>INFO['c_'+k]=()=>{const on=S.cond[k];return{t:COND[k].n,sub:on?'сейчас на тебе':'состояние',body:COND[k].d+`<div class="how">${COND[k].fx.chk||COND[k].fx.atk||COND[k].fx.svdex||COND[k].fx.spd0||COND[k].fx.fail?'Если отметишь, лист сам учтёт это в бросках и скорости.':'Это работает в сцене, мастер следит за этим. Отметь, чтобы не забыть.'}</div>`,acts:on?`<button class="ghost" data-act="condOff:${k}">Снять: больше не ${COND[k].n.toLowerCase()}</button>`:`<button data-act="condOn:${k}">На мне</button>`}});
-Object.keys(SPELLS).forEach(k=>INFO['sp_'+k]=()=>{const p=SPELLS[k],on=S.conc===k,left=S.slots.max-S.slots.used;
+Object.keys(SPELLS).forEach(k=>INFO['sp_'+k]=()=>{const p=SPELLS[k],on=S.conc===k,left=slotsLeft();
  let acts='';
  if(p.conc)acts=on?`<button class="ghost" data-act="concEnd">Закончить заклинание</button>`:`<button data-act="cast:${k}">Сотворить${S.conc?' (прервёт '+SPELLS[S.conc].n+')':''}</button>`;
+ else if(k==='shield')acts=S.shieldOn?`<button class="ghost" data-act="shieldOff">Мой ход начался: Щит исчез</button>`:`<button data-act="cast:${k}" ${left?'':'disabled'}>По мне попали: поднять Щит (ячеек ${left})</button>`;
+ else if(k==='chromatic_orb')acts=`<button data-act="cast:${k}" ${left?'':'disabled'}>Атаковать: к20 ${sg(spellAtk())}, ${S.orbT} (ячеек ${left})</button>`;
  else if(p.lv)acts=`<button data-act="cast:${k}" ${left?'':'disabled'}>Сотворить: потратить ячейку 1 круга (осталось ${left})</button>`;
  else if(k==='fire_bolt')acts=`<button data-act="cast:${k}">Атаковать: к20 ${sg(spellAtk())}</button>`;
- return{t:p.n,sub:p.meta,body:p.d()+(p.lv?`<div class="how">Ты чародей дикой магии: после заклинания 1 круга и выше мастер может попросить бросить к20. На <b>1</b> случается волна дикой магии. Ячейки возвращает долгий отдых.</div>`:'')+(k==='friends'?`<div class="how">В приложении: пока Дружба действует, все проверки Харизмы идут с преимуществом сами. Не забудь выключить, когда цель сменится или время выйдет.</div>`:''),acts}});
+ return{t:p.n,sub:p.meta,body:p.d()+(k==='chromatic_orb'?`<div class="orbs">${ORB.map(o=>`<button class="${S.orbT===o?'on':''}" data-orb="${o}">${o}</button>`).join('')}</div>`:'')+(p.lv?`<div class="how">Ты чародей дикой магии: после заклинания 1 круга и выше мастер может попросить бросить к20. На <b>1</b> случается волна дикой магии. Ячейки возвращает долгий отдых.</div>`:'')+(k==='friends'?`<div class="how">В приложении: пока Дружба действует, все проверки Харизмы идут с преимуществом сами. Не забудь выключить, когда цель сменится или время выйдет.</div>`:''),acts}});
 function openInfo(k,re){const d=INFO[k]();openAb=null;openInfoKey=k;
- $('dbody').innerHTML=`<div class="dh"><h2>${d.t}</h2><div class="sc">${d.sub}</div></div><div class="drows" style="border:0;background:none"><div class="info">${d.body}</div></div><div class="dacts">${d.acts}</div>`;
+ $('dbody').innerHTML=`<div class="dh ${String(d.sub).length>34?'col':''}"><h2>${d.t}</h2><div class="sc">${d.sub}</div></div><div class="drows" style="border:0;background:none"><div class="info">${d.body}</div></div><div class="dacts">${d.acts}</div>`;
  if(!re){$('drawer').style.transform='';$('drawer').classList.add('on');$('dim').classList.add('on');vib(10)}}
 function act(a){
  const re=()=>{save();renderAll()};
  if(a==='fairSim'){const c=Array(20).fill(0);for(let i=0;i<10000;i++)c[r(20)-1]++;window.__sim=c;vib([10,30,10]);openInfo('fair',true);return}
  if(a.startsWith('cast:')){const k=a.slice(5),p=SPELLS[k];
-  if(p.lv){if(S.slots.used>=S.slots.max)return;S.slots.used++}
-  if(p.conc)S.conc=k;save();renderAll();
-  if(k==='fire_bolt'){closeDrawer();return d20({label:'Огненный снаряд: атака',bonus:[{l:'ХАР',v:mod(S.ab.cha)},{l:'мастерство',v:prof()}],kind:'atk'})}
+  if(p.lv&&!useSlot())return;
+  if(p.conc)S.conc=k;if(k==='shield')S.shieldOn=1;save();renderAll();
+  if(k==='shield'){closeDrawer();barrier();flash('#fVit .tok.shield','#a57cff');toast(`Щит: класс доспеха ${effAC()} до твоего хода. Мастер может попросить к20 на волну`);return}
+  if(k==='fire_bolt'||k==='chromatic_orb'){closeDrawer();return d20(atkSpec(k))}
   closeDrawer();vib([15,30,15]);toast(p.lv?`${p.n}: ячейка потрачена. Мастер может попросить к20 на волну`:p.conc?`${p.n} действует`:`${p.n} сотворено`);return}
  if(a==='concEnd'){const k=S.conc;S.conc=null;save();renderAll();closeDrawer();vib(10);if(k==='friends')toast('Существо поняло, что на него влияли магией');return}
  if(a.startsWith('condOn:')){const k=a.slice(7);S.cond[k]=1;save();renderAll();closeDrawer();vib([20,40,30]);setTimeout(()=>{const c=document.querySelector(`.cnd[data-info="c_${k}"]`);if(c){c.classList.remove('stamp');void c.offsetWidth;c.classList.add('stamp')}},30);return}
  if(a.startsWith('condOff:')){delete S.cond[a.slice(8)];save();renderAll();closeDrawer();vib(10);return}
  if(a==='closeD'){closeDrawer();return}
+ if(a.startsWith('atk:')){closeDrawer();return d20(atkSpec(a.slice(4)))}
+ if(a==='shieldOff'){S.shieldOn=0;re();closeDrawer();vib(10);return}
+ if(a==='slotBack'){if(S.slots.used>0)S.slots.used--;re();openInfo('slots',true);vib(10);return}
+ if(a==='pt2slot'){if(S.spt.max-S.spt.used<2)return;S.spt.used+=2;if(S.slots.used>0)S.slots.used--;else S.slots.extra++;re();openInfo('flex',true);vib([15,30,40]);toast('Две единицы сплавлены в ячейку 1 круга');return}
+ if(a==='slot2pt'){if(!S.spt.used||!useSlot())return;S.spt.used--;re();openInfo('flex',true);vib([15,30,40]);toast('Ячейка рассыпалась в единицу чародейства');return}
+ if(a==='surgeD20'){closeDrawer();return d20({label:'Проверка дикой магии',bonus:[],noLuck:1,mode:'norm',after:d=>d===1?`<div class="crit" style="color:var(--violet)">Волна дикой магии!</div><div class="acts"><button class="vio" data-surge>Бросить к100 по таблице</button></div>`:'<div class="br">Магия спокойна. Ничего не случилось</div>'})}
+ if(a==='surgeD100'){closeDrawer();return surgeTable()}
+ if(a==='concSave'){closeDrawer();const b=[{l:'Телосложение',v:mod(S.ab.con)}];if(S.saves.con)b.push({l:'мастерство',v:prof()});return d20({label:'Концентрация: спасбросок Телосложения',bonus:b,kind:'save',ab:'con',after:()=>'<div class="br">сложность 10 или половина урона, если больше</div>'})}
+ if(a==='deathRoll'){closeDrawer();return d20({label:'Спасбросок от смерти',bonus:[],kind:'save',after:d=>`<div class="br">${d===20?'Двадцатка: приходишь в себя с 1 хитом':d===1?'Единица: два провала':d>=10?'Успех':'Провал'}</div>`,commit:deathCommit})}
+ if(a==='deathHit'){S.death.f=Math.min(3,S.death.f+1);re();openInfo('death',true);vib([40,30,20]);return}
+ if(a==='deathReset'){S.death={s:0,f:0};re();openInfo('death',true);vib(10);return}
  if(a==='exhUp'){S.exh=Math.min(6,S.exh+1);re();vib([20,40,30]);return}
  if(a==='exhDown'){S.exh=Math.max(0,S.exh-1);re();vib(10);return}
  if(a==='luckSpend'){S.luck.used++;re();toast('Очко удачи потрачено');vib(15)}
@@ -866,7 +1078,7 @@ function act(a){
  if(a==='toHd')openInfo('hd',true);
  if(a==='hdRoll'){if(S.hd.used>=S.level)return;S.hd.used++;save();const c=mod(S.ab.con);
   dice({label:'Кость хитов',n:1,s:S.hd.die,k:c,kl:'ТЕЛ',min:1,after:v=>{const before=S.hp.cur;S.hp.cur=Math.min(S.hp.max,S.hp.cur+v);save();renderAll();return `<div class="br">хиты ${before} → <b>${S.hp.cur}</b></div>`}})}
- if(a==='longRest'){if(S.exh)S.exh--;S.slots.used=0;S.conc=null;S.hp.cur=S.hp.max;S.hp.temp=0;S.luck.used=0;S.chaos.used=0;S.hd.used=Math.max(0,S.hd.used-Math.max(1,Math.floor(S.level/2)));save();closeDrawer();renderAll();flash('#hpTok','#86c79c');toast('Утро. Силы вернулись');vib([10,60,10])}
+ if(a==='longRest'){if(S.exh)S.exh--;S.slots.used=0;S.slots.extra=0;S.spt.used=0;S.shieldOn=0;S.death={s:0,f:0};S.conc=null;S.hp.cur=S.hp.max;S.hp.temp=0;S.luck.used=0;S.chaos.used=0;S.hd.used=Math.max(0,S.hd.used-Math.max(1,Math.floor(S.level/2)));save();closeDrawer();renderAll();flash('#hpTok','#86c79c');toast('Утро. Силы вернулись');vib([10,60,10])}
 }
 function hpSheet(){
  const f=$('form');f.innerHTML=`<h2>Хиты: ${S.hp.cur} из ${S.hp.max}</h2><input class="big" name="n" type="number" inputmode="numeric" placeholder="сколько?" required>
@@ -875,9 +1087,9 @@ function hpSheet(){
  $('sheet').classList.add('on');setTimeout(()=>f.n.focus(),250);
  f.onsubmit=e=>{e.preventDefault();const n=Math.abs(parseInt(f.n.value));const how=e.submitter&&e.submitter.value;$('sheet').classList.remove('on');if(isNaN(n))return;
   if(how==='dmg'){let d=n;const t=Math.min(S.hp.temp,d);S.hp.temp-=t;d-=t;S.hp.cur=Math.max(0,S.hp.cur-d);flash('#hpTok','#e0485e');vib([40,30,20]);document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake')}
-  else if(how==='heal'){S.hp.cur=Math.min(S.hp.max,S.hp.cur+n);flash('#hpTok','#86c79c');vib(15)}
+  else if(how==='heal'){if(S.hp.cur<=0)S.death={s:0,f:0};S.hp.cur=Math.min(S.hp.max,S.hp.cur+n);flash('#hpTok','#86c79c');vib(15)}
   else{S.hp.temp=Math.max(S.hp.temp,n);flash('#hpTok','#a57cff')}
-  save();renderHead();if(S.hp.cur===0)toast('0 хитов: Филипп без сознания. Спасброски от смерти');
+  save();renderAll();if(S.hp.cur===0)toast('0 хитов: Филипп без сознания. Спасброски от смерти');
  };
 }
 function editSheet(){
@@ -898,7 +1110,7 @@ $('sheet').addEventListener('click',e=>{if(e.target.id==='sheet')$('sheet').clas
 function flash(sel,c){document.querySelector(sel).animate([{boxShadow:`0 0 0 2px ${c},0 0 28px ${c}`},{boxShadow:'0 0 0 0 transparent'}],{duration:700,easing:'ease-out'})}
 let tt;function toast(s){const t=$('toast');t.textContent=s;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2400)}
 
-['mode','mode2'].forEach(id=>$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;rollMode=b.dataset.m;document.querySelectorAll('.mode button').forEach(x=>x.classList.toggle('on',x.dataset.m===rollMode));vib(8)}));
+['mode','mode2','mode3'].forEach(id=>$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;rollMode=b.dataset.m;document.querySelectorAll('.mode button').forEach(x=>x.classList.toggle('on',x.dataset.m===rollMode));vib(8)}));
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;closeDrawer();$('tabs').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p));vib(6)});
 function fit(){const ic=innerHeight<=600?46:innerHeight<=700?54:62;document.documentElement.style.setProperty('--ic',ic+'px')}
 /* iPhone-ярлык на экране «Домой»: иногда система рисует страницу не до самого низа экрана,
@@ -912,7 +1124,7 @@ fixGap();addEventListener('resize',()=>{fixGap();fit()});addEventListener('orien
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-10';
+const BUILD='2026-11-25-11';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
