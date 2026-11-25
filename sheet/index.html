@@ -23,7 +23,7 @@
  --bg:#0b080c;--bg2:rgba(20,15,22,.86);--ink:#ece4d8;--mute:#a39888;--line:rgba(236,228,216,.13);
  --paper:#d8ccb6;--paper2:#c4b597;--paperInk:#2a1d17;--paperMute:#6e5a48;
  --blood:#b3233a;--red2:#e0485e;--gold:#e9bd6c;--gold2:#f6d58e;--violet:#a57cff;--green:#86c79c;
- --gap:0px;--sb:max(env(safe-area-inset-bottom),var(--minsb,0px));--tabh:calc(64px + var(--sb))}
+ --gap:0px;--sb:max(env(safe-area-inset-bottom),var(--minsb,0px));--tabh:calc(54px + var(--sb))}
 *{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
 html,body{background:var(--bg);height:100%}
 body{margin:0;color:var(--ink);font:16px/1.4 Alegreya,Georgia,serif;overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;user-select:none}
@@ -143,7 +143,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 /* нижнее меню */
 .tabs{position:fixed;left:0;right:0;bottom:calc(-1*var(--gap));z-index:40;height:var(--tabh);background:rgba(11,8,12,.96);border-top:1px solid var(--line);padding:5px 6px var(--sb);display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
 .tabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:12px;color:var(--mute);font-size:11.5px}
-.tabs .ti{width:30px;height:30px;border-radius:8px;object-fit:cover;opacity:.5;transition:.2s}
+.tabs .ti{width:38px;height:38px;border-radius:8px;object-fit:cover;opacity:.5;transition:.2s}
 .tabs button.on{color:var(--ink)}
 .tabs button.on .ti{opacity:1;transform:translateY(-2px);filter:drop-shadow(0 0 8px rgba(233,189,108,.45))}
 .tabs .fc2{border-radius:50%;border:1.5px solid var(--gold)}
@@ -264,10 +264,10 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 <section class="page" id="p-inv"><div class="screen"><div class="soon"><div><img class="px" src="art/ab-int.webp" alt=""><h2>Инвентарь</h2><p>Пока здесь только кошель. Остальное скоро.</p><div class="coins" id="coins"></div></div></div></div></section>
 
 <nav class="tabs" id="tabs">
-  <button data-p="p-char" class="on"><img class="ti fc2" src="art/face.webp" alt="">Персонаж</button>
-  <button data-p="p-social"><img class="ti px" src="art/ab-cha.webp" alt="">Общение</button>
-  <button data-p="p-fight"><img class="ti px" src="art/ab-dex.webp" alt="">Бой</button>
-  <button data-p="p-inv"><img class="ti px" src="art/ab-int.webp" alt="">Инвентарь</button>
+  <button data-p="p-char" class="on" aria-label="Персонаж"><img class="ti fc2" src="art/face.webp" alt=""></button>
+  <button data-p="p-social" aria-label="Общение"><img class="ti px" src="art/ab-cha.webp" alt=""></button>
+  <button data-p="p-fight" aria-label="Бой"><img class="ti px" src="art/ab-dex.webp" alt=""></button>
+  <button data-p="p-inv" aria-label="Инвентарь"><img class="ti px" src="art/ab-int.webp" alt=""></button>
 </nav>
 
 <div class="dim" id="dim"></div>
@@ -560,12 +560,13 @@ $('mode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;closeDrawer();$('tabs').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p));vib(6)});
 function fit(){const a=$('abil');if(!a||!a.offsetParent)return;const rowH=(a.clientHeight-9)/2;const small=innerHeight<=600;
  const ic=Math.max(26,Math.min(62,rowH-(small?0:78)));document.documentElement.style.setProperty('--ic',ic+'px')}
-/* iPhone-ярлык на экране «Домой»: иногда система отдаёт странице экран короче настоящего,
-   и снизу остаётся пустая полоса. Меряем её и опускаем вкладки до самого низа. */
+/* iPhone-ярлык на экране «Домой»: иногда система рисует страницу не до самого низа экрана,
+   нижняя полоса остаётся пустой и туда ничего не нарисовать. Тогда полоска «Домой» лежит
+   в этой пустоте, и лишний отступ под вкладками не нужен: прижимаем вкладки к краю рисунка. */
 function fixGap(){const st=navigator.standalone||matchMedia('(display-mode: standalone)').matches;
  const portrait=innerHeight>innerWidth,full=portrait?Math.max(screen.height,screen.width):Math.min(screen.height,screen.width);
  const g=st?full-innerHeight:0,r=document.documentElement.style;
- if(g>0&&g<140){r.setProperty('--gap',g+'px');r.setProperty('--minsb','22px')}else{r.setProperty('--gap','0px');r.removeProperty('--minsb')}}
+ if(g>8&&g<140)r.setProperty('--sb','4px');else r.removeProperty('--sb')}
 fixGap();addEventListener('resize',()=>{fixGap();fit()});addEventListener('orientationchange',()=>setTimeout(()=>{fixGap();fit()},300));
 renderAll();fit();setTimeout(fit,300);
 </script>
