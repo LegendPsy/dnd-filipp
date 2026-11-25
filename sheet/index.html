@@ -581,6 +581,7 @@ body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards
 .rorb{position:fixed;left:0;top:0;width:120px;height:120px;margin:-60px 0 0 -60px;z-index:126;pointer-events:none;margin:0}
 .rorb svg{width:100%;height:100%;overflow:visible;stroke:#ffe2a0;stroke-width:2;stroke-linecap:round;filter:drop-shadow(0 0 10px rgba(255,200,110,.8))}
 .rorb.moon svg{filter:drop-shadow(0 0 10px rgba(200,215,255,.8))}
+.domw{position:fixed;inset:0;z-index:125;pointer-events:none}.domw svg{width:100%;height:100%;fill:none;stroke:#e9bd6c;stroke-linecap:round;filter:drop-shadow(0 0 5px rgba(213,140,255,.6))}.domw .vg{transform-box:view-box}
 .sfx{position:absolute;pointer-events:none;z-index:4}.sfx.u{z-index:1}
 .sfx svg{width:100%;height:100%;overflow:visible;fill:none;stroke:#e9bd6c;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px rgba(233,189,108,.55))}
 .sfx.beam{background:linear-gradient(to bottom,rgba(246,213,142,0),rgba(246,213,142,.16) 60%,rgba(246,213,142,.05));-webkit-mask:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent);mask:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent)}
@@ -1619,7 +1620,7 @@ function orbHit(o){const b=document.querySelector(`.orbs [data-orb="${o}"]`);if(
  document.querySelectorAll('.orbs [data-orb]').forEach(n=>{if(n===b)return;const q=n.getBoundingClientRect(),dx=q.left+q.width/2-cx,dy=q.top+q.height/2-cy,d=Math.hypot(dx,dy)||1,f=push*Math.min(1,140/d);
   n.animate([{transform:'none'},{transform:`translate(${dx/d*f}px,${dy/d*f}px)`,offset:.3},{transform:'none'}],{duration:420,delay:d*.6,easing:'cubic-bezier(.3,1.4,.5,1)'})})}
 /* тап по кнопке заклинания: из пальца брызгает стихия */
-document.addEventListener('pointerdown',e=>{if(RM)return;const b=e.target.closest('.fxb');if(!b||b.disabled||e.target.closest('.orbs'))return;const el=b.dataset.fx;if(!EL[el])return;const r=b.getBoundingClientRect();burst(el,e.clientX,e.clientY,b.classList.contains('solid')?.7:.45,r.bottom)},{passive:true});
+document.addEventListener('pointerdown',e=>{if(RM)return;const b=e.target.closest('.fxb');if(!b||b.disabled||e.target.closest('.orbs'))return;const el=b.dataset.fx;if(!EL[el]||el==='dom')return;const r=b.getBoundingClientRect();burst(el,e.clientX,e.clientY,b.classList.contains('solid')?.7:.45,r.bottom)},{passive:true});
 
 /* урон после попадания: заклинание прилетает снизу (из рук Филиппа) и бьёт в выпавшие кубики */
 function spellStrike(el,dies,done){
@@ -1984,6 +1985,17 @@ function restWave(k){if(RM)return;const sun=k==='long',W=innerWidth,H=innerHeigh
  wash.animate([{opacity:0,clipPath:sun?'circle(0% at 100% 0)':'circle(0% at 0 0)'},{opacity:1,clipPath:sun?'circle(150% at 100% 0)':'circle(150% at 0 0)',offset:.45},{opacity:0,clipPath:sun?'circle(150% at 100% 0)':'circle(150% at 0 0)'}],{duration:1900,easing:'ease-out',fill:'forwards'}).onfinish=()=>wash.remove();
  vib(sun?[10,40,20]:12)}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act="longRest"],[data-act="toHd"]');if(b)restWave(b.dataset.act==='longRest'?'long':'short')},true);
+/* Подчинение личности: сверху опускается вага кукловода, нити натягиваются, рывок — и всё уходит вверх */
+{const _cw=castWave;castWave=function(k){if(k!=='dominate_person'||RM)return _cw(k);const W=innerWidth,H=innerHeight,cx=W/2,cy=H*.48,pg=document.querySelector('.page.on');
+ const ends=[-60,-22,22,60].map((dx,i)=>[cx+dx*2,cy+(i%3?-14:18)]);
+ const d=document.createElement('div');d.className='domw';
+ d.innerHTML=`<svg viewBox="0 0 ${W} ${H}"><g class="vg"><g class="cr"><path d="M${cx-95} 150 L${cx+95} 150" stroke-width="4"/><path d="M${cx} 122 L${cx} 180" stroke-width="4"/><circle cx="${cx-95}" cy="150" r="5" fill="#e9bd6c"/><circle cx="${cx+95}" cy="150" r="5" fill="#e9bd6c"/><circle cx="${cx}" cy="180" r="5" fill="#e9bd6c"/><path d="M${cx} 122 L${cx} 0" stroke="#cbb48a" stroke-width="1"/></g>
+ ${ends.map(([x,y],i)=>`<path class="th" d="M${[cx-95,cx-30,cx+30,cx+95][i]} 150 L${x} ${y}" stroke="#efe4ff" stroke-width="1.8"/><circle class="kn" cx="${x}" cy="${y}" r="6" fill="rgba(213,140,255,.25)" stroke="#d58cff" stroke-width="2"/>`).join('')}</g></svg>`;
+ document.body.appendChild(d);d.animate([{background:'rgba(6,4,8,0)'},{background:'rgba(6,4,8,.45)',offset:.25},{background:'rgba(6,4,8,.45)',offset:.7},{background:'rgba(6,4,8,0)'}],{duration:2300,fill:'forwards'});const vg=d.querySelector('.vg');
+ d.querySelectorAll('.th').forEach((p,i)=>{p.setAttribute('pathLength','1');p.style.strokeDasharray='1';p.style.strokeDashoffset='1';p.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:380,delay:330+i*50,easing:'cubic-bezier(.3,.7,.4,1)',fill:'forwards'})});
+ d.querySelectorAll('.kn').forEach((c,i)=>{c.style.opacity=0;c.animate([{opacity:0},{opacity:1}],{duration:150,delay:650+i*50,fill:'forwards'})});
+ vg.animate([{transform:'translateY(-180px)',opacity:1,offset:0},{transform:'translateY(8px)',offset:.22},{transform:'translateY(0)',offset:.3},{transform:'translateY(0)',offset:.55},{transform:'translateY(-30px)',offset:.62},{transform:'translateY(-22px)',offset:.7},{transform:'translateY(-22px)',opacity:1,offset:.8},{transform:'translateY(-260px)',opacity:0}],{duration:2300,easing:'cubic-bezier(.3,.6,.3,1)',fill:'forwards'}).onfinish=()=>d.remove();
+ setTimeout(()=>{vib([40,20,60]);if(pg)pg.animate([{transform:'none'},{transform:'translateY(-6px) scale(.995)'},{transform:'none'}],{duration:320,easing:'cubic-bezier(.3,1.4,.5,1)'});ends.forEach(([x,y])=>spawn({k:'flash',x,y,s:14,m:.3,c:'rgba(213,140,255,.8)',add:1}))},1260)}}
 {const _sf=skillFx;skillFx=function(spec,used){if(RM)return;const f=SKFX[spec.label];if(f){const W=innerWidth,H=innerHeight,ex=W/2,ey=H/2-80;return f(ex,ey,ey+62,$('die'),used)}return _sf(spec,used)}}
 /* три огненных кнопки различаются: снаряд — огонёк, шар — шар пламени, цветной шарик — шар из шести стихий */
 EL.fball=EL.fire;EL.chroma=EL.fire;
@@ -2280,7 +2292,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-25-34';
+const BUILD='2026-11-25-35';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
