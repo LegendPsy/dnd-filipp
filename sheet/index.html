@@ -1041,6 +1041,11 @@ const MV={pp:1000,gp:100,sp:10,cp:1},MN={pp:'пм',gp:'зм',sp:'см',cp:'мм'
 const purse=()=>Object.keys(MV).reduce((a,k)=>a+(S.money[k]||0)*MV[k],0);
 const costCp=p=>p&&p.cost?p.cost.gp*100:0;
 const canPay=p=>purse()>=costCp(p);
+/* состояния, при которых нет действий и реакций: ни колдовать, ни атаковать */
+const NOACT=['unconscious','paralyzed','petrified','stunned','incapacitated'];
+const noAct=()=>{const k=NOACT.find(c=>S.cond&&S.cond[c]);return k?COND[k].n:null};
+const noActBtn=()=>`<button disabled>Нельзя: ты ${noAct().toLowerCase()}, нет действий и реакций</button><button class="ghost" data-info="c_${NOACT.find(c=>S.cond[c])}">Что это за состояние ›</button>`;
+const REACT1='<div class="how">Реакция <b>одна за раунд</b>: потратил её, и до начала твоего следующего хода других реакций нет (ни Щита, ни Удара вслед).</div>';
 function fmtCp(v){if(!v)return '0 монет';const o=[];for(const k of ['gp','sp','cp']){const n=Math.floor(v/MV[k]);if(n){o.push(n+' '+MN[k]);v-=n*MV[k]}}return o.join(' ')}
 function fmtPurse(){const o=['pp','gp','sp','cp'].filter(k=>S.money[k]).map(k=>S.money[k]+' '+MN[k]);return o.length?o.join(' '):'пусто'}
 /* платим: сначала крупными монетами не больше нужного, недостаток разменом ближайшей большей монеты */
@@ -1097,14 +1102,14 @@ function renderFight(){
  const left=slotsLeft();
  const fs=known().filter(k=>SPELLS[k]&&SPELLS[k].fight&&S.fSpellShow.includes(k));
  const nAct=fs.filter(k=>!SPELLS[k].react).length+2,cmpA=nAct>4;let cmp=cmpA;
- const scard=k=>{const p=SPELLS[k],off=(p.lv&&!firstC(p.lv)&&!(k==='shield'&&S.shieldOn))||(metaArm&&!metaOk(metaArm,k,p.lv))||!canPay(p);
+ const scard=k=>{const p=SPELLS[k],off=(p.lv&&!firstC(p.lv)&&!(k==='shield'&&S.shieldOn))||(metaArm&&!metaOk(metaArm,k,p.lv))||!canPay(p)||!!noAct();
   if(k==='shield')return `<button class="atk ${cmp?'cmp':''} ${S.shieldOn?'on':''} ${off?'off':''} ${metaArm&&!off?'mglow':''}" data-info="sp_shield"><b>${rn(SPELLS.shield)}Щит</b><div class="hit"><span class="d" style="color:#e3d4ff">+5</span><span class="dm">к классу доспеха</span></div><small>${S.shieldOn?'действует до твоего хода':'реакция'}</small></button>`;
   return `<button class="atk ${cmp?'cmp':''} ${off?'off':''} ${metaArm&&!off?'mglow':''}" data-info="sp_${k}"><b${!p.n.includes(' ')&&p.n.length>12?' class="lw"':''}>${rn(p)}${p.n}</b>${p.atk?`<div class="hit"><span class="d">${sg(spellAtk())}</span><span class="dm">${p.hit()}</span></div>`:(cmp?(CAP[k]?`<div class="hit"><span class="dm">${CAP[k]}</span></div>`:''):`<div class="hit"><span class="dm">${p.short}</span></div>`)}<small>${k==='mage_armor'&&S.mArm?'действует, 8 часов':p.lv?(p.where||'')+' · тратит ячейку':'заговор · '+(p.where||'')}${costTag(p)}</small></button>`};
  const acts=fs.filter(k=>!SPELLS[k].react).map(scard);cmp=cmpA;
- acts.push(`<button class="atk steel ${cmp?'cmp':''}" data-info="w_dagger"><b>Кинжал</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">урон 1к4${sg(mod(S.ab.dex))}</span></div><small>1,5 м или бросок 6 м</small></button>`);
+ acts.push(`<button class="atk steel ${cmp?'cmp':''} ${noAct()?'off':''}" data-info="w_dagger"><b>Кинжал</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">урон 1к4${sg(mod(S.ab.dex))}</span></div><small>1,5 м или бросок 6 м</small></button>`);
  acts.push(`<button class="atk plain ${cmp?'cmp':''}" data-info="actions"><b>Другие действия</b><small style="white-space:normal">Рывок, Отход, Уклонение, Помощь, Засада, Поиск</small></button>`);
  $('fAct').className='fgrid'+(acts.length>4?' c3x':'');$('fAct').innerHTML=acts.join('');
- $('fRe').innerHTML=fs.filter(k=>SPELLS[k].react).map(scard).join('')+`<button class="atk steel ${cmp?'cmp':''}" data-info="opp"><b>Удар вслед</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">кинжалом</span></div><small>реакция, враг уходит</small></button>`;
+ $('fRe').innerHTML=fs.filter(k=>SPELLS[k].react).map(scard).join('')+`<button class="atk steel ${cmp?'cmp':''} ${noAct()?'off':''}" data-info="opp"><b>Удар вслед</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">кинжалом</span></div><small>реакция, враг уходит</small></button>`;
  renderItems('fight');
  requestAnimationFrame(fitFight);
  const pips=(n,u,cls)=>Array.from({length:n},(_,i)=>`<span class="charge ${cls} ${i<u?'used':''}"></span>`).join('');
@@ -2286,8 +2291,8 @@ const INFO={
   <p><b>Помощь</b>: союзник получает <b>преимущество</b> на следующую проверку или на атаку по врагу рядом с тобой.</p>
   <p><b>Засада</b> (подготовка): «когда случится X, сделаю Y». Тратишь реакцию, когда X случится. Заклинание при этом держишь концентрацией.</p>
   <p><b>Поиск</b>: проверка Восприятия или Анализа. <b>Засесть</b> (Скрытность), <b>Использовать предмет</b> (зелье, масло).</p>`,acts:''}),
- w_dagger:()=>({t:'Кинжал',sub:WEAP.dagger.meta,body:WEAP.dagger.d(),acts:`<button data-act="atk:dagger">Атаковать: к20 ${sg(daggerHit())}</button>`}),
- opp:()=>({t:'Удар вслед',sub:'атака по возможности · реакция',body:`<p>Когда враг, которого ты видишь, <b>уходит</b> из досягаемости твоего оружия (1,5 м), можешь реакцией один раз ударить его в рукопашную.</p><p>Кинжалом: <b>к20 ${sg(daggerHit())}</b>, урон 1к4 ${sg(mod(S.ab.dex))} колющий.</p><p class="mu">Не срабатывает, если враг использовал Отход, телепортировался или его двигают силой. Реакция одна на раунд: потратил на удар, Щит до твоего хода уже нельзя.</p>`,acts:`<button data-act="atk:dagger">Ударить вслед: к20 ${sg(daggerHit())}</button>`}),
+ w_dagger:()=>({t:'Кинжал',sub:WEAP.dagger.meta,body:WEAP.dagger.d(),acts:noAct()?noActBtn():`<button data-act="atk:dagger">Атаковать: к20 ${sg(daggerHit())}</button>`}),
+ opp:()=>({t:'Удар вслед',sub:'атака по возможности · реакция',body:`<p>Когда враг, которого ты видишь, <b>уходит</b> из досягаемости твоего оружия (1,5 м), можешь реакцией один раз ударить его в рукопашную.</p><p>Кинжалом: <b>к20 ${sg(daggerHit())}</b>, урон 1к4 ${sg(mod(S.ab.dex))} колющий.</p><p class="mu">Не срабатывает, если враг использовал Отход, телепортировался или его двигают силой. Реакция одна на раунд: потратил на удар, Щит до твоего хода уже нельзя.</p>`,acts:noAct()?noActBtn():`<button data-act="atk:dagger">Ударить вслед: к20 ${sg(daggerHit())}</button>`}),
  slots:()=>({t:'Ячейки 1 круга',sub:`осталось ${slotsLeft()} из ${slotsTot()}`,body:`<p>Ячейка это «заряд» для заклинания 1 круга: Щит, Цветной шарик, Очарование личности. Сотворил, и одна ячейка погасла.</p><p><b>Заговоры</b> (Огненный снаряд, Дружба и другие) ячеек не тратят, их можно творить без конца.</p><p>Ячейки возвращает <b>долгий отдых</b>. В бою ячейку можно создать из 2 единиц чародейства (Гибкое колдовство).</p>${S.slots.extra?`<p class="mu">Из них созданных из единиц: ${S.slots.extra}. Они пропадут после долгого отдыха.</p>`:''}`,
   acts:`<button data-info="flex">Гибкое колдовство ›</button><button class="ghost" data-act="slotBack" ${S.slots.used?'':'disabled'}>Вернуть одну ячейку (ошибся)</button>`}),
  flex:()=>({t:'Гибкое колдовство',sub:`единицы чародейства: ${S.spt.max-S.spt.used} из ${S.spt.max}`,body:`<p>Чародей носит в себе запас сырой магии: <b>единицы чародейства</b>. Их ${S.spt.max}, возвращаются после долгого отдыха.</p><p><b>Бонусным действием</b> в свой ход можно:</p><p>• потратить <b>2 единицы</b> и создать <b>ячейку 1 круга</b>. Созданная ячейка исчезает после долгого отдыха;<br>• погасить <b>ячейку 1 круга</b> и получить <b>1 единицу</b>.</p><p class="mu">С 3 уровня единицы ещё понадобятся для метамагии: менять заклинания на лету.</p>`,
@@ -2352,7 +2357,7 @@ INFO.book=()=>{const kn=known(),n=bkCount(),mc=maxCircle(S.level);
  body+=`<div class="how" style="margin-top:10px">Галочка: Филипп знает это заклинание. Нажми на название, чтобы прочитать, что оно делает.<br>${costTag(SPELLS.chromatic_orb)} компонент стоит денег: по правилу мастера они списываются <b>при каждом сотворении</b>.<br>Когда всё набрано, сними галочку с одного, чтобы взять другое. По правилам чародей меняет одно известное заклинание при новом уровне, перебор больше этого согласуй с мастером.${mc>1?'<br>Заклинаний 2 круга и выше в листе пока не все.':''}</div>`;
  return{t:'Книга заклинаний',sub:`чародей ${S.level} уровня · заговоров ${n.C}, заклинаний ${n.Sx}, круги до ${ROM[mc]}`,body,acts:`<button data-act="closeD">Готово</button>`}};
 Object.keys(SPELLS).forEach(k=>INFO['bk_'+k]=()=>{const p=SPELLS[k],on=known().includes(k);
- return{t:rn(p)+p.n,sub:p.meta,body:p.d()+(p.cost?`<div class="how gpn">${costTag(p)}<b>Платный компонент: ${p.cost.what} за ${p.cost.gp} зм.</b> По правилу мастера деньги списываются при каждом сотворении. В кошельке: ${fmtPurse()}.</div>`:''),
+ return{t:rn(p)+p.n,sub:p.meta,body:p.d()+(p.react?REACT1:'')+(p.cost?`<div class="how gpn">${costTag(p)}<b>Платный компонент: ${p.cost.what} за ${p.cost.gp} зм.</b> По правилу мастера деньги списываются при каждом сотворении. В кошельке: ${fmtPurse()}.</div>`:''),
   acts:`<button data-learn="${k}" class="${on?'ghost':''}">${on?'Забыть это заклинание':'Выучить'}</button><button class="ghost" data-info="book">← К книге заклинаний</button>`}});
 Object.keys(SPELLS).forEach(k=>INFO['sp_'+k]=()=>{const p=SPELLS[k],on=S.conc===k,left=slotsLeft();
  let acts='';const can=canPay(p),ct=p.cost?` · −${p.cost.gp} зм`:'';
@@ -2360,11 +2365,12 @@ Object.keys(SPELLS).forEach(k=>INFO['sp_'+k]=()=>{const p=SPELLS[k],on=S.conc===
  if(p.conc&&on)acts=(k==='witch_bolt'?`<button data-act="wbolt">Моё действие: ещё 1к12 электричеством</button>`:'')+`<button class="ghost" data-act="concEnd">Закончить заклинание</button>`;
  else if(k==='shield'&&S.shieldOn)acts=`<button class="ghost" data-act="shieldOff">Мой ход начался: Щит исчез</button>`;
  else if(k==='mage_armor'&&S.mArm)acts=`<button class="ghost" data-act="mArmOff">Снять Доспехи мага</button>`;
+ else if(noAct())acts=noActBtn();
  else if(!can)acts=`<button disabled>Не хватает денег: ${p.cost.what} стоит ${p.cost.gp} зм</button>`;
  else acts=`<button data-act="cast:${k}" ${p.lv&&!left?'disabled':''}>${vb}${p.lv?` (ячеек ${left})`:''}${ct}</button>`+(p.conc&&S.conc?`<div class="mu" style="text-align:center;font-size:12.5px">прервёт ${SPELLS[S.conc].n}</div>`:'');
- if(S.hi&&p.lv&&can&&!(p.conc&&on)&&!(k==='shield'&&S.shieldOn)&&!(k==='mage_armor'&&S.mArm)){const vb=k==='shield'?'Поднять Щит':p.atk?'Атаковать':'Сотворить';
+ if(S.hi&&p.lv&&can&&!noAct()&&!(p.conc&&on)&&!(k==='shield'&&S.shieldOn)&&!(k==='mage_armor'&&S.mArm)){const vb=k==='shield'?'Поднять Щит':p.atk?'Атаковать':'Сотворить';
   const cs=[1,...hiC()].filter(c=>c>=p.lv);acts=cs.map(c=>`<button data-act="cast:${k}:${c}" ${cLeft(c)?'':'disabled'} class="${c>p.lv?'ghost':''}">${vb}: ячейка ${c} круга${c>p.lv?' (усиленное)':''} · осталось ${cLeft(c)}${ct}</button>`).join('')+(p.conc&&S.conc?`<div class="mu" style="text-align:center;font-size:12.5px">прервёт ${SPELLS[S.conc].n}</div>`:'')}
- return{t:rn(p)+p.n,sub:p.lv?p.meta.replace(/^\d круг · /,''):p.meta,body:p.d()+(p.cost?`<div class="how gpn">${costTag(p)}<b>Платный компонент: ${p.cost.what} за ${p.cost.gp} зм.</b> По правилу мастера эти деньги <b>списываются при каждом сотворении</b>. В кошельке: ${fmtPurse()}. ${can?`Хватит на ${Math.floor(purse()/costCp(p))} раз.`:`Не хватает ${fmtCp(costCp(p)-purse())}.`}</div>`:'')+(k==='chromatic_orb'?`<div class="orbs">${ORB.map(o=>`<button class="${S.orbT===o?'on':''}" data-orb="${o}">${o}</button>`).join('')}</div>`:'')+(p.lv?`<div class="how">Ты чародей дикой магии: после заклинания 1 круга и выше мастер может попросить бросить к20. На <b>1</b> случается волна дикой магии. Ячейки возвращает долгий отдых.</div>`:'')+(metaArm?(metaOk(metaArm,k,p.lv)?`<div class="how" style="border-color:var(--gold2)"><b>Заряжено: ${META[metaArm].n}</b>. ${metaArm==='twinned'?'Две цели. Спишется столько единиц, какой круг ячейки'+(p.lv?'':' (заговор: 1)'):'Спишется '+META[metaArm].c}. ${metaArm==='twinned'&&p.twUp?'Только ячейкой '+p.lv+' круга: выше у заклинания и так несколько целей.':''}</div>`:`<div class="how"><b>${META[metaArm].n} сюда не подходит</b>: ${MWHY[metaArm]}. Заклинание сотворится без метамагии, единицы не спишутся.</div>`):'')+(k==='friends'?`<div class="how">В приложении: пока Дружба действует, все проверки Харизмы идут с преимуществом сами. Не забудь выключить, когда цель сменится или время выйдет.</div>`:''),acts}});
+ return{t:rn(p)+p.n,sub:p.lv?p.meta.replace(/^\d круг · /,''):p.meta,body:p.d()+(p.react?REACT1:'')+(p.cost?`<div class="how gpn">${costTag(p)}<b>Платный компонент: ${p.cost.what} за ${p.cost.gp} зм.</b> По правилу мастера эти деньги <b>списываются при каждом сотворении</b>. В кошельке: ${fmtPurse()}. ${can?`Хватит на ${Math.floor(purse()/costCp(p))} раз.`:`Не хватает ${fmtCp(costCp(p)-purse())}.`}</div>`:'')+(k==='chromatic_orb'?`<div class="orbs">${ORB.map(o=>`<button class="${S.orbT===o?'on':''}" data-orb="${o}">${o}</button>`).join('')}</div>`:'')+(p.lv?`<div class="how">Ты чародей дикой магии: после заклинания 1 круга и выше мастер может попросить бросить к20. На <b>1</b> случается волна дикой магии. Ячейки возвращает долгий отдых.</div>`:'')+(metaArm?(metaOk(metaArm,k,p.lv)?`<div class="how" style="border-color:var(--gold2)"><b>Заряжено: ${META[metaArm].n}</b>. ${metaArm==='twinned'?'Две цели. Спишется столько единиц, какой круг ячейки'+(p.lv?'':' (заговор: 1)'):'Спишется '+META[metaArm].c}. ${metaArm==='twinned'&&p.twUp?'Только ячейкой '+p.lv+' круга: выше у заклинания и так несколько целей.':''}</div>`:`<div class="how"><b>${META[metaArm].n} сюда не подходит</b>: ${MWHY[metaArm]}. Заклинание сотворится без метамагии, единицы не спишутся.</div>`):'')+(k==='friends'?`<div class="how">В приложении: пока Дружба действует, все проверки Харизмы идут с преимуществом сами. Не забудь выключить, когда цель сменится или время выйдет.</div>`:''),acts}});
 
 /* полный текст заклинаний (PHB 2014, по смыслу dnd.su, ничего не упрощено) + ссылка на дословный текст */
 const SPFULL={
@@ -2401,7 +2407,7 @@ function act(a){
  if(invAct(a)||hiAct(a))return;
  if(a==='fairSim'){const c=Array(20).fill(0);for(let i=0;i<10000;i++)c[r(20)-1]++;window.__sim=c;vib([10,30,10]);openInfo('fair',true);return}
  if(a.startsWith('cast:')){const [,k,cs]=a.split(':'),p=SPELLS[k];let c=0;
-  if(p.cost&&!canPay(p))return;
+  if(noAct()||(p.cost&&!canPay(p)))return;
   if(p.lv){c=cs?+cs:firstC(p.lv);if(!c||!useSlotC(c))return}
   let paid='';if(p.cost){payCp(costCp(p));paid=`${p.cost.what} −${p.cost.gp} зм`;coinDrop(tapPt.x,tapPt.y,Math.min(9,3+Math.round(p.cost.gp/20)));vib([10,25,10,25,30])}
   let mt='',mtw=false;if(metaArm){const m=metaArm;
@@ -2422,7 +2428,7 @@ function act(a){
  if(a.startsWith('condOn:')){const k=a.slice(7);S.cond[k]=1;save();renderAll();closeDrawer();vib([20,40,30]);setTimeout(()=>{const c=document.querySelector(`.cnd[data-info="c_${k}"]`);if(c){c.classList.remove('stamp');void c.offsetWidth;c.classList.add('stamp')}},30);return}
  if(a.startsWith('condOff:')){delete S.cond[a.slice(8)];save();renderAll();closeDrawer();vib(10);return}
  if(a==='closeD'){closeDrawer();return}
- if(a.startsWith('atk:')){closeDrawer();return d20(atkSpec(a.slice(4)))}
+ if(a.startsWith('atk:')){if(noAct())return;closeDrawer();return d20(atkSpec(a.slice(4)))}
  if(a==='shieldOff'){S.shieldOn=0;re();closeDrawer();vib(10);return}
  if(a==='slotBack'){if(S.slots.used>0)S.slots.used--;re();openInfo('slots',true);vib(10);return}
  if(a==='pt2slot'){if(S.spt.max-S.spt.used<2)return;S.spt.used+=2;if(S.slots.used>0)S.slots.used--;else S.slots.extra++;re();openInfo('flex',true);vib([15,30,40]);toast('Две единицы сплавлены в ячейку 1 круга');return}
@@ -2567,7 +2573,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-26-49';
+const BUILD='2026-11-26-50';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
