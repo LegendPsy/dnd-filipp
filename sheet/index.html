@@ -457,7 +457,7 @@ body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards
 .itm b{flex:1;font:600 15.5px/1.1 "Cormorant Garamond",serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .itm .q{flex:none;font-size:12px;color:var(--gold)}.itm .q.v{color:#cdb8ff}
 .itm small{display:block;font-size:11px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
-.itm .tg{font-style:normal;margin-right:6px}.itm .tg.s{color:var(--gold2)}.itm .tg.f{color:#ff9aa9}
+.itm .tg{font-style:normal;margin-right:6px}.itm .tg.s{color:var(--gold2)}.itm .tg.f{color:#ff9aa9}.itm .tg.c{color:#f3cf7a}.itm.comp{border-color:rgba(243,207,122,.35)}
 .itm.mag{border-color:rgba(165,124,255,.45);background:linear-gradient(160deg,rgba(46,32,66,.92),rgba(20,14,28,.92))}
 .itm.att::after{content:"";position:absolute;top:5px;right:5px;width:6px;height:6px;transform:rotate(45deg);background:var(--violet);box-shadow:0 0 6px var(--violet)}
 .itm.att .top{padding-right:8px}
@@ -476,7 +476,7 @@ body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards
 .cpm button{background:#221a22;border:1px solid var(--line);border-radius:11px;padding:12px 0;font-size:17px}
 .dacts button.danger{border-color:var(--red2);color:#ffb3bf}
 .sheetbg label.chk{flex-direction:row;align-items:center;justify-content:center;gap:6px;font-size:14px;color:var(--ink)}
-.sheetbg label.chk input{width:20px;height:20px}
+.sheetbg label.chk input{width:20px;height:20px;accent-color:var(--gold)}
 .ch:has(>:nth-child(7)){gap:3px}.ch:has(>:nth-child(7))>.charge{width:9px;height:9px;border-width:1.2px}
 .slc{display:flex;gap:4px}
 .slc span{display:grid;justify-items:center;line-height:1}
@@ -1226,7 +1226,7 @@ const IMP=()=>mod(S.ab.dex); /* импровизированное оружие:
 const ICAT={
  dagger:{n:'Кинжал',short:'1к4 колющий',fight:1,meta:'простое оружие · фехтовальное, лёгкое, метательное',
   d:()=>WEAP.dagger.d(),use:'weapon'},
- pouch:{n:'Мешочек с компонентами',short:'для заклинаний',meta:'снаряжение',
+ pouch:{n:'Мешочек с компонентами',short:'для заклинаний',comp:1,meta:'снаряжение · компоненты заклинаний',
   d:()=>`<p>Поясная сумка с отделениями: травы, пыль, перья, кусочки воска. Заменяет все <b>материальные компоненты</b> заклинаний, у которых не указана цена и которые не расходуются.</p><p class="mu">Нужен для Дружбы (немного косметики) и Малой иллюзии (клок шерсти). Если сумку отнимут, такие заклинания творить нельзя.</p>`},
  explorer:{n:'Набор путешественника',short:'рюкзак, верёвка, еда',meta:'снаряжение · набор',
   d:()=>`<p>В рюкзаке: спальник, столовый набор, трутница, 10 факелов, 10 дней рационов, бурдюк с водой и пеньковая верёвка 15 м.</p><p class="mu">Еда и вода нужны для долгого отдыха: без них не снимается истощение.</p>`},
@@ -1292,6 +1292,7 @@ function syncItems(){S.inv=Object.keys(S.items);
   ITEMS[k]=Object.assign(ITEMS[k]||{},{n:o.n||c.n||'Предмет',short:o.short??c.short??'',soc:o.soc?1:0,fight:o.fight?1:0,meta:itemMeta(k),d:()=>itemBody(k),acts:()=>itemActs(k)})});
  S.sItemShow=S.sItemShow.filter(k=>S.items[k]);S.fItemShow=S.fItemShow.filter(k=>S.items[k])}
 const icat=k=>ICAT[k]||{};
+const isComp=k=>!!(icat(k).comp||(S.items[k]&&S.items[k].comp));
 const chMax=k=>icat(k).ch||0,chLeft=k=>chMax(k)-(S.items[k].used||0);
 const attN=()=>S.inv.filter(k=>S.items[k].on).length;
 function itemMeta(k){const o=S.items[k],c=icat(k);let m=c.meta||'свой предмет';if(o.q>1||c.cons)m+=` · ${o.q} шт.`;if(c.ch)m+=` · зарядов ${chLeft(k)} из ${c.ch}`;if(c.att)m+=o.on?' · настроен':' · не настроен';return m}
@@ -1329,11 +1330,11 @@ function renderInv(){const g=$('igrid');if(!g)return;
  const n=S.inv.length,mg=S.inv.filter(k=>icat(k).att).length;
  $('iSub').textContent=`предметов ${n}`+(mg?` · настроено ${attN()} из ${ATT_MAX}`:'');
  $('iFilt').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.f===invFilter));
- const list=S.inv.filter(k=>invFilter==='all'||(invFilter==='mag'?icat(k).mag:S.items[k][invFilter]));
+ const list=S.inv.filter(k=>invFilter==='all'||(invFilter==='mag'?(icat(k).mag||isComp(k)):S.items[k][invFilter]));
  g.className='igrid';
  g.innerHTML=list.map(k=>{const o=S.items[k],c=icat(k);
-  const tags=(o.soc?'<i class="tg s">разговор</i>':'')+(o.fight?'<i class="tg f">бой</i>':'');
-  return `<button class="itm ${c.mag?'mag':''} ${o.on?'att':''} ${o.q<=0?'out':''}" data-info="it_${k}"><span class="top"><b>${esc(ITEMS[k].n)}</b>${o.q!==1||c.cons?`<span class="q">×${o.q}</span>`:''}${c.ch?`<span class="q v">${chLeft(k)}/${c.ch}</span>`:''}</span><small>${tags||esc(ITEMS[k].short)}</small></button>`}).join('')
+  const tags=(isComp(k)?'<i class="tg c">компонент</i>':'')+(o.soc?'<i class="tg s">разговор</i>':'')+(o.fight?'<i class="tg f">бой</i>':'');
+  return `<button class="itm ${c.mag?'mag':''} ${isComp(k)?'comp':''} ${o.on?'att':''} ${o.q<=0?'out':''}" data-info="it_${k}"><span class="top"><b>${esc(ITEMS[k].n)}</b>${o.q!==1||c.cons?`<span class="q">×${o.q}</span>`:''}${c.ch?`<span class="q v">${chLeft(k)}/${c.ch}</span>`:''}</span><small>${tags||esc(ITEMS[k].short)}</small></button>`}).join('')
   +`<button class="itm add" data-act="iadd"><b>+ Предмет</b></button>`;
  /* всё на одном экране: если не помещается, плитки ужимаются */
  requestAnimationFrame(()=>{if(g.scrollHeight>g.clientHeight+1)g.classList.add('tight');if(g.scrollHeight>g.clientHeight+1)g.classList.add('tiny')})}
@@ -1343,12 +1344,13 @@ function itemForm(k){const o=k?S.items[k]:{q:1},c=k?icat(k):{};const f=$('form')
  <label>Коротко, что даёт<input name="sh" value="${esc(o.short??c.short??'')}" style="text-align:left"></label>
  ${c.d?'':`<label>Описание<input name="tx" value="${esc(o.txt||'')}" style="text-align:left"></label>`}
  <div class="three"><label>Сколько<input name="q" type="number" inputmode="numeric" value="${o.q}"></label><label class="chk"><input type="checkbox" name="soc" ${o.soc?'checked':''}> разговор</label><label class="chk"><input type="checkbox" name="fight" ${o.fight?'checked':''}> бой</label></div>
+ ${c.comp?'':`<label class="chk" style="justify-content:flex-start"><input type="checkbox" name="comp" ${o.comp?'checked':''}> компонент для заклинаний (покажется в «Магии»)</label>`}
  <button class="go gold" type="submit">Сохранить</button>`;
  closeDrawer();$('sheet').classList.add('on');
  f.onsubmit=e=>{e.preventDefault();const nm=f.n.value.trim();if(!nm){toast('Впиши название');return}
   const key=k||('u'+Date.now().toString(36));const it=S.items[key]||(S.items[key]={});
   if(!c.n||nm!==c.n)it.n=nm;else delete it.n;const sh=f.sh.value.trim();if(sh!==(c.short??''))it.short=sh;else delete it.short;if(f.tx)it.txt=f.tx.value.trim();
-  it.q=Math.max(0,parseInt(f.q.value)||0);it.soc=f.soc.checked?1:0;it.fight=f.fight.checked?1:0;
+  it.q=Math.max(0,parseInt(f.q.value)||0);it.soc=f.soc.checked?1:0;it.fight=f.fight.checked?1:0;if(f.comp)it.comp=f.comp.checked?1:0;
   syncItems();save();renderAll();$('sheet').classList.remove('on');vib([10,40,15]);toast(k?'Сохранено':'Предмет в сумке')}}
 function invAct(a){const [w,k]=a.split(':');
  if(w==='iuse')return useItem(k),true;
@@ -2581,7 +2583,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-26-51';
+const BUILD='2026-11-26-52';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
