@@ -89,7 +89,8 @@ figcaption{font:italic 500 18px/1.3 "Cormorant Garamond",serif;color:var(--mute)
 .shelf a.open small{color:var(--amber)}
 .shelf a.open small .lk{display:none}
 .shelf a.open small .ok{display:block}
-.shelf a:not(.open):not(.read) small span::after{content:" · закрыта"}
+.shelf a.open small span::after{content:" · открыта"}
+.shelf a:not(.open) small span::after{content:" · закрыта"}
 .shelf .hint{grid-column:1/-1;margin:4px 0 0;color:var(--mute);font-size:15px}
 .shelf .book a{background:linear-gradient(135deg,#2a1018,#151017);border-color:rgba(192,40,63,.5)}
 .shelf .book{grid-column:1/-1}
@@ -209,7 +210,6 @@ figcaption{font:italic 500 18px/1.3 "Cormorant Garamond",serif;color:var(--mute)
     <li><a href="../levels/9/"><span class="r">IX</span><span><h3>Подпись</h3><small><svg class="lk" viewBox="0 0 13 15" aria-hidden="true"><rect x="1" y="6.5" width="11" height="7.5" rx="1"/><path d="M3.5 6.5V4.5a3 3 0 0 1 6 0v2"/></svg><svg class="ok" viewBox="0 0 13 15" aria-hidden="true"><rect class="wx" x="4.6" y="8.2" width="3.8" height="6.2" rx=".6"/><path class="wk" d="M6.5 7.2v1"/><path class="fl" d="M6.5 1.2c1.2 1.5 1.9 2.6 1.9 3.6a1.9 1.9 0 0 1-3.8 0c0-1 .7-2.1 1.9-3.6z"/></svg><span>9 уровень</span></small></span></a></li>
     <li class="book"><a href="../book/"><span class="r">X</span><span><h3>Повесть «Руки должны быть чистыми»</h3><small><svg class="lk" viewBox="0 0 13 15" aria-hidden="true"><rect x="1" y="6.5" width="11" height="7.5" rx="1"/><path d="M3.5 6.5V4.5a3 3 0 0 1 6 0v2"/></svg><svg class="ok" viewBox="0 0 13 15" aria-hidden="true"><rect class="wx" x="4.6" y="8.2" width="3.8" height="6.2" rx=".6"/><path class="wk" d="M6.5 7.2v1"/><path class="fl" d="M6.5 1.2c1.2 1.5 1.9 2.6 1.9 3.6a1.9 1.9 0 0 1-3.8 0c0-1 .7-2.1 1.9-3.6z"/></svg><span>10 уровень. Вся правда.</span></small></span></a></li>
   </ol>
-  <p class="hint" id="readhint" hidden>Страницы, которые вы уже открыли на этом устройстве, отмечены свечой.</p>
 </div></section>
 
 <section class="cta">
@@ -218,18 +218,5 @@ figcaption{font:italic 500 18px/1.3 "Cormorant Garamond",serif;color:var(--mute)
   <small><a href="../">На главную</a> · Персонаж для кампании «Проклятие Страда». Игрок: Алексей.</small>
 </section>
 
-<script>
-/* отмечает страницы, которые уже открывали на этом устройстве (lock.js хранит пароль по адресу страницы) */
-try {
-  let n = 0;
-  document.querySelectorAll('.shelf a').forEach(a => {
-    if (localStorage.getItem('filipp-pass:' + new URL(a.href).pathname)) {
-      a.classList.add('read'); n++;
-      const t = a.querySelector('small span'); t.textContent += ' · открыта';
-    }
-  });
-  if (n) document.getElementById('readhint').hidden = false;
-} catch (e) {}
-</script>
 </body>
 </html>
