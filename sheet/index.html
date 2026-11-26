@@ -786,6 +786,7 @@ body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards
 @keyframes bstamp{0%{transform:scale(1.5)}100%{transform:none}}
 .cdrop{position:fixed;z-index:400;width:18px;height:18px;pointer-events:none}.cdrop .c{width:18px;height:18px;display:block}
 .atk small .gpc{font-size:11px}
+.how.why{border-left-color:var(--red2);background:rgba(224,72,94,.09)}.how.why .wt{display:block;color:var(--red2);font:700 15px/1.2 "Cormorant Garamond",serif;letter-spacing:.03em;margin-bottom:3px}.how.why div+div{margin-top:5px}
 </style>
 </head>
 <body>
@@ -1045,6 +1046,13 @@ const canPay=p=>purse()>=costCp(p);
 const NOACT=['unconscious','paralyzed','petrified','stunned','incapacitated'];
 const noAct=()=>{const k=NOACT.find(c=>S.cond&&S.cond[c]);return k?COND[k].n:null};
 const noActBtn=()=>`<button disabled>Нельзя: ты ${noAct().toLowerCase()}, нет действий и реакций</button><button class="ghost" data-info="c_${NOACT.find(c=>S.cond[c])}">Что это за состояние ›</button>`;
+/* почему заклинание тусклое: объяснение сверху в его шторке (не всплывашкой) */
+function offWhy(k){const p=SPELLS[k],w=[];
+ if(noAct())w.push(`Ты <b>${noAct().toLowerCase()}</b>: в этом состоянии нет действий и реакций, колдовать нельзя. Сними состояние на вкладке «Персонаж», когда оно закончится.`);
+ if(p.lv&&!firstC(p.lv)&&!(k==='shield'&&S.shieldOn)&&!(p.conc&&S.conc===k)&&!(k==='mage_armor'&&S.mArm))w.push(`<b>Нет свободных ячеек${p.lv>1?' '+p.lv+' круга и выше':''}</b>: все потрачены. Вернутся после долгого отдыха.${S.spt.max-S.spt.used>=2?' Или создай ячейку из единиц чародейства: перетащи единицы на круг в «Запасах» вкладки «Бой».':''}`);
+ if(!canPay(p))w.push(`<b>Не хватает денег на компонент</b>: ${p.cost.what} стоит ${p.cost.gp} зм, а в кошельке ${fmtPurse()}. По правилу мастера цена списывается при каждом сотворении.`);
+ if(metaArm&&!metaOk(metaArm,k,p.lv))w.push(`<b>${META[metaArm].n} сюда не подходит</b>: ${MWHY[metaArm]}.`);
+ return w.length?`<div class="how why"><b class="wt">Почему тусклое</b>${w.map(x=>`<div>${x}</div>`).join('')}</div>`:''}
 const REACT1='<div class="how">Реакция <b>одна за раунд</b>: потратил её, и до начала твоего следующего хода других реакций нет (ни Щита, ни Удара вслед).</div>';
 function fmtCp(v){if(!v)return '0 монет';const o=[];for(const k of ['gp','sp','cp']){const n=Math.floor(v/MV[k]);if(n){o.push(n+' '+MN[k]);v-=n*MV[k]}}return o.join(' ')}
 function fmtPurse(){const o=['pp','gp','sp','cp'].filter(k=>S.money[k]).map(k=>S.money[k]+' '+MN[k]);return o.length?o.join(' '):'пусто'}
@@ -2367,10 +2375,10 @@ Object.keys(SPELLS).forEach(k=>INFO['sp_'+k]=()=>{const p=SPELLS[k],on=S.conc===
  else if(k==='mage_armor'&&S.mArm)acts=`<button class="ghost" data-act="mArmOff">Снять Доспехи мага</button>`;
  else if(noAct())acts=noActBtn();
  else if(!can)acts=`<button disabled>Не хватает денег: ${p.cost.what} стоит ${p.cost.gp} зм</button>`;
- else acts=`<button data-act="cast:${k}" ${p.lv&&!left?'disabled':''}>${vb}${p.lv?` (ячеек ${left})`:''}${ct}</button>`+(p.conc&&S.conc?`<div class="mu" style="text-align:center;font-size:12.5px">прервёт ${SPELLS[S.conc].n}</div>`:'');
+ else acts=`<button data-act="cast:${k}" ${p.lv&&!left?'disabled':''}>${p.lv&&!left?'Нет свободных ячеек':vb+(p.lv?` (ячеек ${left})`:'')+ct}</button>`+(p.conc&&S.conc?`<div class="mu" style="text-align:center;font-size:12.5px">прервёт ${SPELLS[S.conc].n}</div>`:'');
  if(S.hi&&p.lv&&can&&!noAct()&&!(p.conc&&on)&&!(k==='shield'&&S.shieldOn)&&!(k==='mage_armor'&&S.mArm)){const vb=k==='shield'?'Поднять Щит':p.atk?'Атаковать':'Сотворить';
   const cs=[1,...hiC()].filter(c=>c>=p.lv);acts=cs.map(c=>`<button data-act="cast:${k}:${c}" ${cLeft(c)?'':'disabled'} class="${c>p.lv?'ghost':''}">${vb}: ячейка ${c} круга${c>p.lv?' (усиленное)':''} · осталось ${cLeft(c)}${ct}</button>`).join('')+(p.conc&&S.conc?`<div class="mu" style="text-align:center;font-size:12.5px">прервёт ${SPELLS[S.conc].n}</div>`:'')}
- return{t:rn(p)+p.n,sub:p.lv?p.meta.replace(/^\d круг · /,''):p.meta,body:p.d()+(p.react?REACT1:'')+(p.cost?`<div class="how gpn">${costTag(p)}<b>Платный компонент: ${p.cost.what} за ${p.cost.gp} зм.</b> По правилу мастера эти деньги <b>списываются при каждом сотворении</b>. В кошельке: ${fmtPurse()}. ${can?`Хватит на ${Math.floor(purse()/costCp(p))} раз.`:`Не хватает ${fmtCp(costCp(p)-purse())}.`}</div>`:'')+(k==='chromatic_orb'?`<div class="orbs">${ORB.map(o=>`<button class="${S.orbT===o?'on':''}" data-orb="${o}">${o}</button>`).join('')}</div>`:'')+(p.lv?`<div class="how">Ты чародей дикой магии: после заклинания 1 круга и выше мастер может попросить бросить к20. На <b>1</b> случается волна дикой магии. Ячейки возвращает долгий отдых.</div>`:'')+(metaArm?(metaOk(metaArm,k,p.lv)?`<div class="how" style="border-color:var(--gold2)"><b>Заряжено: ${META[metaArm].n}</b>. ${metaArm==='twinned'?'Две цели. Спишется столько единиц, какой круг ячейки'+(p.lv?'':' (заговор: 1)'):'Спишется '+META[metaArm].c}. ${metaArm==='twinned'&&p.twUp?'Только ячейкой '+p.lv+' круга: выше у заклинания и так несколько целей.':''}</div>`:`<div class="how"><b>${META[metaArm].n} сюда не подходит</b>: ${MWHY[metaArm]}. Заклинание сотворится без метамагии, единицы не спишутся.</div>`):'')+(k==='friends'?`<div class="how">В приложении: пока Дружба действует, все проверки Харизмы идут с преимуществом сами. Не забудь выключить, когда цель сменится или время выйдет.</div>`:''),acts}});
+ return{t:rn(p)+p.n,sub:p.lv?p.meta.replace(/^\d круг · /,''):p.meta,body:offWhy(k)+p.d()+(p.react?REACT1:'')+(p.cost?`<div class="how gpn">${costTag(p)}<b>Платный компонент: ${p.cost.what} за ${p.cost.gp} зм.</b> По правилу мастера эти деньги <b>списываются при каждом сотворении</b>. В кошельке: ${fmtPurse()}. ${can?`Хватит на ${Math.floor(purse()/costCp(p))} раз.`:`Не хватает ${fmtCp(costCp(p)-purse())}.`}</div>`:'')+(k==='chromatic_orb'?`<div class="orbs">${ORB.map(o=>`<button class="${S.orbT===o?'on':''}" data-orb="${o}">${o}</button>`).join('')}</div>`:'')+(p.lv?`<div class="how">Ты чародей дикой магии: после заклинания 1 круга и выше мастер может попросить бросить к20. На <b>1</b> случается волна дикой магии. Ячейки возвращает долгий отдых.</div>`:'')+(metaArm?(metaOk(metaArm,k,p.lv)?`<div class="how" style="border-color:var(--gold2)"><b>Заряжено: ${META[metaArm].n}</b>. ${metaArm==='twinned'?'Две цели. Спишется столько единиц, какой круг ячейки'+(p.lv?'':' (заговор: 1)'):'Спишется '+META[metaArm].c}. ${metaArm==='twinned'&&p.twUp?'Только ячейкой '+p.lv+' круга: выше у заклинания и так несколько целей.':''}</div>`:`<div class="how"><b>${META[metaArm].n} сюда не подходит</b>: ${MWHY[metaArm]}. Заклинание сотворится без метамагии, единицы не спишутся.</div>`):'')+(k==='friends'?`<div class="how">В приложении: пока Дружба действует, все проверки Харизмы идут с преимуществом сами. Не забудь выключить, когда цель сменится или время выйдет.</div>`:''),acts}});
 
 /* полный текст заклинаний (PHB 2014, по смыслу dnd.su, ничего не упрощено) + ссылка на дословный текст */
 const SPFULL={
@@ -2573,7 +2581,7 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-26-50';
+const BUILD='2026-11-26-51';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
