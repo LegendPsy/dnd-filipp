@@ -698,6 +698,73 @@ body.flip .page.on .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards
 @keyframes edrift{from{transform:translateX(-10px)}to{transform:translateX(10px)}}
 .fx-counter .fxl svg{animation:none!important;opacity:.6}
 .fx-counter .fxl svg circle{transform-origin:20px 20px;animation:fhspin 22s linear infinite!important}
+/* ===== Адаптация (2026-11-26). Большой телефон 390–739px НЕ затронут: правила ниже работают только на узких (до 389px) и широких (от 740px) экранах. ===== */
+/* маленький телефон: iPhone SE, Android 360px */
+@media (max-width:389px){
+ .screen{padding-left:9px;padding-right:9px}
+ .slips{gap:6px 5px}.slip .sheet{padding:7px 3px 6px}
+ .slip .n{font-size:13.5px;gap:3px}.slip .m{font-size:20px}.slip .top{gap:3px}.slip .h{font-size:9.5px}
+ .ab .n{font-size:13px}.ab .m{font-size:23px}
+ .sense{padding:4px 5px;gap:4px}.sense b{font-size:19px}.sense span{font-size:10.5px}
+ .atk{padding:6px 8px 7px}.atk b{font-size:15.5px}.atk .hit .dm{font-size:11px}
+ .fgrid.c3 .atk b{font-size:14.5px}
+ .fvit .tok .k{font-size:8px;letter-spacing:.02em}
+ .mode button{font-size:12px}
+}
+@media (max-width:340px){.slip .n{font-size:12.5px}.slip .m{font-size:18px}.atk b{font-size:14.5px}.tok .v{font-size:21px}.head h1{font-size:23px}}
+
+/* планшет и компьютер: колонки. Слева всегда Персонаж, справа выбранная вкладка, на широком экране ещё и история бросков */
+@media (min-width:740px){
+ :root{--cg:24px;--toph:calc(58px + env(safe-area-inset-top));--cw:min(520px,calc((100vw - 3*var(--cg))/2));--x0:calc((100vw - 2*var(--cw) - var(--cg))/2);--x1:calc(var(--x0) + var(--cw) + var(--cg))}
+ .page{left:var(--x1);right:auto;width:var(--cw);overflow-x:hidden}
+ #p-char{display:block;animation:none;left:var(--x0);bottom:calc(-1*var(--gap))}
+ #p-char .screen{height:calc(100svh + var(--gap))}
+ .screen,.below{max-width:none}
+ .page:not(#p-char)::before{content:"";position:fixed;top:24px;bottom:24px;left:calc(var(--x1) - var(--cg)/2);border-left:1px solid var(--line);pointer-events:none}
+ .page:not(#p-char){top:var(--toph);bottom:0}
+ .page:not(#p-char) .screen{height:calc(100svh - var(--toph));padding-top:10px}
+ .tabs{top:0;bottom:auto;left:var(--x1);right:auto;width:var(--cw);height:var(--toph);padding:calc(10px + env(safe-area-inset-top)) 0 0;grid-template-columns:repeat(3,1fr);gap:6px;background:none;border:0}
+ .tabs button{flex-direction:row;gap:8px;font:600 17px/1 "Cormorant Garamond",serif;border:1px solid transparent;border-radius:12px}
+ .tabs button::after{content:attr(aria-label)}
+ .tabs .ti{width:30px;height:30px}
+ .tabs button.on{border-color:rgba(233,189,108,.35);background:rgba(233,189,108,.06)}
+ .tabs button.on .ti{transform:none}
+ .tabs button:not(.on):hover{color:var(--ink)}.tabs button:not(.on):hover .ti{opacity:.8}
+ .tabs [data-p="p-char"]{display:none}
+ body.flip #p-char .screen{animation:flip .42s cubic-bezier(.5,0,.8,.4) forwards}
+ #p-char.unflip .screen{animation:unflip .5s cubic-bezier(.2,.9,.3,1.2)}
+ .drawer{left:var(--x0);right:auto;width:calc(2*var(--cw) + var(--cg));max-width:none}
+ .drawer #dbody{max-width:640px;width:100%;margin:0 auto}
+ .sheetbg form{max-width:640px}
+ .bgart img{right:-6%;height:92%;opacity:.22}
+ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+}
+/* высокий планшет (iPad стоя): Персонаж без пустоты посередине, ниже сразу история бросков */
+/* Персонаж на широком экране: без пустоты посередине, всё подряд сверху */
+@media (min-width:740px){
+ #p-char .screen{height:auto}
+ #p-char .spare{flex:none}
+}
+/* узкие колонки (планшет стоя): те же поправки, что для маленького телефона */
+@media (min-width:740px) and (max-width:899px){
+ .turnq{white-space:nowrap}.shead .cls{font-size:13px}
+ .screen{padding-left:9px;padding-right:9px}
+ .slips{gap:6px 5px}.slip .sheet{padding:7px 3px 6px}
+ .slip .n{font-size:13.5px;gap:3px}.slip .m{font-size:20px}.slip .top{gap:3px}.slip .h{font-size:9.5px}
+ .ab .n{font-size:13px}.ab .m{font-size:23px}
+ .sense{padding:4px 5px;gap:4px}.sense b{font-size:19px}.sense span{font-size:10.5px}
+ .atk{padding:6px 8px 7px}.atk b{font-size:15.5px}.atk .hit .dm{font-size:11px}
+ .fgrid.c3 .atk b{font-size:14.5px}
+ .fvit .tok .k{font-size:8px;letter-spacing:.02em}
+ .mode button{font-size:12px}
+}
+/* широкий компьютер: третья колонка с историей бросков, без прокрутки */
+@media (min-width:1300px){
+ :root{--lw:300px;--cw:min(520px,calc((100vw - var(--lw) - 4*var(--cg))/2));--x0:calc((100vw - 2*var(--cw) - var(--lw) - 2*var(--cg))/2)}
+ #p-char .below{position:fixed;top:0;bottom:0;left:calc(var(--x1) + var(--cw) + var(--cg));width:var(--lw);padding:calc(24px + env(safe-area-inset-top)) 0 24px var(--cg);border-left:1px solid var(--line);overflow-y:auto;scrollbar-width:thin}
+ #p-char .below h2{margin-top:0}
+}
+@media (hover:hover){.ab:hover,.slip:hover,.atk:hover,.tok:is(button):hover,.sense:hover,.it:hover{filter:brightness(1.08)}}
 </style>
 </head>
 <body>
@@ -2321,6 +2388,8 @@ function toast(s){}
 
 ['mode','mode2','mode3'].forEach(id=>$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;rollMode=b.dataset.m;document.querySelectorAll('.mode button').forEach(x=>x.classList.toggle('on',x.dataset.m===rollMode));vib(8)}));
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;closeDrawer();$('tabs').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p));if(b.dataset.p==='p-inv')renderInv();if(b.dataset.p==='p-fight')fitFight();vib(6)});
+/* широкий экран (от 740px): Персонаж всегда слева, поэтому справа по умолчанию Бой */
+function wideFix(){if(!matchMedia('(min-width:740px)').matches)return;const on=document.querySelector('.page.on');if(!on||on.id==='p-char')$('tabs').querySelector('[data-p="p-fight"]').click()}
 function fit(){const ic=innerHeight<=600?46:innerHeight<=700?54:62;document.documentElement.style.setProperty('--ic',ic+'px')}
 /* iPhone-ярлык на экране «Домой»: иногда система рисует страницу не до самого низа экрана,
    нижняя полоса остаётся пустой и туда ничего не нарисовать. Тогда полоска «Домой» лежит
@@ -2329,7 +2398,7 @@ function fixGap(){const st=navigator.standalone||matchMedia('(display-mode: stan
  const portrait=innerHeight>innerWidth,full=portrait?Math.max(screen.height,screen.width):Math.min(screen.height,screen.width);
  const g=st?full-innerHeight:0,r=document.documentElement.style;
  if(g>8&&g<140)r.setProperty('--sb','4px');else r.removeProperty('--sb')}
-fixGap();addEventListener('resize',()=>{fixGap();fit()});addEventListener('orientationchange',()=>setTimeout(()=>{fixGap();fit()},300));
+fixGap();addEventListener('resize',()=>{fixGap();fit();wideFix();fitFight()});addEventListener('orientationchange',()=>setTimeout(()=>{fixGap();fit()},300));
 
 /* ---------- тестовый 10 уровень: ячейки всех кругов, метамагия, подчинение удачи ---------- */
 const META={
@@ -2367,10 +2436,10 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
  setTimeout(()=>location.reload(),400)}
 {let m='';try{m=sessionStorage.getItem('filipp-tmsg')||'';sessionStorage.removeItem('filipp-tmsg')}catch(e){}
  if(m){document.querySelector('.page.on').classList.add('unflip');setTimeout(()=>toast(m==='test'?'Тестовый 10 уровень. Настоящий лист сохранён, нажми на портрет, чтобы вернуться':`Снова настоящий лист: ${S.level} уровень`),500)}}
-renderAll();fit();setTimeout(fit,300);
+renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-26-46';
+const BUILD='2026-11-26-47';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
