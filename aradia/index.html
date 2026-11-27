@@ -826,6 +826,11 @@ body:has(#p-equip.on) .bgart{opacity:.18;transition:opacity .3s}
 .cdrop{position:fixed;z-index:400;width:18px;height:18px;pointer-events:none}.cdrop .c{width:18px;height:18px;display:block}
 .atk small .gpc{font-size:11px}
 .how.why{border-left-color:var(--red2);background:rgba(208,101,111,.09)}.how.why .wt{display:block;color:var(--red2);font:700 15px/1.2 "Playfair Display",serif;letter-spacing:.03em;margin-bottom:3px}.how.why div+div{margin-top:5px}
+/* пояснение «что сделать» (вместо «почему нельзя») */
+.how.todo{border-left-color:var(--lamp,#f0c47a);background:rgba(240,196,122,.08)}.how.todo .wt{display:block;color:var(--lamp,#f0c47a);font:700 15px/1.2 "Playfair Display",serif;letter-spacing:.03em;margin-bottom:5px}
+.need{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:left;margin-top:6px;padding:9px 11px;border-radius:10px;border:1px solid rgba(240,196,122,.5);background:rgba(240,196,122,.10);color:var(--ink);font-weight:600;font-size:14.5px;line-height:1.3;cursor:pointer}
+.need i{font-style:normal;color:var(--lamp,#f0c47a);font-size:20px;line-height:1}
+span.need{display:inline-flex;width:auto;margin:3px 0 0;padding:3px 9px;font-size:12px;border-radius:8px}
 /* ===== повышение уровня друида (тред 6) ===== */
 .lvtok{border-radius:0!important;background:#e8f2ff!important;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);box-shadow:none!important;filter:drop-shadow(0 0 5px #a9c9ea)}
 .lvq{display:flex;align-items:center;gap:8px;width:100%;margin:8px 0 6px;padding:7px 10px;border:1px dashed rgba(169,201,234,.4);border-radius:10px;font:italic 400 13.5px/1.2 var(--text);color:var(--rune);text-align:left}
@@ -1780,14 +1785,24 @@ const canPay=p=>!p||!p.cost||!!compKey(p);
 /* состояния, при которых нет действий и реакций: ни колдовать, ни атаковать */
 const NOACT=['unconscious','paralyzed','petrified','stunned','incapacitated'];
 const noAct=()=>{const k=NOACT.find(c=>S.cond&&S.cond[c]);return k?COND[k].n:null};
-const noActBtn=()=>`<button disabled>Нельзя: ты ${noAct().toLowerCase()}, нет действий и реакций</button><button class="ghost" data-info="c_${NOACT.find(c=>S.cond[c])}">Что это за состояние ›</button>`;
+const noActBtn=()=>`<button class="ghost" data-go="tab:p-char">Сними состояние «${noAct()}» на вкладке «Персонаж» ›</button><button class="ghost" data-info="c_${NOACT.find(c=>S.cond[c])}">Что это за состояние ›</button>`;
+/* «что сделать, чтобы стало можно»: вместо причины нажимаемая подсказка-действие */
+const needB=(t,g)=>`<button class="need" data-go="${g}"><span>${t}</span><i>›</i></button>`;
+const needS=(t,g)=>`<span class="need" data-go="${g}">${t} ›</span>`;
+const todoBox=a=>a.length?`<div class="how todo"><b class="wt">Что сделать, чтобы стало можно</b>${a.join('')}</div>`:'';
+function goTo(g){const i=g.indexOf(':'),t=i<0?g:g.slice(0,i),v=i<0?'':g.slice(i+1);
+ if(t==='lv'){closeDrawer();setTimeout(lvOpen,260)}
+ else if(t==='tab'){closeDrawer();const b=document.querySelector('.tabs button[data-p="'+v+'"]');if(b)b.click()}
+ else if(t==='info')openInfo(v);
+ else if(t==='flash'){document.querySelectorAll('#dbody .dacts button').forEach(b=>b.animate([{boxShadow:'0 0 0 0 rgba(240,196,122,.95)'},{boxShadow:'0 0 0 9px rgba(240,196,122,0)'}],{duration:800,iterations:2}))}}
+window.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-go]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();goTo(b.dataset.go)},true);
 /* почему заклинание тусклое: объяснение сверху в его шторке (не всплывашкой) */
 function offWhy(k){const p=SPELLS[k],w=[];
- if(noAct())w.push(`Ты <b>${noAct().toLowerCase()}</b>: в этом состоянии нет действий и реакций, колдовать нельзя. Сними состояние на вкладке «Персонаж», когда оно закончится.`);
- if(beastNoCast(k))w.push(S.level>=18?`Ты в облике <b>${esc(wfB().n.toLowerCase())}</b>: с 18 уровня в облике зверя колдовать можно, но у этого заклинания есть материальный компонент${S.level>=20?' с ценой':''}, а зверь не может его дать. Вернуться в свой облик можно бонусным действием во вкладке «Бой».`:`Ты в облике <b>${esc(wfB().n.toLowerCase())}</b>: в зверином облике колдовать нельзя. Концентрация на уже наложенном заклинании держится. Вернуться в свой облик можно бонусным действием во вкладке «Бой».`);
- if(p.lv&&!firstC(p.lv)&&!(p.conc&&S.conc===k)&&!p.ritual&&!(k==='guiding_bolt'&&chartLeft()))w.push(`<b>Нет свободных ячеек${p.lv>1?' '+p.lv+' круга и выше':''}</b>: все потрачены. Вернутся после долгого отдыха.`);
- if(!canPay(p))w.push(`<b>Нет компонента</b>: нужен ${p.cost.what} стоимостью ${p.cost.gp} золотых. Деньги за сотворение не списываются, нужен сам предмет. Купи его кнопкой внизу или отметь, что он у тебя уже есть.`);
- return w.length?`<div class="how why"><b class="wt">Почему тусклое</b>${w.map(x=>`<div>${x}</div>`).join('')}</div>`:''}
+ if(noAct())w.push(needB(`Сними состояние «${noAct()}»: оно отмечено на вкладке «Персонаж»`,'tab:p-char'));
+ if(beastNoCast(k))w.push(needB(S.level>=18?`Вернись в свой облик: у этого заклинания есть материальный компонент, а зверь его не даст`:`Вернись в свой облик (бонусным действием): зверем колдовать нельзя`,'info:wfnow'));
+ if(p.lv&&!firstC(p.lv)&&!(p.conc&&S.conc===k)&&!p.ritual&&!(k==='guiding_bolt'&&chartLeft()))w.push(needB(`Нужна свободная ячейка${p.lv>1?' '+p.lv+' круга или выше':''}: они вернутся после долгого отдыха`,'info:long'));
+ if(!canPay(p)){w.push(needB(`Положи в инвентарь ${p.cost.what}: купи его за ${p.cost.gp} золотых или отметь, что он у тебя уже есть`,'flash'));if(purse()<costCp(p))w.push(needB(`Не хватает золота: добавь монет в кошелёк`,'info:coin_gp'))}
+ return todoBox(w)}
 const REACT1='<div class="how">Реакция <b>одна за раунд</b>: потратил её, и до начала твоего следующего хода других реакций нет (ни Щита, ни Удара вслед).</div>';
 function fmtCp(v){if(!v)return '0 монет';const o=[];for(const k of ['gp','sp','cp']){const n=Math.floor(v/MV[k]);if(n){o.push(n+' '+MN[k]);v-=n*MV[k]}}return o.join(' ')}
 function fmtPurse(){const o=['pp','gp','sp','cp'].filter(k=>S.money[k]).map(k=>S.money[k]+' '+MN[k]);return o.length?o.join(' '):'пусто'}
@@ -3129,12 +3144,12 @@ function spInfo(k){const p=SPELLS[k],on=S.conc===k,can=canPay(p);let acts='';
  const brk=p.conc&&S.conc&&S.conc!==k?`<div class="mu" style="text-align:center;font-size:12.5px">прервёт ${SPELLS[S.conc].n}</div>`:'';
  if(p.conc&&on)acts=rb+`<button class="ghost" data-act="concEnd">Закончить заклинание</button>`;
  else if(noAct())acts=noActBtn();
- else if(!can)acts=`<button data-act="buyc:${k}" ${purse()>=costCp(p)?'':'disabled'}>${purse()>=costCp(p)?`Купить ${p.cost.what}: −${p.cost.gp} золотых`:`Не хватает денег на ${p.cost.what} (${p.cost.gp} золотых)`}</button><button class="ghost" data-act="havec:${k}">У меня уже есть: положить в инвентарь</button>`;
+ else if(!can)acts=`${purse()>=costCp(p)?`<button data-act="buyc:${k}">Купить ${p.cost.what}: −${p.cost.gp} золотых</button>`:`<button data-go="info:coin_gp">Нужно ${p.cost.gp} золотых на ${p.cost.what}: добавить монет в кошелёк ›</button>`}<button class="ghost" data-act="havec:${k}">У меня уже есть: положить в инвентарь</button>`;
  else if(!p.lv)acts=`<button data-act="cast:${k}">${vb}</button>`+(p.light?`<button class="ghost" data-act="castl:${k}">Только зажечь: свет на 10 минут</button>`:'')+brk;
  else{const cs=[1,...hiC()].filter(c=>c>=p.lv),free=(k==='guiding_bolt'&&chartOn())||p.ritual;
   if(k==='guiding_bolt'&&chartOn())acts+=`<button data-act="cast:${k}:m" ${chartLeft()?'':'disabled'}>${vb} · без ячейки, от Звёздной карты (осталось ${chartLeft()})</button>`;
   if(p.ritual)acts+=`<button data-act="cast:${k}:r">Ритуалом: без ячейки, на 10 минут дольше</button>`;
-  acts+=cs.map(c=>`<button data-act="cast:${k}:${c}" ${cLeft(c)?'':'disabled'} class="${free||c>p.lv?'ghost':''}">${cLeft(c)?`${vb}: ячейка ${c} круга${c>p.lv?' (усиленное)':''} · осталось ${cLeft(c)}`:`Нет свободных ячеек ${c} круга`}</button>`).join('')+brk}
+  acts+=cs.map(c=>cLeft(c)?`<button data-act="cast:${k}:${c}" class="${free||c>p.lv?'ghost':''}">${vb}: ячейка ${c} круга${c>p.lv?' (усиленное)':''} · осталось ${cLeft(c)}</button>`:`<button class="ghost" data-go="info:long">Ячеек ${c} круга не осталось: нужен долгий отдых ›</button>`).join('')+brk}
  if(!(p.conc&&on))acts+=rb;
  const cb=k==='guiding_bolt'&&chartOn()?`<div class="how">От <b>Звёздной карты</b>: всегда подготовлен и не занимает место. Без ячейки можно ещё <b>${chartLeft()}</b> из ${prof()} раз до долгого отдыха.</div>`:k==='guidance'&&chartOn()?`<div class="how">От <b>Звёздной карты</b>: Арадия знает этот заговор сверх обычных, пока карта при ней.</div>`:'';
  return{t:rn(p)+p.n,sub:p.lv?p.meta.replace(/^\d круг · /,''):p.meta,body:offWhy(k)+p.d()+cb+(p.ritual?RITUAL:'')+(p.cost?compNote(p):''),acts}}
@@ -4192,7 +4207,7 @@ function lvBody(st){const t=LV.to,d=lvDelta(t),a=lvAb();
   return `<div class="lvbig sm"><span class="n">${t}</span><span class="lt">уровень</span></div><div class="lvlist plain">${rows.map(r=>`<div class="lvi"><span class="ic">${r[0]}</span><span>${r[1]}</span></div>`).join('')}</div>`}
  return ''}
 const skName=k=>{for(const a in SK){const x=SK[a].find(y=>y[0]===k);if(x)return x[1]}return k};
-const LVT={intro:['Новый уровень',''],hp:['Сколько хитов прибавится?','Кость хитов друида к8. К ней прибавляется Телосложение.'],asi:['Характеристики или черта?','На этом уровне одно из двух.'],ab:['Куда вложить +2?','Две единицы: обе в одну или по одной в две.'],feat:['Какую черту взять?','Серые недоступны: под названием написано почему.'],fopt:['Уточни черту',''],swap:['Заменить один заговор?','Необязательное правило «Котла Таши». Спроси мастера, разрешает ли он.'],swapin:['Какой заговор взять вместо?',''],cant:['Новый заговор','Заговоры не тратят ячеек и остаются навсегда.'],prep:['Подготовить ещё?',''],done:['Всё готово','Проверь и жми, когда готова.']};
+const LVT={intro:['Новый уровень',''],hp:['Сколько хитов прибавится?','Кость хитов друида к8. К ней прибавляется Телосложение.'],asi:['Характеристики или черта?','На этом уровне одно из двух.'],ab:['Куда вложить +2?','Две единицы: обе в одну или по одной в две.'],feat:['Какую черту взять?','Серые пока недоступны: под названием написано, что для них нужно.'],fopt:['Уточни черту',''],swap:['Заменить один заговор?','Необязательное правило «Котла Таши». Спроси мастера, разрешает ли он.'],swapin:['Какой заговор взять вместо?',''],cant:['Новый заговор','Заговоры не тратят ячеек и остаются навсегда.'],prep:['Подготовить ещё?',''],done:['Всё готово','Проверь и жми, когда готова.']};
 
 function lvRender(anim){const st=lvSteps();if(LV.i>=st.length)LV.i=st.length-1;const s=st[LV.i],[h,sub0]=LVT[s];
  let sub=sub0;if(s==='fopt'){const f=FEATS[LV.feat];sub=f.opt==='el'?'Какая стихия?':f.opt==='sk'?'Какие три навыка?':'Какую характеристику +1?'}
@@ -4382,6 +4397,13 @@ function dragonOk(sp){return !!(sp&&starOn('dragon')&&((sp.kind==='check'&&(sp.a
 const crN=c=>{c=String(c).trim();if(c.includes('/')){const [a,b]=c.split('/');return +a/+b}return +c||0};
 const crMax=()=>S.level>=8?1:S.level>=4?.5:.25,crTxt=()=>S.level>=8?'1':S.level>=4?'1/2':'1/4';
 const crCh=c=>String(c).replace('1/4','¼').replace('1/2','½').replace('1/8','⅛');
+function beastLv(B){for(let l=Math.max(2,S.level+1);l<=20;l++)if(crN(B.cr)<=(l>=8?1:l>=4?.5:.25)&&!(B.fly&&l<8)&&!(B.swim&&l<4))return l;return 0}
+function wildNeeds(B,flag){const w=[],l=S.wild.max-S.wild.used;
+ if(B&&!beastOk(B)){const L=beastLv(B);w.push(L?needB(`Нужен ${L} уровень (сейчас ${S.level}): повысить уровень`,'lv'):needB(`Этот зверь слишком сильный для Дикого облика: выбери другого`,'info:wfpick'))}
+ else if(!B&&S.level<2)w.push(needB(`Нужен 2 уровень (сейчас ${S.level}): повысить уровень`,'lv'));
+ if(S.level>=2&&!l&&!(S.level>=20))w.push(needB(`Нужен отдых: использования Дикого облика вернутся после короткого или долгого отдыха`,'info:short'));
+ if(noAct())w.push(needB(`Сними состояние «${noAct()}»: оно отмечено на вкладке «Персонаж»`,'tab:p-char'));
+ return w}
 function beastOk(B){return S.level>=2&&crN(B.cr)<=crMax()&&!(B.fly&&S.level<8)&&!(B.swim&&S.level<4)}
 const atkTxt=a=>a.dn?`${a.dn}к${a.ds}${a.k?sg(a.k):''}`:String(a.k);
 const spdTxt=B=>`${B.spd} футов${B.spx?', '+B.spx:''}`;
@@ -4497,9 +4519,9 @@ Object.assign(INFO,{
   <p>• Тёмного зрения нет, если его нет у зверя.</p>
   <p>• Одно использование можно потратить на <b>Звёздный облик</b> (бонусным действием).</p>
   <div class="how">В листе: выбери зверя, и вкладка «Бой» станет его карточкой. Урон в хитах сначала снимается со зверя.</div>`,
-  acts:(B?`<button data-info="wfnow">Сейчас: ${esc(B.n)} ›</button>`:`<button data-info="wfpick" ${l&&S.level>=2?'':'disabled'}>Выбрать зверя ›</button>`)+`<button class="ghost" data-act="wildBack" ${S.wild.used?'':'disabled'}>Вернуть одно использование (ошиблась)</button>`,bang:'qt_wild'}},
+  acts:(B?`<button data-info="wfnow">Сейчас: ${esc(B.n)} ›</button>`:(l&&S.level>=2)?`<button data-info="wfpick">Выбрать зверя ›</button>`:wildNeeds(null).slice(0,1).join(''))+`<button class="ghost" data-act="wildBack" ${S.wild.used?'':'disabled'}>Вернуть одно использование (ошиблась)</button>`,bang:'qt_wild'}},
  wfpick:()=>{const l=S.wild.max-S.wild.used;return{t:'Выбрать зверя',sub:`Дикий облик · осталось ${l} из ${S.wild.max} · опасность до ${crTxt()}`,
-  body:`<div class="bstl">${useOrder('wild',S.beasts.map(B=>B.k)).map(k=>{const i=S.beasts.findIndex(B=>B.k===k),B=S.beasts[i],ok=beastOk(B),oft=useTop('wild',S.beasts.map(x=>x.k)).includes(k);return `<button class="bstr ${ok?'':'no'}" data-info="bst_${i}"><b>${esc(B.n)}${oft?'<i class="oft">часто</i>':''}</b><small>опасность ${crCh(B.cr)} · класс доспеха ${B.ac} · хиты ${B.hp} · ${spdTxt(B)}</small><small>${B.at.map(a=>`${esc(a.n)} ${sg(a.b)}, ${atkTxt(a)}`).join(' · ')}${ok?'':' · <em>пока нельзя</em>'}</small></button>`}).join('')}</div>
+  body:todoBox(wildNeeds(null))+`<div class="bstl">${useOrder('wild',S.beasts.map(B=>B.k)).map(k=>{const i=S.beasts.findIndex(B=>B.k===k),B=S.beasts[i],ok=beastOk(B),oft=useTop('wild',S.beasts.map(x=>x.k)).includes(k);return `<button class="bstr ${ok?'':'no'}" data-info="bst_${i}"><b>${esc(B.n)}${oft?'<i class="oft">часто</i>':''}</b><small>опасность ${crCh(B.cr)} · класс доспеха ${B.ac} · хиты ${B.hp} · ${spdTxt(B)}</small><small>${B.at.map(a=>`${esc(a.n)} ${sg(a.b)}, ${atkTxt(a)}`).join(' · ')}${ok?'':' · '+(beastLv(B)?needS(`Нужен ${beastLv(B)} уровень: повысить`,'lv'):'<em>слишком сильный для Дикого облика</em>')}</small></button>`}).join('')}</div>
   <div class="how" style="margin-top:8px">Нажми на зверя: откроется его карточка, оттуда превращение. Цифры каждого зверя можно поменять, можно добавить своего.</div>`,
   acts:`<button class="ghost" data-act="bstNew">+ Свой зверь</button>${BEAST0.some(b=>!S.beasts.some(x=>x.k===b.k))?`<button class="ghost" data-act="bstRestore">Вернуть зверей из книги</button>`:''}`}},
  wfnow:()=>{const B=wfB();if(!B)return INFO.wild();return{t:B.n,sub:`ты в облике · опасность ${crCh(B.cr)} · до ${wfHours()} ч`,body:beastBody(B,true)+`<div class="how">Свои хиты Арадии сейчас: <b>${S.hp.cur} из ${S.hp.max}</b>. Они вернутся такими же. Колдовать в облике нельзя${S.conc?`, но концентрация на «${SPELLS[S.conc].n}» держится`:''}.</div>`,
@@ -4515,8 +4537,8 @@ function beastBody(B,now){return `<div class="bstat"><div><span>Класс до�
  ${B.tr.map(t=>`<p><b>${esc(t[0])}.</b> ${esc(t[1])}</p>`).join('')}`}
 for(let i=0;i<30;i++){
  INFO['bst_'+i]=()=>{const B=S.beasts[i];if(!B)return INFO.wfpick();const ok=beastOk(B),l=S.wild.max-S.wild.used,cur=S.wf&&S.wf.i===i;
-  const why=S.level<2?'Дикий облик открывается на 2 уровне.':!ok?`На ${S.level} уровне можно зверя с опасностью до ${crTxt()}${S.level<8?', без скорости полёта':''}${S.level<4?' и плавания':''}.`:!l?'Оба использования Дикого облика потрачены. Они вернутся после короткого или долгого отдыха.':'';
-  return{t:B.n,sub:`зверь · опасность ${crCh(B.cr)}${BQ[B.k]?' · из бестиария':' · свой'}`,body:(why?`<div class="how why"><b class="wt">Почему нельзя</b><div>${why}</div></div>`:'')+beastBody(B,false),
+  const nd=wildNeeds(B),why=nd.length&&!(nd.length===1&&noAct())?1:0;
+  return{t:B.n,sub:`зверь · опасность ${crCh(B.cr)}${BQ[B.k]?' · из бестиария':' · свой'}`,body:todoBox(nd)+beastBody(B,false),
    acts:(cur?`<button data-info="wfnow">Ты уже в этом облике ›</button>`:`<button data-act="wfGo:${i}" ${why||noAct()?'disabled':''}>Превратиться: действие, тратит 1 из ${S.wild.max}</button>`)+`<button class="ghost" data-act="bstEdit:${i}">Изменить цифры</button><button class="ghost" data-info="wfpick">← Все звери</button>`,
    bang:BQ[B.k]?'bq_'+i:'qt_wild'}};
  INFO['bq_'+i]=()=>{const B=S.beasts[i],Q=B&&BQ[B.k];return{t:'Бестиарий дословно',sub:'точная цитата с dnd.su, можно показать мастеру',body:Q?`<div class="qbox"><div class="qh">${BEAST0.find(b=>b.k===B.k).n}</div>${Q.t}<div class="qsrc">Источник: Monster Manual, перевод dnd.su. <a class="dsu" href="https://dnd.su/bestiary/${Q.u}/" target="_blank" rel="noopener">Открыть на dnd.su ↗</a></div></div>${qHtml('wild')}`:qHtml('wild'),acts:`<button class="ghost" data-info="${S.wf&&S.wf.i===i?'wfnow':'bst_'+i}">← Назад</button>`}};
@@ -4528,8 +4550,8 @@ Object.keys(CST).forEach(c=>{INFO['st_'+c]=()=>{const C=CST[c],on=starOn(c),l=S.
  const d={archer:`<p>При входе в облик и потом <b>бонусным действием</b> каждый свой ход: <b>дальнобойная атака заклинанием</b> светящейся стрелой в цель в пределах <b>60 футов</b>. Атака <b>к20 ${sg(spellAtk())}</b>, урон <b>${starDie()}к8 ${sg(w)} излучением</b>.</p>`,
   chalice:`<p>Когда творишь заклинание, которое <b>тратит ячейку и лечит</b> (например, Лечащее слово), ты или другое существо в пределах <b>30 футов</b> восстанавливаете ещё <b>${starDie()}к8 ${sg(w)} хитов</b>.</p><div class="how">В листе: после лечения ячейкой появится кнопка «Чаша».</div>`,
   dragon:`<p>На <b>проверках Интеллекта и Мудрости</b> и на <b>спасбросках Телосложения для концентрации</b> выпавшие на к20 <b>1–9 считаются как 10</b>.</p><div class="how">В листе это считается само: если выпадет меньше 10, итог посчитается от 10.</div>`}[c];
- const why=S.level<2?'Звёздный облик открывается на 2 уровне.':wfB()?'Сейчас ты в облике зверя. Сначала вернись в свой облик.':!l&&!on?'Оба использования Дикого облика потрачены. Они вернутся после короткого или долгого отдыха.':'';
- return{t:'Звёздный облик: '+C.n,sub:on?'действует · 10 минут':`Круг Звёзд · бонусное действие · тратит 1 Дикий облик`,body:(why&&!on?`<div class="how why"><b class="wt">Почему нельзя</b><div>${why}</div></div>`:'')+d+`<p class="mu">Облик длится <b>10 минут</b>. Твои показатели не меняются, <b>колдовать можно</b>. Светишься: ярко на 10 футов и тускло ещё на 10. Кончается раньше, если становишься недееспособной, умираешь или снова принимаешь облик.${S.level>=10?' С 10 уровня в начале каждого своего хода можно сменить созвездие.':''}</p>`,
+ const nd=[];if(S.level<2)nd.push(needB(`Нужен 2 уровень (сейчас ${S.level}): повысить уровень`,'lv'));else if(wfB())nd.push(needB('Сначала вернись в свой облик зверя','info:wfnow'));else if(!l&&!on&&S.level<20)nd.push(needB('Нужен отдых: использования Дикого облика вернутся после короткого или долгого отдыха','info:short'));const why=nd.length?1:0;
+ return{t:'Звёздный облик: '+C.n,sub:on?'действует · 10 минут':`Круг Звёзд · бонусное действие · тратит 1 Дикий облик`,body:(why&&!on?todoBox(nd):'')+d+`<p class="mu">Облик длится <b>10 минут</b>. Твои показатели не меняются, <b>колдовать можно</b>. Светишься: ярко на 10 футов и тускло ещё на 10. Кончается раньше, если становишься недееспособной, умираешь или снова принимаешь облик.${S.level>=10?' С 10 уровня в начале каждого своего хода можно сменить созвездие.':''}</p>`,
   acts:on?(c==='archer'?`<button data-act="atk:archer">Выстрел Лучника: к20 ${sg(spellAtk())}</button>`:'')+(S.level>=10?Object.keys(CST).filter(x=>x!==c).map(x=>`<button class="ghost" data-act="starSw:${x}">Сменить на ${CST[x].n}</button>`).join(''):'')+`<button class="ghost" data-act="starEnd">Облик закончился</button>`
    :(c==='archer'?`<button data-act="starGo:archer:shot" ${why||noAct()?'disabled':''}>Принять облик и сразу выстрелить</button><button class="ghost" data-act="starGo:archer" ${why||noAct()?'disabled':''}>Принять облик без выстрела</button>`:`<button data-act="starGo:${c}" ${why||noAct()?'disabled':''}>Принять облик: ${C.n}</button>`)+(S.starPick!==c?`<button class="ghost" data-act="starPick:${c}">Сделать любимым созвездием</button>`:''),
   bang:'qt_star'}}});
@@ -4907,7 +4929,7 @@ INFO.omen=()=>{const O=S.omen||{used:0,r:0},n=prof(),l=Math.max(0,n-O.used),w=om
 /* ---- Заклинания зверя (18) и Архидруид (20): что можно сотворить в облике зверя ---- */
 function spHasM(k){const f=SPFULL[k],c=f&&f.m?f.m.find(x=>x[0]==='Компоненты'):null;return !!(c&&/М/.test(c[1]))}
 function beastNoCast(k){const p=SPELLS[k];if(!wfB()||!p)return false;if(S.level<18)return true;if(!spHasM(k))return false;return S.level<20||!!p.cost}
-{const _si=spInfo;spInfo=function(k){const d=_si(k);if(beastNoCast(k)&&!noAct())d.acts=`<button disabled>В облике зверя это заклинание не сотворить</button><button class="ghost" data-info="${S.level>=18?'cf_beastsp':'wild'}">${S.level>=18?'Заклинания зверя':'Дикий облик'} ›</button>`;return d}}
+{const _si=spInfo;spInfo=function(k){const d=_si(k);if(beastNoCast(k)&&!noAct())d.acts=`<button data-go="info:wfnow">Вернись в свой облик: тогда можно колдовать ›</button><button class="ghost" data-info="${S.level>=18?'cf_beastsp':'wild'}">${S.level>=18?'Заклинания зверя':'Дикий облик'} ›</button>`;return d}}
 /* ---- вкладка «Бой»: знамение среди реакций, заклинания в облике зверя с 18 уровня ---- */
 {const _rf=renderFight;renderFight=function(){_rf();if(!$('fVit'))return;const B=wfB();
  if(B&&S.level>=18){const fs=known().filter(k=>SPELLS[k]&&SPELLS[k].fight&&S.fSpellShow.includes(k)),fa=$('fAct'),last=fa.lastElementChild;
