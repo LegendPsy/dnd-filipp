@@ -3133,7 +3133,7 @@ INFO.book=()=>{const kn=known(),n=bkCount(),mc=maxCircle(S.level);
  const cntOf=g=>{const x=g.filter(k=>kn.includes(k)&&!isBonus(k)).length;return x?`выбрано ${x}`:`${g.length} шт.`};
  let body=`<div class="bkh"><span>Заговоры</span><em class="${n.c>=n.C?'full':''}" data-cnt="c">${n.c} из ${n.C}</em></div>`+fold('c0','Все заговоры',cntOf(grp(0)),grp(0));
  body+=`<div class="bkh"><span>Подготовлено</span><em class="${n.s>=n.Sx?'full':''}" data-cnt="s">${n.s} из ${n.Sx}</em></div><div class="mu sm" style="margin:0 2px 2px">Мудрость ${sg(mod(S.ab.wis))} + уровень ${S.level}${mc>1?', любые круги до '+ROM[mc]:''}</div>`;
- for(let c=1;c<=mc;c++){const g=grp(c);if(g.length)body+=fold('c'+c,ROM[c]+' круг',cntOf(g),g)}
+ for(let c=mc;c>=1;c--){const g=grp(c);if(g.length)body+=fold('c'+c,ROM[c]+' круг',cntOf(g),g)}
  body+=`<div class="how" style="margin-top:10px">Галочка у заговора: Арадия его знает. Галочка у заклинания: оно <b>подготовлено</b> на сегодня, только такие можно творить. Нажми на название, чтобы прочитать и сотворить.<br>По правилам подготовленные меняют после <b>долгого отдыха</b> (минута на каждый круг каждого заклинания), а заговоры друид знает насовсем. Лист не запрещает менять в любой момент: следи сама или согласуй с мастером.<br>✦ даёт Звёздная карта сверх обычного числа.</div>`;
  return{t:'Заклинания друида',sub:`${S.level} уровень · сложность ${spellDC()} · атака ${sg(spellAtk())} · ячеек ${slotsLeft()} из ${slotsTot()}`,body,acts:`<button data-act="closeD">Готово</button>`}};
 Object.keys(SPELLS).forEach(k=>INFO['bk_'+k]=()=>{const p=SPELLS[k],on=known().includes(k);
@@ -5492,7 +5492,7 @@ INFO.myspells=()=>{const kn=known().filter(k=>SPELLS[k]),c=useGet().cast||{},top
   const tag=[on?'действует':'',p.conc&&!on?'концентрация':'',p.ritual?'ритуал':'',top.includes(k)?'часто':''].filter(Boolean).join(' · ');
   return `<div class="brow on ${off?'bkoff':''}"><button class="bn" data-info="sp_${k}" data-ms><b>${rn(p)}${p.n}</b><small>${p.short}${tag?' · '+tag:''}</small></button>${costTag(p)}<i class="msgo">›</i></div>`};
  let body='';
- for(let lv=0;lv<=9;lv++){const g=kn.filter(k=>SPELLS[k].lv===lv).sort((a,b)=>SPELLS[a].n.localeCompare(SPELLS[b].n,'ru'));
+ for(const lv of [0,9,8,7,6,5,4,3,2,1]){const g=kn.filter(k=>SPELLS[k].lv===lv).sort((a,b)=>SPELLS[a].n.localeCompare(SPELLS[b].n,'ru'));
   if(g.length)body+=`<div class="bkh"><span>${lv?ROM[lv]+' круг':'Заговоры'}</span><em>${lv?`ячеек ${cLeft(lv)} из ${cTot(lv)}`:'без ячеек'}</em></div>`+g.map(row).join('')}
  if(!kn.some(k=>SPELLS[k].lv))body+=needB('Подготовить заклинания на сегодня','info:prep');
  const n=bkCount();
@@ -5501,13 +5501,13 @@ INFO.myspells=()=>{const kn=known().filter(k=>SPELLS[k]),c=useGet().cast||{},top
 Object.keys(SPELLS).forEach(k=>{const f=INFO['sp_'+k];INFO['sp_'+k]=()=>{const d=f();if(MSB)d.acts+=`<button class="ghost" data-info="myspells" data-ms>← Все заклинания</button>`;return d}});
 /* подготовка: тот же список кругов, что в «Заклинаниях друида», но без заговоров, сверху то, что подготовлено сейчас */
 INFO.prep=()=>{const b=INFO.book(),i=b.body.indexOf('<div class="bkh"><span>Подготовлено'),j=b.body.lastIndexOf('<div class="how"'),n=bkCount();
- const now=picked().filter(k=>SPELLS[k]&&SPELLS[k].lv),min=now.reduce((a,k)=>a+SPELLS[k].lv,0);
+ const now=picked().filter(k=>SPELLS[k]&&SPELLS[k].lv).sort((a,b)=>SPELLS[b].lv-SPELLS[a].lv),min=now.reduce((a,k)=>a+SPELLS[k].lv,0);
  const chips=now.length?`<div class="prepn">${now.map(k=>`<button class="pchip" data-learn="${k}" aria-label="убрать">✓ ${rn(SPELLS[k])}${SPELLS[k].n}</button>`).join('')}</div>`:'';
  const body=`<div class="mu sm" style="margin:0 2px 6px">Отметь заклинания на сегодня: творить можно только подготовленные. Заговоры Арадия знает всегда. Нажми на подготовленное сверху, чтобы убрать его.</div>`+chips+(i>=0?b.body.slice(i,j>i?j:undefined):'');
  return{t:'Подготовка заклинаний',sub:`после долгого отдыха · ${n.s} из ${n.Sx}${min?` · займёт ${min} мин.`:''}`,body,
   acts:`<button data-act="closeD">Готово: заклинания подготовлены</button><button class="ghost" data-info="myspells">Все заклинания ›</button>`}};
 /* утро после долгого отдыха: спросить, оставить подготовленные или выбрать заново */
-INFO.morn=()=>{const now=picked().filter(k=>SPELLS[k]&&SPELLS[k].lv),n=bkCount();
+INFO.morn=()=>{const now=picked().filter(k=>SPELLS[k]&&SPELLS[k].lv).sort((a,b)=>SPELLS[b].lv-SPELLS[a].lv),n=bkCount();
  return{t:'Утро',sub:`после долгого отдыха · подготовлено ${n.s} из ${n.Sx}`,body:`<p>Отдых закончен. После него друид может подготовить другие заклинания на день.</p>`+(now.length?`<div class="prepn">${now.map(k=>`<span class="pchip">${rn(SPELLS[k])}${SPELLS[k].n}</span>`).join('')}</div>`:`<p class="mu">Сейчас ничего не подготовлено.</p>`),
   acts:`<button data-act="closeD">Оставить как есть</button><button class="ghost" data-info="prep">Подготовить заклинания ›</button>`}};
 QMAP.morn=['cast'];addQ('morn',['cast']);
@@ -5517,7 +5517,7 @@ QMAP.prep=['cast'];QMAP.myspells=['cast'];addQ('prep',['cast']);addQ('myspells',
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-27-21';
+const BUILD='aradia-2026-11-27-22';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
