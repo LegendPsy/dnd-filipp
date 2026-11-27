@@ -1184,6 +1184,39 @@ h1,h2,h3{font-family:var(--serif);font-weight:400}
  #p-char .cnds::-webkit-scrollbar{display:none}
  #p-char .cnd{flex:none}
 }
+
+/* ===== Бой друида (тред 3): облики, звери, созвездия ===== */
+.fform{flex:none;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.wst{display:inline-flex;gap:3px;margin-left:4px;vertical-align:-1px}.wst .star{width:12px;height:12px}
+.fform.tr{display:flex;flex-wrap:wrap;gap:6px}
+.cnd.rc.no{color:var(--mute);border-style:dashed}
+.cst{position:relative;background:linear-gradient(160deg,rgba(40,50,61,.92),rgba(26,33,42,.92));border:1px solid rgba(169,201,234,.3);border-radius:12px;padding:5px 4px 6px;display:flex;flex-direction:column;align-items:center;gap:1px;color:#cfe3f7;transition:transform .12s cubic-bezier(.3,1.6,.5,1);min-width:0}
+.cst svg{width:46px;height:26px}
+.cst b{font:600 15px/1.05 "Playfair Display",serif;color:#e6eef6}
+.cst small{font:italic 400 10.5px/1.15 Spectral,serif;color:var(--mute);text-align:center;max-width:100%}
+.cst.pk{border-color:rgba(207,227,247,.55)}
+.cst.on{border-color:#cfe3f7;box-shadow:0 0 0 1px rgba(207,227,247,.6),0 0 18px rgba(169,201,234,.45);background:linear-gradient(160deg,rgba(60,78,98,.95),rgba(30,40,54,.95))}
+.cst.on b{color:#fff}.cst.on small{color:#cfe3f7}
+.cst.off{opacity:.45}
+.cst.wf{color:var(--gold2)}
+.cst.pressed{transform:scale(.93) translateY(2px)}
+.fres4 .fc .ch i.sep{width:6px}
+.tok.bst,.fvit .tok.bst{border-color:rgba(240,196,122,.55);box-shadow:0 0 0 1px rgba(240,196,122,.25)}
+.ab.bst .m{color:var(--gold2)}
+.cnd.frm{color:#f3e7cf;border-color:rgba(240,196,122,.55);background:linear-gradient(160deg,rgba(70,58,40,.6),rgba(30,26,20,.6))}
+.bstl{display:flex;flex-direction:column;gap:6px}
+.bstr{text-align:left;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.bstr b{display:block;font:600 17px/1.1 "Playfair Display",serif;color:var(--ink)}
+.bstr small{display:block;font-size:12.5px;line-height:1.25;color:var(--mute);margin-top:2px}
+.bstr.no{opacity:.55}.bstr em{color:var(--red2);font-style:normal}
+.bstat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 6px}
+.bstat div{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:5px 8px;text-align:center}
+.bstat span{display:block;font-size:11px;color:var(--mute)}
+.bstat b{font:600 19px/1.1 "Playfair Display",serif}.bstat small{font-size:12px;color:var(--mute)}
+.qbox p.bab{font-variant-numeric:tabular-nums}
+#p-fight.inbeast .shead h1{color:var(--gold2)}
+@media (max-height:760px){.cst svg{width:40px;height:22px}.cst b{font-size:14px}.cst small{font-size:10px}}
+#p-fight.d3 .cst small{display:none}
 </style>
 </head>
 <body>
@@ -1240,21 +1273,21 @@ h1,h2,h3{font-family:var(--serif);font-weight:400}
   <div class="smh">Языки<i></i><button class="pick" data-info="lang">подробнее ›</button></div>
   <div class="langs" id="langs"></div>
  </div></section>
-<section class="page wip" id="p-fight"><div class="screen">
-  <div class="soon"><div><img src="art/t-fight.webp" alt=""><h2>Бой</h2><p>Скимитар, Дикий облик со зверями и Звёздный облик появятся здесь в следующих обновлениях.</p></div></div>
-  <div class="shead"><img src="art/t-fight.webp" alt=""><div><h1>Бой</h1><div class="cls" id="fSub"></div></div><button class="turnq" data-info="turn">как устроен ход ›</button></div>
+<section class="page" id="p-fight"><div class="screen">
+  <div class="shead"><img id="fIco" src="art/t-fight.webp" alt=""><div><h1 id="fTtl">Бой</h1><div class="cls" id="fSub"></div></div><button class="turnq" data-info="turn">как устроен ход ›</button></div>
   <div class="fvit" id="fVit"></div>
   <div class="mode" id="mode3">
     <button data-m="norm" class="on">Обычный</button>
     <button data-m="adv">Преимущество</button>
     <button data-m="dis">Помеха</button>
   </div>
-  <div class="smh">Действие<i></i><button class="pick" data-info="fspellpick">заклинания ›</button></div>
+  <div class="smh">Действие<i></i><button class="pick" id="fPick" data-info="fspellpick">заклинания ›</button></div>
   <div class="fgrid" id="fAct"></div>
-  <div class="smh">Реакция и бонусное действие<i></i></div>
+  <div class="smh">Бонусное действие и реакция<i></i></div>
   <div class="fgrid c3" id="fRe"></div>
-  <div class="smh">Запасы<i></i></div>
-  <div class="fres" id="fRes"></div>
+  <div class="smh" id="fFormH"></div>
+  <div class="fform" id="fForm"></div>
+  <div class="fres4" id="fRes"></div>
  </div></section>
 <section class="page wip" id="p-inv"><div class="screen">
   <div class="soon"><div><img src="art/t-inv.webp" alt=""><h2>Инвентарь</h2><p>Снаряжение друида и амулет «Звёздная карта» появятся здесь в следующих обновлениях.</p></div></div>
@@ -1331,7 +1364,7 @@ function condFx(spec){const dis=[],adv=[];let fail=null;const C=S.cond||{},kind=
  if(spec.conc&&hasFeat('war_caster'))adv.push('Боевой заклинатель');
  const e=S.exh||0;if(e>=1&&kind==='check')dis.push('Истощение');if(e>=3&&(kind==='atk'||kind==='save'))dis.push('Истощение');
  return{dis,adv,fail}}
-function effSpeed(){const C=S.cond||{},e=S.exh||0;if(e>=5||Object.keys(C).some(k=>C[k]&&COND[k]&&COND[k].fx.spd0))return 0;return e>=2?S.speed/2:S.speed}
+function effSpeed(){const C=S.cond||{},e=S.exh||0,b=wfB()?wfB().spd:S.speed;if(e>=5||Object.keys(C).some(k=>C[k]&&COND[k]&&COND[k].fx.spd0))return 0;return e>=2?b/2:b}
 function effMax(){return (S.exh||0)>=4?Math.floor(S.hp.max/2):S.hp.max}
 /* нажатие на значок сразу включает/выключает состояние; порядок постоянный, как в списке.
    Какие значки на экране, выбирается галочками в «все ›». Истощение: каждое нажатие +1 уровень, после 6 снова 0. */
@@ -1355,7 +1388,7 @@ function cLeft(c){if(c===1)return slotsLeft();const h=S.hi&&S.hi[c];return h?cTo
 function firstC(lv){for(let c=Math.max(1,lv);c<=9;c++)if(cLeft(c)>0)return c;return 0}
 function useSlotC(c){if(c===1)return useSlot();const h=S.hi&&S.hi[c];if(!h||cLeft(c)<=0)return false;if(h.extra>0)h.extra--;else h.used++;return true}
 const FONT={2:3,3:5,4:6,5:7};
-const effAC=()=>(S.mArm?Math.max(S.ac,13+mod(S.ab.dex)):S.ac)+(S.shieldOn?5:0);
+const effAC=()=>wfB()?wfB().ac:(S.mArm?Math.max(S.ac,13+mod(S.ab.dex)):S.ac)+(S.shieldOn?5:0);
 /* ===== ЗАКЛИНАНИЯ ДРУИДА (PHB 2014, своими словами, расстояния в футах) =====
    Поля: n имя, lv круг (0 = заговор), soc набор «Общение», fight набор «Бой», conc концентрация, ritual ритуал,
    atk:1 + hit() + dmg(c) атака заклинанием (c = круг ячейки), heal {n,s,up} лечение 1кS + Мудрость,
@@ -1399,6 +1432,7 @@ const noActBtn=()=>`<button disabled>Нельзя: ты ${noAct().toLowerCase()}
 /* почему заклинание тусклое: объяснение сверху в его шторке (не всплывашкой) */
 function offWhy(k){const p=SPELLS[k],w=[];
  if(noAct())w.push(`Ты <b>${noAct().toLowerCase()}</b>: в этом состоянии нет действий и реакций, колдовать нельзя. Сними состояние на вкладке «Персонаж», когда оно закончится.`);
+ if(wfB())w.push(`Ты в облике <b>${esc(wfB().n.toLowerCase())}</b>: в зверином облике колдовать нельзя. Концентрация на уже наложенном заклинании держится. Вернуться в свой облик можно бонусным действием во вкладке «Бой».`);
  if(p.lv&&!firstC(p.lv)&&!(p.conc&&S.conc===k)&&!p.ritual&&!(k==='guiding_bolt'&&chartLeft()))w.push(`<b>Нет свободных ячеек${p.lv>1?' '+p.lv+' круга и выше':''}</b>: все потрачены. Вернутся после долгого отдыха.`);
  if(!canPay(p))w.push(`<b>Нет компонента</b>: нужен ${p.cost.what} стоимостью ${p.cost.gp} золотых. Деньги за сотворение не списываются, нужен сам предмет. Купи его кнопкой внизу или отметь, что он у тебя уже есть.`);
  return w.length?`<div class="how why"><b class="wt">Почему тусклое</b>${w.map(x=>`<div>${x}</div>`).join('')}</div>`:''}
@@ -1466,42 +1500,7 @@ function atkSpec(k,c){
 }
 function fitFight(){const pg=$('p-fight');if(!pg||!pg.classList.contains('on'))return;const sc=pg.querySelector('.screen');
  pg.classList.remove('d1','d2','d3','d4','d5','d6','d7','d8');for(const c of ['d1','d2','d3','d4','d5','d6','d7','d8']){if(sc.scrollHeight<=sc.clientHeight+1)break;pg.classList.add(c)}}
-function renderFight(){
- if(!$('fVit'))return;
- $('fSub').textContent=`атака заклинанием ${sg(spellAtk())} · сложность ${spellDC()}`;
- const em=effMax(),hp=Math.min(S.hp.cur,em),sp=effSpeed();
- $('fVit').innerHTML=`<button class="tok hp" data-hp="1"><div class="k">Хиты</div><div class="v">${hp} <small>/ ${em}</small>${S.hp.temp?` <span class="temp">+${S.hp.temp}</span>`:''}</div><div class="hpbar"><i style="width:${Math.max(0,Math.min(100,hp/em*100))}%"></i></div></button>
- <button class="tok ${S.shieldOn?'shield':''}" data-info="ac"><div class="k">Класс доспеха</div><div class="v">${effAC()}</div></button>
- <button class="tok" data-finit="1"><div class="k">Инициатива</div><div class="v">${sg(initB())}</div></button>
- <button class="tok" data-info="move"><div class="k">Скорость</div><div class="v ${sp!==S.speed?'warn':''}">${String(sp).replace('.',',')}<small>м</small></div></button>`;
- const left=slotsLeft();
- const fs=known().filter(k=>SPELLS[k]&&SPELLS[k].fight&&S.fSpellShow.includes(k));
- const nAct=fs.filter(k=>!SPELLS[k].react).length+2,cmpA=nAct>4;let cmp=cmpA;
- const scard=k=>{const p=SPELLS[k],off=(p.lv&&!firstC(p.lv)&&!(k==='shield'&&S.shieldOn)&&!(k==='guiding_bolt'&&chartLeft()))||(metaArm&&!metaOk(metaArm,k,p.lv))||!canPay(p)||!!noAct();
-  if(k==='shield')return `<button class="atk ${cmp?'cmp':''} ${S.shieldOn?'on':''} ${off?'off':''} ${metaArm&&!off?'mglow':''}" data-info="sp_shield"><b>${rn(SPELLS.shield)}Щит</b><div class="hit"><span class="d" style="color:#e3d4ff">+5</span><span class="dm">к классу доспеха</span></div><small>${S.shieldOn?'действует до твоего хода':'реакция'}</small></button>`;
-  return `<button class="atk ${cmp?'cmp':''} ${off?'off':''} ${metaArm&&!off?'mglow':''}" data-info="sp_${k}"><b${!p.n.includes(' ')&&p.n.length>12?' class="lw"':''}>${rn(p)}${p.n}</b>${p.atk?`<div class="hit"><span class="d">${sg(spellAtk())}</span><span class="dm">${p.hit()}</span></div>`:(cmp?(CAP[k]?`<div class="hit"><span class="dm">${CAP[k]}</span></div>`:''):`<div class="hit"><span class="dm">${p.short}</span></div>`)}<small>${k==='mage_armor'&&S.mArm?'действует, 8 часов':p.lv?(p.where||'')+' · тратит ячейку':'заговор · '+(p.where||'')}${costTag(p)}</small></button>`};
- const acts=fs.filter(k=>!SPELLS[k].react).map(scard);cmp=cmpA;
- acts.push(`<button class="atk steel ${cmp?'cmp':''} ${noAct()?'off':''}" data-info="w_dagger"><b>Кинжал</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">урон 1к4${sg(mod(S.ab.dex))}</span></div><small>1,5 м или бросок 6 м</small></button>`);
- acts.push(`<button class="atk plain ${cmp?'cmp':''}" data-info="actions"><b>Другие действия</b><small style="white-space:normal">Рывок, Отход, Уклонение, Помощь, Засада, Поиск</small></button>`);
- $('fAct').className='fgrid'+(acts.length>4?' c3x':'');$('fAct').innerHTML=acts.join('');
- $('fRe').innerHTML=fs.filter(k=>SPELLS[k].react).map(scard).join('')+`<button class="atk steel ${cmp?'cmp':''} ${noAct()?'off':''}" data-info="opp"><b>Удар вслед</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">кинжалом</span></div><small>реакция, враг уходит</small></button>`;
- renderItems('fight');
- requestAnimationFrame(fitFight);
- const pips=(n,u,cls)=>Array.from({length:n},(_,i)=>`<span class="charge ${cls} ${i<u?'used':''}"></span>`).join('');
- const dz=S.hp.cur<=0,D=S.death,dp=(n,c)=>Array.from({length:3},(_,i)=>`<span class="charge ${i<n?c:'used'}"></span>`).join('');
- const circ=[1,...hiC()],L=S.spt.max-S.spt.used,cost=c=>c===1?2:FONT[c];
- const mm=S.meta||[],one=circ.length<=2,mk=c=>`<button class="fq" data-act="${c===1?'pt2slot':'pt2slotC:'+c}" ${L>=cost(c)?'':'disabled'}><span class="xg">${cost(c)}<i class="charge"></i></span><span class="xa">›</span><span class="xv">${ROM[c]}</span>${one?' <small>создать ячейку</small>':''}</button>`,br=c=>`<button class="fq dn" data-act="${c===1?'slot2pt':'slot2ptC:'+c}" ${cLeft(c)&&S.spt.used>=1?'':'disabled'}><span class="xv">${ROM[c]}</span><span class="xa">›</span><span class="xg">${c}<i class="charge"></i></span>${one?' <small>разбить ячейку</small>':''}</button>`;
- $('fRes').innerHTML=`<div class="flexp">
-  <button class="fr" data-info="slots"><span class="t">Ячейки</span><span class="sgs">${circ.map(c=>{const t=cTot(c),l=cLeft(c);return `<span class="sg ${l?'':'z'}" data-c="${c}"><span class="ch">${Array.from({length:t},(_,i)=>`<span class="charge v ${i>=l?'used':''}"></span>`).join('')}</span><i>${c} круг</i></span>`}).join('')}</span></button>
-  <button class="fr frp" data-info="flex"><span class="t">Единицы чародейства <small>${L} из ${S.spt.max}</small></span><span class="ch">${pips(S.spt.max,S.spt.used,'')}</span></button>
-  ${mm.length?`<div class="fxr"><button class="lb mlb" data-info="meta">метамагия ›</button>${mm.filter(m=>m!=='twinned'&&META[m]).map(m=>{const n=META[m].cost;return `<button class="fq mq ${metaArm===m?'armed':''}" data-act="arm:${m}" ${L>=n||metaArm===m?'':'disabled'}>${META[m].n.split(' ')[0]} <span class="cpips">${'<i class="charge"></i>'.repeat(n)}</span></button>`}).join('')}${mm.includes('twinned')?`<button class="fq mq x2 ${metaArm==='twinned'?'armed':''}" data-act="arm:twinned" ${L>=1||metaArm==='twinned'?'':'disabled'}><b style="font:700 19px/1 &quot;Playfair Display&quot;,serif">×2</b></button>`:''}</div>`:''}
- </div>
- <div class="fres4">
- <button class="fc ${chaosArmed?'armed':''}" data-info="chaos"><span class="t">Поток хаоса</span><span class="ch">${pips(S.chaos.max,S.chaos.used,'v')}</span></button>
- <button class="fc surge" data-info="surge"><span class="t">Волна дикой магии</span><span class="ic">✺</span></button>${S.hi&&S.level>=6?`<button class="fc" data-info="bend"><span class="t">Подчинение удачи</span><span class="cpips"><i class="charge"></i><i class="charge"></i></span></button>`:''}
- ${S.conc?`<button class="fc armed" data-info="conc"><span class="t">${SPELLS[S.conc].n}</span><small class="cc">концентрация</small></button>`:`<button class="fc" data-info="conc"><span class="t">Концентрация</span></button>`}
- ${dz||D.s||D.f?`<button class="fc ${dz?'dead':''}" data-info="death"><span class="t">Спасброски от смерти</span><span class="ch tw"><span>${dp(D.s,'g')}</span><span>${dp(D.f,'r')}</span></span></button>`:''}</div>`;
-}
+function renderFight(){} /* вкладка «Бой» друида: ниже, блок «БОЙ ДРУИДА (тред 3)» */
 function barrier(){const b=document.createElement('div');b.className='barrier';document.body.appendChild(b);
  b.animate([{opacity:0,transform:'scale(1.08)'},{opacity:1,transform:'scale(1)',offset:.25},{opacity:.0,transform:'scale(.99)'}],{duration:900,easing:'cubic-bezier(.2,.9,.3,1)'}).onfinish=()=>b.remove();
  vib([25,30,60]);document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake')}
@@ -1781,7 +1780,7 @@ const mod=s=>Math.floor((s-10)/2);
 const sg=n=>(n>=0?'+':'−')+Math.abs(n);
 const prof=()=>Math.ceil(S.level/4)+1;
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let metaArm=null,twinPend=null,rayPend=null,rollMode='norm',editing=false,chaosArmed=false,inspArmed=false,openAb=null,openInfoKey=null;
+let poisPend=null,chalPend=0,wfDrop=null,lastDrop=null,metaArm=null,twinPend=null,rayPend=null,rollMode='norm',editing=false,chaosArmed=false,inspArmed=false,openAb=null,openInfoKey=null;
 const vib=()=>{}; /* вибрации нет: Арадия отказалась */
 const d20i='<svg class="d20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 2l-5 9h10z M7 11l5 11 5-11"/></svg>';
 
@@ -1794,13 +1793,13 @@ const d20i='<svg class="d20" viewBox="0 0 24 24" fill="none" stroke="currentColo
 function renderHead(){
  $('nm').innerHTML=esc(S.name)+` <span class="lv2">${S.level} уровень</span>`;
  $('cl').innerHTML=`${esc(S.race)} · ${esc(S.cls)} ${S.sub==='Круг Звёзд'?'Круга Звёзд':esc(S.sub)}`;
- const em=effMax();$('hpCur').textContent=Math.min(S.hp.cur,em);$('hpMax').textContent=em;$('hpMax').classList.toggle('warn',em<S.hp.max);$('hpTemp').textContent=S.hp.temp?'+'+S.hp.temp:'';
- $('hpBar').style.width=Math.max(0,Math.min(100,Math.min(S.hp.cur,em)/em*100))+'%';
- $('acV').textContent=effAC();$('acV').parentNode.classList.toggle('shield',!!S.shieldOn);{const sp=effSpeed();$('spV').innerHTML=`${String(sp).replace('.',',')}<small> футов</small>`;$('spV').classList.toggle('warn',sp!==S.speed)}$('initV').textContent=sg(initB());
+ const em=effMax(),B=wfB();$('hpTok').querySelector('.k').textContent=B?'Хиты зверя':'Хиты';$('hpTok').classList.toggle('bst',!!B);if(B){$('hpCur').textContent=S.wf.hp;$('hpMax').textContent=B.hp;$('hpMax').classList.remove('warn');$('hpTemp').textContent=S.hp.temp?'+'+S.hp.temp:'';$('hpBar').style.width=Math.max(0,Math.min(100,S.wf.hp/B.hp*100))+'%'}else{$('hpCur').textContent=Math.min(S.hp.cur,em);$('hpMax').textContent=em;$('hpMax').classList.toggle('warn',em<S.hp.max);$('hpTemp').textContent=S.hp.temp?'+'+S.hp.temp:'';
+ $('hpBar').style.width=Math.max(0,Math.min(100,Math.min(S.hp.cur,em)/em*100))+'%'}
+ $('acV').textContent=effAC();$('acV').parentNode.classList.toggle('shield',!!S.shieldOn);{const sp=effSpeed();$('spV').innerHTML=`${String(sp).replace('.',',')}<small> футов</small>`;$('spV').classList.toggle('warn',sp!==baseSpd())}$('initV').textContent=sg(initB());
 }
 function renderAbil(){
- $('abil').innerHTML=AB.map(([k,n])=>{const m=mod(S.ab[k]);
-  return `<button class="ab ${k==='wis'?'main':''}" data-ab="${k}"><div class="sheet"><img class="ic" src="art/ab-${k}.webp" alt=""><span class="m">${sg(m)}</span><span class="band">${n}</span></div></button>`}).join('');
+ $('abil').innerHTML=AB.map(([k,n])=>{const m=mod(abv(k));
+  return `<button class="ab ${k==='wis'?'main':''} ${wfB()&&BAB.includes(k)?'bst':''}" data-ab="${k}"><div class="sheet"><img class="ic" src="art/ab-${k}.webp" alt=""><span class="m">${sg(m)}</span><span class="band">${n}</span></div></button>`}).join('');
 }
 /* ресурсы на первом экране: звёздочки = заряды умений, ромбы = кости хитов и вдохновение */
 const star=(on)=>`<i class="star ${on?'':'off'}"></i>`,dia=(on)=>`<i class="dia ${on?'':'off'}"></i>`;
@@ -1820,12 +1819,14 @@ const COINS=[['pp','платина',['#c9c6d4','#7c7988']],['gp','золото',
 function renderCoins(){}
 function pas(k){const a={perception:'wis',insight:'wis',investigation:'int'}[k];return 10+mod(S.ab[a])+(S.skills[k]?prof():0)+(k!=='insight'&&hasFeat('observant')?5:0)}
 const hasFeat=k=>(S.feats||[]).some(f=>f.k===k);
-const initB=()=>mod(S.ab.dex)+(hasFeat('alert')?5:0),initBon=()=>{const b=[{l:'Ловкость',v:mod(S.ab.dex)}];if(hasFeat('alert'))b.push({l:'Бдительный',v:5});return b};
+const initB=()=>mod(abv('dex'))+(hasFeat('alert')?5:0),initBon=()=>{const b=[{l:wfB()?'Ловкость '+wfB().n.toLowerCase():'Ловкость',v:mod(abv('dex'))}];if(hasFeat('alert'))b.push({l:'Бдительный',v:5});return b};
 function renderSenses(){$('senses').innerHTML=[['perception','Пассивное восприятие'],['insight','Пассивная проницательность'],['investigation','Пассивный анализ']].map(([k,n])=>`<button class="sense" data-info="senses"><b>${pas(k)}</b><span>${n}</span></button>`).join('')}
 function renderLog(){if(S.log.length>7){S.log=S.log.slice(0,7);save()}$('log').innerHTML=S.log.length?S.log.map(l=>`<div><span>${esc(l.l)}</span><b>${l.t}</b></div>`).join(''):'<div><span>Пока ни одного броска</span></div>'}
 function skAb(id){for(const k in SK)if(SK[k].some(x=>x[0]===id))return k}
-function skMod(id){const k=skAb(id);return mod(S.ab[k])+(S.skills[id]?prof():0)}
-function rollSkill(id){const k=skAb(id),[,n,s3]=ABN[k],sk=SK[k].find(x=>x[0]===id),b=[{l:s3,v:mod(S.ab[k])}];if(S.skills[id])b.push({l:'мастерство',v:prof()});d20({label:sk[1],bonus:b,kind:'check',ab:k})}
+function skMod(id){const k=skAb(id),v=mod(abv(k))+(S.skills[id]?prof():0),b=wfB();return b&&b.sk&&b.sk[id]!=null?Math.max(v,b.sk[id]):v}
+function rollSkill(id){const k=skAb(id),[,n,s3]=ABN[k],sk=SK[k].find(x=>x[0]===id);d20({label:sk[1],bonus:skBon(id),kind:'check',ab:k})}
+/* бонусы навыка: в зверином облике Сила/Ловкость/Телосложение зверя; если у зверя бонус навыка выше, берётся он */
+function skBon(id){const k=skAb(id),s3=ABN[k][2],b=[{l:s3+(wfB()&&BAB.includes(k)?' зверя':''),v:mod(abv(k))}];if(S.skills[id])b.push({l:'мастерство',v:prof()});const B=wfB(),sum=b.reduce((a,x)=>a+x.v,0);if(B&&B.sk&&B.sk[id]!=null&&B.sk[id]>sum)return[{l:'навык зверя',v:B.sk[id]}];return b}
 function renderSocial(){
  $('chaMod').textContent=sg(mod(S.ab.cha));$('wisMod').textContent=sg(mod(S.ab.wis));$('profS').textContent='+'+prof();
  $('slips').innerHTML=SOC.map(([id,k])=>{const sk=SK[k].find(x=>x[0]===id),o=S.skills[id];return `<button class="slip" data-sroll="${id}"><div class="sheet"><span class="top"><span class="n"><i class="dot ${o?'on':''}"></i>${sk[1]}</span><span class="m">${sg(skMod(id))}</span></span><span class="h">${sk[2]}</span></div></button>`}).join('')
@@ -1837,13 +1838,14 @@ function renderAll(){syncItems();renderRace();renderFight();renderSocial();rende
 
 /* ---------- шторка характеристики ---------- */
 function renderDrawer(){
- const k=openAb,[,n,s3]=ABN[k],m=mod(S.ab[k]),p=prof(),on=S.saves[k];
- let h=`<div class="dh"><img class="px" src="art/ab-${k}.webp" alt=""><h2>${n}</h2><div class="sc">значение<b>${S.ab[k]}</b></div></div>`;
+ const k=openAb,[,n,s3]=ABN[k],m=mod(abv(k)),p=prof(),on=S.saves[k],bz=wfB()&&BAB.includes(k);
+ let h=`<div class="dh"><img class="px" src="art/ab-${k}.webp" alt=""><h2>${n}<button class="bang" data-info="qt_ab_${k}" aria-label="Точная цитата правил">!</button></h2><div class="sc">${bz?esc(wfB().n.toLowerCase()):'значение'}<b>${abv(k)}</b></div></div>`;
+ if(bz)h+=`<div class="how" style="margin:0 0 6px">Ты в облике: <b>${esc(wfB().n)}</b>. ${n} зверя ${abv(k)}, твоя ${S.ab[k]}.</div>`;
  if(editing)h+=`<div class="edrow">Значение характеристики <input type="number" inputmode="numeric" id="abIn" value="${S.ab[k]}"> <span>нажимай на точки, чтобы менять владение</span></div>`;
  h+=`<div class="drows">`;
  h+=`<button class="row main" data-roll="check"><span class="dot" style="visibility:hidden"></span><span class="nm">Проверка: ${n}<small>просто ${n.toLowerCase()}, без навыка</small></span><span class="md">${sg(m)}</span>${d20i}</button>`;
  h+=`<button class="row main" data-roll="save"><span class="dot red ${on?'on':''}"></span><span class="nm">Спасбросок<small>${on?'владеешь':'не владеешь'}</small></span><span class="md">${sg(m+(on?p:0))}</span>${d20i}</button>`;
- SK[k].forEach(([id,nm,hint])=>{const o=S.skills[id];h+=`<button class="row" data-roll="${id}"><span class="dot ${o?'on':''}"></span><span class="nm">${nm}<small>${hint}</small></span>${o&&SRC[id]?`<span class="tag">${SRC[id]}</span>`:''}<span class="md">${sg(m+(o?p:0))}</span>${d20i}</button>`});
+ SK[k].forEach(([id,nm,hint])=>{const o=S.skills[id];h+=`<button class="row" data-roll="${id}"><span class="dot ${o?'on':''}"></span><span class="nm">${nm}<small>${hint}</small></span>${o&&SRC[id]?`<span class="tag">${SRC[id]}</span>`:''}<span class="md">${sg(skMod(id))}</span>${d20i}</button>`});
  if(!SK[k].length)h+=`<div class="row" style="color:var(--mute);font-size:14px">У Телосложения нет навыков. Его бросают на выносливость и удержание заклинаний.</div>`;
  h+=`</div>`;
  const pp=x=>10+m+(S.skills[x]?p:0);
@@ -2062,6 +2064,7 @@ function dust(x,y,gold){const ov=$('roll');for(let i=0;i<(gold?28:14);i++){const
  const dir=Math.random()<.5?-1:1,dx=dir*(30+Math.random()*90),dy=-(Math.random()*(gold?90:30));
  d.animate([{transform:'translate(0,0)',opacity:1},{transform:`translate(${dx}px,${dy}px)`,opacity:0}],{duration:420+Math.random()*380,easing:'cubic-bezier(.2,.8,.4,1)',fill:'forwards'})}}
 function showRes(){
+ if(dragonOk(cur.spec)&&cur.used<10){cur.spec.note=(cur.spec.note?cur.spec.note+' · ':'')+`Дракон: выпало ${cur.used}, считается 10`;cur.used=10}
  const {spec,m,used,other,bonus}=cur,res=$('res'),total=used+bonus;
  const br=`к20 <b>${used}</b>`+(other!=null?` <span style="opacity:.6">(второй ${other}: ${m==='adv'?'преимущество':'помеха'})</span>`:'')+spec.bonus.filter(x=>x.v).map(x=>` ${x.v>=0?'+':'−'} ${Math.abs(x.v)} ${x.l}`).join('');
  const crit=used===20?'<div class="crit" style="color:var(--gold2)">Природная двадцатка!</div>':used===1?'<div class="crit" style="color:var(--red2)">Природная единица…</div>':'';
@@ -2073,7 +2076,7 @@ function showRes(){
 function twBtn(){if(rayPend)return `<button data-ray style="background:linear-gradient(90deg,rgba(226,80,30,.35),rgba(233,189,108,.35));border-color:var(--gold2)">Следующий луч: ${rayPend.i+1} из ${rayPend.n}</button>`;return twinPend?`<button data-twin style="background:linear-gradient(90deg,rgba(165,124,255,.35),rgba(233,189,108,.35));border-color:var(--gold2)">Удвоенное: атака по второй цели</button>`:''}
 function metaShow(n,mt){const res=$('res');cur={dice:true};$('roll').classList.add('on');res.innerHTML=`<div class="lbl">${esc(n)}</div><div class="tot" style="font-size:34px;color:var(--gold2)">${esc(mt.split(':')[0])}</div><div class="br">${esc(mt.split(': ')[1]||'')}</div><div class="hint">нажми, чтобы закрыть</div>`;res.classList.add('on')}
 function resExtra(die){const sp=cur.spec;let h=sp.after?sp.after(die):'';
- if(sp.dmg){const g=sp.dmg,crit=die===20,n=crit?g.dn*2:g.dn;h+=`<div class="acts">${die===1?'':`<button class="red" data-dmg="${n}">${crit?'Крит! ':''}Попал: урон ${n}к${g.ds}${g.k?sg(g.k):''}</button>`}${twBtn()}</div>`}
+ if(sp.dmg){const g=sp.dmg,crit=die===20,n=crit&&!g.flat?g.dn*2:g.dn;h+=`<div class="acts">${die===1?'':`<button class="red" data-dmg="${n}">${crit?'Крит! ':''}Попал: урон ${g.flat?g.k:n+'к'+g.ds+(g.k?sg(g.k):'')}</button>`}${twBtn()}</div>`}
  return h}
 function useLuck(){
  if(!cur||cur.dice||busy)return;S.luck.used++;save();renderFate();renderFight();
@@ -2090,7 +2093,11 @@ $('roll').addEventListener('click',e=>{
  if(busy)return;
  if(e.target.closest('[data-luck]')){useLuck();return}
  const p=e.target.closest('[data-pick]');if(p){const v=+p.dataset.pick+cur.bonus;cur.final=+p.dataset.pick;S.log[0]={l:cur.spec.label+' (Везунчик)',t:v};save();$('res').innerHTML=`<div class="lbl">${esc(cur.spec.label)}</div><div class="tot">${v}</div><div class="br">оставлен кубик <b>${p.dataset.pick}</b></div>${resExtra(cur.final)}<div class="hint">нажми, чтобы закрыть</div>`;vib(15);return}
- const dm=e.target.closest('[data-dmg]');if(dm){const g=cur.spec.dmg,n=+dm.dataset.dmg;lastPt={x:e.clientX,y:e.clientY};vib([20,30,40]);dice({label:`${g.n}: урон`,n,s:g.ds,k:g.k,kl:g.kl,min:0,fx:g.fx,after:()=>`<div class="br">${g.t}${n>g.dn?' · критическое попадание, кубиков вдвое':''}</div>${twinPend?`<div class="acts">${twBtn()}</div>`:''}`});return}
+ const dm=e.target.closest('[data-dmg]');if(dm){const g=cur.spec.dmg,n=+dm.dataset.dmg;lastPt={x:e.clientX,y:e.clientY};vib([20,30,40]);const P=g.p;
+  if(g.flat){cur={dice:true};$('res').innerHTML=`<div class="lbl">${esc(g.n)}: урон</div><div class="tot">${g.k}</div><div class="br">${g.t}. Урон у этой атаки всегда ${g.k}, кубик не нужен</div><div class="hint">нажми, чтобы закрыть</div>`;pushLog(g.n+': урон',g.k);return}
+  dice({label:`${g.n}: урон`,n,s:g.ds,k:g.k,kl:g.kl,min:0,fx:g.fx,after:()=>{if(P)poisPend=P;return `<div class="br">${g.t}${n>g.dn?' · критическое попадание, кубиков вдвое':''}</div>${P?`<div class="acts"><button class="red" data-pois>${P.l}: бросить ${P.dn}к${P.ds}</button></div>`:''}${twinPend?`<div class="acts">${twBtn()}</div>`:''}`}});return}
+ if(e.target.closest('[data-pois]')&&poisPend){const P=poisPend;poisPend=null;lastPt={x:e.clientX,y:e.clientY};return dice({label:P.l,n:P.dn,s:P.ds,min:0,fx:'chaos',after:()=>`<div class="br">${P.t}</div>`})}
+ if(e.target.closest('[data-chal]')&&chalPend){chalPend=0;lastPt={x:e.clientX,y:e.clientY};return chaliceRoll()}
  {const bb=e.target.closest('[data-bomb]');if(bb){const sd=+bb.dataset.bomb;lastPt={x:e.clientX,y:e.clientY};vib([20,30,40]);return dice({label:'Бомбардировка заклинаниями',n:1,s:sd,min:0,fx:'fire',after:()=>'<div class="br">прибавь к урону заклинания</div>'})}}
  if(e.target.closest('[data-ray]')){const t=rayPend;if(!t)return;t.i++;if(t.i>=t.n)rayPend=null;lastPt={x:e.clientX,y:e.clientY};vib([15,30,40]);const sp=atkSpec(t.k,t.c);sp.label=sp.label.replace(': атака',`: луч ${t.i} из ${t.n}`);busy=false;return d20(sp)}
  if(e.target.closest('[data-twin]')){const t=twinPend;twinPend=null;if(!t)return;lastPt={x:e.clientX,y:e.clientY};vib([15,30,40]);const sp=atkSpec(t.k,t.c);sp.label=sp.label.replace(': атака',': вторая цель')+' · Удвоенное';busy=false;return d20(sp)}
@@ -2617,10 +2624,10 @@ eyeFx=function(x,y){const ov=$('roll'),w=document.createElement('div');w.classNa
  wspT.push(setTimeout(()=>w.animate([{opacity:1},{opacity:0,filter:'blur(3px)'}],{duration:500,fill:'forwards'}),2300))};
 /* ---------- броски из шторки ---------- */
 function rollFromDrawer(what){
- const k=openAb,[,n,s3]=ABN[k],m=mod(S.ab[k]),b=[{l:s3,v:m}];
+ const k=openAb,[,n,s3]=ABN[k],m=mod(abv(k)),b=[{l:s3+(wfB()&&BAB.includes(k)?' зверя':''),v:m}];
  if(what==='check')return d20({label:`Проверка: ${n}`,bonus:b,kind:'check',ab:k});
  if(what==='save'){if(S.saves[k])b.push({l:'мастерство',v:prof()});return d20({label:`Спасбросок: ${n}`,bonus:b,kind:'save',ab:k})}
- const sk=SK[k].find(x=>x[0]===what);if(S.skills[what])b.push({l:'мастерство',v:prof()});d20({label:sk[1],bonus:b,kind:'check',ab:k});
+ const sk=SK[k].find(x=>x[0]===what);d20({label:sk[1],bonus:skBon(what),kind:'check',ab:k});
 }
 
 document.addEventListener('click',e=>{
@@ -2677,7 +2684,7 @@ const INFO={
   acts:`<button data-act="pt2slot" ${S.spt.max-S.spt.used>=2?'':'disabled'}>2 единицы → ячейка 1 круга</button><button class="ghost" data-act="slot2pt" ${slotsLeft()&&S.spt.used?'':'disabled'}>Ячейка → 1 единица</button>`}),
  surge:()=>({t:'Волна дикой магии',sub:'дикая магия чародея',body:`<p>Магия Филиппа плохо слушается. <b>Сразу после заклинания 1 круга и выше</b> мастер может сказать бросить к20. На <b>1</b> случается волна: бросаешь к100 по таблице, и происходит что-то странное. От огненного шара вокруг себя до бороды из перьев.</p><p>Если <b>Поток хаоса</b> уже потрачен, мастер может сразу сказать бросить по таблице, без к20. После этого Поток хаоса возвращается.</p><div class="how">В таблице 50 строк, лист прочтёт нужную. Вернуть ячейку или единицы лист сделает сам.</div>`,
   acts:`<button data-act="surgeD20">Мастер попросил: бросить к20</button><button class="ghost" data-act="surgeD100">Сразу к100 по таблице</button>`}),
- conc:()=>{const c=mod(S.ab.con)+(S.saves.con?prof():0);return{t:'Концентрация',sub:S.conc?`держишь: ${SPELLS[S.conc].n}`:'сейчас ничего',body:`<p>Некоторые заклинания действуют, пока ты <b>держишь их вниманием</b>. Держать можно только одно: новое такое заклинание обрывает старое.</p><p>Когда тебя <b>ранят</b>, делаешь спасбросок Телосложения <b>${sg(c)}</b>. Сложность <b>10</b> или половина урона, если она больше. Провал: заклинание обрывается.</p><p>Также обрывается, если ты без сознания или погиб.</p>`,
+ conc:()=>{const c=mod(abv('con'))+(S.saves.con?prof():0);return{t:'Концентрация',sub:S.conc?`держишь: ${SPELLS[S.conc].n}`:'сейчас ничего',body:`<p>Некоторые заклинания действуют, пока ты <b>держишь их вниманием</b>. Держать можно только одно: новое такое заклинание обрывает старое.</p><p>Когда тебя <b>ранят</b>, делаешь спасбросок Телосложения <b>${sg(c)}</b>. Сложность <b>10</b> или половина урона, если она больше. Провал: заклинание обрывается.</p><p>Также обрывается, если ты без сознания или погиб.</p>`,
   acts:`<button data-act="concSave">Меня ранили: спасбросок ${sg(c)}</button>${S.conc?`<button class="ghost" data-act="concEnd">Закончить ${SPELLS[S.conc].n}</button>`:''}`}},
  death:()=>({t:'Спасброски от смерти',sub:`успехи ${S.death.s} из 3 · провалы ${S.death.f} из 3`,body:`<p>Когда хиты падают до <b>0</b>, Арадия без сознания. В начале каждого своего хода бросаешь <b>к20 без бонусов</b>:</p><p>• <b>10 и больше</b>: успех. Три успеха: ты стабилен, больше не бросаешь.<br>• <b>9 и меньше</b>: провал. Три провала: смерть.<br>• <b>1</b>: два провала сразу.<br>• <b>20</b>: ты приходишь в себя с 1 хитом.</p><p>Урон при 0 хитах: один провал, от крита два. Любое лечение сразу поднимает на ноги.</p>`,
   acts:`<button data-act="deathRoll">Бросить спасбросок от смерти</button><button class="ghost" data-act="deathHit">Меня ударили на 0 хитах: +1 провал</button><button class="ghost" data-act="deathReset" ${S.death.s||S.death.f?'':'disabled'}>Сбросить: стабилен или вылечен</button>`}),
@@ -2738,7 +2745,7 @@ Object.assign(INFO,{
   <p>${S.level>=3?'<b>С 3 уровня</b>: сразу после переноса у тебя <b>сопротивление всему урону</b> до начала твоего следующего хода. Ты в это время полупрозрачная.':'<span class="mu">С 3 уровня сразу после переноса будет ещё сопротивление всему урону до начала следующего хода.</span>'}</p>`,
   acts:`<button data-act="ravenUse" ${l?'':'disabled'}>Перенестись: потратить</button><button class="ghost" data-act="ravenBack" ${S.raven.used?'':'disabled'}>Вернуть (ошиблась)</button>`}},
  ac:()=>({t:'Класс доспеха',sub:`сейчас ${effAC()}`,body:`<p>Сколько должен выбросить враг на атаке (с бонусами), чтобы попасть по тебе.</p><p>Рекомендованный расчёт для Арадии: <b>кожаный доспех 11 + Ловкость ${sg(mod(S.ab.dex))} + деревянный щит 2 = ${11+mod(S.ab.dex)+2}</b>. Без щита ${11+mod(S.ab.dex)}.</p><p class="mu">Друиды не носят доспехи и щиты из металла.</p><div class="how">Число меняется в «Правке листа» (карандаш сверху). Считать класс доспеха от надетых вещей будет вкладка «Экипировка».</div>`,acts:`<button class="ghost" data-act="editChar">Изменить</button>`}),
- move:()=>({t:'Скорость',sub:`${effSpeed()} футов за ход`,body:`<p>Столько футов можешь пройти за свой ход. Одна клетка на карте обычно 5 футов, значит <b>${Math.floor(effSpeed()/5)} клеток</b>.</p><p>Движение можно делить: пройти, сделать действие, пройти ещё.</p>${effSpeed()!==S.speed?'<p class="mu">Сейчас скорость снижена состоянием или истощением.</p>':''}`,acts:''}),
+ move:()=>({t:'Скорость',sub:`${effSpeed()} футов за ход`,body:`<p>Столько футов можешь пройти за свой ход. Одна клетка на карте обычно 5 футов, значит <b>${Math.floor(effSpeed()/5)} клеток</b>.</p><p>Движение можно делить: пройти, сделать действие, пройти ещё.</p>${effSpeed()!==baseSpd()?'<p class="mu">Сейчас скорость снижена состоянием или истощением.</p>':''}`,acts:''}),
  r_dark:()=>({t:'Тёмное зрение',sub:'шадар-кай · 60 футов',body:`<p>В пределах <b>60 футов</b> ты видишь в тусклом свете как при ярком, а в темноте как при тусклом.</p><p>В темноте цвета не различаешь, только оттенки серого.</p>`,acts:''}),
  r_fey:()=>({t:'Наследие фей',sub:'шадар-кай',body:`<p>• <b>Преимущество</b> на спасброски против того, чтобы тебя <b>очаровали</b>.</p><p>• Магия не может тебя <b>усыпить</b>.</p><div class="how">Когда мастер просит спасбросок против очарования, включи «Преимущество» над листками характеристик и бросай.</div>`,acts:''}),
  r_trance:()=>({t:'Транс',sub:'шадар-кай',body:`<p>Ты не спишь. Вместо сна <b>4 часа</b> глубоко медитируешь, оставаясь в полусознании. Этого хватает, чтобы отдохнуть так же, как человеку за 8 часов сна.</p><p>Во время транса ты смутно слышишь и чувствуешь, что вокруг.</p>`,acts:''}),
@@ -2924,7 +2931,7 @@ function itemPick(kind){const all=itemList(kind),show=kind==='soc'?S.sItemShow:S
   body:(all.length?all.map(k=>{const sh=show.includes(k);return `<button class="crow ck ${sh?'on':''}" data-ishow="${kind}:${k}"><span><i class="box">${sh?'✓':''}</i>${ITEMS[k].n}</span><small>${ITEMS[k].short||''}</small></button>`}).join(''):`<p>Пока пусто.</p>`)+`<div class="how" style="margin-top:10px">Здесь появятся вещи из инвентаря, которые ${kind==='soc'?'помогают в разговоре: подарок, письмо, знак, монеты для взятки':'пригодятся в бою: зелье, масло, факел, свиток'}. Отметь до ${ITMAX}, чтобы держать их под рукой.</div>`,acts:`<button data-act="closeD">Готово</button>`}}
 function openInfo(k,re){if(!INFO[k]&&k.startsWith('it_')){const it=ITEMS[k.slice(3)];if(!it)return;INFO[k]=()=>({t:it.n,sub:it.meta||'предмет',body:it.d?it.d():`<p>${it.short||''}</p>`,acts:it.acts?it.acts():''})}const d=INFO[k]();openAb=null;openInfoKey=k;
  const fk=/^(sp|bk|spb)_/.test(k)&&SPFULL[k.replace(/^(sp|bk|spb)_/,'')]?k.replace(/^(sp|bk|spb)_/,''):null;const qk=!fk&&QMAP[k]?k:null;
- $('dbody').innerHTML=`<div class="dh ${String(d.sub).length>34?'col':''}"><h2>${d.t}${fk||qk?`<button class="bang" data-info="${fk?'full_'+fk:'qt_'+qk}" aria-label="Точная цитата правил">!</button>`:''}</h2><div class="sc">${d.sub}</div></div><div class="drows" style="border:0;background:none"><div class="info">${d.body}</div></div><div class="dacts">${d.acts}</div>`;
+ $('dbody').innerHTML=`<div class="dh ${String(d.sub).length>34?'col':''}"><h2>${d.t}${fk||qk||d.bang?`<button class="bang" data-info="${d.bang||(fk?'full_'+fk:'qt_'+qk)}" aria-label="Точная цитата правил">!</button>`:''}</h2><div class="sc">${d.sub}</div></div><div class="drows" style="border:0;background:none"><div class="info">${d.body}</div></div><div class="dacts">${d.acts}</div>`;
  if(!re){$('drawer').style.transform='';$('drawer').classList.add('on');$('dim').classList.add('on');vib(10)}}
 let tapPt={x:innerWidth/2,y:innerHeight*.7};document.addEventListener('pointerdown',e=>{tapPt={x:e.clientX,y:e.clientY}},true);
 function act(a){
@@ -2932,7 +2939,7 @@ function act(a){
  if(invAct(a)||hiAct(a))return;
  if(a==='fairSim'){const c=Array(20).fill(0);for(let i=0;i<10000;i++)c[r(20)-1]++;window.__sim=c;vib([10,30,10]);openInfo('fair',true);return}
  if(a.startsWith('cast:')){const [,k,cs]=a.split(':'),p=SPELLS[k];let c=0,how='';
-  if(!p||noAct()||(p.cost&&!canPay(p)))return;
+  if(!p||noAct()||wfB()||(p.cost&&!canPay(p)))return;
   if(p.lv){if(cs==='r'){if(!p.ritual)return;c=p.lv;how='ритуалом, без ячейки'}
    else if(cs==='m'){if(k!=='guiding_bolt'||!chartLeft())return;S.chart.used=(S.chart.used||0)+1;c=1;how='от Звёздной карты, без ячейки'}
    else{c=cs?+cs:firstC(p.lv);if(!c||!useSlotC(c))return}}
@@ -2941,7 +2948,8 @@ function act(a){
   const up=c>p.lv?` (${c} круг)`:'',extra=[how,paid].filter(Boolean).join(' · ');
   if(p.atk){closeDrawer();const sp=atkSpec(k,c);if(up)sp.label=sp.label.replace(': атака',up+': атака');if(extra)sp.label+=' · '+extra;return d20(sp)}
   if(p.heal){closeDrawer();const H=p.heal,n=H.n+Math.max(0,c-p.lv)*(H.up||0),w=mod(S.ab.wis);
-   return dice({label:`${p.n}${up}: лечение${extra?' · '+extra:''}`,n,s:H.s,k:w,kl:'Мудрость',min:1,after:()=>`<div class="br">столько хитов возвращает существу в пределах ${p.where}. Нежить и конструкты не лечатся</div>`})}
+   const ch=starOn('chalice')&&c>0&&!how;chalPend=ch?1:0;
+   return dice({label:`${p.n}${up}: лечение${extra?' · '+extra:''}`,n,s:H.s,k:w,kl:'Мудрость',min:1,after:()=>`<div class="br">столько хитов возвращает существу в пределах ${p.where}. Нежить и конструкты не лечатся</div>${ch?`<div class="acts"><button data-chal>Чаша: ещё ${starDie()}к8 ${sg(w)} хитов тебе или существу в 30 футах</button></div>`:''}`})}
   if(p.roll){closeDrawer();const R=p.roll,n=(typeof R.n==='function'?R.n():R.n)+Math.max(0,c-p.lv)*(R.up||0);
    const tx=R.ns?R.t:R.pool?`${R.t}: начиная с самого слабого, пока хватает этих хитов`:`${R.t}, сложность ${spellDC()}: ${R.half?'при успехе половина':'при успехе урона нет'}`;
    return dice({label:`${p.n}${up}: ${R.pool?'запас хитов':'урон'}${extra?' · '+extra:''}`,n,s:R.s,k:0,min:0,fx:p.fx||null,after:()=>`<div class="br">${tx}</div>`})}
@@ -2964,7 +2972,7 @@ function act(a){
  if(a==='slot2pt'){if(!S.spt.used||!useSlot())return;S.spt.used--;re();openInfo('flex',true);vib([15,30,40]);toast('Ячейка рассыпалась в единицу чародейства');return}
  if(a==='surgeD20'){closeDrawer();return d20({label:'Проверка дикой магии',bonus:[],noLuck:1,mode:'norm',after:d=>d===1?`<div class="crit" style="color:var(--violet)">Волна дикой магии!</div><div class="acts"><button class="vio" data-surge>Бросить к100 по таблице</button></div>`:'<div class="br">Магия спокойна. Ничего не случилось</div>'})}
  if(a==='surgeD100'){closeDrawer();return surgeTable()}
- if(a==='concSave'){closeDrawer();const b=[{l:'Телосложение',v:mod(S.ab.con)}];if(S.saves.con)b.push({l:'мастерство',v:prof()});return d20({label:'Концентрация: спасбросок Телосложения',bonus:b,kind:'save',ab:'con',conc:1,after:()=>'<div class="br">сложность 10 или половина урона, если больше</div>'})}
+ if(a==='concSave'){closeDrawer();const b=[{l:wfB()?'Телосложение зверя':'Телосложение',v:mod(abv('con'))}];if(S.saves.con)b.push({l:'мастерство',v:prof()});return d20({label:'Концентрация: спасбросок Телосложения',bonus:b,kind:'save',ab:'con',conc:1,after:()=>'<div class="br">сложность 10 или половина урона, если больше</div>'})}
  if(a==='deathRoll'){closeDrawer();return d20({label:'Спасбросок от смерти',bonus:[],kind:'save',after:d=>`<div class="br">${d===20?'Двадцатка: приходишь в себя с 1 хитом':d===1?'Единица: два провала':d>=10?'Успех':'Провал'}</div>`,commit:deathCommit})}
  if(a==='deathHit'){S.death.f=Math.min(3,S.death.f+1);re();openInfo('death',true);vib([40,30,20]);return}
  if(a==='deathReset'){S.death={s:0,f:0};re();openInfo('death',true);vib(10);return}
@@ -2974,7 +2982,7 @@ function act(a){
  if(a==='wildBack'){S.wild.used=Math.max(0,S.wild.used-1);re();openInfo('wild',true);return}
  if(a==='ravenUse'){if(S.raven.used<S.raven.max)S.raven.used++;re();closeDrawer();vib(15);return}
  if(a==='ravenBack'){S.raven.used=0;re();openInfo('raven',true);return}
- if(a==='shortRest'){S.wild.used=0;re();closeDrawer();flash('#fate .fc','#a9c9ea');return}
+ if(a==='shortRest'){S.wild.used=0;S.wf=null;S.star=null;re();closeDrawer();flash('#fate .fc','#a9c9ea');return}
  if(a==='editLangs'||a==='editChar'){closeDrawer();return editSheet()}
  if(a==='luckSpend'){S.luck.used++;re();toast('Очко удачи потрачено');vib(15)}
  if(a==='luckBack'){S.luck.used=Math.max(0,S.luck.used-1);re()}
@@ -2988,18 +2996,19 @@ function act(a){
  if(a==='toHd')openInfo('hd',true);
  if(a==='hdRoll'){if(S.hd.used>=S.level)return;S.hd.used++;save();const c=mod(S.ab.con);
   dice({label:'Кость хитов',n:1,s:S.hd.die,k:c,kl:'Телосложение',min:hasFeat('durable')?Math.max(1,2*c):1,after:v=>{const before=S.hp.cur;S.hp.cur=Math.min(S.hp.max,S.hp.cur+v);save();renderAll();return `<div class="br">хиты ${before} → <b>${S.hp.cur}</b></div>`}})}
- if(a==='longRest'){if(S.exh)S.exh--;S.slots.used=0;S.slots.extra=0;hiC().forEach(c=>{S.hi[c].used=0;S.hi[c].extra=0});const dw=dawnItems();setTimeout(()=>{if(dw.length)toast('Рассвет: '+dw.join(', '))},2600);S.spt.used=0;S.shieldOn=0;S.mArm=0;S.death={s:0,f:0};S.conc=null;S.hp.cur=S.hp.max;S.hp.temp=0;S.luck.used=0;S.chaos.used=0;S.wild.used=0;S.raven.used=0;S.hd.used=Math.max(0,S.hd.used-Math.max(1,Math.floor(S.level/2)));save();closeDrawer();renderAll();flash('#hpTok','#86c79c');toast('Утро. Силы вернулись');vib([10,60,10])}
+ if(a==='longRest'){if(S.exh)S.exh--;S.slots.used=0;S.slots.extra=0;hiC().forEach(c=>{S.hi[c].used=0;S.hi[c].extra=0});const dw=dawnItems();setTimeout(()=>{if(dw.length)toast('Рассвет: '+dw.join(', '))},2600);S.spt.used=0;S.shieldOn=0;S.mArm=0;S.death={s:0,f:0};S.conc=null;S.hp.cur=S.hp.max;S.hp.temp=0;S.luck.used=0;S.chaos.used=0;S.wild.used=0;S.wf=null;S.star=null;S.raven.used=0;S.hd.used=Math.max(0,S.hd.used-Math.max(1,Math.floor(S.level/2)));save();closeDrawer();renderAll();flash('#hpTok','#86c79c');toast('Утро. Силы вернулись');vib([10,60,10])}
 }
 function hpSheet(){
- const f=$('form');f.innerHTML=`<h2>Хиты: ${S.hp.cur} из ${S.hp.max}</h2><input class="big" name="n" type="number" inputmode="numeric" placeholder="сколько?" required>
+ const f=$('form');f.innerHTML=`<h2>${wfB()?`Хиты облика «${esc(wfB().n)}»: ${S.wf.hp} из ${wfB().hp}`:`Хиты: ${S.hp.cur} из ${S.hp.max}`}</h2><input class="big" name="n" type="number" inputmode="numeric" placeholder="сколько?" required>
  <div class="two"><button class="go red" type="submit" value="dmg">− Урон</button><button class="go grn" type="submit" value="heal">+ Лечение</button></div>
  <button class="go" type="submit" value="temp" style="border:1px solid var(--violet);color:var(--violet)">Временные хиты</button>`;
  $('sheet').classList.add('on');setTimeout(()=>f.n.focus(),250);
  f.onsubmit=e=>{e.preventDefault();const n=Math.abs(parseInt(f.n.value));const how=e.submitter&&e.submitter.value;$('sheet').classList.remove('on');if(isNaN(n))return;
-  if(how==='dmg'){let d=n;const t=Math.min(S.hp.temp,d);S.hp.temp-=t;d-=t;S.hp.cur=Math.max(0,S.hp.cur-d);flash('#hpTok','#e0485e');vib([40,30,20]);document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake')}
+  if(how==='dmg'){let d=n;const t=Math.min(S.hp.temp,d);S.hp.temp-=t;d-=t;if(wfB()){const b0=S.wf.hp;S.wf.hp-=d;if(S.wf.hp>0)d=0;else{d=-S.wf.hp;wfDrop={n:wfB().n,over:d,b0};S.wf=null}}S.hp.cur=Math.max(0,S.hp.cur-d);flash('#hpTok','#e0485e');vib([40,30,20]);document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake')}
+  else if(how==='heal'&&wfB()){S.wf.hp=Math.min(wfB().hp,S.wf.hp+n);flash('#hpTok','#86c79c')}
   else if(how==='heal'){if(S.hp.cur<=0)S.death={s:0,f:0};S.hp.cur=Math.min(S.hp.max,S.hp.cur+n);flash('#hpTok','#86c79c');vib(15)}
   else{S.hp.temp=Math.max(S.hp.temp,n);flash('#hpTok','#a57cff')}
-  save();renderAll();if(S.hp.cur===0)toast('0 хитов: Арадия без сознания. Спасброски от смерти');
+  save();renderAll();if(wfDrop){const w=wfDrop;wfDrop=null;setTimeout(()=>{lastDrop=w;openInfo('wfdrop')},60)}
  };
 }
 function editSheet(){
@@ -3421,10 +3430,245 @@ function lvUndo(){const s=S.lvHist.pop();if(!s)return;const cur=S.hp.cur;LVKEYS.
 {const _act=act;act=function(a){if(a==='lvOpen'){closeDrawer();return setTimeout(lvOpen,260)}if(a==='lvUndo')return lvUndo();return _act(a)}}
 $('lvBtn').classList.toggle('max',S.level>=20);
 
+/* ===================== БОЙ ДРУИДА (тред 3): скимитар, Дикий облик со зверями, Звёздный облик =====================
+   S.beasts = список зверей (правится в листе), S.wf = {i: номер зверя в S.beasts, hp: хиты зверя} пока Арадия в облике зверя,
+   S.star = {c:'archer'|'chalice'|'dragon'} пока она в Звёздном облике, S.starPick = любимое созвездие (Лучник первым).
+   Цифры зверей сверены с dnd.su/bestiary 2026-11-27. BQ = дословные статблоки dnd.su для значка «!». */
+var BAB=['str','dex','con'];
+var BQ={"hyena": {"u": "361-hyena", "t": "<p>Средний Зверь, без мировоззрения</p><p><b>Класс Доспеха</b> 11</p><p><b>Хиты</b> 5 (1к8 + 1)</p><p><b>Скорость</b> 50 футов</p><p class=\"bab\">Сил 11 (+0), Лов 13 (+1), Тел 12 (+1), Инт 2 (-4), Мдр 12 (+1), Хар 5 (-3)</p><p><b>Навыки</b> Восприятие +3</p><p><b>Чувства</b> пассивное Восприятие 13</p><p><b>Опасность</b> 0 (0 или 10 опыта)</p><p><b>Бонус мастерства</b> +2</p><p><b>Местность обитания</b> лес, луг, пустыня, холмы</p><p><b><em>Тактика стаи.</em></b> Гиена совершает с преимуществом броски атаки по существу, если в пределах 5 футов от этого существа находится как минимум один дееспособный союзник гиены.</p><p><b>Действия</b></p><p><b><em>Укус.</em></b> Рукопашная атака оружием: +2 к попаданию, досягаемость 5 футов, одна цель. Попадание: Колющий урон 3 (1к6).</p>"}, "rat": {"u": "373-rat", "t": "<p>Крошечный Зверь, без мировоззрения</p><p><b>Класс Доспеха</b> 10</p><p><b>Хиты</b> 1 (1к4 - 1)</p><p><b>Скорость</b> 20 футов</p><p class=\"bab\">Сил 2 (-4), Лов 11 (+0), Тел 9 (-1), Инт 2 (-4), Мдр 10 (+0), Хар 4 (-3)</p><p><b>Чувства</b> тёмное зрение 30 футов, пассивное Восприятие 10</p><p><b>Опасность</b> 0 (0 или 10 опыта)</p><p><b>Бонус мастерства</b> +2</p><p><b>Местность обитания</b> болото, город</p><p><b><em>Тонкий нюх.</em></b> Крыса совершает с преимуществом проверки Мудрости (Восприятие), полагающиеся на обоняние.</p><p><b>Действия</b></p><p><b><em>Укус.</em></b> Рукопашная атака оружием: +0 к попаданию, досягаемость 5 футов, одна цель. Попадание: 1 колющего урона.</p>"}, "wolf": {"u": "2-wolf", "t": "<p>Средний Зверь, без мировоззрения</p><p><b>Класс Доспеха</b> 13 (природный доспех)</p><p><b>Хиты</b> 11 (2к8 + 2)</p><p><b>Скорость</b> 40 футов</p><p class=\"bab\">Сил 12 (+1), Лов 15 (+2), Тел 12 (+1), Инт 3 (-4), Мдр 12 (+1), Хар 6 (-2)</p><p><b>Навыки</b> Восприятие +3, Скрытность +4</p><p><b>Чувства</b> пассивное Восприятие 13</p><p><b>Опасность</b> 1/4 (50 опыта)</p><p><b>Бонус мастерства</b> +2</p><p><b>Местность обитания</b> лес, луг, холмы</p><p><b><em>Острый слух и тонкий нюх.</em></b> Волк совершает с преимуществом проверки Мудрости (Восприятие), полагающиеся на слух или нюх.</p><p><b><em>Тактика стаи.</em></b> Волк совершает с преимуществом броски атаки по существу, если как минимум один союзник волка находится в пределах 5 футов от этого существа, и этот союзник дееспособен.</p><p><b>Действия</b></p><p><b><em>Укус.</em></b> Рукопашная атака оружием: +4 к попаданию, досягаемость 5 футов, одна цель. Попадание: Колющий урон 7 (2к4 + 2). Если цель — существо, она должна преуспеть в спасброске Силы Сл 11, иначе она сбивается с ног.</p>"}, "spider": {"u": "358-giant-wolf-spider", "t": "<p>Средний Зверь, без мировоззрения</p><p><b>Класс Доспеха</b> 13</p><p><b>Хиты</b> 11 (2к8 + 2)</p><p><b>Скорость</b> 40 футов, лазая 40 футов</p><p class=\"bab\">Сил 12 (+1), Лов 16 (+3), Тел 13 (+1), Инт 3 (-4), Мдр 12 (+1), Хар 4 (-3)</p><p><b>Навыки</b> Восприятие +3, Скрытность +7</p><p><b>Чувства</b> слепое зрение 10 футов, тёмное зрение 60 футов, пассивное Восприятие 13</p><p><b>Опасность</b> 1/4 (50 опыта)</p><p><b>Бонус мастерства</b> +2</p><p><b>Местность обитания</b> лес, луг, побережье, пустыня, холмы</p><p><b><em>Паучье лазание.</em></b> Паук может лазать по сложным поверхностям, включая потолки, без совершения проверок характеристик.</p><p><b><em>Чувство паутины.</em></b> Находясь в контакте с паутиной, паук знает точное местоположение всех других существ, находящихся в контакте с той же паутиной.</p><p><b><em>Хождение по паутине.</em></b> Паук игнорирует ограничения перемещения, вызванные паутиной.</p><p><b>Действия</b></p><p><b><em>Укус.</em></b> Рукопашная атака оружием: +3 к попаданию, досягаемость 5 футов, одно существо. Попадание: Колющий урон 4 (1к6 + 1), и цель должна совершить спасбросок Телосложения Сл 11, получая урон ядом 7 (2к6) при провале, или половину этого урона при успехе. Если урон ядом уменьшает хиты цели до 0, цель остается стабилизированной, но отравленной на 1 час, даже если позже восстановит хиты, и она парализована, пока отравлена таким образом.</p>"}, "panther": {"u": "391-panther", "t": "<p>Средний Зверь, без мировоззрения</p><p><b>Класс Доспеха</b> 12</p><p><b>Хиты</b> 13 (3к8)</p><p><b>Скорость</b> 50 футов, лазая 40 футов</p><p class=\"bab\">Сил 14 (+2), Лов 15 (+2), Тел 10 (+0), Инт 3 (-4), Мдр 14 (+2), Хар 7 (-2)</p><p><b>Навыки</b> Восприятие +4, Скрытность +6</p><p><b>Чувства</b> пассивное Восприятие 14</p><p><b>Опасность</b> 1/4 (50 опыта)</p><p><b>Бонус мастерства</b> +2</p><p><b>Местность обитания</b> лес, луг, холмы</p><p><b><em>Тонкий нюх.</em></b> Пантера совершает с преимуществом проверки Мудрости (Восприятие), полагающиеся на обоняние.</p><p><b><em>Наскок.</em></b> Если пантера переместится как минимум на 20 футов по прямой к существу, а затем в том же ходу попадет по нему атакой когтем, эта цель должна преуспеть в спасброске Силы Сл 12, иначе будет сбита с ног. Если цель сбита с ног, пантера может бонусным действием совершить по ней одну атаку укусом.</p><p><b>Действия</b></p><p><b><em>Укус.</em></b> Рукопашная атака оружием: +4 к попаданию, досягаемость 5 футов, одна цель. Попадание: Колющий урон 5 (1к6 + 2).</p><p><b><em>Коготь.</em></b> Рукопашная атака оружием: +4 к попаданию, досягаемость 5 футов, одна цель. Попадание: Рубящий урон 4 (1к4 + 2).</p>"}};
+var BEAST0=[
+ {k:'hyena',n:'Гиена',cr:'0',size:'Средний',ac:11,hp:5,hd:'1к8 + 1',spd:50,spx:'',str:11,dex:13,con:12,sk:{perception:3},sense:'',
+  tr:[['Тактика стаи','Гиена совершает с преимуществом броски атаки по существу, если в пределах 5 футов от этого существа находится как минимум один дееспособный союзник гиены.']],
+  at:[{n:'Укус',b:2,dn:1,ds:6,k:0,t:'колющий',x:''}]},
+ {k:'rat',n:'Крыса',cr:'0',size:'Крошечный',ac:10,hp:1,hd:'1к4 − 1',spd:20,spx:'',str:2,dex:11,con:9,sk:{},sense:'тёмное зрение 30 футов',
+  tr:[['Тонкий нюх','Крыса совершает с преимуществом проверки Мудрости (Восприятие), полагающиеся на обоняние.']],
+  at:[{n:'Укус',b:0,dn:0,ds:0,k:1,t:'колющий',x:''}]},
+ {k:'wolf',n:'Волк',cr:'1/4',size:'Средний',ac:13,hp:11,hd:'2к8 + 2',spd:40,spx:'',str:12,dex:15,con:12,sk:{perception:3,stealth:4},sense:'',
+  tr:[['Острый слух и тонкий нюх','Волк совершает с преимуществом проверки Мудрости (Восприятие), полагающиеся на слух или нюх.'],['Тактика стаи','Волк совершает с преимуществом броски атаки по существу, если как минимум один союзник волка находится в пределах 5 футов от этого существа, и этот союзник дееспособен.']],
+  at:[{n:'Укус',b:4,dn:2,ds:4,k:2,t:'колющий',x:'Если цель — существо, она должна преуспеть в спасброске Силы Сл 11, иначе она сбивается с ног.'}]},
+ {k:'spider',n:'Гигантский паук-волк',cr:'1/4',size:'Средний',ac:13,hp:11,hd:'2к8 + 2',spd:40,spx:'лазая 40 футов',str:12,dex:16,con:13,sk:{perception:3,stealth:7},sense:'слепое зрение 10 футов, тёмное зрение 60 футов',
+  tr:[['Паучье лазание','Паук может лазать по сложным поверхностям, включая потолки, без совершения проверок характеристик.'],['Чувство паутины','Находясь в контакте с паутиной, паук знает точное местоположение всех других существ, находящихся в контакте с той же паутиной.'],['Хождение по паутине','Паук игнорирует ограничения перемещения, вызванные паутиной.']],
+  at:[{n:'Укус',b:3,dn:1,ds:6,k:1,t:'колющий',x:'Цель должна совершить спасбросок Телосложения Сл 11, получая урон ядом 7 (2к6) при провале, или половину этого урона при успехе. Если урон ядом уменьшает хиты цели до 0, цель остается стабилизированной, но отравленной на 1 час, даже если позже восстановит хиты, и она парализована, пока отравлена таким образом.',
+   p:{l:'Яд паука',dn:2,ds:6,t:'урон ядом: цель делает спасбросок Телосложения Сл 11. Провал: весь урон, успех: половина. Если яд опустил хиты цели до 0, она стабилизирована, но отравлена на 1 час и парализована, пока отравлена'}}]},
+ {k:'panther',n:'Пантера',cr:'1/4',size:'Средний',ac:12,hp:13,hd:'3к8',spd:50,spx:'лазая 40 футов',str:14,dex:15,con:10,sk:{perception:4,stealth:6},sense:'',
+  tr:[['Тонкий нюх','Пантера совершает с преимуществом проверки Мудрости (Восприятие), полагающиеся на обоняние.'],['Наскок','Если пантера переместится как минимум на 20 футов по прямой к существу, а затем в том же ходу попадет по нему атакой когтем, эта цель должна преуспеть в спасброске Силы Сл 12, иначе будет сбита с ног. Если цель сбита с ног, пантера может бонусным действием совершить по ней одну атаку укусом.']],
+  at:[{n:'Укус',b:4,dn:1,ds:6,k:2,t:'колющий',x:''},{n:'Коготь',b:4,dn:1,ds:4,k:2,t:'рубящий',x:'Наскок: если перед этим пробежала 20 футов по прямой к цели, она делает спасбросок Силы Сл 12, иначе сбита с ног, и тогда можно бонусным действием укусить.'}]}];
+if(!S.beasts)S.beasts=structuredClone(BEAST0);
+if(!S.starPick)S.starPick='archer';
+if(S.wf&&!S.beasts[S.wf.i])S.wf=null;
+if(!S.fight3){S.fight3=1;S.fSpellShow=S.fSpellShow.filter(k=>SPELLS[k])}
+function baseSpd(){return wfB()?wfB().spd:S.speed}
+function wfB(){return S&&S.wf?S.beasts[S.wf.i]||null:null}
+function abv(k){const B=wfB();return B&&BAB.includes(k)?B[k]:S.ab[k]}
+function starOn(c){return !!(S.star&&!wfB()&&(!c||S.star.c===c))}
+function starDie(){return S.level>=10?2:1}
+function dragonOk(sp){return !!(sp&&starOn('dragon')&&((sp.kind==='check'&&(sp.ab==='int'||sp.ab==='wis'))||sp.conc))}
+const crN=c=>{c=String(c).trim();if(c.includes('/')){const [a,b]=c.split('/');return +a/+b}return +c||0};
+const crMax=()=>S.level>=8?1:S.level>=4?.5:.25,crTxt=()=>S.level>=8?'1':S.level>=4?'1/2':'1/4';
+const crCh=c=>String(c).replace('1/4','¼').replace('1/2','½').replace('1/8','⅛');
+function beastOk(B){return S.level>=2&&crN(B.cr)<=crMax()&&!(B.fly&&S.level<8)&&!(B.swim&&S.level<4)}
+const atkTxt=a=>a.dn?`${a.dn}к${a.ds}${a.k?sg(a.k):''}`:String(a.k);
+const spdTxt=B=>`${B.spd} футов${B.spx?', '+B.spx:''}`;
+const wfHours=()=>Math.max(1,Math.floor(S.level/2));
+/* скимитар: фехтовальное, берётся лучшее из Силы и Ловкости */
+const scimAb=()=>mod(S.ab.dex)>=mod(S.ab.str)?['Ловкость',mod(S.ab.dex)]:['Сила',mod(S.ab.str)];
+const scimHit=()=>scimAb()[1]+prof();
+{const _as=atkSpec;atkSpec=function(k,c){
+ if(k==='scim'){const [l,v]=scimAb();return{label:'Скимитар: атака',bonus:[{l,v},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:'Скимитар',dn:1,ds:6,k:v,kl:l,t:'рубящий',fx:'steel'}}}
+ if(k==='archer'){const w=mod(S.ab.wis);return{label:'Лучник: атака заклинанием',bonus:[{l:'Мудрость',v:w},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:'Лучник',dn:starDie(),ds:8,k:w,kl:'Мудрость',t:'излучением, светящаяся стрела до 60 футов',fx:'snd'}}}
+ if(k.startsWith('b')&&wfB()){const B=wfB(),a=B.at[+k.slice(1)];if(a)return{label:`${B.n}: ${a.n}`,bonus:[{l:'атака зверя',v:a.b}],kind:'atk',
+  dmg:{n:a.n,dn:a.dn||1,ds:a.ds||1,k:a.k,t:a.t+(a.x?'. '+a.x:''),fx:'steel',flat:!a.dn,p:a.p||null}}}
+ return _as(k,c)}}
+function chaliceRoll(){const w=mod(S.ab.wis);return dice({label:'Чаша: лечение',n:starDie(),s:8,k:w,kl:'Мудрость',min:1,after:()=>`<div class="br">столько хитов получает Арадия или другое существо в пределах 30 футов от неё</div>`})}
+/* созвездия: тонкие линии и звёзды, без движения */
+const CST={
+ archer:{n:'Лучник',sh:()=>`атака ${sg(spellAtk())}, ${starDie()}к8${sg(mod(S.ab.wis))}`,
+  svg:'<svg viewBox="0 0 60 34"><path d="M14 3 Q4 17 14 31 M14 3 L14 31 M14 17 L52 17 M46 12 L52 17 L46 22" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/><g fill="currentColor"><circle cx="14" cy="3" r="2"/><circle cx="14" cy="31" r="2"/><circle cx="7.5" cy="17" r="1.6"/><circle cx="31" cy="17" r="1.6"/><circle cx="52" cy="17" r="2.4"/></g></svg>'},
+ chalice:{n:'Чаша',sh:()=>`лечишь ячейкой: ещё ${starDie()}к8${sg(mod(S.ab.wis))}`,
+  svg:'<svg viewBox="0 0 60 34"><path d="M18 4 L24 15 L36 15 L42 4 M24 15 L30 22 L36 15 M30 22 L30 30 M23 31 L37 31" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/><g fill="currentColor"><circle cx="18" cy="4" r="2"/><circle cx="42" cy="4" r="2"/><circle cx="24" cy="15" r="1.6"/><circle cx="36" cy="15" r="1.6"/><circle cx="30" cy="22" r="2.2"/><circle cx="23" cy="31" r="1.5"/><circle cx="37" cy="31" r="1.5"/></g></svg>'},
+ dragon:{n:'Дракон',sh:()=>'на к20 1–9 считается 10',
+  svg:'<svg viewBox="0 0 60 34"><path d="M6 29 L17 21 L24 25 L33 12 L41 8 L48 12 L53 6 M41 8 L44 16" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/><g fill="currentColor"><circle cx="6" cy="29" r="1.6"/><circle cx="17" cy="21" r="1.6"/><circle cx="24" cy="25" r="1.6"/><circle cx="33" cy="12" r="1.8"/><circle cx="41" cy="8" r="2.2"/><circle cx="48" cy="12" r="1.6"/><circle cx="53" cy="6" r="2"/><circle cx="44" cy="16" r="1.4"/></g></svg>'}};
+const PAW='<svg viewBox="0 0 60 34"><g fill="none" stroke="currentColor" stroke-width="1.1"><ellipse cx="30" cy="23" rx="8" ry="6.5"/><ellipse cx="19" cy="13" rx="3.2" ry="4.2"/><ellipse cx="26" cy="7.5" rx="3.2" ry="4.2"/><ellipse cx="34" cy="7.5" rx="3.2" ry="4.2"/><ellipse cx="41" cy="13" rx="3.2" ry="4.2"/></g></svg>';
+/* формы держатся, пока нет причин: без сознания (зверь), недееспособна (звёздный облик) */
+function syncForms(){if(S.wf&&(S.cond&&S.cond.unconscious))S.wf=null;if(S.star&&noAct())S.star=null}
+{const _ra=renderAll;renderAll=function(){syncForms();_ra()}}
+
+renderFight=function(){
+ if(!$('fVit'))return;
+ const B=wfB(),pg=$('p-fight');pg.classList.toggle('inbeast',!!B);pg.classList.toggle('instar',starOn());
+ $('fTtl').textContent=B?B.n:'Бой';$('fIco').src=B?'art/t-wild.webp':'art/t-fight.webp';
+ $('fSub').textContent=B?`Дикий облик · опасность ${crCh(B.cr)}`:`атака заклинанием ${sg(spellAtk())} · сложность ${spellDC()}`;
+ const em=effMax(),hp=B?S.wf.hp:Math.min(S.hp.cur,em),hm=B?B.hp:em,sp=effSpeed();
+ $('fVit').innerHTML=`<button class="tok hp ${B?'bst':''}" data-hp="1"><div class="k">${B?'Хиты зверя':'Хиты'}</div><div class="v">${hp} <small>/ ${hm}</small>${S.hp.temp?` <span class="temp">+${S.hp.temp}</span>`:''}</div><div class="hpbar"><i style="width:${Math.max(0,Math.min(100,hp/hm*100))}%"></i></div></button>
+ <button class="tok" data-info="ac"><div class="k">Класс доспеха</div><div class="v">${effAC()}</div></button>
+ <button class="tok" data-finit="1"><div class="k">Инициатива</div><div class="v">${sg(initB())}</div></button>
+ <button class="tok" data-info="move"><div class="k">Скорость</div><div class="v ${sp!==(B?B.spd:S.speed)?'warn':''}">${String(sp).replace('.',',')}<small> футов</small></div></button>`;
+ const na=!!noAct(),cmp=true;
+ const card=(info,title,d,dm,small,cls='')=>`<button class="atk @C ${cls}" data-info="${info}"><b>${title}</b>${d!=null||dm?`<div class="hit">${d!=null?`<span class="d">${d}</span>`:''}${dm?`<span class="dm">${dm}</span>`:''}</div>`:''}${small?`<small>${small}</small>`:''}</button>`;
+ $('fPick').style.display=B?'none':'';
+ if(B){
+  const acts=B.at.map((a,i)=>card('wa_'+i,a.n,sg(a.b),'урон '+atkTxt(a),a.t,`steel ${na?'off':''}`));
+  acts.push(card('actions','Другие действия',null,null,'Рывок, Отход, Уклонение, Помощь, Засада, Поиск','plain'));
+  $('fAct').className='fgrid';$('fAct').innerHTML=acts.join('').replace(/@C/g,'');
+  $('fRe').className='fgrid c3';$('fRe').innerHTML=(card('wfnow','Вернуться в свой облик',null,'бонусное действие',null,'plain')+card('raven','Королева воронов',null,'телепорт 30 футов',S.raven.used>=S.raven.max?'потрачено':'бонусное действие',S.raven.used>=S.raven.max?'off':'')+card('opp','Удар вслед',sg(B.at[0].b),B.at[0].n.toLowerCase(),'реакция',`steel ${na?'off':''}`)).replace(/@C/g,'');
+  $('fFormH').innerHTML=`Особенности<i></i><button class="pick" data-info="wild">правила облика ›</button>`;
+  $('fForm').className='fform tr';
+  $('fForm').innerHTML=B.tr.map((t,i)=>`<button class="cnd rc" data-info="wft_${i}">${esc(t[0])}</button>`).join('')+(B.spx?`<button class="cnd rc" data-info="wfnow">${esc(B.spx)}</button>`:'')+(B.sense?`<button class="cnd rc" data-info="wfnow">${esc(B.sense)}</button>`:'')+`<button class="cnd rc no" data-info="wfnow">Колдовать нельзя</button>`;
+ }else{
+  const fs=known().filter(k=>SPELLS[k]&&SPELLS[k].fight&&S.fSpellShow.includes(k));
+  const isB=k=>/бонусное действие/.test(SPELLS[k].meta)||SPELLS[k].react;
+  const scard=k=>{const p=SPELLS[k],off=(p.lv&&!firstC(p.lv)&&!(k==='guiding_bolt'&&chartLeft()))||!canPay(p)||na;
+   return `<button class="atk @C ${off?'off':''}" data-info="sp_${k}"><b${!p.n.includes(' ')&&p.n.length>12?' class="lw"':''}>${rn(p)}${p.n}</b>${p.atk?`<div class="hit"><span class="d">${sg(spellAtk())}</span><span class="dm">${p.hit()}</span></div>`:p.heal?`<div class="hit"><span class="dm">лечит ${p.heal.n}к${p.heal.s}${sg(mod(S.ab.wis))}</span></div>`:`<div class="hit"><span class="dm">${p.short}</span></div>`}<small>${p.lv?(p.where||'')+' · тратит ячейку':'заговор · '+(p.where||'')}${costTag(p)}</small></button>`};
+  const acts=fs.filter(k=>!isB(k)).map(scard);
+  acts.push(card('w_scim','Скимитар',sg(scimHit()),'урон 1к6'+sg(scimAb()[1]),'5 футов, рубящий',`steel ${na?'off':''}`));
+  acts.push(card('actions','Другие действия',null,null,'Рывок, Отход, Уклонение, Помощь, Засада, Поиск','plain'));
+  $('fAct').className='fgrid'+(acts.length>4?' c3x':'');$('fAct').innerHTML=acts.join('').replace(/@C/g,acts.length>4?'cmp':'');
+  const re=fs.filter(isB).map(scard);
+  if(starOn('archer'))re.unshift(card('st_archer','Лучник',sg(spellAtk()),starDie()+'к8'+sg(mod(S.ab.wis)),'бонусное действие, 60 футов','on'));
+  re.push(card('raven','Королева воронов',null,'телепорт 30 футов',S.raven.used>=S.raven.max?'потрачено до долгого отдыха':'бонусное действие',S.raven.used>=S.raven.max?'off':''));
+  re.push(card('opp','Удар вслед',sg(scimHit()),'скимитаром','реакция',`steel ${na?'off':''}`));
+  $('fRe').className='fgrid c3';$('fRe').innerHTML=re.join('').replace(/@C/g,re.length>3?'cmp':'');
+  const wl=S.wild.max-S.wild.used;
+  $('fFormH').innerHTML=`Облики<i></i><button class="pick" data-info="wild">Дикий облик <span class="wst">${Array.from({length:S.wild.max},(_,i)=>`<span class="star ${i<wl?'':'off'}"></span>`).join('')}</span></button>`;
+  $('fForm').className='fform';
+  const lowLv=S.level<2;
+  $('fForm').innerHTML=`<button class="cst wf ${lowLv||!wl?'off':''}" data-info="wfpick">${PAW}<b>Зверь</b><small>действие</small></button>`+Object.keys(CST).map(c=>{const C=CST[c],on=starOn(c),pk=!S.star&&S.starPick===c;
+   return `<button class="cst ${on?'on':''} ${pk?'pk':''} ${!on&&(lowLv||!wl)?'off':''}" data-info="st_${c}">${C.svg}<b>${C.n}</b><small>${on?'светишься · 10 минут':C.sh()}</small></button>`}).join('');
+ }
+ /* запасы */
+ const pips=(n,u,cls)=>Array.from({length:n},(_,i)=>`<span class="charge ${cls} ${i<u?'used':''}"></span>`).join('');
+ const dz=S.hp.cur<=0,D=S.death,dp=(n,c)=>Array.from({length:3},(_,i)=>`<span class="charge ${i<n?c:'used'}"></span>`).join('');
+ const circ=[1,...hiC()];
+ $('fRes').innerHTML=(B?`<button class="fc" data-info="wfown"><span class="t">Хиты Арадии</span><small class="cc">${S.hp.cur} из ${S.hp.max}</small></button>`:'')
+  +`<button class="fc" data-info="slots"><span class="t">Ячейки</span><span class="ch">${circ.map(c=>{const t=cTot(c),l=cLeft(c);return Array.from({length:t},(_,i)=>`<span class="charge v ${i>=l?'used':''}"></span>`).join('')}).join('<i class="sep"></i>')}</span></button>`
+  +(!B&&S.level>=2?`<button class="fc" data-info="chart"><span class="t">Звёздная карта</span>${chartOn()?`<span class="ch">${pips(prof(),prof()-chartLeft(),'st')}</span>`:'<small class="cc">потеряна</small>'}</button>`:'')
+  +(S.conc?`<button class="fc armed" data-info="conc"><span class="t">${SPELLS[S.conc].n}</span><small class="cc">концентрация</small></button>`:`<button class="fc" data-info="conc"><span class="t">Концентрация</span></button>`)
+  +(dz||D.s||D.f?`<button class="fc ${dz?'dead':''}" data-info="death"><span class="t">Спасброски от смерти</span><span class="ch tw"><span>${dp(D.s,'g')}</span><span>${dp(D.f,'r')}</span></span></button>`:'');
+ requestAnimationFrame(fitFight);
+};
+
+/* ---------- окна ---------- */
+const QA=['a_dash','a_dis','a_dodge','a_help','a_hide','a_search','a_ready','a_use'];
+Object.assign(INFO,{
+ turn:()=>({t:'Как устроен ход',sub:'бой идёт по кругу, раунд ≈ 6 секунд',body:`<p>Порядок ходов задаёт <b>инициатива</b>: в начале боя все бросают её, мастер записывает.</p>
+  <p>В свой ход у тебя есть:</p><p>• <b>Перемещение</b> до ${effSpeed()} футов. Можно делить: пройти, ударить, пройти дальше.<br>• <b>Одно действие</b>: заклинание, удар скимитаром, превращение в зверя или что-то из «Других действий».<br>• <b>Бонусное действие</b>, если что-то его даёт. У Арадии: Звёздный облик и выстрел Лучника, Благословение Королевы воронов, Лечащее слово, возврат из облика зверя.<br>• Одно мелкое дело бесплатно: открыть дверь, достать скимитар.</p>
+  <p><b>Реакция</b> одна на раунд, её можно потратить и в чужой ход: например, Удар вслед.</p>
+  <p class="mu">Правило бонусного заклинания: если в этот ход ты сотворила заклинание бонусным действием, то действием можно сотворить только заговор.</p>`,acts:'',bang:'qt_turn'}),
+ actions:()=>({t:'Другие действия',sub:'вместо атаки или заклинания',body:`<p><b>Рывок</b>: ещё раз столько же движения (всего ${effSpeed()*2} футов).</p>
+  <p><b>Отход</b>: до конца хода уход от врагов не провоцирует Удар вслед.</p>
+  <p><b>Уклонение</b>: до твоего следующего хода атаки по тебе с <b>помехой</b> (если ты видишь атакующего), а спасброски Ловкости с <b>преимуществом</b>.</p>
+  <p><b>Помощь</b>: союзник получает <b>преимущество</b> на следующую проверку или на первую атаку по врагу в 5 футах от тебя.</p>
+  <p><b>Засада</b> (спрятаться): проверка Ловкости (Скрытность). Её сравнивают с Восприятием тех, кто тебя ищет.</p>
+  <p><b>Поиск</b>: проверка Мудрости (Восприятие) или Интеллекта (Анализ).</p>
+  <p><b>Подготовка</b>: «когда случится это, сделаю то». Сработает реакцией. Подготовленное заклинание держишь концентрацией.</p>
+  <p><b>Использование предмета</b>: зелье, второй предмет за ход.</p>`,acts:'',bang:'qt_actions'}),
+ w_scim:()=>{const [l,v]=scimAb();return{t:'Скимитар',sub:'воинское оружие · лёгкое, фехтовальное',body:`<p><b>Рукопашная атака: к20 ${sg(scimHit())}</b> (${l} ${sg(v)} + мастерство ${prof()}). Цель в пределах 5 футов.</p><p>При попадании <b>1к6 ${sg(v)} рубящего урона</b>.</p><p class="mu">Фехтовальное: к атаке и урону прибавляешь Силу или Ловкость, что больше. Друиды владеют скимитаром. В облике зверя скимитар не используется.</p>`,acts:noAct()?noActBtn():`<button data-act="atk:scim">Атаковать: к20 ${sg(scimHit())}</button>`,bang:'qt_w_scim'}},
+ opp:()=>{const B=wfB(),a=B?B.at[0]:null;return{t:'Удар вслед',sub:'провоцированная атака · реакция',body:`<p>Когда враг, которого ты видишь, <b>уходит</b> из твоей досягаемости (5 футов), можешь реакцией один раз ударить его в рукопашную.</p><p>${B?`${esc(a.n)} зверя: <b>к20 ${sg(a.b)}</b>, урон ${atkTxt(a)} ${a.t}.`:`Скимитаром: <b>к20 ${sg(scimHit())}</b>, урон 1к6 ${sg(scimAb()[1])} рубящий.`}</p><p class="mu">Не срабатывает, если враг использовал Отход, телепортировался или его двигают силой. Реакция одна на раунд.</p>`,acts:noAct()?noActBtn():`<button data-act="atk:${B?'b0':'scim'}">Ударить вслед: к20 ${sg(B?a.b:scimHit())}</button>`,bang:'qt_opp'}},
+ wild:()=>{const l=S.wild.max-S.wild.used,B=wfB();return{t:'Дикий облик',sub:`друид · осталось ${l} из ${S.wild.max}`,body:`<p><b>Действием</b> превращаешься в зверя, которого уже видела. Два использования, оба возвращаются после <b>короткого или долгого отдыха</b>.</p>
+  <p>На ${S.level} уровне: зверь с опасностью <b>до ${crTxt()}</b>${S.level>=8?'':S.level>=4?', без скорости полёта':', без скорости плавания и полёта'}. Облик держится <b>${wfHours()} ч</b>. Вернуться раньше можно бонусным действием. При 0 хитах зверя, потере сознания или смерти возвращаешься сразу.</p>
+  <p>• Берёшь у зверя хиты, класс доспеха, скорость, Силу, Ловкость, Телосложение и атаки. Свои Интеллект, Мудрость, Харизму и владения оставляешь. Если у зверя бонус навыка выше, берётся бонус зверя.</p>
+  <p>• Если хиты зверя упали до 0, лишний урон переходит на твои обычные хиты.</p>
+  <p>• В облике <b>нельзя колдовать</b>, но концентрация на уже наложенном заклинании держится.</p>
+  <p>• Тёмного зрения нет, если его нет у зверя.</p>
+  <p>• Одно использование можно потратить на <b>Звёздный облик</b> (бонусным действием).</p>
+  <div class="how">В листе: выбери зверя, и вкладка «Бой» станет его карточкой. Урон в хитах сначала снимается со зверя.</div>`,
+  acts:(B?`<button data-info="wfnow">Сейчас: ${esc(B.n)} ›</button>`:`<button data-info="wfpick" ${l&&S.level>=2?'':'disabled'}>Выбрать зверя ›</button>`)+`<button class="ghost" data-act="wildBack" ${S.wild.used?'':'disabled'}>Вернуть одно использование (ошиблась)</button>`,bang:'qt_wild'}},
+ wfpick:()=>{const l=S.wild.max-S.wild.used;return{t:'Выбрать зверя',sub:`Дикий облик · осталось ${l} из ${S.wild.max} · опасность до ${crTxt()}`,
+  body:`<div class="bstl">${S.beasts.map((B,i)=>{const ok=beastOk(B);return `<button class="bstr ${ok?'':'no'}" data-info="bst_${i}"><b>${esc(B.n)}</b><small>опасность ${crCh(B.cr)} · класс доспеха ${B.ac} · хиты ${B.hp} · ${spdTxt(B)}</small><small>${B.at.map(a=>`${esc(a.n)} ${sg(a.b)}, ${atkTxt(a)}`).join(' · ')}${ok?'':' · <em>пока нельзя</em>'}</small></button>`}).join('')}</div>
+  <div class="how" style="margin-top:8px">Нажми на зверя: откроется его карточка, оттуда превращение. Цифры каждого зверя можно поменять, можно добавить своего.</div>`,
+  acts:`<button class="ghost" data-act="bstNew">+ Свой зверь</button>${BEAST0.some(b=>!S.beasts.some(x=>x.k===b.k))?`<button class="ghost" data-act="bstRestore">Вернуть зверей из книги</button>`:''}`}},
+ wfnow:()=>{const B=wfB();if(!B)return INFO.wild();return{t:B.n,sub:`ты в облике · опасность ${crCh(B.cr)} · до ${wfHours()} ч`,body:beastBody(B,true)+`<div class="how">Свои хиты Арадии сейчас: <b>${S.hp.cur} из ${S.hp.max}</b>. Они вернутся такими же. Колдовать в облике нельзя${S.conc?`, но концентрация на «${SPELLS[S.conc].n}» держится`:''}.</div>`,
+  acts:`<button data-act="wfEnd">Вернуться в свой облик (бонусное действие)</button><button class="ghost" data-act="wfUndo">Превратилась по ошибке: отменить</button>`,bang:BQ[B.k]?'bq_'+S.wf.i:'qt_wild'}},
+ wfown:()=>({t:'Хиты Арадии',sub:`${S.hp.cur} из ${S.hp.max} · ждут под обликом`,body:`<p>Пока ты в облике зверя, урон снимается с <b>хитов зверя</b>. Твои хиты остаются как были.</p><p>Если хиты зверя упадут до 0, облик спадает, а <b>лишний урон</b> переходит на твои хиты.</p>`,acts:`<button data-act="wfEnd">Вернуться в свой облик</button>`,bang:'qt_wild'}),
+ wfdrop:()=>{const w=lastDrop||{n:'зверь',over:0};return{t:'Облик спал',sub:'хиты зверя опустились до 0',body:`<p>${esc(w.n)} больше не держит удар: Арадия снова в своём облике.</p><p>${w.over?`Лишний урон <b>${w.over}</b> перешёл на её хиты: теперь <b>${S.hp.cur} из ${S.hp.max}</b>.`:`Лишнего урона нет, её хиты <b>${S.hp.cur} из ${S.hp.max}</b>.`}</p>`,acts:`<button data-act="closeD">Понятно</button>`,bang:'qt_wild'}},
+ wfundo:()=>INFO.wild()
+});
+function beastBody(B,now){return `<div class="bstat"><div><span>Класс доспеха</span><b>${B.ac}</b></div><div><span>Хиты</span><b>${now?S.wf.hp+' / ':''}${B.hp}</b></div><div><span>Скорость</span><b>${B.spd}<small> футов</small></b></div></div>
+ <div class="bstat"><div><span>Сила</span><b>${B.str} <small>${sg(mod(B.str))}</small></b></div><div><span>Ловкость</span><b>${B.dex} <small>${sg(mod(B.dex))}</small></b></div><div><span>Телосложение</span><b>${B.con} <small>${sg(mod(B.con))}</small></b></div></div>
+ <p class="mu" style="margin:4px 0">${esc(B.size||'')} зверь · опасность ${crCh(B.cr)}${B.spx?' · '+esc(B.spx):''}${B.sense?' · '+esc(B.sense):''}${B.sk&&Object.keys(B.sk).length?' · навыки: '+Object.entries(B.sk).map(([k,v])=>`${skName(k)} ${sg(v)}`).join(', '):''}</p>
+ ${B.at.map(a=>`<p><b>${esc(a.n)}</b>: рукопашная атака <b>к20 ${sg(a.b)}</b>, 5 футов. Урон <b>${atkTxt(a)}</b> ${esc(a.t)}.${a.x?' '+esc(a.x):''}</p>`).join('')}
+ ${B.tr.map(t=>`<p><b>${esc(t[0])}.</b> ${esc(t[1])}</p>`).join('')}`}
+for(let i=0;i<30;i++){
+ INFO['bst_'+i]=()=>{const B=S.beasts[i];if(!B)return INFO.wfpick();const ok=beastOk(B),l=S.wild.max-S.wild.used,cur=S.wf&&S.wf.i===i;
+  const why=S.level<2?'Дикий облик открывается на 2 уровне.':!ok?`На ${S.level} уровне можно зверя с опасностью до ${crTxt()}${S.level<8?', без скорости полёта':''}${S.level<4?' и плавания':''}.`:!l?'Оба использования Дикого облика потрачены. Они вернутся после короткого или долгого отдыха.':'';
+  return{t:B.n,sub:`зверь · опасность ${crCh(B.cr)}${BQ[B.k]?' · из бестиария':' · свой'}`,body:(why?`<div class="how why"><b class="wt">Почему нельзя</b><div>${why}</div></div>`:'')+beastBody(B,false),
+   acts:(cur?`<button data-info="wfnow">Ты уже в этом облике ›</button>`:`<button data-act="wfGo:${i}" ${why||noAct()?'disabled':''}>Превратиться: действие, тратит 1 из ${S.wild.max}</button>`)+`<button class="ghost" data-act="bstEdit:${i}">Изменить цифры</button><button class="ghost" data-info="wfpick">← Все звери</button>`,
+   bang:BQ[B.k]?'bq_'+i:'qt_wild'}};
+ INFO['bq_'+i]=()=>{const B=S.beasts[i],Q=B&&BQ[B.k];return{t:'Бестиарий дословно',sub:'точная цитата с dnd.su, можно показать мастеру',body:Q?`<div class="qbox"><div class="qh">${BEAST0.find(b=>b.k===B.k).n}</div>${Q.t}<div class="qsrc">Источник: Monster Manual, перевод dnd.su. <a class="dsu" href="https://dnd.su/bestiary/${Q.u}/" target="_blank" rel="noopener">Открыть на dnd.su ↗</a></div></div>${qHtml('wild')}`:qHtml('wild'),acts:`<button class="ghost" data-info="${S.wf&&S.wf.i===i?'wfnow':'bst_'+i}">← Назад</button>`}};
+}
+for(let j=0;j<8;j++)INFO['wft_'+j]=()=>{const B=wfB(),t=B&&B.tr[j];if(!t)return INFO.wfnow();return{t:t[0],sub:'особенность облика: '+B.n.toLowerCase(),body:`<p>${esc(t[1])}</p>`,acts:`<button class="ghost" data-info="wfnow">Весь облик ›</button>`,bang:BQ[B.k]?'bq_'+S.wf.i:''}};
+for(let j=0;j<4;j++)INFO['wa_'+j]=()=>{const B=wfB(),a=B&&B.at[j];if(!a)return INFO.wfnow();return{t:a.n,sub:`${B.n.toLowerCase()} · рукопашная атака · 5 футов`,body:`<p><b>Атака: к20 ${sg(a.b)}</b>. При попадании <b>${atkTxt(a)} ${esc(a.t)}</b> урона.</p>${a.x?`<p>${esc(a.x)}</p>`:''}${B.tr.some(t=>/Тактика стаи/.test(t[0]))?'<div class="how">Тактика стаи: если рядом с целью (в 5 футах) стоит твой дееспособный союзник, включи «Преимущество» перед броском.</div>':''}`,acts:noAct()?noActBtn():`<button data-act="atk:b${j}">Атаковать: к20 ${sg(a.b)}</button>`,bang:BQ[B.k]?'bq_'+S.wf.i:''}};
+/* созвездия */
+Object.keys(CST).forEach(c=>{INFO['st_'+c]=()=>{const C=CST[c],on=starOn(c),l=S.wild.max-S.wild.used,w=mod(S.ab.wis);
+ const d={archer:`<p>При входе в облик и потом <b>бонусным действием</b> каждый свой ход: <b>дальнобойная атака заклинанием</b> светящейся стрелой в цель в пределах <b>60 футов</b>. Атака <b>к20 ${sg(spellAtk())}</b>, урон <b>${starDie()}к8 ${sg(w)} излучением</b>.</p>`,
+  chalice:`<p>Когда творишь заклинание, которое <b>тратит ячейку и лечит</b> (например, Лечащее слово), ты или другое существо в пределах <b>30 футов</b> восстанавливаете ещё <b>${starDie()}к8 ${sg(w)} хитов</b>.</p><div class="how">В листе: после лечения ячейкой появится кнопка «Чаша».</div>`,
+  dragon:`<p>На <b>проверках Интеллекта и Мудрости</b> и на <b>спасбросках Телосложения для концентрации</b> выпавшие на к20 <b>1–9 считаются как 10</b>.</p><div class="how">В листе это считается само: если выпадет меньше 10, итог посчитается от 10.</div>`}[c];
+ const why=S.level<2?'Звёздный облик открывается на 2 уровне.':wfB()?'Сейчас ты в облике зверя. Сначала вернись в свой облик.':!l&&!on?'Оба использования Дикого облика потрачены. Они вернутся после короткого или долгого отдыха.':'';
+ return{t:'Звёздный облик: '+C.n,sub:on?'действует · 10 минут':`Круг Звёзд · бонусное действие · тратит 1 Дикий облик`,body:(why&&!on?`<div class="how why"><b class="wt">Почему нельзя</b><div>${why}</div></div>`:'')+d+`<p class="mu">Облик длится <b>10 минут</b>. Твои показатели не меняются, <b>колдовать можно</b>. Светишься: ярко на 10 футов и тускло ещё на 10. Кончается раньше, если становишься недееспособной, умираешь или снова принимаешь облик.${S.level>=10?' С 10 уровня в начале каждого своего хода можно сменить созвездие.':''}</p>`,
+  acts:on?(c==='archer'?`<button data-act="atk:archer">Выстрел Лучника: к20 ${sg(spellAtk())}</button>`:'')+(S.level>=10?Object.keys(CST).filter(x=>x!==c).map(x=>`<button class="ghost" data-act="starSw:${x}">Сменить на ${CST[x].n}</button>`).join(''):'')+`<button class="ghost" data-act="starEnd">Облик закончился</button>`
+   :(c==='archer'?`<button data-act="starGo:archer:shot" ${why||noAct()?'disabled':''}>Принять облик и сразу выстрелить</button><button class="ghost" data-act="starGo:archer" ${why||noAct()?'disabled':''}>Принять облик без выстрела</button>`:`<button data-act="starGo:${c}" ${why||noAct()?'disabled':''}>Принять облик: ${C.n}</button>`)+(S.starPick!==c?`<button class="ghost" data-act="starPick:${c}">Сделать любимым созвездием</button>`:''),
+  bang:'qt_star'}}});
+/* дословные цитаты dnd.su для значка «!» */
+Object.assign(QUOTE,{"ab_str": {"h": "Использование характеристик: Сила", "s": "Player's Handbook", "u": "https://dnd.su/articles/newbie/468-using-ability-scores/", "t": "<p>Сила означает физическую силу и атлетические тренировки.</p><p><b>Проверки силы</b></p><p>Проверки Силы могут моделировать попытки поднять, толкнуть, подтянуть или сломать что-то, попытки втиснуть своё тело в некое пространство или другие попытки применения грубой силы. Навык Атлетика отражает особую склонность к некоторым проверкам Силы.</p><p><b>Атлетика.</b> Проверки Силы (Атлетика) покрывают разнообразные ситуации, в которых вы лазаете, прыгаете или плаваете. Примеры включают следующие действия:</p><p>Вы пытаетесь взобраться на крутой утёс, избегая при этом опасностей, или попытки удержаться за что-то, когда вас пытаются стряхнуть.</p><p>Вы пытаетесь прыгнуть на большое расстояние или совершить трюк в середине прыжка.</p><p>Вы пытаетесь плыть или оставаться на плаву в бурных водах, во время шторма или среди зарослей водорослей. Другое существо может попытаться толкнуть или затянуть вас под воду, или как-то иным способом помешать вашему плаванию.</p><p><b>Прочие проверки Силы.</b> Мастер может призвать к проверке Силы, если вы пытаетесь сделать что-то из следующего:</p><p>Попытка открыть застрявшую, запертую или заложенную на засов дверь</p><p>Попытка вырваться из оков</p><p>Попытка протиснуться по узкому туннелю</p><p>Попытка удержаться за фургон, не отцепившись от него во время движения</p><p>Опрокидывание статуи</p><p>Попытка удержать валун от падения</p>"}, "ab_dex": {"h": "Использование характеристик: Ловкость", "s": "Player's Handbook", "u": "https://dnd.su/articles/newbie/468-using-ability-scores/", "t": "<p>Ловкость отвечает за проворство, реакцию и равновесие.</p><p><b>Проверки ловкости</b></p><p>Проверка Ловкости может моделировать любую попытку перемещаться ловко, быстро или тихо, либо попытку не упасть с шаткой опоры. Навыки Акробатика, Ловкость рук и Скрытность отражают особую склонность к некоторым проверкам Ловкости.</p><p><b>Акробатика.</b> Проверки Ловкости (Акробатика) охватывают попытки устоять на ногах в неудобной ситуации, например, когда вы пытаетесь пробежаться по льду, балансируете на натянутом канате или стоите на палубе корабля в шторм. Мастер может также призвать к проверке Ловкости (Акробатика), чтобы увидеть, можете ли вы выполнить акробатический трюк, включая ныряние, кувырки, сальто и перекаты.</p><p><b>Ловкость рук.</b> Если вы пытаетесь жонглировать или сделать ловкий трюк, например, подбросить что-то другому или спрятать что-то на своём теле, совершите проверку Ловкости (Ловкость рук). Мастер может призвать совершить проверку Ловкости (Ловкость рук) чтобы определить, можете ли вы срезать у ротозея кошелёк или подбросить что-то другому в карман.</p><p><b>Скрытность.</b> Совершите проверку Ловкости (Скрытность), когда пытаетесь спрятаться от врагов, прокрасться мимо стражи, сбежать незамеченным или незаметно и неслышно подобраться к кому-то.</p><p><b>Прочие проверки Ловкости.</b> Мастер может призвать к проверке Ловкости, если вы пытаетесь сделать что-то из следующего:</p><p>Вы спускаетесь с тяжело нагруженной тачкой по крутому склону</p><p>Вы закладываете крутой вираж на карете</p><p>Вы вскрываете замок</p><p>Вы обезвреживаете ловушку</p><p>Вы связываете пленника</p><p>Вы пытаетесь высвободиться из пут</p><p>Вы играете на струнном инструменте</p><p>Вы создаёте мелкий или высокодетализированный предмет</p>"}, "ab_con": {"h": "Использование характеристик: Телосложение", "s": "Player's Handbook", "u": "https://dnd.su/articles/newbie/468-using-ability-scores/", "t": "<p>Телосложение измеряет ваше здоровье, выносливость и жизненные силы.</p><p><b>Проверки телосложения</b></p><p>Проверки Телосложения совершаются не часто, и от него не зависят никакие навыки, так как выносливость, которую отражает эта характеристика, пассивна, и персонаж или чудовище не может активно её использовать. Однако проверка Телосложения может моделировать вашу попытку сделать что-то необычное.</p><p>Мастер может призвать к проверке Телосложения, если вы пытаетесь сделать что-то из следующего:</p><p>Вы задерживаете дыхание</p><p>Вы совершаете марш-бросок или несколько часов без перерыва работаете</p><p>Вы долго не спите</p><p>У вас нет еды и воды</p><p>Вы пытаетесь осушить кружку пива одним махом</p>"}, "ab_int": {"h": "Использование характеристик: Интеллект", "s": "Player's Handbook", "u": "https://dnd.su/articles/newbie/468-using-ability-scores/", "t": "<p>Интеллект измеряет силу ума, точность воспоминаний и способность здраво рассуждать.</p><p><b>Проверки интеллекта</b></p><p>Проверки Интеллекта происходят когда вы используете логику, образование, память или дедуктивное мышление. Навыки История, Магия, Природа, Расследование и Религия отражают особую склонность к некоторым проверкам Интеллекта.</p><p><b>Расследование.</b> Если вы ищете подсказки и делаете на их основе выводы, вы совершаете проверку Интеллекта (Расследование). Вы можете вычислить местоположение спрятанного предмета, понять по виду раны, каким оружием она была нанесена или определить самую слабую точку в туннеле, способную его обрушить. Рассматривание древних свитков в поисках тайного знания тоже может требовать совершения проверки Интеллекта (Расследование).</p><p><b>История.</b> Проверка Интеллекта (История) определяет вашу способность вспомнить знания об исторических событиях, легендарных личностях, древних королевствах, былых спорах, недавних войнах и утерянных цивилизациях.</p><p><b>Магия.</b> Проверка Интеллекта (Магия) определяет вашу способность вспомнить знания о заклинаниях, магических предметах, мистических символах, магических традициях, планах существования и обитателях этих планов.</p><p><b>Природа.</b> Проверка Интеллекта (Природа) определяет вашу способность вспомнить знания о местности, о растениях и животных, о погоде и естественных циклах.</p><p><b>Религия.</b> Проверка Интеллекта (Религия) определяет вашу способность вспомнить знания о божествах, ритуалах и молитвах, религиозных иерархиях, священных символах и практиках тайных культов.</p><p><b>Прочие проверки Интеллекта.</b> Мастер может призвать к проверке Интеллекта, если вы пытаетесь сделать что-то из следующего:</p><p>Вы общаетесь с существом без использования слов</p><p>Вы оцениваете стоимость ценного предмета</p><p>Вы маскируетесь под городского стража</p><p>Вы подделываете документ</p><p>Вы вспоминаете знание о ремесле или торговле</p><p>Вы соревнуетесь с кем-то другим</p>"}, "ab_wis": {"h": "Использование характеристик: Мудрость", "s": "Player's Handbook", "u": "https://dnd.su/articles/newbie/468-using-ability-scores/", "t": "<p>Мудрость определяет, как хорошо вы настроены на окружающий мир и отражает восприимчивость и интуицию.</p><p><b>Проверки мудрости</b></p><p>Проверки Мудрости могут отражать попытки понять язык тела, понять чьи-то переживания, заметить что-то в окружающем мире или позаботиться о раненом. Навыки Восприятие, Выживание, Медицина, Проницательность и Уход за животными отражают особую склонность к некоторым проверкам Мудрости.</p><p><b>Восприятие.</b> Проверка Мудрости (Восприятие) позволяет вам увидеть, услышать или как-то иначе заметить присутствие чего-либо. Она измеряет вашу готовность к новым событиям и остроту ваших чувств. Например, вы можете подслушать разговор под дверью, подсмотреть в окно или услышать чудовищ, крадущихся по лесу. Или вы можете попытаться заметить что-то, что скрыто или легко можно пропустить, будь то орки, лежащие в засаде у дороги, головорезы, затаившиеся в тенях аллеи или свет от лампы под закрытой потайной дверью.</p><p><b>Выживание.</b> Мастер может призвать совершить проверку Мудрости (Выживание) для выслеживания врагов, охоты на дичь, нахождения дороги в промёрзшей тундре, замечания признаков того, что рядом живут совомеды, предсказывания погоды и избегания зыбучих песков и прочих природных опасностей.</p><p><b>Медицина.</b> Проверка Мудрости (Медицина) позволяет стабилизировать умирающего спутника или диагностировать болезнь.</p><p><b>Проницательность.</b> Ваша проверка Мудрости (Проницательность) определяет, можете ли вы определить истинные намерения существа, например, при попытке распознать ложь или предсказать чей-то следующий шаг. При этом вы совершаете догадки по языку тела, особенностям разговора и переменах в поведении.</p><p><b>Уход за животными.</b> Если возникает вопрос, можете ли вы успокоить одомашненное животное, удержать скакуна от того, чтобы он запаниковал, или почувствовать намерения животного, Мастер может призвать совершить проверку Мудрости (Уход за животными). Вы также совершаете проверку Мудрости (Уход за животными) для контролирования скакуна при совершении опасного манёвра.</p><p><b>Прочие проверки Мудрости.</b> Мастер может призвать к проверке Мудрости, если вы пытаетесь сделать что-то из следующего:</p><p>Вы пытаетесь понять, что делать дальше</p><p>Вы пытаетесь распознать в живом или вроде бы мёртвом существе нежить</p>"}, "ab_cha": {"h": "Использование характеристик: Харизма", "s": "Player's Handbook", "u": "https://dnd.su/articles/newbie/468-using-ability-scores/", "t": "<p>Харизма измеряет вашу способность эффективно взаимодействовать с другими. Она охватывает такие факторы как уверенность в себе и красноречие, и может отражать привлекательную или внушительную внешность.</p><p><b>Проверки харизмы</b></p><p>Проверку Харизмы можно совершать при попытке повлиять на других или развлечь их, когда вы пытаетесь произвести впечатление или убедительно соврать, или если вы пытаетесь разобраться в сложной социальной ситуации. Навыки Выступление, Запугивание, Обман и Убеждение отражают особую склонность к некоторым проверкам Харизмы.</p><p><b>Выступление.</b> Ваша проверка Харизмы (Выступление) определяет, насколько хорошо вы удовлетворили публику музыкой, танцем, актёрской игрой, рассказом или другим развлечением.</p><p><b>Запугивание.</b> Когда вы пытаетесь воздействовать на других угрозами, враждебными действиями и физическим насилием, Мастер может попросить вас совершить проверку Харизмы (Запугивание). Примерами могут послужить добыча информации из пленника, убеждение головорезов отказаться от драки и угроза разбитой бутылкой ехидному визирю, чтобы тот изменил решение.</p><p><b>Обман.</b> Ваша проверка Харизмы (Обман) определяет, можете ли вы намеренно утаить правду, хоть речами, хоть действиями. Такой обман охватывает всё, от направления других по неверному следу и двусмысленных речей до рассказывания откровенной лжи. Может применяться при отвлечении стражников, обмане торговцев, зарабатывании денег азартными играми, маскировке под других, отводе чужих подозрений ложными утверждениями и сохранении спокойного лица при рассказывании чудовищной лжи.</p><p><b>Убеждение.</b> Если вы пытаетесь повлиять на существо или целую группу существ тактично, с уважением и добродушием, Мастер может попросить вас совершить проверку Харизмы (Убеждение). Обычно убеждение используется при добрых намерениях, при попытках подружиться, установить контакт или проявить этикет. Примеры убеждения других включают в себя попытки убедить дворецкого пропустить вас к королю, мирное урегулирование споров двух враждующих племён и воодушевление толпы горожан.</p><p><b>Прочие проверки Харизмы.</b> Мастер может призвать к проверке Харизмы, если вы пытаетесь сделать что-то из следующего:</p><p>Вы ищете, с кем лучше всего обсудить новости, слухи и сплетни</p><p>Вы сливаетесь с толпой, чтобы узнать основные обсуждаемые темы</p>"}, "saves": {"h": "Использование характеристик: Спасброски", "s": "Player's Handbook", "u": "https://dnd.su/articles/newbie/468-using-ability-scores/", "t": "<p>Спасброски отражают вашу попытку сопротивляться заклинанию, ловушке, яду, болезни или другой подобной угрозе. Обычно это не вы решаете совершить спасбросок, а вас заставляют его сделать, когда персонаж получает плохой эффект.</p><p>Для совершения спасброска бросьте к20 и добавьте модификатор соответствующей характеристики. Например, при совершении спасброска Ловкости используется модификатор Ловкости.</p><p>Спасбросок может быть модифицирован ситуационным бонусом или штрафом, и может совершаться с преимуществом или помехой, на усмотрение Мастера.</p><p>Классы дают владение как минимум двумя спасбросками. Волшебник, например, владеет спасбросками Интеллекта. Так же как в случае владения навыками, владение спасброском позволяет персонажу добавлять бонус мастерства к спасброскам соответствующей характеристики. У некоторых чудовищ тоже есть владение спасбросками.</p><p>Сл спасброска определяется эффектом. Например, Сл спасброска от заклинания определяется базовой характеристикой заклинателя и его бонусом мастерства.</p><p>Результат успешного или проваленного спасброска описан в эффекте, заставляющем совершить спасбросок. Обычно успех означает, что существо не получает урон или получает, но уменьшенный.</p>"}, "a_dash": {"h": "Действия: Рывок", "s": "Player's Handbook", "u": "https://dnd.su/articles/mechanics/360-actions/", "t": "<p>Если вы совершаете действие «Рывок», вы получаете дополнительное перемещение в текущем ходу, равное вашей скорости после применения всех модификаторов.</p>"}, "a_dis": {"h": "Действия: Отход", "s": "Player's Handbook", "u": "https://dnd.su/articles/mechanics/360-actions/", "t": "<p>Если вы совершаете действие «Отход», то до конца текущего хода ваше перемещение не провоцирует атаки.</p>"}, "a_dodge": {"h": "Действия: Уклонение", "s": "Player's Handbook", "u": "https://dnd.su/articles/mechanics/360-actions/", "t": "<p>До начала вашего следующего хода все броски атаки по вам совершаются с помехой, если вы видите атакующего, и спасброски Ловкости вы совершаете с преимуществом.</p><p>Вы теряете это преимущество, если становитесь недееспособным или если ваша скорость падает до 0.</p>"}, "a_help": {"h": "Действия: Помощь", "s": "Player's Handbook", "u": "https://dnd.su/articles/mechanics/360-actions/", "t": "<p>Существо, которому вы помогаете, совершит свою следующую проверку характеристики для выполнения задачи с преимуществом, если она будет совершена до начала вашего следующего хода.</p><p>В качестве альтернативы, вы можете помочь дружественному существу атаковать другое существо, находящееся в пределах 5 футов от вас. Вы совершаете финт, отвлекаете цель или каким-то другим образом делаете атаку союзника более эффективной. Если ваш союзник атакует цель до начала вашего следующего хода, первый бросок атаки совершается с преимуществом.</p><p>Преимущество длится до начала вашего следующего хода.</p>"}, "a_use": {"h": "Действия: Использование предмета", "s": "Player's Handbook", "u": "https://dnd.su/articles/mechanics/360-actions/", "t": "<p>Обычно вы взаимодействуете с предметами во время других действий или передвижения, например, вынимаете меч частью атаки или открываете дверь в движении, но если предмет требует действия для его использования, вы совершаете действие Использование предмета.</p><p>Также это действие требуется, если вы используете второй предмет за один ход. Например: вы открываете дверь (не требует действия) и хотите сразу достать зелье из рюкзака (действие Использование предмета)</p>"}, "a_hide": {"h": "Действия: Засада", "s": "Player's Handbook", "u": "https://dnd.su/articles/mechanics/360-actions/", "t": "<p>Вы не можете прятаться от существа, которое видит вас, и если вы издадите шум (например, прокричите предупреждение или уроните вазу), вы выдаёте своё местоположение.</p><p>Когда вы пытаетесь спрятаться, совершите проверку Ловкости (Скрытность). Пока вас не найдут или вы не прекратите прятаться, результат этой проверки будет противостоять проверкам Мудрости (Восприятие) существ, активно ищущих вас.</p><p>Если вы прячетесь, есть шанс, что вас заметят даже без активных поисков. Для определения того, заметило ли вас существо, Мастер сравнивает результат вашей проверки Ловкости (Скрытность) с пассивным значением Мудрости (Восприятие), которое равно 10 + модификатор Мудрости существа, плюс все уместные бонусы и штрафы.</p>"}, "a_search": {"h": "Действия: Поиск", "s": "Player's Handbook", "u": "https://dnd.su/articles/mechanics/360-actions/", "t": "<p>В зависимости от характера ваших поисков, Мастер может призвать к проверке Мудрости (Восприятие) или Интеллекта (Расследование).</p>"}, "a_ready": {"h": "Действия: Подготовка", "s": "Player's Handbook", "u": "https://dnd.su/articles/mechanics/360-actions/", "t": "<p>Во-первых, определите, какое воспринимаемое событие вызовет вашу реакцию.</p><p>Затем выберите действие, либо перемещение, которое будет совершено.</p><p>Примеры: «Если культист наступит на люк, я дёрну рычаг и открою его», «Если передо мной встанет гоблин, я отойду прочь».</p><p>Когда срабатывает условие, вы можете либо совершить свою реакцию сразу после окончания действия, вызвавшего срабатывание, либо игнорировать срабатывание условия. Подготовленное действие можно совершить только до начала вашего следующего хода. Помните, что вы можете совершить только одну реакцию в раунд.</p><p>Если вы подготовили заклинание, вы накладываете его как обычно, но удерживаете энергию, пока не сработает условие. Для того чтобы заклинание можно было подготовить, у него должно быть время накладывания «1 действие», а удерживание магии требует концентрации. Если концентрация прервана, заклинание тратится без всякого эффекта.</p>"}, "a_bonus": {"h": "Действия: Бонусные действия", "s": "Player's Handbook", "u": "https://dnd.su/articles/mechanics/360-actions/", "t": "<p>Разнообразные классовые умения, заклинания и прочие эффекты позволяют вам совершать в ход дополнительное бонусное действие.</p>"}, "a_react": {"h": "Действия: Реакция", "s": "Player's Handbook", "u": "https://dnd.su/articles/mechanics/360-actions/", "t": "<p>Реакция — это мгновенный ответ на срабатывание некоего условия, которое может происходить как в ваш, так и в чужой ход. Если реакция прерывает ход другого существа, после реакции это существо может продолжить свой ход. Если вы не уверены, когда реакция происходит по отношению к её условию, следуйте правилу: реакция происходит после завершения её условия, если в описании реакции явно не указано иное.</p>"}, "opp": {"h": "Действия: Провоцированная атака", "s": "Player's Handbook", "u": "https://dnd.su/articles/mechanics/360-actions/", "t": "<p>Условие: враждебное существо, которое вы видите, покидает вашу досягаемость.</p><p>Вы совершаете одну рукопашную атаку по спровоцировавшему существу.</p><p>Эта атака происходит как раз перед тем, как спровоцировавшее существо покинет пределы вашей досягаемости.</p><p>Вы не вызываете провоцированные атаки, если совершаете действие «Отход». Вы также не провоцируете атаки, если телепортируетесь, или кто-то (что-то) перемещает вас, не тратя ваше перемещение, действие и реакцию.</p><p>Провоцированная атака не получает преимуществ «Дополнительной атаки» (умение воина и других классов), т.к. не является действием Атака.</p>"}, "scim": {"h": "Оружие: Скимитар", "s": "Player's Handbook", "u": "https://dnd.su/articles/inventory/96-arms/", "t": "<p><b>Скимитар</b>: 25 зм, 1к6 рубящий, 3 фнт., лёгкое, фехтовальное.</p><p>Владение оружием позволяет вам добавлять бонус мастерства к броскам атаки всех атак, совершённых этим оружием. Если вы совершаете бросок атаки, используя оружие, которым не владеете, вы не добавляете к броску атаки бонус мастерства.</p><p>Лёгкое. Лёгкое оружие маленькое и удобное, и идеально подходит для сражения двумя оружиями. Смотрите правила по сражению двумя оружиями.</p><p>Фехтовальное. При совершении атаки фехтовальным оружием вы сами выбираете, какой модификатор использовать при совершении бросков атаки и урона — модификатор Силы или Ловкости. Для обоих бросков должен использоваться один и тот же модификатор.</p>"}, "druidic": {"h": "Друид: Друидический язык", "s": "Player's Handbook", "u": "https://dnd.su/class/90-druid/", "t": "<p>Вы знаете Друидический язык — тайный язык друидов. Вы можете на нём говорить и оставлять тайные послания. Вы и все, кто знает этот язык, автоматически замечаете эти послания. Другие замечают присутствие послания при успешной проверке Мудрости (Восприятие) Сл 15, но без помощи магии не могут расшифровать его.</p>"}, "wild": {"h": "Друид: Дикий облик", "s": "Player's Handbook", "u": "https://dnd.su/class/90-druid/", "t": "<p>Действием вы можете магическим образом принять облик любого Зверя, которого вы видели. Вы можете использовать это умение два раза, восстанавливая использования после короткого или продолжительного отдыха.</p><p>Уровень друида определяет, в каких Зверей можно превращаться. Например, на 2-м уровне можно превращаться в животное с показателем опасности не более 1/4 без скорости полёта и плавания.</p><p>В облике зверя можно оставаться количество часов, равное половине уровня друида (округляя в меньшую сторону). Затем друид возвращается в нормальный облик, если только не потратит еще одно использование «Дикого облика». Бонусным действием можно вернуться в нормальный облик досрочно. Бессознательный, доведённый до 0 хитов или мёртвый друид сразу возвращается в нормальный облик.</p><p>Когда вы превращены, действуют следующие правила:</p><p>Вся игровая статистика берётся из статистики Зверя, но сохраняются мировоззрение, личность и значения Интеллекта, Мудрости и Харизмы. Также у вас остаются владения навыками и спасбросками в дополнение к таковым нового облика. Если владение есть и у вас, и у Зверя, но у него бонус выше, используется бонус Зверя. Легендарные действия и действия в логове недоступны.</p><p>Когда вы превращены, вы принимаете хиты и Кость Хитов Зверя. Вернувшись в нормальный облик, ваши хиты будут такими же, как до превращения. Однако, если вы вернулись в свой облик из-за того, что ваши хиты опустились до 0, «лишний» урон переносится на нормальный облик. Например, если вы в облике Зверя получили 10 урона, имея при этом 1 хит, то вы возвращаетесь в нормальный облик и получаете 9 урона. Если этот урон не довёл хиты персонажа до 0, он не теряет сознание.</p><p>Вы не можете накладывать заклинания, а речь и действия, требующие рук, могут быть ограничены видом Зверя. Превращение не прерывает вашу концентрацию на уже наложенных заклинаниях и не мешает совершать действия, являющиеся частью заклинания, такие как в случае заклинания призыв молнии [call lightning].</p><p>Вы сохраняете преимущества от всех умений класса, расы и прочих источников и можете пользоваться ими, если этому не препятствует новый физический облик. Однако недоступны особые чувства, такие как тёмное зрение, если только их нет у Зверя.</p><p>Вы выбираете, упадет ли ваше снаряжение на землю в вашем пространстве, сольется с вашей новой формой или будет надето на нее. Носимое снаряжение функционирует как обычно, но Мастер решает, может ли новая форма, в зависимости от сложения и размера, носить тот или иной предмет снаряжения. Снаряжение не меняет форму и размер под новый облик, и если оно не подходит новому облику, оно должно остаться на земле или слиться с новым обликом. Слившееся с обликом снаряжение не работает, пока вы опять не примете свой облик.</p><p><b>Облик зверя</b>: 2 уровень, ПО не более ¼, без скорости плавания и полёта (пример: волк); 4 уровень, ПО не более ½, без скорости полёта (пример: крокодил); 8 уровень, ПО не более 1 (пример: гигантский орёл).</p>"}, "r_dark": {"h": "Эльф: Тёмное зрение", "s": "Player's Handbook", "u": "https://dnd.su/race/79-elf/", "t": "<p><b>Тёмное зрение.</b> Привыкнув к сумраку леса и ночному небу, вы обладаете превосходным зрением в темноте и при тусклом освещении. На расстоянии в 60 футов вы при тусклом освещении можете видеть так, как будто это яркое освещение, и в темноте так, как будто это тусклое освещение. В темноте вы не можете различать цвета, только оттенки серого.</p>"}, "r_keen": {"h": "Эльф: Обострённые чувства", "s": "Player's Handbook", "u": "https://dnd.su/race/79-elf/", "t": "<p><b>Обострённые чувства.</b> Вы владеете навыком Восприятие.</p>"}, "r_fey": {"h": "Эльф: Наследие фей", "s": "Player's Handbook", "u": "https://dnd.su/race/79-elf/", "t": "<p><b>Наследие фей.</b> Вы совершаете с преимуществом спасброски от состояния «очарованный», и вас невозможно магически усыпить.</p>"}, "r_trance": {"h": "Эльф: Транс", "s": "Player's Handbook", "u": "https://dnd.su/race/79-elf/", "t": "<p><b>Транс.</b> Эльфы не нуждаются во сне. Вместо этого они погружаются в глубокую медитацию, находясь в полубессознательном состоянии до 4 часов в сутки (обычно такую медитацию называют трансом). Во время этой медитации вы можете грезить о разных вещах. Некоторые из этих грёз являются ментальными упражнениями, выработанными за годы тренировок. После такого отдыха вы получаете все преимущества, которые получает человек после 8 часов сна.</p>"}, "r_necro": {"h": "Шадар-кай: Некротическое сопротивление", "s": "Mordenkainen’s Tome of Foes", "u": "https://dnd.su/race/79-elf/", "t": "<p><b>Некротическое сопротивление.</b> Вы получаете сопротивление урону некротической энергией.</p>"}, "raven": {"h": "Шадар-кай: Благословение Королевы воронов", "s": "Mordenkainen’s Tome of Foes", "u": "https://dnd.su/race/79-elf/", "t": "<p><b>Благословение Королевы воронов.</b> Бонусным действием вы можете магическим образом телепортироваться в свободное пространство на расстояние до 30 футов вашей видимости. Применив эту особенность, вы не сможете ею воспользоваться, пока не закончите продолжительный отдых.</p><p>Начиная с 3-го уровня, при телепортации с помощью этой особенности, вы также получаете сопротивление всему урону. Сопротивление длится до начала вашего следующего хода. В течение этого времени, ваш облик становится призрачным и полупрозрачным.</p>"}, "wanderer": {"h": "Чужеземец: Странник", "s": "Player's Handbook", "u": "https://dnd.su/backgrounds/768-outlander/", "t": "<p>Вы отлично запоминаете карты и местность, и всегда можете вспомнить общие характеристики местности, поселения, и прочие особенности в окрестностях. Кроме того, вы каждый день можете находить еду и пресную воду для себя и пяти других товарищей, при условии, что вокруг вас можно найти ягоды, дичь, воду и так далее.</p>"}});
+const addQ=(k,list,back)=>{INFO['qt_'+k]=()=>({t:'Правила дословно',sub:'точная цитата с dnd.su, можно показать мастеру',body:list.map(qHtml).join(''),acts:back||`<button class="ghost" data-info="${k}">← Назад</button>`})};
+addQ('turn',['a_bonus','a_react']);addQ('actions',QA);addQ('w_scim',['scim']);addQ('opp',['opp']);addQ('wild',['wild']);addQ('star',['form']);
+['r_dark','r_fey','r_trance','r_necro','raven','wanderer','druidic'].forEach(k=>{QMAP[k]=[k];addQ(k,[k])});
+QMAP.senses=['r_keen'];addQ('senses',['r_keen']);
+AB.forEach(([k])=>addQ('ab_'+k,['ab_'+k,'saves'],`<button class="ghost" data-ab="${k}">← Назад</button>`));
+INFO.qt_star=()=>({t:'Правила дословно',sub:'точная цитата с dnd.su, можно показать мастеру',body:qHtml('form'),acts:`<button class="ghost" data-info="st_${S.star?S.star.c:S.starPick}">← Назад</button>`});
+/* Звёздный облик больше не «появится позже» */
+{const _c=INFO.cf_circle;INFO.cf_circle=()=>{const d=_c();d.body=d.body.replace(/<div class="how">Звёздный облик появится[^<]*<\/div>/,'<div class="how">Звёздный облик и созвездия: вкладка «Бой», раздел «Облики».</div>');return d}}
+{const _r=INFO.raven;INFO.raven=()=>{const d=_r();if(wfB())d.body+='<p class="mu">В облике зверя телепорт тоже работает: это умение расы, рук и слов не нужно.</p>';return d}}
+
+/* ---------- действия ---------- */
+function bstForm(i){const nw=i<0,B=nw?{k:'own'+Date.now(),n:'',cr:'1/4',size:'Средний',ac:12,hp:10,hd:'',spd:30,spx:'',str:10,dex:10,con:10,sk:{},sense:'',tr:[],at:[{n:'Укус',b:3,dn:1,ds:6,k:1,t:'колющий',x:''}]}:S.beasts[i];
+ const f=$('form'),A=B.at,dz=a=>a?atkTxt(a):'';
+ f.innerHTML=`<h2>${nw?'Свой зверь':'Цифры: '+esc(B.n)}</h2>
+ <div class="three"><label style="grid-column:span 2">Название<input name="n" type="text" value="${esc(B.n)}" style="text-align:left" required></label><label>Опасность<input name="cr" type="text" value="${esc(B.cr)}"></label></div>
+ <div class="three"><label>Класс доспеха<input name="ac" type="number" inputmode="numeric" value="${B.ac}"></label><label>Хиты<input name="hp" type="number" inputmode="numeric" value="${B.hp}"></label><label>Скорость, футов<input name="spd" type="number" inputmode="numeric" value="${B.spd}"></label></div>
+ <div class="three"><label>Сила<input name="str" type="number" inputmode="numeric" value="${B.str}"></label><label>Ловкость<input name="dex" type="number" inputmode="numeric" value="${B.dex}"></label><label>Телосложение<input name="con" type="number" inputmode="numeric" value="${B.con}"></label></div>
+ ${[0,1].map(j=>`<div class="three"><label>Атака ${j+1}<input name="an${j}" type="text" value="${esc(A[j]?A[j].n:'')}" placeholder="${j?'нет':'Укус'}" style="text-align:left"></label><label>Бонус<input name="ab${j}" type="number" inputmode="numeric" value="${A[j]?A[j].b:''}"></label><label>Урон<input name="ad${j}" type="text" value="${dz(A[j])}" placeholder="1к6+2"></label></div>`).join('')}
+ <label class="wide">Другая скорость и чувства<input name="spx" type="text" value="${esc([B.spx,B.sense].filter(Boolean).join('; '))}" placeholder="лазая 40 футов; тёмное зрение 60 футов" style="text-align:left"></label>
+ <label class="wide" style="display:flex;gap:14px;flex-direction:row;align-items:center"><span><input type="checkbox" name="swim" ${B.swim?'checked':''}> плавает</span><span><input type="checkbox" name="fly" ${B.fly?'checked':''}> летает</span></label>
+ <button class="go gold" type="submit">Сохранить</button>
+ ${nw?'':`<button class="go" type="button" id="bstDel" style="border:1px solid var(--red2);color:var(--red2);font-weight:500">Убрать зверя из списка</button>`}`;
+ $('sheet').classList.add('on');
+ if(!nw)$('bstDel').onclick=()=>{if(S.wf&&S.wf.i===i){S.wf=null}else if(S.wf&&S.wf.i>i)S.wf.i--;S.beasts.splice(i,1);save();renderAll();$('sheet').classList.remove('on');openInfo('wfpick')};
+ f.onsubmit=e=>{e.preventDefault();const g=n=>f[n].value.trim(),N=(n,d)=>{const v=parseInt(g(n));return isNaN(v)?d:v};
+  const pd=t=>{t=t.replace(/\s/g,'').replace(/[dkд]/gi,'к').replace('−','-');let m=t.match(/^(\d+)к(\d+)([+-]\d+)?$/);if(m)return{dn:+m[1],ds:+m[2],k:+(m[3]||0)};m=t.match(/^(\d+)$/);return m?{dn:0,ds:0,k:+m[1]}:null};
+  const at=[];[0,1].forEach(j=>{const n=g('an'+j),d=pd(g('ad'+j));if(n&&d){const o=B.at[j]&&B.at[j].n===n?B.at[j]:{t:'колющий',x:''};at.push(Object.assign({},o,{n,b:N('ab'+j,0)},d))}});
+  if(!at.length)at.push({n:'Удар',b:0,dn:1,ds:4,k:0,t:'дробящий',x:''});
+  const ex=g('spx').split(';').map(x=>x.trim()).filter(Boolean);
+  const nb=Object.assign(B,{n:g('n')||'Зверь',cr:g('cr')||'0',ac:N('ac',10),hp:Math.max(1,N('hp',1)),spd:Math.max(0,N('spd',30)),str:N('str',10),dex:N('dex',10),con:N('con',10),at,
+   spx:ex.filter(x=>/лаз|плав|лет|копа/.test(x)).join(', '),sense:ex.filter(x=>!/лаз|плав|лет|копа/.test(x)).join(', '),swim:f.swim.checked?1:0,fly:f.fly.checked?1:0});
+  if(nw)S.beasts.push(nb);if(S.wf&&S.beasts[S.wf.i]===nb)S.wf.hp=Math.min(S.wf.hp,nb.hp);
+  save();renderAll();$('sheet').classList.remove('on');openInfo('bst_'+S.beasts.indexOf(nb))}}
+{const _act=act;act=function(a){
+ if(a.startsWith('wfGo:')){const i=+a.slice(5),B=S.beasts[i];if(!B||!beastOk(B)||S.wild.used>=S.wild.max||noAct())return;S.wild.used++;S.star=null;S.wf={i,hp:B.hp};save();closeDrawer();renderAll();
+  const t=document.querySelector('[data-p="p-fight"]');if(t&&!$('p-fight').classList.contains('on'))t.click();setTimeout(()=>flash('#fVit .tok.hp','#a9c9ea'),30);return}
+ if(a==='wfEnd'){S.wf=null;save();closeDrawer();renderAll();setTimeout(()=>flash('#fVit .tok.hp','#a9c9ea'),30);return}
+ if(a==='wfUndo'){S.wf=null;S.wild.used=Math.max(0,S.wild.used-1);save();closeDrawer();renderAll();return}
+ if(a.startsWith('starGo:')){const [,c,shot]=a.split(':');if(S.level<2||wfB()||noAct()||S.wild.used>=S.wild.max||!CST[c])return;S.wild.used++;S.star={c};save();closeDrawer();renderAll();
+  setTimeout(()=>{const b=document.querySelector(`#fForm [data-info="st_${c}"]`);if(b)flash(`#fForm [data-info="st_${c}"]`,'#cfe3f7')},30);if(shot)setTimeout(()=>d20(atkSpec('archer')),250);return}
+ if(a.startsWith('starSw:')){if(S.star)S.star.c=a.slice(7);save();renderAll();openInfo('st_'+S.star.c,true);return}
+ if(a==='starEnd'){S.star=null;save();closeDrawer();renderAll();return}
+ if(a.startsWith('starPick:')){S.starPick=a.slice(9);save();renderAll();openInfo('st_'+S.starPick,true);return}
+ if(a==='bstNew'){closeDrawer();return bstForm(-1)}
+ if(a.startsWith('bstEdit:')){closeDrawer();return bstForm(+a.slice(8))}
+ if(a==='bstRestore'){BEAST0.forEach(b=>{if(!S.beasts.some(x=>x.k===b.k))S.beasts.push(structuredClone(b))});save();openInfo('wfpick',true);return}
+ if(a==='wildUse'){openInfo('wfpick',true);return}
+ return _act(a)}}
+/* на «Персонаже»: видно, в каком ты облике */
+{const _rr=renderRace;renderRace=function(){_rr();const B=wfB();if(!B&&!starOn())return;
+ const c=$('race').querySelector('.cnds');if(c)c.insertAdjacentHTML('afterbegin',B?`<button class="cnd frm" data-info="wfnow">В облике: ${esc(B.n)}</button>`:`<button class="cnd frm" data-info="st_${S.star.c}">Звёздный облик: ${CST[S.star.c].n}</button>`)}}
+
+{const _f=INFO.fspellpick;INFO.fspellpick=()=>{const d=_f();d.body=d.body.replace(/<div class="how"[^>]*>Здесь только.*?<\/div>$/,'<div class="how" style="margin-top:10px">Здесь боевые заклинания Арадии. Отметь нужные, до 9: обычные встанут в «Действие», а бонусные (как Лечащее слово) в «Бонусное действие». Скимитар, Удар вслед и облики остаются всегда.</div>');return d}}
+{const _ac=INFO.ac;INFO.ac=()=>{const B=wfB();if(!B)return _ac();return{t:'Класс доспеха',sub:`облик: ${B.n.toLowerCase()} · ${B.ac}`,body:`<p>В облике зверя класс доспеха берётся у зверя: <b>${B.ac}</b>. Твой обычный ${S.ac} вернётся вместе с обликом.</p><p>Сколько должен выбросить враг на атаке (с бонусами), чтобы попасть по тебе.</p>`,acts:'',bang:'qt_wild'}}}
+
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-27-4';
+const BUILD='aradia-2026-11-27-5';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
