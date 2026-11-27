@@ -1255,6 +1255,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:400}
 .bstr b{display:block;font:600 17px/1.1 "Playfair Display",serif;color:var(--ink)}
 .bstr small{display:block;font-size:12.5px;line-height:1.25;color:var(--mute);margin-top:2px}
 .bstr.no{opacity:.55}.bstr em{color:var(--red2);font-style:normal}
+.bstr i.oft{font:italic 500 12px/1 "Spectral",serif;color:var(--mute);margin-left:8px;vertical-align:2px}
 .bstat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 6px}
 .bstat div{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:5px 8px;text-align:center}
 .bstat span{display:block;font-size:11px;color:var(--mute)}
@@ -3003,7 +3004,7 @@ document.addEventListener('click',e=>{
 });
 const INFO={
 
- fspellpick:()=>({t:'Заклинания в бою',sub:`галочка = показать во вкладке «Бой» · ${S.fSpellShow.length} из 9`,body:`<button class="bookbtn" data-info="book">Все заклинания: заговоры и подготовка ›</button>`+known().filter(k=>SPELLS[k]&&SPELLS[k].fight).map(k=>{const sh=S.fSpellShow.includes(k),p=SPELLS[k];return `<button class="crow ck ${sh?'on':''}" data-fshow="${k}"><span><i class="box">${sh?'✓':''}</i>${rn(p)}${p.n}</span><small>${p.lv?(p.react?'реакция':''):'заговор'}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">Здесь только боевые заклинания Арадии. Отметь любимые, до 9: они встанут в «Действие», а реакции (как Щит) в «Реакцию». Кинжал, удар вслед и другие действия остаются всегда.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
+ fspellpick:()=>({t:'Заклинания в бою',sub:`галочка = показать во вкладке «Бой» · ${S.fSpellShow.length} из 9`,body:`<button class="bookbtn" data-info="book">Все заклинания: заговоры и подготовка ›</button>`+useOrder('cast',known().filter(k=>SPELLS[k]&&SPELLS[k].fight)).map(k=>{const sh=S.fSpellShow.includes(k),p=SPELLS[k];return `<button class="crow ck ${sh?'on':''}" data-fshow="${k}"><span><i class="box">${sh?'✓':''}</i>${rn(p)}${p.n}</span><small>${p.lv?(p.react?'реакция':''):'заговор'}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">Здесь только боевые заклинания Арадии. Отметь любимые, до 9: они встанут в «Действие», а реакции (как Щит) в «Реакцию». Кинжал, удар вслед и другие действия остаются всегда.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
  itempick_soc:()=>itemPick('soc'),itempick_fight:()=>itemPick('fight'),
  turn:()=>({t:'Как устроен ход',sub:'бой идёт по кругу, раунд ≈ 6 секунд',body:`<p>Порядок ходов задаёт <b>инициатива</b>: в начале боя все бросают её, мастер записывает.</p>
   <p>В свой ход у тебя есть:</p><p>• <b>Перемещение</b> до ${String(effSpeed()).replace('.',',')} м. Можно делить: пройти, ударить, пройти дальше.<br>• <b>Одно действие</b>: заклинание, атака кинжалом или что-то из «Других действий».<br>• <b>Бонусное действие</b>, только если что-то его даёт (у тебя: Гибкое колдовство).<br>• Одно мелкое дело бесплатно: открыть дверь, достать кинжал.</p>
@@ -3819,6 +3820,7 @@ function act(a){
   if(p.lv){if(cs==='r'){if(!p.ritual)return;c=p.lv;how='ритуалом, без ячейки'}
    else if(cs==='m'){if(k!=='guiding_bolt'||!chartLeft())return;S.chart.used=(S.chart.used||0)+1;c=1;how='от Звёздной карты, без ячейки'}
    else{c=cs?+cs:firstC(p.lv);if(!c||!useSlotC(c))return}}
+  useBump('cast',k);
   let paid='';if(p.cost&&p.cost.cons){const ck=compKey(p);S.items[ck].q--;paid=`${p.cost.what} израсходован`}
   if(p.conc)S.conc=k;save();renderAll();
   const up=c>p.lv?` (${c} круг)`:'',extra=[how,paid].filter(Boolean).join(' · ');
@@ -3830,7 +3832,7 @@ function act(a){
    const tx=R.ns?R.t:R.pool?`${R.t}: начиная с самого слабого, пока хватает этих хитов`:`${R.t}, сложность ${spellDC()}: ${R.half?'при успехе половина':'при успехе урона нет'}`;
    return dice({label:`${p.n}${up}: ${R.pool?'запас хитов':'урон'}${extra?' · '+extra:''}`,n,s:R.s,k:0,min:0,fx:p.fx||null,after:()=>`<div class="br">${tx}</div>`})}
   closeDrawer();castWave(k);return}
- if(a.startsWith('castl:')){const k=a.slice(6);if(!SPELLS[k]||noAct())return;closeDrawer();castWave(k);return}
+ if(a.startsWith('castl:')){const k=a.slice(6);if(!SPELLS[k]||noAct())return;useBump('cast',k);closeDrawer();castWave(k);return}
  if(a.startsWith('buyc:')||a.startsWith('havec:')){const [w,k]=a.split(':'),p=SPELLS[k],c=p.cost;if(canPay(p))return;
   if(w==='buyc'){if(!payCp(costCp(p)))return;coinDrop(tapPt.x,tapPt.y,Math.min(9,3+Math.round(c.gp/20)));vib([10,25,10,25,30])}else vib([12,30,18]);
   S.items[c.key]=Object.assign(S.items[c.key]||{},{q:1},ICAT[c.key]?{}:{n:c.what.charAt(0).toUpperCase()+c.what.slice(1),short:`для «${p.n}», ${c.gp} зм`,comp:1,txt:`Платный компонент заклинания «${p.n}»: ${c.what} стоимостью ${c.gp} золотых. ${c.cons?'Расходуется при сотворении.':'При сотворении не тратится.'} Пока он в инвентаре, заклинание можно творить; золото за сотворение не списывается.`});syncItems();save();renderAll();openInfo('sp_'+k,true);return}
@@ -4406,6 +4408,14 @@ const PAW='<svg viewBox="0 0 60 34"><g fill="none" stroke="currentColor" stroke-
 function syncForms(){if(S.wf&&(S.cond&&S.cond.unconscious))S.wf=null;if(S.star&&noAct())S.star=null}
 {const _ra=renderAll;renderAll=function(){syncForms();_ra()}}
 
+/* ЧАСТО ИСПОЛЬЗУЕМОЕ: общий счётчик. localStorage 'aradia-use-v1' = {группа:{ключ:сколько раз}}.
+   Группы: 'wild' (звери Дикого облика, ключ B.k), 'cast' (заклинания, ключ SPELLS), для призыва позже 'summon'.
+   useBump(группа,ключ) — записать использование; useOrder(группа,массив ключей) — вернуть тот же список, но 2 самых частых (не меньше 2 раз) первыми. */
+const USEKEY='aradia-use-v1';
+function useGet(){try{const o=JSON.parse(localStorage.getItem(USEKEY));return o&&typeof o==='object'?o:{}}catch(e){return{}}}
+function useBump(g,k){try{const o=useGet();(o[g]=o[g]||{})[k]=(o[g][k]||0)+1;localStorage.setItem(USEKEY,JSON.stringify(o))}catch(e){}}
+function useTop(g,keys){const c=useGet()[g]||{};return keys.filter(k=>(c[k]||0)>=2).sort((a,b)=>c[b]-c[a]||keys.indexOf(a)-keys.indexOf(b)).slice(0,2)}
+function useOrder(g,keys){const t=useTop(g,keys);return t.concat(keys.filter(k=>!t.includes(k)))}
 renderFight=function(){
  if(!$('fVit'))return;
  const B=wfB(),pg=$('p-fight');pg.classList.toggle('inbeast',!!B);pg.classList.toggle('instar',starOn());
@@ -4428,7 +4438,7 @@ renderFight=function(){
   $('fForm').className='fform tr';
   $('fForm').innerHTML=B.tr.map((t,i)=>`<button class="cnd rc" data-info="wft_${i}">${esc(t[0])}</button>`).join('')+(B.spx?`<button class="cnd rc" data-info="wfnow">${esc(B.spx)}</button>`:'')+(B.sense?`<button class="cnd rc" data-info="wfnow">${esc(B.sense)}</button>`:'')+`<button class="cnd rc no" data-info="wfnow">Колдовать нельзя</button>`;
  }else{
-  const fs=known().filter(k=>SPELLS[k]&&SPELLS[k].fight&&S.fSpellShow.includes(k));
+  const fs=useOrder('cast',known().filter(k=>SPELLS[k]&&SPELLS[k].fight&&S.fSpellShow.includes(k)));
   const isB=k=>/бонусное действие/.test(SPELLS[k].meta)||SPELLS[k].react;
   const scard=k=>{const p=SPELLS[k],off=(p.lv&&!firstC(p.lv)&&!(k==='guiding_bolt'&&chartLeft()))||!canPay(p)||na;
    return `<button class="atk @C ${off?'off':''}" data-info="sp_${k}"><b${!p.n.includes(' ')&&p.n.length>12?' class="lw"':''}>${rn(p)}${p.n}</b>${p.atk?`<div class="hit"><span class="d">${sg(spellAtk())}</span><span class="dm">${p.hit()}</span></div>`:p.heal?`<div class="hit"><span class="dm">лечит ${p.heal.n}к${p.heal.s}${sg(mod(S.ab.wis))}</span></div>`:`<div class="hit"><span class="dm">${p.short}</span></div>`}<small>${p.lv?(p.where||'')+' · тратит ячейку':'заговор · '+(p.where||'')}${costTag(p)}</small></button>`};
@@ -4487,7 +4497,7 @@ Object.assign(INFO,{
   <div class="how">В листе: выбери зверя, и вкладка «Бой» станет его карточкой. Урон в хитах сначала снимается со зверя.</div>`,
   acts:(B?`<button data-info="wfnow">Сейчас: ${esc(B.n)} ›</button>`:`<button data-info="wfpick" ${l&&S.level>=2?'':'disabled'}>Выбрать зверя ›</button>`)+`<button class="ghost" data-act="wildBack" ${S.wild.used?'':'disabled'}>Вернуть одно использование (ошиблась)</button>`,bang:'qt_wild'}},
  wfpick:()=>{const l=S.wild.max-S.wild.used;return{t:'Выбрать зверя',sub:`Дикий облик · осталось ${l} из ${S.wild.max} · опасность до ${crTxt()}`,
-  body:`<div class="bstl">${S.beasts.map((B,i)=>{const ok=beastOk(B);return `<button class="bstr ${ok?'':'no'}" data-info="bst_${i}"><b>${esc(B.n)}</b><small>опасность ${crCh(B.cr)} · класс доспеха ${B.ac} · хиты ${B.hp} · ${spdTxt(B)}</small><small>${B.at.map(a=>`${esc(a.n)} ${sg(a.b)}, ${atkTxt(a)}`).join(' · ')}${ok?'':' · <em>пока нельзя</em>'}</small></button>`}).join('')}</div>
+  body:`<div class="bstl">${useOrder('wild',S.beasts.map(B=>B.k)).map(k=>{const i=S.beasts.findIndex(B=>B.k===k),B=S.beasts[i],ok=beastOk(B),oft=useTop('wild',S.beasts.map(x=>x.k)).includes(k);return `<button class="bstr ${ok?'':'no'}" data-info="bst_${i}"><b>${esc(B.n)}${oft?'<i class="oft">часто</i>':''}</b><small>опасность ${crCh(B.cr)} · класс доспеха ${B.ac} · хиты ${B.hp} · ${spdTxt(B)}</small><small>${B.at.map(a=>`${esc(a.n)} ${sg(a.b)}, ${atkTxt(a)}`).join(' · ')}${ok?'':' · <em>пока нельзя</em>'}</small></button>`}).join('')}</div>
   <div class="how" style="margin-top:8px">Нажми на зверя: откроется его карточка, оттуда превращение. Цифры каждого зверя можно поменять, можно добавить своего.</div>`,
   acts:`<button class="ghost" data-act="bstNew">+ Свой зверь</button>${BEAST0.some(b=>!S.beasts.some(x=>x.k===b.k))?`<button class="ghost" data-act="bstRestore">Вернуть зверей из книги</button>`:''}`}},
  wfnow:()=>{const B=wfB();if(!B)return INFO.wild();return{t:B.n,sub:`ты в облике · опасность ${crCh(B.cr)} · до ${wfHours()} ч`,body:beastBody(B,true)+`<div class="how">Свои хиты Арадии сейчас: <b>${S.hp.cur} из ${S.hp.max}</b>. Они вернутся такими же. Колдовать в облике нельзя${S.conc?`, но концентрация на «${SPELLS[S.conc].n}» держится`:''}.</div>`,
@@ -4557,7 +4567,7 @@ function bstForm(i){const nw=i<0,B=nw?{k:'own'+Date.now(),n:'',cr:'1/4',size:'С
   if(nw)S.beasts.push(nb);if(S.wf&&S.beasts[S.wf.i]===nb)S.wf.hp=Math.min(S.wf.hp,nb.hp);
   save();renderAll();$('sheet').classList.remove('on');openInfo('bst_'+S.beasts.indexOf(nb))}}
 {const _act=act;act=function(a){
- if(a.startsWith('wfGo:')){const i=+a.slice(5),B=S.beasts[i];if(!B||!beastOk(B)||S.wild.used>=S.wild.max||noAct())return;S.wild.used++;S.star=null;S.wf={i,hp:B.hp};save();closeDrawer();renderAll();
+ if(a.startsWith('wfGo:')){const i=+a.slice(5),B=S.beasts[i];if(!B||!beastOk(B)||S.wild.used>=S.wild.max||noAct())return;S.wild.used++;S.star=null;S.wf={i,hp:B.hp};useBump('wild',B.k);save();closeDrawer();renderAll();
   const t=document.querySelector('[data-p="p-fight"]');if(t&&!$('p-fight').classList.contains('on'))t.click();setTimeout(()=>flash('#fVit .tok.hp','#a9c9ea'),30);return}
  if(a==='wfEnd'){S.wf=null;save();closeDrawer();renderAll();setTimeout(()=>flash('#fVit .tok.hp','#a9c9ea'),30);return}
  if(a==='wfUndo'){S.wf=null;S.wild.used=Math.max(0,S.wild.used-1);save();closeDrawer();renderAll();return}
@@ -5438,7 +5448,7 @@ Object.assign(CWF,{call_lightning:'bolt',conjure_animals:'summon',daylight:'sun'
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-27-16';
+const BUILD='aradia-2026-11-27-17';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
