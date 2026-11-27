@@ -919,6 +919,15 @@ body:has(#p-equip.on) .bgart{opacity:.18;transition:opacity .3s}
 .lvnav button:disabled{opacity:.35}
 .lvnav button.go{background:radial-gradient(120% 160% at 50% 0%,#fff3cf,#f0b445 55%,#a8661a);box-shadow:0 0 22px rgba(240,180,69,.45);font-size:17px}
 @media (max-height:700px){.lvhd h2{font-size:24px}.lvbig span{font-size:50px}.lvi{padding:6px 12px;font-size:14px}.lvt img{width:44px;height:44px}.lvcard{padding:12px 8px 10px}.lvcard .big{font-size:32px}.lvnav button{padding:11px}}
+
+/* крупные заметные галочки в списках выбора (тап пальцем) */
+.box{width:28px!important;height:28px!important;border:2px solid #b8a688!important;border-radius:8px!important;background:rgba(255,255,255,.07);font-size:19px!important;font-weight:700;line-height:1}
+.brow .bx,.brow .lockx{align-self:stretch;display:flex!important;align-items:center;justify-content:center;min-width:54px;padding:0 8px 0 4px!important}
+.brow .bx .box,.brow .lockx .box{margin:0!important}
+.crow .box{margin-right:12px!important;vertical-align:-8px!important}
+.crow.ck{padding-top:14px;padding-bottom:14px}
+.lvrow{padding-top:12px;padding-bottom:12px}
+.brow.on .box,.crow.ck.on .box,.lvrow.on .box{background:var(--gold)!important;border-color:var(--gold)!important;box-shadow:0 0 8px rgba(240,196,122,.45)}
 </style>
 </head>
 <body>
@@ -2706,9 +2715,10 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-eqput]');i
 function itemPick(kind){const all=itemList(kind),show=kind==='soc'?S.sItemShow:S.fItemShow;
  return{t:kind==='soc'?'Предметы для разговора':'Предметы для боя',sub:`галочка = показать на экране · ${show.filter(k=>all.includes(k)).length} из ${ITMAX}`,
   body:(all.length?all.map(k=>{const sh=show.includes(k);return `<button class="crow ck ${sh?'on':''}" data-ishow="${kind}:${k}"><span><i class="box">${sh?'✓':''}</i>${ITEMS[k].n}</span><small>${ITEMS[k].short||''}</small></button>`}).join(''):`<p>Пока пусто.</p>`)+`<div class="how" style="margin-top:10px">Здесь появятся вещи из инвентаря, которые ${kind==='soc'?'помогают в разговоре: подарок, письмо, знак, монеты для взятки':'пригодятся в бою: зелье, масло, факел, свиток'}. Отметь до ${ITMAX}, чтобы держать их под рукой.</div>`,acts:`<button data-act="closeD">Готово</button>`}}
-function openInfo(k,re){if(!INFO[k]&&k.startsWith('it_')){const it=ITEMS[k.slice(3)];if(!it)return;INFO[k]=()=>({t:it.n,sub:it.meta||'предмет',body:it.d?it.d():`<p>${it.short||''}</p>`,acts:it.acts?it.acts():''})}const d=INFO[k]();openAb=null;openInfoKey=k;
+function openInfo(k,re){if(!INFO[k]&&k.startsWith('it_')){const it=ITEMS[k.slice(3)];if(!it)return;INFO[k]=()=>({t:it.n,sub:it.meta||'предмет',body:it.d?it.d():`<p>${it.short||''}</p>`,acts:it.acts?it.acts():''})}const d=INFO[k]();const keepTop=(re&&openInfoKey===k)?(()=>{const o=document.querySelector('#dbody .drows');return o?o.scrollTop:0})():0;openAb=null;openInfoKey=k;
  const fk=k.startsWith('sp_')&&SPFULL[k.slice(3)]?k.slice(3):null;
  $('dbody').innerHTML=`<div class="dh ${String(d.sub).length>34?'col':''}"><h2>${d.t}${fk?`<button class="bang" data-info="full_${fk}" aria-label="Полный текст правил">!</button>`:''}</h2><div class="sc">${d.sub}</div></div><div class="drows" style="border:0;background:none"><div class="info">${d.body}</div></div><div class="dacts">${d.acts}</div>`;
+ if(keepTop){const o=document.querySelector('#dbody .drows');if(o)o.scrollTop=keepTop}
  if(!re){$('drawer').style.transform='';$('drawer').classList.add('on');$('dim').classList.add('on');vib(10)}}
 let tapPt={x:innerWidth/2,y:innerHeight*.7};document.addEventListener('pointerdown',e=>{tapPt={x:e.clientX,y:e.clientY}},true);
 function act(a){
@@ -3164,7 +3174,7 @@ $('lvBtn').classList.toggle('max',S.level>=20);
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-27-57';
+const BUILD='2026-11-27-58';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
