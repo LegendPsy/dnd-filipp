@@ -5166,17 +5166,21 @@ let wfSeen=null,wfBoot=0,wfWhy='';
 /* портрет в облике: тап открывает облик, оттуда можно вернуться */
 
 /* ---------- Благословение Королевы воронов: Арадия уходит в тень вороном, ворон перелетает и выходит из тени в новом месте ---------- */
-ravenFx=function(){if(RM)return;const W=innerWidth,H=innerHeight,pg=pgOn(),x0=lastPt?lastPt.x:W/2,y0=lastPt?lastPt.y:H*.6,x1=x0<W/2?W*RN(.66,.8):W*RN(.2,.34),y1=H*RN(.3,.42),dx=Math.max(-46,Math.min(46,(x1-x0)*.12)),dy=Math.max(-30,Math.min(30,(y1-y0)*.1));
- /* только перенос: в месте ухода и в месте выхода из одной точки во все стороны разлетаются чёрные перья —
-    вразнобой по времени, с разной силой и в несимметричные стороны, и тают в воздухе, не долетая до пола */
- const plume=(x,y,n)=>{const skew=RN(0,6.283),bias=RN(.25,.6);for(let i=0;i<n;i++)setTimeout(()=>{let a=RN(0,6.283);if(Math.random()<bias)a=skew+RN(-.9,.9);
-  const f=feather(x+RN(-6,6),y+RN(-6,6),{a,v:RN(260,980)*(Math.random()<.25?.45:1),fl:H+400,m:RN(.45,1.15),z:RN(.55,1.15),av:RN(-22,22),u:0,roll:0});if(f)f.fp=1.6},RN(0,260)|0)};
- plume(x0,y0,RN(16,24)|0);
- /* сдвиг: лист гаснет и проявляется уже сдвинутым в сторону места выхода, затем встаёт на место с толчком */
- if(pg)pg.animate([{transform:'none',opacity:1,filter:'none'},{transform:`translate(${-dx*.3}px,${-dy*.3}px) scale(.97,.94)`,opacity:.05,filter:'blur(3px) brightness(.3)',offset:.32},
-  {transform:`translate(${dx}px,${dy}px) scale(.97,.94)`,opacity:.05,filter:'blur(3px) brightness(.3)',offset:.5},{transform:`translate(${dx*.3}px,${dy*.3}px) scale(1.01,1.02)`,opacity:1,filter:'brightness(1.15)',offset:.75},{transform:'none',opacity:1,filter:'none'}],{duration:1000,easing:'cubic-bezier(.4,0,.3,1)'});
- setTimeout(()=>plume(x1,y1,RN(16,24)|0),430);
- setTimeout(()=>{bigShake();if(S.level>=3)for(let i=0;i<5;i++)glint(x1+RN(-40,40),y1+RN(-34,10),RN(6,9),{m:.6,c:'#cfe3f7'})},700)};
+ravenFx=function(){if(RM)return;const W=innerWidth,H=innerHeight,cx=W/2,cy=H/2;
+ /* весь экран с интерфейсом быстро закручивается вихрем в точку посередине,
+    из этой точки со всплеском разлетаются за края экрана чёрные перья, и экран разворачивается обратно */
+ const els=[...document.querySelectorAll('.page,.tabs,.bgart')].filter(e=>e.offsetParent!==null||getComputedStyle(e).position==='fixed'&&getComputedStyle(e).display!=='none');
+ const T1=430,T2=90,T3=560;
+ els.forEach(e=>{const r=e.getBoundingClientRect();e.style.transformOrigin=`${cx-r.left}px ${cy-r.top}px`;
+  e.animate([{transform:'none',filter:'none',opacity:1},{transform:'rotate(200deg) scale(.55)',filter:'blur(1px) brightness(.8)',opacity:1,offset:.45},{transform:'rotate(560deg) scale(.015)',filter:'blur(3px) brightness(.4)',opacity:.6}],{duration:T1,easing:'cubic-bezier(.55,0,.9,.4)',fill:'forwards'});
+  setTimeout(()=>e.animate([{transform:'rotate(-420deg) scale(.015)',filter:'blur(3px) brightness(1.6)',opacity:.6},{transform:'rotate(-40deg) scale(1.04)',filter:'blur(.5px) brightness(1.15)',opacity:1,offset:.75},{transform:'none',filter:'none',opacity:1}],{duration:T3,easing:'cubic-bezier(.15,.7,.3,1)'}).onfinish=()=>{e.getAnimations().forEach(a=>a.cancel());e.style.transformOrigin=''},T1+T2)});
+ /* вихрь затягивает пару тёмных струй к центру */
+ for(let i=0;i<18;i++){const a0=RN(0,6.283),r0=Math.max(W,H)*RN(.45,.7);spawn({x:cx,y:cy,m:T1/1000,s:RN(2,3),c:'rgba(10,14,20,.8)',tick:(p,dt)=>{const q=Math.min(1,p.l/(T1/1000)),e=q*q,r=r0*(1-e),a=a0+e*5;p.vx=p.vy=0;p.x=cx+Math.cos(a)*r;p.y=cy+Math.sin(a)*r}})}
+ /* всплеск: из точки во все стороны, вразнобой, далеко за края экрана */
+ setTimeout(()=>{spawn({k:'flash',x:cx,y:cy,s:70,gr:.8,m:.25,c:'rgba(169,201,234,.5)',add:1});spawn({k:'ring',x:cx,y:cy,r0:4,r1:Math.max(W,H)*.7,m:.5,c:'#0a0e14',w:5,fp:1});
+  const n=RN(34,46)|0;for(let i=0;i<n;i++)setTimeout(()=>{const f=feather(cx+RN(-5,5),cy+RN(-5,5),{a:RN(0,6.283),v:RN(1100,2300),fl:H+600,m:RN(.9,1.4),z:RN(.7,1.35),av:RN(-26,26),u:0,roll:0});if(f){f.kd=.004;f.G=120}},RN(0,170)|0);
+  bigShake()},T1+T2*.3);
+ if(S.level>=3)setTimeout(()=>{for(let i=0;i<5;i++)glint(cx+RN(-60,60),cy+RN(-60,60),RN(6,9),{m:.6,c:'#cfe3f7'})},T1+T2+T3*.7)};
 
 
 /* ===================== КНОПКИ И ЭФФЕКТЫ ВСЕХ ЗАКЛИНАНИЙ ДРУИДА =====================
@@ -5469,7 +5473,7 @@ Object.assign(CWF,{call_lightning:'bolt',conjure_animals:'summon',daylight:'sun'
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-27-19';
+const BUILD='aradia-2026-11-27-20';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
