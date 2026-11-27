@@ -1497,7 +1497,7 @@ const icat=k=>ICAT[k]||{};
 const isComp=k=>!!(icat(k).comp||(S.items[k]&&S.items[k].comp));
 const chMax=k=>icat(k).ch||0,chLeft=k=>chMax(k)-(S.items[k].used||0);
 const attN=()=>S.inv.filter(k=>S.items[k].on).length;
-function itemMeta(k){const o=S.items[k],c=icat(k);let m=c.meta||'свой предмет';if(o.q>1||c.cons)m+=` · ${o.q} шт.`;if(c.ch)m+=` · зарядов ${chLeft(k)} из ${c.ch}`;if(c.att)m+=o.on?' · настроен':' · не настроен';if(S.eq&&wornN(k))m+=' · надето';return m}
+function itemMeta(k){const o=S.items[k],c=icat(k);let m=c.meta||'свой предмет';if(o.q>1||c.cons)m+=` · ${o.q} шт.`;if(c.ch)m+=` · зарядов ${chLeft(k)} из ${c.ch}`;if(c.att)m+=o.on?' · настроен':' · не настроен';if(S.eq&&Object.values(S.eq).includes(k))m+=' · надето';return m}
 function itemBody(k){const o=S.items[k],c=icat(k);
  let h=c.d?c.d():`<p>${esc(o.txt||o.short||'Описания пока нет. Нажми «Изменить» и впиши, что предмет делает.')}</p>`;
  h+=`<div class="itags"><button class="crow ck ${o.soc?'on':''}" data-itag="${k}:soc"><span><i class="box">${o.soc?'✓':''}</i>Пригодится в разговоре</span></button><button class="crow ck ${o.fight?'on':''}" data-itag="${k}:fight"><span><i class="box">${o.fight?'✓':''}</i>Пригодится в бою</span></button></div>`;
@@ -3164,7 +3164,7 @@ $('lvBtn').classList.toggle('max',S.level>=20);
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-27-56';
+const BUILD='2026-11-27-57';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
