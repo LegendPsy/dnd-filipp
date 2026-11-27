@@ -1295,6 +1295,11 @@ body.beast .lvup{display:none}
 .atk.back{border-color:rgba(240,196,122,.62)!important;background:linear-gradient(160deg,rgba(74,60,38,.88),rgba(32,27,20,.9))!important;box-shadow:0 0 0 1px rgba(240,196,122,.18),0 0 16px rgba(240,196,122,.16);padding-right:44px!important;position:relative}
 .atk.back b{color:#f8e6bd}
 .atk.back .bkf{position:absolute;right:7px;top:50%;width:30px;height:30px;margin-top:-15px;border-radius:50%;box-shadow:0 0 0 1.5px rgba(240,196,122,.8)}
+/* ===== знаки на кнопках заклинаний друида и волны ===== */
+.fxl .emb.dr{align-items:center;opacity:.5;right:9px}
+.fxl .emb.dr svg{height:min(24px,62%);width:auto;fill:none;stroke:currentColor;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;shape-rendering:auto;overflow:visible}
+.atk.cmp .fxl .emb.dr{align-items:flex-start;top:6px;height:auto;right:6px}.atk.cmp .fxl .emb.dr svg{height:18px}
+.mbeam{position:fixed;top:0;width:90px;z-index:126;pointer-events:none;transform-origin:50% 0;background:linear-gradient(180deg,rgba(244,248,255,.05),rgba(232,242,255,.38) 70%,rgba(255,255,255,.6));filter:blur(3px);mix-blend-mode:screen;border-radius:0 0 50% 50%/0 0 12px 12px}
 </style>
 </head>
 <body>
@@ -4662,10 +4667,188 @@ ravenFx=function(){if(RM)return;const W=innerWidth,H=innerHeight,pg=pgOn(),x0=la
   /* сопротивление урону до начала следующего хода: тело на миг отливает призрачной тенью */
   if(S.level>=3)for(let i=0;i<5;i++)glint(x1+RN(-40,40),y1+RN(-30,20),RN(6,9),{m:.6,c:'#cfe3f7'});bigShake()},260+dur)};
 
+
+/* ===================== КНОПКИ И ЭФФЕКТЫ ВСЕХ ЗАКЛИНАНИЙ ДРУИДА =====================
+   Кнопка: как у чародея — один маленький знак справа, тонкими линиями, приглушённо, неподвижно. Тап — брызги своей стихии.
+   Совпадающие с чародеем (Очарование личности, Удержание личности) берут его готовый знак и волну.
+   Сотворение без броска — своя волна у каждой семьи; урон и лечение бьют в кубики своей стихией. */
+const DEMB={
+ star:['#e8f2ff','<path d="M12 2.5 L13.5 10.5 L21.5 12 L13.5 13.5 L12 21.5 L10.5 13.5 L2.5 12 L10.5 10.5Z" fill="rgba(232,242,255,.18)"/><circle cx="19" cy="5" r=".9" fill="currentColor" stroke="none"/>'],
+ thorn:['#b8dc8a','<path d="M4 21 C9 15 13 13 20 3"/><path d="M8 16.6 l-3 -.6 M10.6 13.8 l.6 -3 M14 10.6 l-3 -.4 M16.4 7.6 l.8 -2.8"/>'],
+ vine:['#b8dc8a','<path d="M5 22 C5 15 13 16 12 9 C11.5 5 7 5 7.5 8.5 C8 11 11.5 10 11.5 8"/><path d="M13 15 C15 11 19 11 21 13 C19 16 15 17 13 15Z" fill="rgba(184,220,138,.2)"/>'],
+ berry:['#d9a0b0','<circle cx="8" cy="15" r="3"/><circle cx="14.5" cy="16" r="3"/><circle cx="11.5" cy="10.5" r="3"/><path d="M12 7.5 C12 4.5 14 3 17 3 C16.5 6 14.5 7.5 12 7.5Z" stroke="#b8dc8a" fill="rgba(184,220,138,.2)"/>'],
+ fae:['#c9a8ff','<path d="M7 4 L7.8 8 L11.5 8.8 L7.8 9.6 L7 13.5 L6.2 9.6 L2.5 8.8 L6.2 8Z" stroke="#9fd0ff"/><path d="M16 9 L16.7 12.3 L20 13 L16.7 13.7 L16 17 L15.3 13.7 L12 13 L15.3 12.3Z" stroke="#c9a8ff"/><path d="M9 16 L9.5 18.5 L12 19 L9.5 19.5 L9 22 L8.5 19.5 L6 19 L8.5 18.5Z" stroke="#a8f0b0"/>'],
+ cloud:['#c9d2da','<path d="M6 16 H18 C21 16 21 11.5 18 11.5 C18 7.5 13 6.5 12 9.5 C11 7.5 7 7.5 7 11.5 C4 11.5 4 16 6 16Z" fill="rgba(201,210,218,.14)"/><path d="M4 19.5 H11 M14 19.5 H20"/>'],
+ paw:['#ebe4d5','<ellipse cx="12" cy="16" rx="4.4" ry="3.6"/><ellipse cx="6" cy="10.5" rx="1.8" ry="2.4"/><ellipse cx="10" cy="6.8" rx="1.8" ry="2.4"/><ellipse cx="14.5" cy="6.8" rx="1.8" ry="2.4"/><ellipse cx="18.4" cy="10.5" rx="1.8" ry="2.4"/>'],
+ heal:['#a8e6b8','<path d="M12 3 C15.5 8 18 11 18 14.5 A6 6 0 0 1 6 14.5 C6 11 8.5 8 12 3Z" fill="rgba(168,230,184,.15)"/><path d="M12 11.5 V17.5 M9 14.5 H15"/>'],
+ ward:['#a9c9ea','<circle cx="12" cy="12" r="8.5" stroke-dasharray="2.4 1.6"/><path d="M12 6 L16.5 15 H7.5Z"/><circle cx="12" cy="12" r="1" fill="currentColor"/>'],
+ guide:['#f0c47a','<path d="M4 18 Q12 11 20 18"/><path d="M12 3 L12.9 7.1 L17 8 L12.9 8.9 L12 13 L11.1 8.9 L7 8 L11.1 7.1Z" fill="rgba(240,196,122,.2)"/>'],
+ sprout:['#b8dc8a','<path d="M12 21 V12"/><path d="M12 13 C8 13 5.5 10.5 5.5 7 C9 7 12 9 12 13Z M12 11 C12 7.5 14.5 4.5 18.5 4.5 C18.5 8.5 15.5 11 12 11Z" fill="rgba(184,220,138,.18)"/><path d="M7 21 H17"/>'],
+ mend:['#f0c47a','<path d="M5 19 L18 4"/><ellipse cx="18.6" cy="3.6" rx="1.2" ry=".7" transform="rotate(-50 18.6 3.6)"/><path d="M8 16 C4 13 9 9 12 12 C15 15 19 12 17 9" stroke="#cfe3f7" stroke-dasharray="1.4 1.2"/>'],
+ club:['#c9a878','<path d="M6 20.5 L15 8"/><path d="M13.2 10.4 C11.5 7 14 3 17.5 3.4 C21 3.8 21 8.5 17.6 9.8 C16 10.4 14.5 10.8 13.2 10.4Z" fill="rgba(201,168,120,.2)"/><path d="M9 16 l-1.4 -.8 M11.2 13 l1.3 .8"/>'],
+ wind:['#cfe3f7','<path d="M3 9 H14 C17.5 9 17.5 4.5 14.5 4.5 C13 4.5 12.3 5.6 12.5 6.6"/><path d="M3 13.5 H18 C21.5 13.5 21.5 18.5 18 18.5 C16.5 18.5 15.8 17.4 16 16.4"/><path d="M5 18 H11"/>'],
+ stone:['#b9b0a4','<path d="M4.5 17 L7.5 9 L14.5 6.5 L20 11.5 L18 18 L8.5 19.5Z" fill="rgba(185,176,164,.16)"/><path d="M11 8 L12.5 12 L10.5 15 M12.5 12 L16 13"/>'],
+ claw:['#ebe4d5','<path d="M6 4 C10 9 10 15 6.5 21"/><path d="M11.5 3 C15.5 8.5 15.5 15 12 21"/><path d="M17 4 C21 9 21 15 17.5 21"/>'],
+ water:['#9fd0ff','<path d="M12 3 C15.5 8 18 11 18 14.5 A6 6 0 0 1 6 14.5 C6 11 8.5 8 12 3Z" fill="rgba(159,208,255,.15)"/><path d="M9 14.5 C9 16.5 10.3 17.6 12 17.8"/>'],
+ eye:['#cfe3f7','<path d="M2.5 12 C6 6.5 18 6.5 21.5 12 C18 17.5 6 17.5 2.5 12Z"/><circle cx="12" cy="12" r="3.2" fill="rgba(207,227,247,.18)"/><circle cx="12" cy="12" r="1" fill="currentColor"/>'],
+ step:['#ebe4d5','<ellipse cx="8" cy="15" rx="2.6" ry="4"/><circle cx="8" cy="9" r=".9"/><ellipse cx="16" cy="9" rx="2.6" ry="4"/><circle cx="16" cy="3.4" r=".9"/>'],
+ absorb:['#e8f2ff','<circle cx="12" cy="12" r="5"/><circle cx="12" cy="3.5" r="1.6" stroke="#ff9a5a"/><circle cx="20.5" cy="12" r="1.6" stroke="#9fd0ff"/><circle cx="12" cy="20.5" r="1.6" stroke="#ffe14a"/><circle cx="3.5" cy="12" r="1.6" stroke="#b4ee62"/>'],
+ bark:['#c9a878','<path d="M12 2.5 L19.5 5.5 V12 C19.5 16.5 16 19.5 12 21.5 C8 19.5 4.5 16.5 4.5 12 V5.5Z" fill="rgba(201,168,120,.14)"/><path d="M9 6 C10 10 8 13 9.5 18 M14.5 6 C13.5 9.5 15.5 13 14 18.5"/>'],
+ moon:['#e8f2ff','<path d="M15 3 A7 7 0 1 0 21 13 A5.5 5.5 0 1 1 15 3Z" fill="rgba(232,242,255,.16)"/><path d="M6 17 V22 M9.5 18 V22 M3 18.5 V21" stroke-dasharray="1.3 1.2"/>'],
+ metal:['#ffb070','<path d="M5 18 H19 L17 12 H7Z" fill="rgba(255,176,112,.18)"/><path d="M8 9 C7 7.5 9 6.5 8 4.5 M12 9 C11 7.5 13 6.5 12 4.5 M16 9 C15 7.5 17 6.5 16 4.5"/>'],
+ sky:['#cfe3f7','<path d="M5 9 H16 C19 9 19 5 16 5 C15.5 3 12 2.5 11 4.5 C9 3.5 7 4.5 7 6.5 C5 6.5 4 9 5 9Z"/><path d="M4 15 C6 13 7 17 9 15 C11 13 12 17 14 15 C16 13 17 17 20 15" stroke-dasharray="1.4 1"/>'],
+ snare:['#c9a878','<circle cx="12" cy="14" r="6" stroke-dasharray="2.2 1.2"/><path d="M12 8 C12 5 14 3 17 3 M10.5 8.3 L13.5 7.7"/>']};
+const SPEMB={guidance:'guide',thorn_whip:'thorn',healing_word:'heal',entangle:'vine',faerie_fire:'fae',fog_cloud:'cloud',speak_with_animals:'paw',guiding_bolt:'star',
+ druidcraft:'sprout',mending:'mend',resistance:'ward',shillelagh:'club',gust:'wind',magic_stone:'stone',mold_earth:'stone',primal_savagery:'claw',shape_water:'water',
+ animal_friendship:'paw',create_or_destroy_water:'water',cure_wounds:'heal',detect_magic:'eye',detect_poison_and_disease:'eye',goodberry:'berry',jump:'step',longstrider:'step',
+ purify_food_and_drink:'water',absorb_elements:'absorb',beast_bond:'paw',earth_tremor:'stone',snare:'snare',protection_from_evil_and_good:'ward',animal_messenger:'paw',
+ barkskin:'bark',beast_sense:'eye',darkvision:'eye',dust_devil:'wind',earthbind:'stone',enhance_ability:'guide',find_traps:'eye',gust_of_wind:'wind',healing_spirit:'heal',
+ heat_metal:'metal',lesser_restoration:'heal',locate_animals_or_plants:'sprout',locate_object:'eye',moonbeam:'moon',pass_without_trace:'step',protection_from_poison:'ward',
+ skywrite:'sky',spike_growth:'thorn',summon_beast:'paw',warding_wind:'wind',
+ /* стихии — те же знаки, что у чародея (огонёк, шарики холода, яда, звука) */
+ produce_flame:'fire',create_bonfire:'fire',control_flames:'fire',flame_blade:'fire',flaming_sphere:'fire',poison_spray:'poi',infestation:'poi',frostbite:'cold',ice_knife:'cold',thunderclap:'snd',thunderwave:'snd'};
+for(const k in SPEMB)if(!FXMAP[k])FXMAP[k]=(e=>()=>e)(SPEMB[k]);
+{const _l=fxLayer;fxLayer=function(el){const E=DEMB[el];if(E)return `<span class="emb dr" style="color:${E[0]}"><svg viewBox="0 0 24 24">${E[1]}</svg></span>`;return _l(el)}}
+/* брызги от пальца: у знака своя стихия */
+const DBUR={star:'star',guide:'star',ward:'star',eye:'star',sky:'star',moon:'moon',absorb:'star',thorn:'thorn',vine:'thorn',sprout:'thorn',berry:'thorn',heal:'heal',
+ paw:'beast',claw:'beast',club:'beast',bark:'beast',snare:'beast',step:'beast',stone:'earth',mend:'feather',cloud:'wind',wind:'wind',water:'water',metal:'fire',fae:'fae'};
+Object.assign(EL,{heal:{c:['#ffffff','#e2ffe8','#a8e6b8','#5fae78'],g:'#c8f2d2'},moon:{c:['#ffffff','#f4f8ff','#dbe8f5','#a9c9ea'],g:'#f4f8ff'},
+ earth:{c:['#e9e1d2','#b9b0a4','#8a8073','#4f483f'],g:'#d8cfc0'},wind:{c:['#ffffff','#e8f2ff','#cfe3f7','#9fb3c8'],g:'#e8f2ff'},water:{c:['#ffffff','#d6efff','#9fd0ff','#4f86b8'],g:'#c8e6ff'},
+ fae:{c:['#9fd0ff','#c9a8ff','#a8f0b0','#ffffff'],g:'#c9a8ff'}});
+for(const k in DEMB)if(!EL[k])EL[k]=EL[DBUR[k]]||EL.star;
+{const _b=burst;burst=function(el,x,y,pw,fl){const q=Math.sqrt(pw),up=()=>RN(-Math.PI*.95,-Math.PI*.05);
+ if(DEMB[el]&&DBUR[el]&&DBUR[el]!==el)return burst(DBUR[el],x,y,pw,fl);
+ if(el==='heal'){spawn({k:'flash',x,y,s:16*pw,gr:.6,m:.3,c:'rgba(168,230,184,.6)',add:1});
+  for(let i=0;i<12*pw;i++)spawn({x:x+RN(-16,16)*q,y:y+RN(-6,6),vx:RN(-20,20),vy:-RN(40,140)*q,dr:1.5,m:RN(.7,1.3),s:RN(1.6,2.8),c:EL.heal.c,add:1,sh:1});
+  for(let i=0;i<(pw>1.5?4:2);i++)feather(x,y,{spr:SPR.L,fl:fl!=null?fl:y+24,v:RN(120,300),z:RN(.6,.85)});return}
+ if(el==='moon'){spawn({k:'flash',x,y,s:20*pw,gr:.5,m:.35,c:'rgba(244,248,255,.8)',add:1});spawn({k:'ring',x,y,r0:4,r1:36*pw,m:.5,c:'#f4f8ff',w:2,fp:1,fy:.45});
+  for(let i=0;i<10*pw;i++)spawn({x:x+RN(-10,10)*q,y:y-RN(0,60)*q,vx:RN(-6,6),vy:RN(30,90),dr:1,m:RN(.6,1.1),s:RN(1.4,2.4),c:EL.moon.c,add:1});return}
+ if(el==='earth'){for(let i=0;i<12*pw;i++){const a=up(),v=RN(140,380)*q,s=RN(2.2,4);spawn({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:1300,dr:.5,m:RN(.7,1.2),s,c:EL.earth.c,fl,bo:.3})}
+  for(let i=0;i<5*pw;i++)spawn({k:'puff',x:x+RN(-14,14)*q,y,vx:RN(-50,50),vy:RN(-30,-5),dr:2.5,m:RN(.7,1.1),s:RN(7,12)*q,gr:1.4,c:'rgba(185,176,164,.22)',fin:.15,fp:1.2});return}
+ if(el==='wind'){const s=Math.random()<.5?1:-1;for(let i=0;i<6*pw;i++){const yy=y+RN(-18,18)*q,L=RN(30,70)*q;spawn({k:'zap',pts:[[x-s*L*.6,yy],[x+s*L*.4,yy+RN(-3,3)]],m:RN(.18,.3),c:'rgba(232,242,255,.8)',w:1.2,fp:1})}
+  for(let i=0;i<6*pw;i++)spawn({k:'puff',x,y:y+RN(-8,8),vx:s*RN(120,320)*q,vy:RN(-20,20),dr:2.2,m:RN(.5,.9),s:RN(6,10)*q,gr:1.3,c:'rgba(207,227,247,.2)',fin:.1,fp:1.2});return}
+ if(el==='water'){spawn({k:'ring',x,y,r0:3,r1:26*pw,m:.5,c:'#c8e6ff',w:1.6,fp:1,fy:.4});
+  for(let i=0;i<12*pw;i++){const a=up(),v=RN(120,330)*q;spawn({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:1100,m:RN(.6,1.1),s:RN(1.6,2.8),c:EL.water.c,fl,stick:1,fp:3})}return}
+ if(el==='fae'){for(let i=0;i<12*pw;i++){const a=RN(0,6.283),v=RN(40,160)*q,c=EL.fae.c[i%3];spawn({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,dr:2,g:60,m:RN(.8,1.4),s:RN(1.6,2.6),c,add:1})}
+  for(let i=0;i<3;i++)glint(x+RN(-18,18)*q,y+RN(-14,10)*q,RN(5,8),{m:.5,c:EL.fae.c[i]});return}
+ return _b(el,x,y,pw,fl)}}
+
+/* ---------- удар по кубикам: лунный столб, камни из-под стола, порыв ветра, исцеляющий свет ---------- */
+{const _dc=dieCoat;dieCoat=function(d,el){if(el==='moon')return _dc(d,'star');if(['heal','earth','wind','water','fae'].includes(el))return;return _dc(d,el)}}
+{const _ss=spellStrike;spellStrike=function(el,dies,done){if(!['moon','earth','wind','heal'].includes(el))return _ss(el,dies,done);
+ const W=innerWidth,H=innerHeight,xs=dies.map(d=>d._x),ys=dies.map(d=>d._y),cx=xs.reduce((a,b)=>a+b,0)/xs.length,cy=ys.reduce((a,b)=>a+b,0)/ys.length,sz=dies[0]._sz,fl=Math.max(...ys)+sz*.46;
+ const knock=(dx,h,dur,sx,sy)=>dies.forEach((d,i)=>{const b=`translate(${d._x}px,${d._y}px)`;dieCoat(d,el);
+  d.animate([{transform:b},{transform:b+` translate(${dx}px,${-h}px) rotate(${dx*.6}deg)`,offset:.32},{transform:b+` translate(${dx*.2}px,0) scale(${sx||1.08},${sy||.86})`,offset:.7},{transform:b}],{duration:dur,delay:i*25,easing:'cubic-bezier(.2,.7,.4,1)'})});
+ if(el==='moon'){/* сверху опускается бледный столб света и давит на кубики */
+  const c=document.createElement('div');c.className='mbeam';c.style.cssText=`left:${cx}px;height:${cy+sz*.4}px`;document.body.appendChild(c);
+  c.animate([{transform:'translateX(-50%) scaleX(.1)',opacity:0},{transform:'translateX(-50%) scaleX(1)',opacity:1,offset:.35},{transform:'translateX(-50%) scaleX(.85)',opacity:.85,offset:.7},{transform:'translateX(-50%) scaleX(.3)',opacity:0}],{duration:900,easing:'ease-out',fill:'forwards'}).onfinish=()=>c.remove();
+  setTimeout(()=>{burst('moon',cx,cy,2.2,fl);knock(0,-4,460,1.12,.8);bodyShake()},260);setTimeout(done,700);return}
+ if(el==='earth'){/* стол вздрагивает, из-под кубиков выбивает камни */
+  bigShake();setTimeout(()=>{burst('earth',cx,fl,2.4,fl);knock(RN(-8,8),22,520)},90);setTimeout(done,620);return}
+ if(el==='wind'){/* порыв проходит сбоку и сдвигает кубики */
+  const s=Math.random()<.5?1:-1;for(let i=0;i<10;i++){const yy=cy+RN(-sz,sz);setTimeout(()=>spawn({k:'zap',pts:[[s<0?W+10:-10,yy],[cx+s*sz,yy+RN(-6,6)]],m:.25,c:'rgba(232,242,255,.7)',w:1.4,fp:1}),i*18)}
+  setTimeout(()=>{burst('wind',cx,cy,2,fl);knock(s*16,8,520);bodyShake()},160);setTimeout(done,640);return}
+ /* лечение: тёплые зелёные искры опускаются и впитываются в кубики */
+ for(let i=0;i<26;i++){const x=cx+RN(-W*.35,W*.35),y=cy-RN(H*.15,H*.4),dl=RN(0,.25);spawn({x,y,m:.55+dl,s:RN(1.6,2.8),c:EL.heal.c,add:1,tick:(p,dt)=>{const q=Math.max(0,Math.min(1,(p.l-dl)/.5)),e=q*q;p.vx=p.vy=0;p.x=x+(cx-x)*e;p.y=y+(cy-y)*e}})}
+ setTimeout(()=>{burst('heal',cx,cy,2,fl);dies.forEach(d=>d.animate([{filter:'drop-shadow(0 0 0 transparent)'},{filter:'drop-shadow(0 0 12px #a8e6b8)'},{filter:'drop-shadow(0 0 0 transparent)'}],{duration:700}));knock(0,6,420,1.05,.94)},560);setTimeout(done,860)}}
+/* лечение заклинанием сразу берёт целебную стихию, остальные броски — стихию своего заклинания */
+{const _d=dice;dice=function(o){if(o&&!o.fx&&/лечение|исцел/i.test(o.label||''))o.fx='heal';return _d.apply(this,arguments)}}
+{const R=(k,i,fx)=>{const s=SPELLS[k];if(s&&s.rolls&&s.rolls[i]&&!s.rolls[i].fx&&!s.rolls[i].att)s.rolls[i].fx=fx};
+ R('moonbeam',0,'moon');R('spike_growth',0,'thorn');R('flaming_sphere',0,'fire');R('heat_metal',0,'fire');R('dust_devil',0,'wind');R('healing_spirit',0,'heal');
+ if(SPELLS.earth_tremor&&!SPELLS.earth_tremor.fx)SPELLS.earth_tremor.fx='earth';
+ if(SPELLS.primal_savagery){const d0=SPELLS.primal_savagery.dmg;SPELLS.primal_savagery.dmg=c=>Object.assign({},d0(c),{fx:'acid'})}}
+
+/* ---------- волна сотворения: у каждой семьи своя ---------- */
+Object.assign(CWF,{shape_water:'water',create_or_destroy_water:'water',purify_food_and_drink:'water',
+ mold_earth:'earth',earthbind:'earth',magic_stone:'earth',gust:'wind',gust_of_wind:'wind',warding_wind:'wind',dust_devil:'wind',
+ detect_magic:'eye',detect_poison_and_disease:'eye',darkvision:'eye',find_traps:'eye',locate_object:'eye',beast_sense:'eye',
+ resistance:'ward',protection_from_evil_and_good:'ward',protection_from_poison:'ward',jump:'jump',longstrider:'step',pass_without_trace:'hush',
+ barkskin:'bark',moonbeam:'moon',control_flames:'fire',flame_blade:'fire',flaming_sphere:'fire',heat_metal:'fire',skywrite:'sky',mending:'mend',
+ druidcraft:'sprout',locate_animals_or_plants:'sprout',lesser_restoration:'heal',healing_spirit:'heal',guidance:'guide',enhance_ability:'guide',
+ shillelagh:'club',summon_beast:'summon',animal_messenger:'beast',absorb_elements:'absorb',spike_growth:'vine'});
+{const _cw=castWave;castWave=function(k){if(RM)return;const f=CWF[k],W=innerWidth,H=innerHeight,cx=W/2,cy=H*.45,pg=pgOn();
+ const wob=(kf,d)=>{if(pg)pg.animate(kf,{duration:d,easing:'cubic-bezier(.3,1.2,.5,1)'})};
+ if(f==='water'){/* сверху падают капли, на низу экрана расходятся круги, лист слегка колышется */
+  for(let i=0;i<22;i++){const x=RN(.06,.94)*W,fy=H-RN(30,140),dl=RN(0,500);setTimeout(()=>{spawn({x,y:-10,vy:RN(700,900),g:900,m:2,s:2.4,c:EL.water.c,add:1,fl:fy,stick:1,fp:3});
+   setTimeout(()=>{spawn({k:'ring',x,y:fy,r0:2,r1:RN(18,34),m:.6,c:'#c8e6ff',w:1.4,fp:1,fy:.35});for(let j=0;j<3;j++)spawn({x,y:fy,vx:RN(-60,60),vy:-RN(80,160),g:900,m:.5,s:1.6,c:'#d6efff',add:1,fl:fy})},Math.sqrt(2*(fy+10)/900)*1000*.82)},dl)}
+  setTimeout(()=>wob([{transform:'none'},{transform:'translateY(2px) scale(1,.995)'},{transform:'none'}],500),400);return}
+ if(f==='earth'){/* земля вздрагивает: лист подпрыгивает, снизу летят камешки и пыль */
+  bigShake();for(let i=0;i<26;i++){const x=RN(0,W),v=RN(300,700);spawn({x,y:H+5,vx:RN(-80,80),vy:-v,g:1500,dr:.4,m:RN(.9,1.4),s:RN(2.4,4.4),c:EL.earth.c,fl:H-RN(10,40),bo:.3})}
+  for(let i=0;i<12;i++)spawn({k:'puff',x:RN(0,W),y:H-10,vx:RN(-40,40),vy:-RN(20,60),dr:2,m:RN(1,1.5),s:RN(30,50),gr:1.2,c:'rgba(185,176,164,.18)',fin:.1,fp:1.3});
+  wob([{transform:'none'},{transform:'translateY(-8px)'},{transform:'translateY(3px) scale(1,.99)'},{transform:'none'}],460);return}
+ if(f==='wind'){/* порыв проносится через экран: полосы, листья и пёрышки уносит, лист кренится под ветром */
+  const s=Math.random()<.5?1:-1;for(let i=0;i<26;i++){const y=RN(.1,.9)*H,L=RN(.2,.45)*W;setTimeout(()=>{let x=s>0?-L:W+L;spawn({k:'zap',pts:[[x,y],[x+s*L,y]],m:.5,c:'rgba(232,242,255,.55)',w:1.2,fp:1,tick:p=>{p.pts=p.pts.map(([a,b])=>[a+s*24,b+Math.sin(a*.02)*.6])}})},i*22)}
+  for(let i=0;i<6;i++)feather(s>0?-20:W+20,RN(.2,.7)*H,{a:s>0?RN(-.4,.1):Math.PI+RN(-.1,.4),v:RN(600,900),fl:H-RN(30,100),z:RN(.6,.9),spr:i%2?SPR.L:SPR.F,u:0,roll:0});
+  wob([{transform:'none'},{transform:`translateX(${s*7}px) skewX(${-s*1.2}deg)`,offset:.3},{transform:`translateX(${-s*2}px)`,offset:.7},{transform:'none'}],700);return}
+ if(f==='eye'){/* посреди экрана раскрывается глаз, в зрачке звезда, от него по экрану идёт волна зрения */
+  const d=fxBox();d.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="stroke:#cfe3f7;fill:none;stroke-width:1.6;filter:drop-shadow(0 0 5px #a9c9ea)"><path class="lt" d="M${cx-90} ${cy} Q${cx} ${cy-70} ${cx+90} ${cy}"/><path class="lb" d="M${cx-90} ${cy} Q${cx} ${cy+70} ${cx+90} ${cy}"/><circle cx="${cx}" cy="${cy}" r="22" class="pu" fill="rgba(169,201,234,.15)"/></svg>`;
+  const lt=d.querySelector('.lt'),lb=d.querySelector('.lb'),pu=d.querySelector('.pu');pu.style.transformBox='fill-box';pu.style.transformOrigin='50% 50%';
+  lt.animate([{d:`path("M${cx-90} ${cy} Q${cx} ${cy} ${cx+90} ${cy}")`},{d:`path("M${cx-90} ${cy} Q${cx} ${cy-70} ${cx+90} ${cy}")`}],{duration:380,easing:'cubic-bezier(.3,1.4,.5,1)'});
+  lb.animate([{d:`path("M${cx-90} ${cy} Q${cx} ${cy} ${cx+90} ${cy}")`},{d:`path("M${cx-90} ${cy} Q${cx} ${cy+70} ${cx+90} ${cy}")`}],{duration:380,easing:'cubic-bezier(.3,1.4,.5,1)'});
+  pu.animate([{transform:'scale(0)'},{transform:'scale(1.25)',offset:.6},{transform:'scale(1)'}],{duration:420,delay:120,fill:'backwards'});
+  setTimeout(()=>{glint(cx,cy,18,{m:.7});spawn({k:'ring',x:cx,y:cy,r0:20,r1:Math.max(W,H)*.8,m:.9,c:'#cfe3f7',w:2,fp:1});if(pg)pg.animate([{filter:'none'},{filter:'brightness(1.35) saturate(.9)',offset:.3},{filter:'none'}],{duration:900})},420);
+  setTimeout(()=>d.animate([{opacity:1},{opacity:0}],{duration:450,fill:'forwards'}).onfinish=()=>d.remove(),1000);return}
+ if(f==='ward'){/* вокруг рисуется защитный круг с рунами и с толчком ложится на лист */
+  const R=Math.min(W,H)*.36,d=fxBox(),n=8;d.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="stroke:#a9c9ea;fill:none;filter:drop-shadow(0 0 6px #a9c9ea)"><circle data-d="0" cx="${cx}" cy="${cy}" r="${R}" stroke-width="1.6"/><circle data-d="150" cx="${cx}" cy="${cy}" r="${R*.86}" stroke-width="1" stroke-dasharray="4 6"/>${Array.from({length:n},(_,i)=>{const a=i/n*6.283;return `<text x="${cx+Math.cos(a)*R*.93}" y="${cy+Math.sin(a)*R*.93+5}" text-anchor="middle" font-size="14" fill="#dbe8f5" stroke="none" class="rn">${RUNES[i*3%RUNES.length]}</text>`}).join('')}</svg>`;
+  sDraw(d,0,600);d.querySelectorAll('.rn').forEach((t,i)=>{t.style.opacity=0;t.animate([{opacity:0},{opacity:1}],{duration:200,delay:200+i*50,fill:'forwards'})});
+  const sv=d.firstChild;setTimeout(()=>{sv.style.transformOrigin=`${cx}px ${cy}px`;sv.animate([{transform:'scale(1)'},{transform:'scale(.9)',offset:.4},{transform:'scale(1.02)'}],{duration:320,easing:'cubic-bezier(.5,0,.5,1)',fill:'forwards'});
+   wob([{transform:'scale(1)'},{transform:'scale(.985)'},{transform:'none'}],380);bodyShake();spawn({k:'ring',x:cx,y:cy,r0:R*.9,r1:R*1.4,m:.5,c:'#cfe3f7',w:2,fp:1})},780);
+  setTimeout(()=>d.animate([{opacity:1},{opacity:0}],{duration:500,fill:'forwards'}).onfinish=()=>d.remove(),1250);return}
+ if(f==='jump'||f==='step'||f==='hush'){/* следы: прыжок — лист подскакивает и тяжело приземляется; скороход — широкие шаги; без следа — следы тают */
+  const P='<ellipse cx="0" cy="4" rx="5" ry="8"/><circle cx="-3" cy="-7" r="1.6"/><circle cx="1" cy="-8.5" r="1.6"/><circle cx="4.5" cy="-6" r="1.4"/>',d=fxBox(),n=f==='step'?5:f==='jump'?3:6,gap=f==='step'?W/4.2:W/6;
+  d.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="fill:rgba(235,228,213,.35);stroke:#ebe4d5;stroke-width:.8">${Array.from({length:n},(_,i)=>`<g class="pr" transform="translate(${W*.12+i*gap} ${H*.82-(i%2)*18}) rotate(80) scale(1.4)">${P}</g>`).join('')}</svg>`;
+  d.querySelectorAll('.pr').forEach((g,i)=>{g.style.opacity=0;setTimeout(()=>{g.style.opacity=1;const b=g.getBoundingClientRect();for(let j=0;j<3;j++)spawn({k:'puff',x:b.left+b.width/2,y:b.top+b.height/2,vx:RN(-40,40),vy:-RN(5,20),dr:2,m:.6,s:10,gr:1,c:'rgba(185,205,225,.18)',fin:.1,fp:1.2})},i*(f==='step'?190:140))});
+  if(f==='jump')wob([{transform:'none'},{transform:'translateY(-22px)',offset:.35},{transform:'translateY(4px) scale(1,.985)',offset:.75},{transform:'none'}],620),setTimeout(bigShake,420);
+  setTimeout(()=>d.animate(f==='hush'?[{opacity:1,filter:'blur(0)'},{opacity:0,filter:'blur(6px)'}]:[{opacity:1},{opacity:0}],{duration:f==='hush'?900:600,fill:'forwards'}).onfinish=()=>d.remove(),n*170+500);return}
+ if(f==='bark'){/* кожа дубеет: по Классу доспеха ползут древесные волокна, лист глухо вздрагивает */
+  const t=document.querySelector('.page.on [data-info="ac"]')||$('acV');if(t){const r=t.getBoundingClientRect(),d=fxBox();d.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="stroke:#c9a878;fill:none;stroke-width:1.4;filter:drop-shadow(0 0 4px rgba(201,168,120,.6))">${Array.from({length:6},(_,i)=>{const x=r.left+r.width*(.12+i*.15);return `<path data-d="${i*60}" d="M${x} ${r.bottom} C${x-6} ${r.bottom-r.height*.35} ${x+6} ${r.bottom-r.height*.6} ${x-2} ${r.top}"/>`}).join('')}</svg>`;
+   sDraw(d,0,420);setTimeout(()=>{t.animate([{transform:'scale(1.08)',boxShadow:'0 0 0 2px #c9a878,0 0 22px rgba(201,168,120,.6)'},{transform:'none',boxShadow:'0 0 0 0 transparent'}],{duration:600,easing:'cubic-bezier(.3,1.4,.5,1)'});bodyShake();for(let i=0;i<6;i++)spawn({x:r.left+RN(0,r.width),y:r.top+RN(0,r.height),vx:RN(-60,60),vy:-RN(40,140),g:900,m:.8,s:RN(2,3),c:['#e0c49a','#c9a878','#8a6a44'],fl:r.bottom+40})},560);
+   setTimeout(()=>d.animate([{opacity:1},{opacity:0}],{duration:500,fill:'forwards'}).onfinish=()=>d.remove(),1200)}return}
+ if(f==='moon'){/* с неба опускается столб лунного света и упирается в лист */
+  const c=document.createElement('div');c.className='mbeam';c.style.cssText=`left:${cx}px;height:${H*.62}px`;document.body.appendChild(c);
+  c.animate([{transform:'translateX(-50%) scaleX(.05)',opacity:0},{transform:'translateX(-50%) scaleX(1)',opacity:1,offset:.3},{transform:'translateX(-50%) scaleX(.9)',opacity:.8,offset:.75},{transform:'translateX(-50%) scaleX(.2)',opacity:0}],{duration:1500,easing:'ease-out',fill:'forwards'}).onfinish=()=>c.remove();
+  setTimeout(()=>{spawn({k:'ring',x:cx,y:H*.62,r0:10,r1:110,m:.7,c:'#f4f8ff',w:2,fp:1,fy:.3});bodyShake();for(let i=0;i<16;i++)spawn({x:cx+RN(-30,30),y:RN(.1,.6)*H,vx:RN(-8,8),vy:RN(20,70),m:RN(.8,1.3),s:RN(1.4,2.4),c:EL.moon.c,add:1})},300);return}
+ if(f==='fire'){/* снизу поднимается жар: искры, тёплое марево, огонёк вспыхивает и оседает */
+  spawn({k:'flash',x:cx,y:H+30,s:H*.4,gr:.6,m:.9,c:'rgba(255,150,60,.2)',fp:1.4,fin:.2});
+  for(let i=0;i<34;i++)spawn({x:RN(0,W),y:H+RN(0,30),vx:RN(-20,20),vy:-RN(200,460),dr:1.2,m:RN(.8,1.5),s:RN(1.8,3.2),c:EL.fire.c,add:1,sh:1});
+  if(pg)pg.animate([{filter:'none'},{filter:'sepia(.25) saturate(1.3) brightness(1.08)',offset:.35},{filter:'none'}],{duration:900});setTimeout(()=>burst('fire',cx,H*.7,1.4,H*.78),250);return}
+ if(f==='sky'){/* высоко в небе облачные буквы выписываются и расплываются */
+  const d=fxBox(),y=H*.16;d.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="stroke:rgba(232,242,255,.8);fill:none;stroke-width:3;stroke-linecap:round;filter:blur(.6px) drop-shadow(0 0 6px #cfe3f7)"><path data-d="0" d="M${W*.12} ${y} c10 -20 20 20 30 0 s20 -20 30 0 s14 18 26 -2 M${W*.42} ${y-6} q10 22 22 0 t26 4 M${W*.66} ${y+4} c8 -24 22 -10 16 6 s18 6 26 -10"/></svg>`;
+  sDraw(d,0,900);for(let i=0;i<8;i++)setTimeout(()=>spawn({k:'puff',x:W*(.12+i*.1),y:y+RN(-6,6),vx:RN(-10,10),vy:-RN(2,8),dr:1,m:RN(1.4,2),s:RN(16,24),gr:.8,c:'rgba(232,242,255,.14)',fin:.2,fp:1.3}),i*100);
+  setTimeout(()=>d.animate([{opacity:1,filter:'blur(0)'},{opacity:0,filter:'blur(5px)'}],{duration:900,fill:'forwards'}).onfinish=()=>d.remove(),1300);return}
+ if(f==='mend'){/* по экрану пробегает трещина и стягивается золотой нитью */
+  const d=fxBox(),y=cy,pts=[];for(let i=0;i<=10;i++)pts.push([W*.1+i*W*.08,y+(i%2?-14:12)+RN(-5,5)]);const P='M'+pts.map(p=>p.join(' ')).join(' L');
+  d.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="fill:none;stroke-linecap:round"><path class="cr" d="${P}" stroke="rgba(5,7,10,.85)" stroke-width="3"/><path data-d="350" d="${P}" stroke="#f0c47a" stroke-width="1.4" style="filter:drop-shadow(0 0 4px #f0c47a)"/></svg>`;
+  const cr=d.querySelector('.cr');cr.setAttribute('pathLength','1');cr.style.strokeDasharray='1';cr.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:260,fill:'forwards'});setTimeout(bodyShake,200);
+  sDraw(d,0,500,'[data-d]');setTimeout(()=>{pts.forEach((p,i)=>i%3||glint(p[0],p[1],7,{m:.5,c:'#f6dca8'}));d.animate([{opacity:1},{opacity:0}],{duration:500,fill:'forwards'}).onfinish=()=>d.remove()},900);return}
+ if(f==='sprout'){/* из нижнего края проклёвываются ростки и раскрывают листья */
+  const d=fxBox();d.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="stroke:#9cc46a;fill:none;stroke-width:1.8;stroke-linecap:round">${Array.from({length:7},(_,i)=>{const x=W*(.08+i*.14)+RN(-10,10),h=RN(40,90);return `<path data-d="${i*60}" d="M${x} ${H} Q${x+RN(-10,10)} ${H-h*.6} ${x} ${H-h}"/><g class="lf"><path d="${LEAF}" transform="translate(${x} ${H-h}) rotate(-130) scale(1.3)" fill="rgba(184,220,138,.3)" stroke="#b8dc8a" stroke-width=".7"/><path d="${LEAF}" transform="translate(${x} ${H-h}) rotate(-50) scale(1.3)" fill="rgba(184,220,138,.3)" stroke="#b8dc8a" stroke-width=".7"/></g>`}).join('')}</svg>`;
+  sDraw(d,0,520);d.querySelectorAll('.lf').forEach((e,i)=>{e.style.opacity=0;e.animate([{opacity:0},{opacity:1}],{duration:220,delay:420+i*60,fill:'forwards'})});
+  setTimeout(()=>d.animate([{opacity:1},{opacity:0}],{duration:600,fill:'forwards'}).onfinish=()=>d.remove(),1500);return}
+ if(f==='heal'){/* зелёные искры поднимаются и впитываются в хиты */
+  const t=document.querySelector('.page.on .tok.hp')||$('hpTok'),r=t?t.getBoundingClientRect():{left:cx,top:cy,width:0,height:0},tx=r.left+r.width/2,ty=r.top+r.height/2;
+  for(let i=0;i<30;i++){const x=RN(0,W),y=H+RN(0,40),dl=RN(0,.3);spawn({x,y,m:.75+dl,s:RN(1.6,2.8),c:EL.heal.c,add:1,tick:(p,dt)=>{const q=Math.max(0,Math.min(1,(p.l-dl)/.7)),e=q*q*(3-2*q);p.vx=p.vy=0;p.x=x+(tx-x)*e+Math.sin(q*6+i)*20*(1-q);p.y=y+(ty-y)*e}})}
+  setTimeout(()=>{if(t)t.animate([{transform:'scale(1.06)',boxShadow:'0 0 0 2px #a8e6b8,0 0 24px rgba(168,230,184,.6)'},{transform:'none',boxShadow:'0 0 0 0 transparent'}],{duration:700,easing:'cubic-bezier(.3,1.4,.5,1)'});glint(tx,ty,12,{m:.6,c:'#e2ffe8'})},780);return}
+ if(f==='guide'){/* тёплая звезда опускается сверху и мягко касается листа */
+  const x=lastPt?lastPt.x:cx;let y=-20;spawn({x,y,m:.7,s:3,c:'#fff6d8',add:1,tick:(p,dt)=>{const q=p.l/.7,e=1-Math.pow(1-q,3);p.vx=p.vy=0;p.y=-20+(cy+20)*e;p.x=x+(cx-x)*e;if(Math.random()<.6)spawn({x:p.x,y:p.y,m:.4,s:2,c:'#f0c47a',add:1})}});
+  setTimeout(()=>{glint(cx,cy,20,{m:.8,c:'#fff6d8'});spawn({k:'ring',x:cx,y:cy,r0:6,r1:120,m:.6,c:'#f0c47a',w:2,fp:1});bodyShake()},700);return}
+ if(f==='club'){/* посох тяжелеет: волокна дерева светятся, удар оземь */
+  bigShake();spawn({k:'ring',x:cx,y:H*.8,r0:10,r1:W*.45,m:.6,c:'#c9a878',w:3,fp:1,fy:.3});for(let i=0;i<10;i++){const a=RN(-Math.PI*.9,-Math.PI*.1),v=RN(160,380);spawn({x:cx,y:H*.8,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:1100,m:RN(.7,1.1),s:RN(2,3.4),c:['#e0c49a','#c9a878','#8a6a44'],fl:H*.8,bo:.3})}
+  for(let i=0;i<4;i++)feather(cx+RN(-30,30),H*.75,{spr:SPR.L,v:RN(200,400),fl:H*.82,z:RN(.7,1)});wob([{transform:'translateY(4px)'},{transform:'none'}],300);return}
+ if(f==='summon'){/* дух зверя: из тумана рисуется контур зверя, встаёт рядом и растворяется в звёздной пыли */
+  const ic=['wolf-head','eagle-head','octopus'][RN(0,3)|0],S0=Math.min(W*.6,280),d=bContour(ic,S0,cx,cy);d.querySelector('.ln').animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:800,fill:'forwards'});
+  setTimeout(()=>{d.querySelector('.fl').animate([{opacity:0},{opacity:1}],{duration:300,fill:'forwards'});bigShake();spawn({k:'ring',x:cx,y:cy+S0*.45,r0:10,r1:S0*.8,m:.6,c:'#e8f2ff',w:2,fp:1,fy:.3})},820);
+  setTimeout(()=>{bPts(d,40).forEach(([x,y])=>spawn({x,y,vx:RN(-30,30),vy:-RN(20,80),dr:1,m:RN(.8,1.3),s:RN(1.4,2.2),c:EL.star.c,add:1}));d.remove()},1600);return}
+ if(f==='absorb'){/* четыре стихии слетаются в ладонь и гаснут */
+  const cols=['#ff9a5a','#9fd0ff','#ffe14a','#b4ee62','#c9b6ff'],x=lastPt?lastPt.x:cx,y=lastPt?lastPt.y:cy;
+  for(let i=0;i<30;i++){const a=RN(0,6.283),R=RN(.4,.6)*Math.max(W,H),x0=x+Math.cos(a)*R,y0=y+Math.sin(a)*R,c=cols[i%5],dl=RN(0,.2);spawn({x:x0,y:y0,m:.5+dl,s:RN(2,3.2),c,add:1,tick:(p,dt)=>{const q=Math.max(0,Math.min(1,(p.l-dl)/.5)),e=q*q;p.vx=p.vy=0;p.x=x0+(x-x0)*e;p.y=y0+(y-y0)*e}})}
+  setTimeout(()=>{spawn({k:'flash',x,y,s:60,gr:.5,m:.3,c:'rgba(255,255,255,.6)',add:1});spawn({k:'ring',x,y,r0:30,r1:6,m:.3,c:'#ffffff',w:2,fp:1});bodyShake()},560);return}
+ return _cw(k)}}
+
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-27-12';
+const BUILD='aradia-2026-11-27-13';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
