@@ -6070,10 +6070,87 @@ function sumHosFx(){const b=document.querySelector('.tabs [data-p="p-sum"]');ren
 /* старые сохранения: призванных ещё не было */
 if(S.sum&&(!S.sum.list||!S.sum.list.length||!SUMC[S.sum.list[0].key]))S.sum=null;
 
+/* ---------- У КАЖДОГО ЗВЕРЯ СВОЙ ОБРАЗ: похожие звери (медведи, волки) получают разные силуэты (game-icons.net, CC BY 3.0),
+   свой свет, своё превращение и свой распад. ---------- */
+BICO['bear-face']="M64.264 44.704c-88.765 25.213-39.73 158.676-2.108 161.887c-8.506 42.218-13.32 84.645-12.642 127.824c.355 22.67 51.374 58.424 105.35 86.035C186.48 466.787 238.98 466.876 256 467.296c17.02-.42 69.52-.51 101.137-46.846c53.975-27.61 104.994-63.364 105.35-86.035c.677-43.179-4.137-85.606-12.643-127.824c37.623-3.211 86.657-136.674-2.108-161.887c-28.433 1.462-55.606 16.152-82.172 37.223C317.64 62.233 293.164 61.296 256 61.296s-61.639.937-109.564 20.63c-26.566-21.07-53.739-35.76-82.172-37.222m4.927 49.928c6.057-.096 17.237 5.625 26.809 14.664c3.362 3.175-22.916 51.05-26.818 50.158c-4.59-1.05-14.985-48.285-3.725-63.318c.745-.994 2.039-1.477 3.734-1.504m373.618 0c1.695.027 2.99.51 3.734 1.504c11.26 15.033.865 62.268-3.725 63.318c-3.902.893-30.18-46.983-26.818-50.158c9.572-9.04 20.752-14.76 26.809-14.664m-260.85 82.088c17.457-.304 30.686 24.445 42.041 44.576c-53.57 15.878-82.575-17.11-57.752-37.777c5.603-4.665 10.823-6.714 15.711-6.8zm148.082 0c4.888.085 10.108 2.134 15.711 6.799c24.823 20.667-4.181 53.655-57.752 37.777c11.355-20.13 24.584-44.88 42.041-44.576M256 251.548c17.32.223 36.826 9.567 30.197 36.517c-1.444 5.872-12.516 8.617-21.197 9.7v8.972c99.884 41.126 79.565 138.559-9 138.559s-108.884-97.433-9-138.559v-8.972c-8.68-1.083-19.753-3.828-21.197-9.7c-6.629-26.95 12.877-36.294 30.197-36.517";BICO['direwolf']="M145.14 22.185c9.508 36.595 15.32 71.885 14.22 108.31c21.73 18.495 44.074 28.207 68.035 38.93c11.813 5.288 23.99 10.82 36.37 17.69c-24.702-70.606-62.676-117.77-118.626-164.93zM27.122 25.887C24.958 45.21 27.53 71.24 34.12 97.38c6.96 18.72 16.942 37.974 27.595 54.67c15.003 23.516 32.422 42.276 40.48 46.868l-9.27 16.244c-14.91-8.496-31.08-28.122-46.978-53.037c-9.383-14.708-18.273-31.144-25.328-47.943v196.584l43.17 1.76c-2.8-23.054-4.248-45.878-2.73-66.516l18.614 1.382c-2.313 31.474 3.16 71.293 9.656 108.65c110.615 90.673 195.362 124.516 260.695 131.175l-95.107-66.8l40.053-15.876l-142.53-71.961l38.505-1.738c-28.377-14.028-48.9-32.894-63.144-55.63l1.464-22.964c35.81 41.623 89.82 73.71 151.373 98.096l-43.164 6.068l112.765 52.193l-22.39 25.518l119.7 42.32c16.61-5.68 31.058-12.678 43.66-19.464c-97.364-69.615-123.58-131.642-168.034-193.962l-.008-.01c-34.93-45.653-68.47-60.9-103.4-76.534c-33.725-15.094-68.975-30.612-101.788-72.558L27.123 25.887zm156.344 175.59l89.894 46.75l-24.032 17.57c18.66 30.458 55.134 55.834 91.12 72.86c-50.826-7.884-103.33-32.248-148.212-69.427l29.815-20.224l-38.583-47.53z";
+Object.assign(BEASTICO,{black_bear:'bear-face',brown_bear:'bear-head',dire_wolf:'direwolf',crocodile:'croc-jaws',giant_eagle:'eagle-head'});
+BKW.unshift([/лют[а-я]* волк|волк[а-я]* лют/,'direwolf'],[/(чёрн|черн)[а-я]* медвед|барибал/,'bear-face'],[/бур[а-я]* медвед|гризли/,'bear-head']);
+Object.assign(BMOT,{'bear-face':'climb','bear-head':'charge','direwolf':'stalk','croc-jaws':'snap','eagle-head':'soar'});
+Object.assign(BCOL,{'bear-face':'#b9c3dc','bear-head':'#e8c79c','direwolf':'#bfe3f7','eagle-head':'#f3e5b6','croc-jaws':'#b9dcc2'});
+Object.assign(BCRUMB,{'bear-face':'bark','bear-head':'quake','direwolf':'frost','eagle-head':'plume','croc-jaws':'ripple'});
+/* новые способы движения при превращении; для остальных зверей — прежние */
+{const _in=beastInFx;beastInFx=async function(B){if(RM||!B)return;const ic=bIcon(B),mo=BMOT[ic];if(!['climb','stalk','snap','soar'].includes(mo))return _in(B);
+ const W=innerWidth,H=innerHeight,col=bCol(ic),pg=pgOn(),tg=bTarget(),bgI=$('bgImg');if(tg)tg.style.opacity=0;bHold++;
+ if(pg)pg.animate([{filter:'none'},{filter:'brightness(.45)',offset:.2},{filter:'brightness(.55)',offset:.8},{filter:'none'}],{duration:2300,easing:'ease-out'});
+ const cx=W/2,cy=H*.42,S0=Math.min(W*.7,320);
+ spawn({k:'flash',x:cx,y:cy,s:Math.min(W,H)*.3,gr:.6,m:.35,c:'rgba(169,201,234,.3)',add:1});
+ for(let i=0;i<22;i++)feather(cx+RN(-30,30),cy+RN(-30,30),{a:RN(0,6.283),v:RN(450,1100),fl:H-RN(30,110),m:RN(2.2,3.2),z:RN(.6,1),u:0,roll:0});
+ if(bgI)bgI.animate([{opacity:0},{opacity:0}],{duration:1900});
+ await bWait(260);
+ const R=tg?tg.getBoundingClientRect():{left:16,top:20,width:44,height:44},tx=R.left+R.width/2,ty=R.top+R.height/2,k=R.width*1.05/S0;
+ const T=(x,y,s,r,sx,sy)=>({transform:`translate(${x}px,${y}px) rotate(${r||0}deg) scale(${(s||1)*(sx||1)},${(s||1)*(sy||1)})`});
+ /* где контур рисуется: медведь у низа, волк низко у края, крокодил над «водой», орёл в вышине */
+ const P0={climb:[cx,H*.62],stalk:[W*.68,H*.6],snap:[cx,H*.58],soar:[cx,H*.3]}[mo],x0=P0[0],y0=P0[1],dx=tx-x0,dy=ty-y0;
+ const d=bContour(ic,S0,x0,y0),ln=d.querySelector('.ln'),fl=d.querySelector('.fl'),DR=mo==='stalk'?1100:mo==='climb'?760:850;
+ ln.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:DR,easing:mo==='climb'?'steps(7)':'cubic-bezier(.35,.2,.3,1)',fill:'forwards'});
+ bPts(d,6,.06,.96).forEach(([x,y,f])=>setTimeout(()=>{glint(x,y,RN(8,12),{m:.6,c:'#ffffff'});spawn({k:'ring',x,y,r0:2,r1:16,m:.3,c:col,w:1.4,fp:1})},f*DR));
+ if(mo==='snap')for(let i=0;i<3;i++)setTimeout(()=>spawn({k:'ring',x:x0,y:y0+S0*.38,r0:10,r1:S0*.7,m:.9,c:col,w:1.6,fp:1,fy:.22}),i*260);
+ await bWait(DR);
+ fl.animate([{opacity:0},{opacity:1}],{duration:260,fill:'forwards'});
+ let kf,dur,ez='cubic-bezier(.5,0,.75,.4)',big=0;
+ if(mo==='climb'){/* чёрный медведь: лезет вверх рывками, лапа за лапой, оставляя борозды когтей, и сверху валится в портрет */
+  const up=y0-H*.2,st=[];for(let i=0;i<=4;i++)st.push({...T(i%2?10:-10,-i*up/4,1,i%2?6:-6),offset:i/4});
+  d.animate(st,{duration:900,easing:'cubic-bezier(.6,0,.4,1)',fill:'forwards'});
+  for(let i=1;i<=4;i++)setTimeout(()=>{const yy=y0-i*up/4,s=document.createElement('div');s.className='bclaw';s.style.cssText=`left:${x0+(i%2?S0*.28:-S0*.38)}px;top:${yy+S0*.05}px;color:${col}`;s.innerHTML='<svg viewBox="0 0 40 50"><path d="M6 4 Q10 26 4 46 M18 2 Q22 26 16 48 M30 4 Q34 26 28 46"/></svg>';document.body.appendChild(s);
+   s.querySelectorAll('path').forEach(p=>{p.setAttribute('pathLength','1');p.style.strokeDasharray='1';p.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:140,fill:'forwards'})});
+   for(let j=0;j<5;j++)spawn({x:x0+RN(-30,30),y:yy+S0*.3,vx:RN(-60,60),vy:RN(-40,0),g:900,m:.7,s:RN(1.4,2.4),c:col,add:1,fl:H-20,bo:.2});
+   s.animate([{opacity:1},{opacity:1,offset:.6},{opacity:0}],{duration:1300,fill:'forwards'}).onfinish=()=>s.remove()},i*225-120);
+  await bWait(920);kf=[T(10,-up,1,6),{...T(dx*.6,Math.min(-up,dy)-30,(1+k)/2,-14),offset:.45},T(dx,dy,k)];dur=480;big=1}
+ else if(mo==='stalk'){/* лютый волк: припадает к земле и медленно крадётся, изо рта морозный пар, потом резкий бросок */
+  d.animate([T(0,0),T(0,18,1,0,1.12,.8)],{duration:300,easing:'ease-out',fill:'forwards'});await bWait(300);
+  d.animate([T(0,18,1,0,1.12,.8),T(-W*.22,22,1,-2,1.12,.78)],{duration:900,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'});
+  for(let i=0;i<4;i++)setTimeout(()=>{const hx=x0-W*.22*(i/3)-S0*.36,hy=y0+S0*.02;for(let j=0;j<3;j++)spawn({k:'puff',x:hx,y:hy,vx:-RN(40,90),vy:-RN(5,25),dr:1.6,m:RN(.8,1.2),s:RN(14,22),gr:1.4,c:'rgba(205,232,250,.22)',fin:.1,fp:1.2})},i*260);
+  await bWait(920);const sx=-W*.22;kf=[T(sx,22,1,-2,1.12,.78),{...T(sx-14,26,1,-4,1.2,.72),offset:.15},{...T(sx+(dx-sx)*.5,dy*.5-30,(1+k)/2,-10,1.2,.85),offset:.6},T(dx,dy,k)];dur=420;big=1;ez='cubic-bezier(.6,0,.6,1)'}
+ else if(mo==='snap'){/* крокодил: уходит под воду, кольца по воде, и рывком выпрыгивает, щёлкая пастью */
+  d.animate([T(0,0),T(0,40,1,0,1.05,.55)],{duration:520,easing:'cubic-bezier(.5,0,.5,1)',fill:'forwards'});fl.animate([{opacity:1},{opacity:.35}],{duration:520,fill:'forwards'});
+  for(let i=0;i<2;i++)setTimeout(()=>spawn({k:'ring',x:x0,y:y0+S0*.3,r0:20,r1:S0*.85,m:1,c:col,w:1.4,fp:1,fy:.22}),200+i*220);
+  await bWait(560);fl.animate([{opacity:.35},{opacity:1}],{duration:200,fill:'forwards'});
+  for(let i=0;i<14;i++){const a=RN(-2.6,-.5);spawn({x:x0+RN(-40,40),y:y0+S0*.3,vx:Math.cos(a)*RN(120,320),vy:Math.sin(a)*RN(200,420),g:1000,m:.8,s:RN(1.6,2.8),c:col,add:1,fl:H-20,bo:.1})}
+  kf=[T(0,40,1,0,1.05,.55),{...T(dx*.25,dy*.25,1.05,-6,.9,1.15),offset:.3},{...T(dx*.32,dy*.32,1.12,-6,1.1,.9),offset:.42},{...T(dx*.4,dy*.4,1.02,-6),offset:.52},T(dx,dy,k,-4)];dur=560;ez='cubic-bezier(.3,0,.5,1)';big=1}
+ else{/* гигантский орёл: широкий круг в вышине, тень скользит по листу, и пикирование в портрет */
+  kf=[];for(let i=0;i<=12;i++){const f=i/12,a=f*Math.PI*1.5,r=W*.22*(1-f*.4);kf.push(T(Math.sin(a)*r*(1-f)+dx*f*f,(1-Math.cos(a))*r*.35*(1-f)+dy*f*f,1+(k-1)*f*f,Math.cos(a)*10*(1-f),1,i%3===0?.75:1))}dur=1150;ez='linear';
+  const sh=document.createElement('div');sh.style.cssText=`position:fixed;left:${x0-S0*.4}px;top:${H*.62}px;width:${S0*.8}px;height:${S0*.18}px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.45),transparent);pointer-events:none;z-index:115`;document.body.appendChild(sh);
+  sh.animate([{transform:'translateX(0) scaleX(1)',opacity:.9},{transform:`translateX(${W*.2}px) scaleX(.7)`,opacity:.7,offset:.5},{transform:`translateX(${dx*.6}px) scaleX(.3)`,opacity:0}],{duration:dur,fill:'forwards'}).onfinish=()=>sh.remove()}
+ d.animate(kf,{duration:dur,easing:ez,fill:'forwards'});
+ await bWait(dur);d.animate([{opacity:1},{opacity:0}],{duration:120,fill:'forwards'}).onfinish=()=>d.remove();
+ bHold--;bLand(bTarget()||tg,ic,big);if(mo==='snap'||mo==='climb')bigShake();
+ const t2=document.querySelector('.tabs .fc2');if(t2&&t2!==tg)t2.animate([{transform:'scale(1.25)'},{transform:'none'}],{duration:400,easing:'cubic-bezier(.3,1.4,.5,1)'});
+ if(bgI)bgI.animate([{opacity:0,transform:'scale(1.04)'},{opacity:getComputedStyle(bgI).opacity,transform:'none'}],{duration:900,easing:'ease-out'});
+ const ft=$('fTtl');if(ft)ft.animate([{transform:'translateY(-10px)',opacity:.2},{transform:'none',opacity:1}],{duration:380,easing:'cubic-bezier(.3,1.3,.5,1)'})}}
+/* новые способы распада при возврате: крошки контура летят по-своему */
+{const _out=beastOutFx;beastOutFx=async function(B,why){const ic=B?bIcon(B):'',cr=BCRUMB[ic];
+ if(RM||!['bark','quake','frost','plume','ripple'].includes(cr))return _out(B,why);
+ const _sp=spawn,col=bCol(ic),H=innerHeight,W=innerWidth;let n=0,on=false,done=false;
+ const fin=()=>{if(done)return;done=true;on=false;spawn=_sp;
+  if(!n)return;
+  if(cr==='quake'){bigShake();for(let i=0;i<10;i++){const s=i%2?1:-1;_sp({k:'puff',x:W/2+s*RN(10,90),y:H-40,vx:s*RN(120,280),vy:-RN(0,30),dr:2.2,m:1.1,s:RN(18,30),gr:1.2,c:'rgba(185,205,225,.22)',fin:.1,fp:1.2})}}
+  if(cr==='ripple')for(let i=0;i<3;i++)setTimeout(()=>_sp({k:'ring',x:W/2,y:H*.72,r0:10,r1:W*.45,m:1,c:col,w:1.4,fp:1,fy:.22}),i*220);
+  if(cr==='frost')for(let i=0;i<6;i++)_sp({k:'puff',x:W*.4+RN(-40,40),y:H*.38+RN(-40,40),vx:RN(160,300),vy:RN(-20,10),dr:1.6,m:RN(1,1.4),s:RN(26,40),gr:1.3,c:'rgba(205,232,250,.18)',fin:.1,fp:1.2})};
+ /* крошки распада узнаём по цвету зверя (и серому пеплу) и подменяем их полёт */
+ spawn=function(p){if(on&&p&&!p.k&&(p.c===col||p.c==='#6f7d8c')){n++;if(n===1)setTimeout(fin,0);const x=p.x,y=p.y;
+   if(cr==='quake'){if(n%4)return;return _sp({x,y,vx:RN(-20,20),vy:RN(0,40),g:1600,dr:.2,m:RN(.9,1.3),c:col,fl:H-20,bo:.05,s:RN(2.6,4.2),draw:(g,q)=>{g.fillStyle=q.c;g.fillRect(q.x-q.s,q.y-q.s,q.s*2,q.s*2)}})}
+   if(cr==='bark'){if(n%3)return;const L=RN(5,11);return _sp({x,y,vx:RN(-40,40),vy:RN(-30,10),g:380,dr:1.4,m:RN(1.2,1.7),c:col,fl:H-20,bo:.1,L,rot:RN(0,6),vr:RN(-6,6),sw:RN(0,6),draw:(g,q)=>{q.rot+=q.vr*.016;g.save();g.translate(q.x+Math.sin(q.l*5+q.sw)*6,q.y);g.rotate(q.rot);g.fillStyle=q.c;g.fillRect(-q.L/2,-1.2,q.L,2.4);g.restore()}})}
+   if(cr==='frost')return _sp({x,y,vx:RN(160,420),vy:RN(-60,20),dr:1.8,m:RN(.9,1.4),s:RN(1.2,2.2),c:col,add:1});
+   if(cr==='plume'){const a=RN(0,6.283);return _sp({x,y,vx:Math.cos(a)*30,vy:-RN(60,200),dr:1.2,m:RN(1,1.6),s:RN(1.2,2.2),c:col,add:1,ph:RN(0,6),tick:q=>{q.x+=Math.sin(q.l*6+q.ph)*1.4}})}
+   if(cr==='ripple'){if(n%2)return;return _sp({x,y,vx:RN(-10,10),vy:RN(40,120),g:120,dr:1,m:RN(.8,1.2),s:RN(1.2,2),c:col,add:1})}}
+  return _sp(p)};
+ setTimeout(()=>{on=true},560);setTimeout(fin,1600);
+ return _out(B,why)}}
+
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-27-27';
+const BUILD='aradia-2026-11-27-28';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
