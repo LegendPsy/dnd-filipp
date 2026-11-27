@@ -5169,19 +5169,40 @@ let wfSeen=null,wfBoot=0,wfWhy='';
 
 /* ---------- Благословение Королевы воронов: Арадия уходит в тень вороном, ворон перелетает и выходит из тени в новом месте ---------- */
 ravenFx=function(){if(RM)return;const W=innerWidth,H=innerHeight,cx=W/2,cy=H/2;
- /* весь экран с интерфейсом быстро закручивается вихрем в точку посередине,
-    из этой точки со всплеском разлетаются за края экрана чёрные перья, и экран разворачивается обратно */
- const els=[...document.querySelectorAll('.page,.tabs,.bgart')].filter(e=>e.offsetParent!==null||getComputedStyle(e).position==='fixed'&&getComputedStyle(e).display!=='none');
- const T1=430,T2=90,T3=560;
- els.forEach(e=>{const r=e.getBoundingClientRect();e.style.transformOrigin=`${cx-r.left}px ${cy-r.top}px`;
-  e.animate([{transform:'none',filter:'none',opacity:1},{transform:'rotate(200deg) scale(.55)',filter:'blur(1px) brightness(.8)',opacity:1,offset:.45},{transform:'rotate(560deg) scale(.015)',filter:'blur(3px) brightness(.4)',opacity:.6}],{duration:T1,easing:'cubic-bezier(.55,0,.9,.4)',fill:'forwards'});
-  setTimeout(()=>e.animate([{transform:'rotate(-420deg) scale(.015)',filter:'blur(3px) brightness(1.6)',opacity:.6},{transform:'rotate(-40deg) scale(1.04)',filter:'blur(.5px) brightness(1.15)',opacity:1,offset:.75},{transform:'none',filter:'none',opacity:1}],{duration:T3,easing:'cubic-bezier(.15,.7,.3,1)'}).onfinish=()=>{e.getAnimations().forEach(a=>a.cancel());e.style.transformOrigin=''},T1+T2)});
- /* вихрь затягивает пару тёмных струй к центру */
- for(let i=0;i<18;i++){const a0=RN(0,6.283),r0=Math.max(W,H)*RN(.45,.7);spawn({x:cx,y:cy,m:T1/1000,s:RN(2,3),c:'rgba(10,14,20,.8)',tick:(p,dt)=>{const q=Math.min(1,p.l/(T1/1000)),e=q*q,r=r0*(1-e),a=a0+e*5;p.vx=p.vy=0;p.x=cx+Math.cos(a)*r;p.y=cy+Math.sin(a)*r}})}
- /* всплеск: из точки во все стороны, вразнобой, далеко за края экрана */
- setTimeout(()=>{spawn({k:'flash',x:cx,y:cy,s:70,gr:.8,m:.25,c:'rgba(169,201,234,.5)',add:1});spawn({k:'ring',x:cx,y:cy,r0:4,r1:Math.max(W,H)*.7,m:.5,c:'#0a0e14',w:5,fp:1});
-  const n=RN(34,46)|0;for(let i=0;i<n;i++)setTimeout(()=>{const f=feather(cx+RN(-5,5),cy+RN(-5,5),{a:RN(0,6.283),v:RN(1100,2300),fl:H+600,m:RN(.9,1.4),z:RN(.7,1.35),av:RN(-26,26),u:0,roll:0});if(f){f.kd=.004;f.G=120}},RN(0,170)|0);
+ /* ВСАСЫВАНИЕ: центральная половина интерфейса (круг площадью ~50% экрана) режется на кольца-копии;
+    внутренние кольца срываются первыми и крутятся быстрее, внешние тянутся за ними, как в воронку.
+    Края экрана остаются на месте, их только чуть тянет к центру. В точке — вспышка и всплеск перьев,
+    потом кольца раскручиваются обратно. */
+ const R=Math.sqrt(.5*W*H/Math.PI),N=10,T1=820,T2=110,T3=640;
+ const src=[...document.querySelectorAll('.bgart,.page.on,.tabs')].filter(e=>getComputedStyle(e).display!=='none');
+ const hole=(e,r)=>{const b=e.getBoundingClientRect(),m=`radial-gradient(circle at ${cx-b.left}px ${cy-b.top}px, transparent ${r-5}px, #000 ${r-3}px)`;e.style.webkitMaskImage=e.style.maskImage=m};
+ const unhole=e=>{e.style.webkitMaskImage=e.style.maskImage=''};
+ const rings=[];
+ for(let k=0;k<N;k++){const r0=Math.max(0,R*k/N-2),r1=k===N-1?R+3:R*(k+1)/N+2,w=document.createElement('div');
+  w.className='rvring';w.style.cssText=`position:fixed;inset:0;z-index:${50+N-k};pointer-events:none;transform-origin:${cx}px ${cy}px`;
+  const f=k===N-1?2:5,m=`radial-gradient(circle at ${cx}px ${cy}px, transparent ${Math.max(0,r0-4)}px, #000 ${r0+4}px, #000 ${r1-f}px, transparent ${r1+(k===N-1?0:3)}px)`;w.style.webkitMaskImage=w.style.maskImage=m;
+  src.forEach(e=>{const c=e.cloneNode(true);c.removeAttribute('id');c.querySelectorAll('[id]').forEach(x=>x.removeAttribute('id'));c.style.animation='none';w.appendChild(c);
+   const oc=e.querySelectorAll('canvas'),cc=c.querySelectorAll('canvas');cc.forEach((x,n)=>{try{x.getContext('2d').drawImage(oc[n],0,0)}catch(_){}})});
+  document.body.appendChild(w);w.querySelectorAll('.page').forEach((c,n)=>{const o=src.filter(e=>e.classList.contains('page'))[n];if(o)c.scrollTop=o.scrollTop});
+  rings.push(w)}
+ src.forEach(e=>hole(e,R));
+ /* края экрана слегка тянет к центру и затемняет у кромки воронки */
+ src.forEach(e=>{const b=e.getBoundingClientRect();e.style.transformOrigin=`${cx-b.left}px ${cy-b.top}px`;
+  e.animate([{transform:'none',filter:'none'},{transform:'scale(.965) rotate(4deg)',filter:'brightness(.7)',offset:.8},{transform:'scale(.98) rotate(2deg)',filter:'brightness(.85)'}],{duration:T1+T2,easing:'cubic-bezier(.5,0,.8,.5)',fill:'forwards'})});
+ /* кольца: внутренние раньше и быстрее, с растяжкой по кругу (вращение растёт к центру) */
+ rings.forEach((w,k)=>{const q=k/(N-1),d=q*T1*.3,du=T1-d,spin=(1-q)*620+220;
+  w.animate([{transform:'none',filter:'none'},{transform:`rotate(${spin*.22}deg) scale(${.9-.3*(1-q)})`,filter:'blur(0px) brightness(.92)',offset:.4},{transform:`rotate(${spin*.6}deg) scale(${.5-.3*(1-q)})`,filter:'blur(1.2px) brightness(.72)',offset:.75},{transform:`rotate(${spin}deg) scale(.004)`,filter:'blur(3px) brightness(.5)'}],{duration:du,delay:d,easing:'cubic-bezier(.42,0,.8,.7)',fill:'both'})});
+ /* тёмные струи затягивает по спирали */
+ for(let i=0;i<34;i++){const a0=RN(0,6.283),r0=R*RN(.7,1.3),dl=RN(0,.35);spawn({x:cx,y:cy,m:T1/1000,s:RN(1.6,3),c:'rgba(8,10,16,.85)',tick:(p,dt)=>{const q=Math.max(0,Math.min(1,(p.l-dl*T1/1000)/((1-dl)*T1/1000))),e=q*q*q,r=r0*(1-e),a=a0+e*6;p.vx=p.vy=0;p.x=cx+Math.cos(a)*r;p.y=cy+Math.sin(a)*r}})}
+ /* всплеск в точке: вспышка, кольцо и очень много перьев во все стороны, вразнобой, за края экрана */
+ setTimeout(()=>{spawn({k:'flash',x:cx,y:cy,s:90,gr:.9,m:.28,c:'rgba(169,201,234,.55)',add:1});spawn({k:'ring',x:cx,y:cy,r0:4,r1:Math.max(W,H)*.8,m:.55,c:'#0a0e14',w:6,fp:1});
+  const n=RN(80,100)|0;for(let i=0;i<n;i++)setTimeout(()=>{const f=feather(cx+RN(-6,6),cy+RN(-6,6),{a:RN(0,6.283),v:RN(900,2500),fl:H+700,m:RN(.9,1.5),z:RN(.6,1.4),av:RN(-28,28),u:0,roll:0});if(f){f.kd=.004;f.G=120}},RN(0,220)|0);
   bigShake()},T1+T2*.3);
+ /* разворот обратно: из точки, внутренние кольца первыми, с обратным закручиванием */
+ setTimeout(()=>{rings.forEach((w,k)=>{const q=k/(N-1),spin=(1-q)*300+200;w.getAnimations().forEach(a=>a.cancel());
+   w.animate([{transform:`rotate(${-spin}deg) scale(.004)`,filter:'blur(3px) brightness(1.6)'},{transform:`rotate(${-spin*.08}deg) scale(1.03)`,filter:'blur(.4px) brightness(1.12)',offset:.78},{transform:'none',filter:'none'}],{duration:T3-q*120,delay:q*90,easing:'cubic-bezier(.15,.75,.3,1)',fill:'both'})});
+  src.forEach(e=>{e.getAnimations().forEach(a=>{if(a.effect&&a.effect.getKeyframes().some(f=>/scale\(\.965/.test(f.transform||'')))a.cancel()});e.animate([{transform:'scale(.98) rotate(2deg)',filter:'brightness(.85)'},{transform:'none',filter:'none'}],{duration:T3*.7,easing:'cubic-bezier(.2,.8,.3,1)'})});
+  setTimeout(()=>{src.forEach(e=>{unhole(e);e.style.transformOrigin=''});rings.forEach(w=>w.remove())},T3+90)},T1+T2);
  if(S.level>=3)setTimeout(()=>{for(let i=0;i<5;i++)glint(cx+RN(-60,60),cy+RN(-60,60),RN(6,9),{m:.6,c:'#cfe3f7'})},T1+T2+T3*.7)};
 
 
@@ -5516,7 +5537,7 @@ QMAP.prep=['cast'];QMAP.myspells=['cast'];addQ('prep',['cast']);addQ('myspells',
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-27-23';
+const BUILD='aradia-2026-11-27-24';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
