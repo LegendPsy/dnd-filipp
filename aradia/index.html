@@ -1440,6 +1440,9 @@ body.beast .lvup{display:none}
 /* следы эффекта призыва */
 .sring{position:fixed;z-index:120;pointer-events:none;border-radius:50%;border:2px solid currentColor;box-shadow:0 0 18px currentColor,inset 0 0 18px currentColor;opacity:0}
 
+.rst{display:flex;flex-direction:column;gap:8px;margin-top:6px;padding-top:10px;border-top:1px solid var(--line)}
+.rst .go{border:1px solid var(--line);font-weight:500}.rst p{margin:0;color:var(--mute);font-size:13.5px;line-height:1.35;text-align:center}
+.rstq{display:flex;flex-direction:column;gap:8px}.rstq[hidden]{display:none}.rst .go.rsty{border-color:var(--red2,#d0656f);color:#f6dfe1;background:linear-gradient(160deg,rgba(120,20,38,.55),rgba(50,10,20,.6))}
 </style>
 </head>
 <body>
@@ -6070,10 +6073,39 @@ function sumHosFx(){const b=document.querySelector('.tabs [data-p="p-sum"]');ren
 /* старые сохранения: призванных ещё не было */
 if(S.sum&&(!S.sum.list||!S.sum.list.length||!SUMC[S.sum.list[0].key]))S.sum=null;
 
+/* =====================================================================
+   СБРОС ДО БАЗОВОГО 2 УРОВНЯ (кнопка внизу «Правки листа», с подтверждением)
+   Возвращает уровень, характеристики, хиты, навыки, черты, заклинания и ячейки как при создании (DEFAULT, KNOWN),
+   снимает облики, концентрацию, призванных, обнуляет траты отдыха и историю повышений.
+   НЕ трогает: инвентарь, экипировку, деньги, языки, характер, зверей Дикого облика, счётчик частых заклинаний.
+   Перед сбросом весь лист кладётся в localStorage SKEY+'-bak': кнопка «Вернуть как было до сброса».
+   ===================================================================== */
+const RBAK=SKEY+'-bak';
+function hasBak(){try{return !!localStorage.getItem(RBAK)}catch(e){return false}}
+function resetBase(){try{localStorage.setItem(RBAK,JSON.stringify(S))}catch(e){}
+ const D=structuredClone(DEFAULT);
+ ['level','ab','saves','skills','hp','speed','feats','luck','chaos'].forEach(k=>S[k]=D[k]);
+ S.hd={die:D.hd.die,used:0};S.wild={max:D.wild.max,used:0};S.raven={max:D.raven.max,used:0};
+ S.known=[...KNOWN];S.slots={max:3,used:0,extra:0};S.hi={};delete S.omen;S.lvHist=[];
+ if(S.chart)S.chart.used=0;S.conc=null;S.wf=null;S.star=null;S.sum=null;S.exh=0;S.death={s:0,f:0};
+ save();$('sheet').classList.remove('on');closeDrawer();renderAll();fit();vib([30,20,10]);
+ if(!RM)$('cl').animate([{transform:'translateY(-4px)',opacity:.3},{transform:'none',opacity:1}],{duration:400,easing:'ease-out'})}
+function resetUndo(){let b=null;try{b=localStorage.getItem(RBAK)}catch(e){}if(!b)return;
+ try{localStorage.setItem(SKEY,b);localStorage.removeItem(RBAK)}catch(e){}location.reload()}
+{const _es=editSheet;editSheet=function(){_es();const f=$('form');
+ f.insertAdjacentHTML('beforeend',`<div class="rst"><button class="go" type="button" id="rstBtn">Сбросить до базового 2 уровня</button>
+  <div class="rstq" hidden><p>Уровень, характеристики, хиты, навыки, черты, заклинания и ячейки станут как при создании Арадии (2 уровень). Инвентарь, деньги, языки, характер и звери останутся.</p>
+  <button class="go rsty" type="button" id="rstYes">Да, сбросить до 2 уровня</button><button class="go" type="button" id="rstNo">Не сбрасывать</button></div>
+  ${hasBak()?'<button class="go" type="button" id="rstBack">Вернуть лист как был до сброса</button>':''}</div>`);
+ $('rstBtn').onclick=()=>{$('rstBtn').hidden=true;f.querySelector('.rstq').hidden=false;vib(10)};
+ $('rstNo').onclick=()=>{$('rstBtn').hidden=false;f.querySelector('.rstq').hidden=true};
+ $('rstYes').onclick=resetBase;
+ if($('rstBack'))$('rstBack').onclick=resetUndo}}
+
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-27-27';
+const BUILD='aradia-2026-11-27-28';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
