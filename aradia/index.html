@@ -1324,6 +1324,16 @@ body.beast .lvup{display:none}
 .fold .ft{flex:1;font:600 16.5px/1.2 "Playfair Display",serif;color:var(--ink)}
 .fold em{font:400 12.5px/1 Spectral,serif;color:var(--mute);font-style:normal}
 .fbody[hidden]{display:none}
+.atk.pair{display:grid!important;grid-template-rows:1fr 1fr;grid-template-columns:1fr;padding:0!important;gap:0;background:none!important;border:0!important;box-shadow:none!important}
+.atk.pair>button{display:flex;flex-direction:column;gap:2px;text-align:left;padding:4px 9px;justify-content:center;border:1px solid rgba(240,196,122,.28);background:linear-gradient(160deg,rgba(45,37,31,.92),rgba(34,28,24,.92));min-width:0}
+.atk.pair>button:first-child{border-radius:12px 12px 0 0}
+.atk.pair>button.plain{border:1px dashed var(--line);border-top:0;border-radius:0 0 12px 12px;background:var(--bg2)}
+.atk.pair>button b{color:var(--ink);font-size:13.5px!important;line-height:1.1}.atk.pair .hit{display:flex;align-items:baseline;gap:5px;flex-wrap:nowrap;white-space:nowrap}.atk.pair .hit .d{font-size:17px}.atk.pair .hit .dm{font-size:11.5px}.atk.pair>button small{color:var(--mute);font-size:11px;line-height:1.15}
+.atk.pair>button.off{opacity:.45}
+.fnar{grid-column:1/-1;display:flex;gap:6px}
+.fnar .fc{flex:1 1 0;min-width:0;display:flex;flex-direction:row;align-items:center;gap:7px;padding:5px 10px;min-height:40px}
+.fnar .fc .t{flex:1;min-width:0;font-size:14.5px;line-height:1.1;text-align:left}.fnar .fc .t small{display:block;font-size:11px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fnar .fc .rsimg{width:28px;height:28px}.fnar .fc .d{font:600 18px/1 "Playfair Display",serif;color:var(--gold)}.fnar .fc.off{opacity:.45}
 /* ===== призванные существа: шестая вкладка, окно выбора, броски стаей ===== */
 .tabs.six{grid-template-columns:repeat(6,1fr)}
 .tabs.six .ti{width:44px;height:44px}.tabs.six .fc2{width:36px;height:36px}
@@ -4575,14 +4585,15 @@ renderFight=function(){
   const scard=k=>{const p=SPELLS[k],off=(p.lv&&!firstC(p.lv)&&!(k==='guiding_bolt'&&chartLeft()))||!canPay(p)||na;
    return `<button class="atk @C ${off?'off':''}" data-info="sp_${k}"><b${!p.n.includes(' ')&&p.n.length>12?' class="lw"':''}>${rn(p)}${p.n}</b>${p.atk?`<div class="hit"><span class="d">${sg(spellAtk())}</span><span class="dm">${p.hit()}</span></div>`:p.heal?`<div class="hit"><span class="dm">лечит ${p.heal.n}к${p.heal.s}${sg(mod(S.ab.wis))}</span></div>`:`<div class="hit"><span class="dm">${p.short}</span></div>`}<small>${p.lv?(p.where||'')+' · тратит ячейку':'заговор · '+(p.where||'')}${costTag(p)}</small></button>`};
   const acts=fs.filter(k=>!isB(k)).map(scard);
-  acts.push(card('w_scim','Скимитар',sg(scimHit()),'урон 1к6'+sg(scimAb()[1]),'5 футов, рубящий',`steel ${na?'off':''}`));
-  acts.push(card('actions','Другие действия',null,null,'Рывок, Отход, Уклонение, Помощь, Засада, Поиск','plain'));
+  /* Скимитар и Другие действия делят одну плитку (просьба Алексея: место под 8 заклинаний) */
+  acts.push(`<div class="atk @C pair"><button class="steel ${na?'off':''}" data-info="w_scim"><b>Скимитар</b><div class="hit"><span class="d">${sg(scimHit())}</span><span class="dm">1к6${sg(scimAb()[1])}</span></div></button><button class="plain" data-info="actions"><b>Другие действия</b></button></div>`);
   $('fAct').className='fgrid'+(acts.length>4?' c3x':'');$('fAct').innerHTML=acts.join('').replace(/@C/g,acts.length>4?'cmp':'');
   const re=fs.filter(isB).map(scard);
   if(starOn('archer'))re.unshift(card('st_archer','Лучник',sg(spellAtk()),starDie()+'к8'+sg(mod(S.ab.wis)),'бонусное действие, 60 футов','on'));
-  re.push(card('raven','Королева воронов',null,'телепорт 30 футов',S.raven.used>=S.raven.max?'потрачено до долгого отдыха':'бонусное действие',S.raven.used>=S.raven.max?'off':''));
-  re.push(card('opp','Удар вслед',sg(scimHit()),'скимитаром','реакция',`steel ${na?'off':''}`));
-  $('fRe').className='fgrid c3';$('fRe').innerHTML=re.join('').replace(/@C/g,re.length>3?'cmp':'');
+  /* Королева воронов и Удар вслед узкими строками, как на «Персонаже» */
+  const rl=S.raven.max-S.raven.used;
+  const nar=`<div class="fnar"><button class="fc ${rl?'':'off'}" data-info="raven"><img class="rsimg" src="art/t-raven.webp" alt=""><div class="t">Королева воронов<small>${rl?'телепорт 30 футов':'потрачено до отдыха'}</small></div><div class="ch">${Array.from({length:S.raven.max},(_,i)=>`<span class="star ${i<rl?'':'off'}"></span>`).join('')}</div></button><button class="fc ${na?'off':''}" data-info="opp"><span class="d">${sg(scimHit())}</span><div class="t">Удар вслед<small>скимитаром, реакция</small></div></button></div>`;
+  $('fRe').className='fgrid c3';$('fRe').innerHTML=re.join('').replace(/@C/g,re.length>3?'cmp':'')+nar;
   const wl=S.wild.max-S.wild.used;
   $('fFormH').innerHTML=`Облики<i></i><button class="pick" data-info="wild">Дикий облик <span class="wst">${Array.from({length:S.wild.max},(_,i)=>`<span class="star ${i<wl?'':'off'}"></span>`).join('')}</span></button>`;
   $('fForm').className='fform';
@@ -5603,7 +5614,7 @@ Object.assign(CWF,{call_lightning:'bolt',conjure_animals:'summon',daylight:'sun'
    «все заклинания ›» = INFO.myspells: все подготовленные, нажатие сразу открывает заклинание (sp_), в нём кнопка назад к списку.
    После «Отдохнуть до утра» открывается INFO.prep: подготовка заклинаний на день, «!» = цитата dnd.su (QUOTE.cast).
    ===================================================================== */
-const FMAX=7,SMAX=6;
+const FMAX=8,SMAX=6;
 function spAuto(kind,max){const c=useGet().cast||{},pref=kind==='fight'?S.fSpellShow:S.smagShow,keys=known().filter(k=>SPELLS[k]&&SPELLS[k][kind]);
  const rank=k=>{const i=(pref||[]).indexOf(k);return i>=0?i:100+SPELLS[k].lv*10};
  return keys.sort((a,b)=>(c[b]||0)-(c[a]||0)||rank(a)-rank(b)||SPELLS[a].n.localeCompare(SPELLS[b].n,'ru')).slice(0,max)}
