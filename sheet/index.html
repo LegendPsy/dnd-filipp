@@ -823,6 +823,102 @@ body:has(#p-equip.on) .bgart{opacity:.18;transition:opacity .3s}
 .cdrop{position:fixed;z-index:400;width:18px;height:18px;pointer-events:none}.cdrop .c{width:18px;height:18px;display:block}
 .atk small .gpc{font-size:11px}
 .how.why{border-left-color:var(--red2);background:rgba(224,72,94,.09)}.how.why .wt{display:block;color:var(--red2);font:700 15px/1.2 "Cormorant Garamond",serif;letter-spacing:.03em;margin-bottom:3px}.how.why div+div{margin-top:5px}
+/* ===== повышение уровня ===== */
+.facew{position:relative;flex:none;display:block}
+.lvup{position:absolute;right:-7px;bottom:-5px;width:23px;height:23px;border-radius:50%;display:grid;place-items:center;z-index:2;color:#2a1606;
+ background:radial-gradient(circle at 34% 28%,#fffaf0 0,#ffe3a0 26%,#f0b445 60%,#9a5e14 100%);
+ box-shadow:0 0 0 2px #0b080c,0 0 9px rgba(255,200,90,.85),0 0 22px rgba(255,170,60,.4);transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
+.lvup::before{content:'';position:absolute;inset:-12px;border-radius:50%}
+.lvup svg{width:13px;height:13px;filter:drop-shadow(0 1px 0 rgba(255,250,230,.6))}
+.lvup:active{transform:scale(.8)}
+.lvup.max{display:none}
+.head .who{text-align:left;display:block;min-width:0}
+.lvl{position:fixed;inset:0 0 calc(-1*var(--gap)) 0;z-index:96;display:none;background:rgba(6,4,8,.92)}
+.lvl.on{display:block}
+.lvc{position:absolute;inset:0;max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:10px;padding:calc(14px + env(safe-area-inset-top)) 14px calc(12px + var(--sb) + var(--gap));
+ background:radial-gradient(130% 55% at 50% -5%,rgba(233,189,108,.16),transparent 62%),linear-gradient(175deg,#1d1520,#0e0a10)}
+.lvtop{flex:none;display:flex;align-items:center;gap:10px}
+.lvsteps{flex:1;display:flex;gap:5px}
+.lvsteps i{flex:1;height:4px;border-radius:3px;background:rgba(236,228,216,.12)}
+.lvsteps i.d{background:var(--gold)}
+.lvsteps i.c{background:linear-gradient(90deg,var(--gold),#fff3cf);box-shadow:0 0 8px rgba(233,189,108,.6)}
+.lvx{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);color:var(--mute);font-size:15px}
+.lvmain{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:10px}
+.lvhd .lvk{font:600 11px/1 Alegreya,serif;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.lvhd h2{font:600 28px/1.05 "Cormorant Garamond",serif;margin:5px 0 3px}
+.lvhd p{margin:0;color:var(--mute);font-size:14px;line-height:1.3}
+.lvbody{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:10px}
+.lvbody .how{background:rgba(233,189,108,.07);border-left:3px solid var(--gold);border-radius:8px;padding:8px 10px;font-size:14px;line-height:1.35;color:#ddd3c4}
+.lvbody .how b{color:var(--gold2);font-weight:500}
+.lvbig{display:flex;align-items:center;justify-content:center;gap:14px;padding:4px 0 2px;color:var(--gold)}
+.lvbig span{font:700 64px/1 "Cormorant Garamond",serif}
+.lvbig .o{color:rgba(236,228,216,.35)}
+.lvbig .n{color:var(--gold2);text-shadow:0 0 24px rgba(233,189,108,.45)}
+.lvbig svg{width:40px;height:16px}
+.lvbig.sm{flex-direction:column;gap:0}.lvbig.sm .lt{font:italic 500 16px/1 "Cormorant Garamond",serif;color:var(--mute)}
+.lvlist{flex:1 1 auto;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.22)}
+.lvlist.plain{flex:0 1 auto;background:rgba(20,15,22,.6)}
+.lvi{display:flex;gap:10px;align-items:baseline;padding:8px 12px;border-top:1px solid var(--line);font-size:15px;line-height:1.3;width:100%;text-align:left}
+.lvi:first-child{border-top:0}
+.lvi .ic{flex:none;width:20px;text-align:center;color:var(--gold);font:700 15px/1 "Cormorant Garamond",serif}
+.lvi b{color:var(--ink);font-weight:600}.lvi small{color:var(--mute);font-size:13px}
+.lvi.btn:active{background:#2a1f2c}
+.lvrow{display:flex;align-items:center;gap:10px;padding:9px 12px;width:100%;text-align:left;border-top:1px solid var(--line);transition:background .12s}
+.lvrow:first-child{border-top:0}
+.lvrow:active{background:#2a1f2c}
+.lvrow .box{flex:none;display:grid;place-items:center;width:21px;height:21px;border:1.5px solid #6f6458;border-radius:6px;font-style:normal;font-size:13px;color:#1a1310}
+.lvrow.on .box{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px rgba(233,189,108,.5)}
+.lvrow .box.stamp{animation:bstamp .28s cubic-bezier(.3,1.8,.5,1)}
+.lvrow .tx{flex:1;min-width:0}
+.lvrow .tx b{display:block;font-size:16px;font-weight:500;color:var(--ink)}
+.lvrow .tx small{display:block;font-size:12.5px;color:var(--mute);line-height:1.25}
+.lvrow em{flex:none;font-style:normal;font-size:11px;color:var(--violet)}
+.lvrow em .cpips{display:inline-flex;gap:2px}.lvrow em .charge{width:9px;height:9px}
+.lvrow.dis{opacity:.42}
+.lvrow.on{background:rgba(233,189,108,.07)}
+.lvgh{font:600 12px/1 Alegreya,serif;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);padding:10px 12px 6px;position:sticky;top:0;background:#151017;z-index:1;margin-top:6px}
+.lvgh small{text-transform:none;letter-spacing:0;color:var(--mute);font-weight:400;margin-left:6px}
+.lvlist .lvgh:first-child{margin-top:0}
+.lvlist .lvgh{border-bottom:1px solid var(--line)}
+.drawer .lvgh{position:static;background:none;padding:12px 4px 6px;border:0}
+.lvdet{flex:0 0 auto;max-height:36%;overflow:auto;border:1px solid rgba(233,189,108,.22);border-radius:14px;padding:10px 12px;background:rgba(233,189,108,.045);font-size:14.5px;line-height:1.42;color:#ddd3c4}
+.lvdet p{margin:0 0 7px}.lvdet b{color:var(--gold2);font-weight:500}.lvdet .mu{color:var(--mute);font-size:13px}.lvdet .sm{margin-bottom:6px}
+.lvdet .dh2{font:600 19px/1.1 "Cormorant Garamond",serif;color:var(--ink);margin-bottom:4px}
+.lvdet .how{background:rgba(233,189,108,.07);border-left:3px solid var(--gold);border-radius:8px;padding:6px 9px;margin:4px 0}
+.lvcards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lvcards.c5{grid-template-columns:repeat(3,1fr)}
+.lvcard{display:flex;flex-direction:column;align-items:center;gap:5px;padding:16px 10px 14px;border-radius:16px;border:1px solid rgba(233,189,108,.25);background:linear-gradient(165deg,rgba(40,29,40,.95),rgba(20,14,22,.95));text-align:center;transition:transform .14s cubic-bezier(.3,1.6,.5,1),border-color .15s,box-shadow .15s}
+.lvcard:active{transform:scale(.96)}
+.lvcard .big{font:700 40px/1 "Cormorant Garamond",serif;color:var(--gold2);display:flex;align-items:center;gap:4px}
+.lvcard .big .d20{width:30px;height:30px;opacity:.9}
+.lvcard b{font-size:16px;font-weight:600}
+.lvcard small{font-size:12.5px;color:var(--mute);line-height:1.25}
+.lvcard.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 0 22px rgba(233,189,108,.28);background:linear-gradient(165deg,rgba(70,50,36,.95),rgba(28,19,20,.95))}
+.lvcard:disabled:not(.on),.lvcard.dis{opacity:.38}
+.lvcard.sm{padding:13px 6px}
+.lvcard.wide{flex:none;flex-direction:row;justify-content:flex-start;gap:10px;padding:12px 14px;text-align:left}
+.lvres{display:flex;align-items:baseline;justify-content:center;gap:10px;padding:10px;border-radius:14px;background:rgba(134,199,156,.08);border:1px solid rgba(134,199,156,.35)}
+.lvres b{font:700 44px/1 "Cormorant Garamond",serif;color:var(--green)}
+.lvres .k{font-size:13.5px;color:var(--mute)}
+.lvpts{display:flex;align-items:center;justify-content:center;gap:10px;font:italic 500 16px "Cormorant Garamond",serif;color:var(--mute)}
+.lvpts .ch{display:flex;gap:6px}.lvpts .charge{width:16px;height:16px}
+.lvab{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.lvt{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px 7px;border-radius:12px;background:linear-gradient(170deg,var(--paper),var(--paper2));color:var(--paperInk);transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
+.lvt img{width:56px;height:56px;image-rendering:pixelated}
+.lvt .nm{font-size:13px}
+.lvt .v b{font:700 22px/1 "Cormorant Garamond",serif}.lvt .v small{color:var(--paperMute);font-weight:600}
+.lvt .plus{position:absolute;top:5px;right:6px;font:700 17px/1 "Cormorant Garamond",serif;color:#fff8e6;background:radial-gradient(circle at 35% 30%,#fff3cf,#e9a93a 65%,#8d5a14);border-radius:999px;padding:3px 6px;box-shadow:0 0 10px rgba(233,169,58,.7)}
+.lvt.on{box-shadow:0 0 0 2px var(--gold),0 0 18px rgba(233,189,108,.45)}
+.lvt.dis{filter:grayscale(.8) brightness(.55)}
+.lvt .why{position:absolute;top:6px;left:0;right:0;font-size:10.5px;color:var(--blood);font-weight:700}
+.lvtok{position:fixed;left:0;top:0;width:15px;height:15px;margin:-7.5px 0 0 -7.5px;z-index:140;pointer-events:none;border-radius:3px;background:radial-gradient(circle at 35% 30%,#fff6da,#f6d58e 45%,#c58a2c);box-shadow:0 0 12px #e9bd6c}
+.lvnav{flex:none;display:flex;gap:8px}
+.lvnav button{flex:1;border-radius:14px;padding:14px;font-weight:700;font-size:16px;background:var(--gold);color:#1b1208;transition:transform .12s cubic-bezier(.3,1.6,.5,1),opacity .15s}
+.lvnav button:active{transform:scale(.96)}
+.lvnav button.ghost{flex:.55;background:none;border:1px solid var(--line);color:var(--ink);font-weight:500}
+.lvnav button:disabled{opacity:.35}
+.lvnav button.go{background:radial-gradient(120% 160% at 50% 0%,#fff3cf,#f0b445 55%,#a8661a);box-shadow:0 0 22px rgba(240,180,69,.45);font-size:17px}
+@media (max-height:700px){.lvhd h2{font-size:24px}.lvbig span{font-size:50px}.lvi{padding:6px 12px;font-size:14px}.lvt img{width:44px;height:44px}.lvcard{padding:12px 8px 10px}.lvcard .big{font-size:32px}.lvnav button{padding:11px}}
 </style>
 </head>
 <body>
@@ -833,8 +929,8 @@ body:has(#p-equip.on) .bgart{opacity:.18;transition:opacity .3s}
 <section class="page on" id="p-char">
  <div class="screen">
   <div class="head">
-    <button class="facebtn" id="faceBtn" aria-label="Переключить тестовый 10 уровень"><img class="face" src="art/face.webp" alt=""></button>
-    <div class="who"><h1 id="nm">Филипп</h1><div class="cls" id="cl"></div></div>
+    <span class="facew"><button class="facebtn" id="faceBtn" aria-label="Переключить тестовый 10 уровень"><img class="face" src="art/face.webp" alt=""></button><button class="lvup" id="lvBtn" aria-label="Повысить уровень"><svg viewBox="0 0 14 14"><path d="M7 1.5v11M1.5 7h11" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></span>
+    <button class="who" data-info="feats"><h1 id="nm">Филипп</h1><div class="cls" id="cl"></div></button>
     <button class="iconbtn" id="editBtn" aria-label="Изменить цифры"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/></svg></button>
   </div>
 
@@ -918,6 +1014,7 @@ body:has(#p-equip.on) .bgart{opacity:.18;transition:opacity .3s}
 
 <div class="dim" id="dim"></div>
 <div class="drawer" id="drawer"><div class="grab"></div><div id="dbody"></div></div>
+<div class="lvl" id="lvl"><div class="lvc" id="lvc"></div></div>
 <div class="roll" id="roll"><div class="shd" id="shd"></div><div class="die" id="die"></div><div class="res" id="res"></div></div>
 <div class="sheetbg" id="sheet"><form id="form"></form></div>
 <div class="toast" id="toast"></div>
@@ -960,6 +1057,7 @@ function condFx(spec){const dis=[],adv=[];let fail=null;const C=S.cond||{},kind=
   if(kind==='save'&&ab==='dex'&&f.svdex==='dis')dis.push(n);
   if(kind==='save'&&(ab==='str'||ab==='dex')&&f.fail)fail=n}
  if(S.conc==='friends'&&kind==='check'&&ab==='cha')adv.push('Дружба');
+ if(spec.conc&&hasFeat('war_caster'))adv.push('Боевой заклинатель');
  const e=S.exh||0;if(e>=1&&kind==='check')dis.push('Истощение');if(e>=3&&(kind==='atk'||kind==='save'))dis.push('Истощение');
  return{dis,adv,fail}}
 function effSpeed(){const C=S.cond||{},e=S.exh||0;if(e>=5||Object.keys(C).some(k=>C[k]&&COND[k]&&COND[k].fx.spd0))return 0;return e>=2?S.speed/2:S.speed}
@@ -1014,6 +1112,51 @@ const SPELLS={
   d:()=>`<p>Тебя окутывает серебристый туман, и ты <b>телепортируешься</b> до 9 м в свободное место, которое видишь.</p><p class="mu">Это бонусное действие: в тот же ход можно ещё сотворить заговор действием. Уход телепортом не провоцирует Удар вслед.</p>`},
  hold_person:{n:'Удержание личности',lv:2,fight:1,conc:1,where:'18 м',short:'гуманоид парализован',meta:'2 круг · 1 действие · 18 м · концентрация до 1 минуты · В, С, М (кусочек железа)',
   d:()=>`<p>Выбери <b>гуманоида</b>, которого видишь в пределах 18 м. Он делает <b>спасбросок Мудрости против Сл ${spellDC()}</b>. При провале он <b>парализован</b>: не двигается, не действует, атаки по нему с преимуществом, а удар вплотную становится критическим.</p><p>В конце каждого своего хода цель снова делает спасбросок и при успехе освобождается.</p><p><b>Ячейкой выше 2 круга</b>: ещё одна цель за каждый круг выше, все в пределах 9 м друг от друга.</p>`},
+ /* ---- 2 круг чародея (PHB 2014): остальные 21 заклинание ---- */
+ alter_self:{n:'Смена обличья',lv:2,soc:1,conc:1,where:'на себя',short:'жабры, другая внешность или когти',meta:'2 круг · 1 действие · на себя · концентрация до 1 часа · В, С',
+  d:()=>`<p>Ты меняешь своё тело. Выбери один вариант. Пока заклинание длится, можешь <b>действием</b> сменить его на другой.</p><p><b>Водная адаптация.</b> У тебя появляются жабры и перепонки: дышишь под водой, плаваешь со скоростью, равной обычной.</p><p><b>Другая внешность.</b> Меняешь рост, вес, черты лица, голос, длину и цвет волос, отличительные приметы. Можешь выглядеть как существо другой расы, но строение тела остаётся твоим: ты остаёшься гуманоидом того же размера. Держится, пока не сменишь вариант.</p><p><b>Природное оружие.</b> Отращиваешь когти, клыки, шипы, рога или что-то такое. Безоружные удары ими наносят <b>1к6</b> урона (колющего, рубящего или дробящего, по виду оружия) плюс Сила. Это оружие магическое, к его атакам и урону <b>+1</b>.</p>`},
+ blindness_deafness:{n:'Глухота/слепота',lv:2,fight:1,where:'9 м',short:'цель слепнет или глохнет на минуту',meta:'2 круг · 1 действие · 9 м · 1 минута · В',
+  d:()=>`<p>Выбери существо в пределах 9 м, которое видишь. Оно делает <b>спасбросок Телосложения против Сл ${spellDC()}</b>. При провале оно <b>ослеплено</b> или <b>оглохло</b> (выбираешь ты) на 1 минуту.</p><p>В конце каждого своего хода цель повторяет спасбросок и при успехе освобождается.</p><p class="mu">Концентрации не нужно. Ячейкой 3 круга и выше: +1 цель за каждый круг выше второго.</p>`},
+ blur:{n:'Размытый образ',lv:2,fight:1,conc:1,where:'на себя',short:'атаки по тебе с помехой',meta:'2 круг · 1 действие · на себя · концентрация до 1 минуты · В',
+  d:()=>`<p>Твоё тело расплывается, колышется, как марево. Пока заклинание длится, <b>все атаки по тебе с помехой</b>.</p><p class="mu">Не действует на тех, кто видит без глаз (слепое зрение) или видит истину (истинное зрение), и на тех, кто тебя не видит вовсе.</p>`},
+ cloud_of_daggers:{n:'Облако кинжалов',lv:2,fight:1,conc:1,where:'18 м',short:'вихрь клинков, 4к4 каждому внутри',roll:{n:4,s:4,up:2,ns:1,t:'рубящего урона: тому, кто входит в облако впервые за ход или начинает там ход. Спасброска нет'},fx:'steel',meta:'2 круг · 1 действие · 18 м · концентрация до 1 минуты · В, С, М (осколок стекла)',
+  d:()=>`<p>В кубе со стороной <b>1,5 м</b> в точке до 18 м закручиваются призрачные кинжалы.</p><p>Существо, которое <b>входит в облако впервые за ход</b> или <b>начинает в нём ход</b>, получает <b>4к4 рубящего урона</b>. Спасброска нет.</p><p class="mu">Ячейкой 3 круга и выше: +2к4 за каждый круг выше второго.</p>`},
+ crown_of_madness:{n:'Корона безумия',lv:2,fight:1,conc:1,where:'36 м',short:'гуманоид бьёт того, кого укажешь',meta:'2 круг · 1 действие · 36 м · концентрация до 1 минуты · В, С',
+  d:()=>`<p>Гуманоид, которого видишь в пределах 36 м, делает <b>спасбросок Мудрости против Сл ${spellDC()}</b>. При провале он <b>очарован</b>: над головой у него появляется корона из зазубренного железа, в глазах безумие.</p><p>В каждый свой ход, <b>прежде чем двигаться</b>, он должен действием атаковать вплотную существо, которое ты мысленно укажешь (не себя). Если никого не укажешь или рядом никого нет, ходит как обычно.</p><p>Каждый свой ход ты должен тратить <b>действие</b>, чтобы удерживать его, иначе заклинание кончается. В конце каждого своего хода цель повторяет спасбросок и при успехе освобождается.</p>`},
+ darkness:{n:'Тьма',lv:2,fight:1,conc:1,where:'18 м',short:'сфера магической тьмы 4,5 м',meta:'2 круг · 1 действие · 18 м · концентрация до 10 минут · В, М (мех летучей мыши и капля смолы или уголёк)',
+  d:()=>`<p>Из точки в пределах 18 м расползается <b>магическая тьма</b>: сфера радиусом <b>4,5 м</b>, огибает углы. Сквозь неё <b>не видит даже тёмное зрение</b>, а обычный свет её не освещает.</p><p>Если наложить тьму на предмет, который ты держишь или который никто не носит, она движется вместе с ним. Накрой предмет чем-то непрозрачным (миской, шлемом), и тьма скрыта.</p><p class="mu">Если тьма задевает свет от заклинания 2 круга и ниже, тот свет гаснет.</p>`},
+ darkvision:{n:'Тёмное зрение',lv:2,where:'касание',short:'видеть в темноте 18 м, 8 часов',meta:'2 круг · 1 действие · касание · 8 часов · В, С, М (сушёная морковь или агат)',
+  d:()=>`<p>Ты касаешься согласного существа. На <b>8 часов</b> оно получает <b>тёмное зрение на 18 м</b>: в темноте видит как в сумраке, только оттенки серого.</p><p class="mu">Концентрации не нужно. Можно наложить и на себя.</p>`},
+ detect_thoughts:{n:'Обнаружение мыслей',lv:2,soc:1,conc:1,where:'на себя',short:'читать мысли того, кто рядом',meta:'2 круг · 1 действие · на себя · концентрация до 1 минуты · В, С, М (медная монетка)',
+  d:()=>`<p>Ты можешь читать мысли существ рядом. Действием выбери одно в пределах <b>9 м</b>, которое видишь: узнаёшь, <b>о чём оно сейчас думает</b>. Существа с Интеллектом 3 и ниже и те, кто не знает ни одного языка, не годятся.</p><p>В следующие ходы действием можно перейти к другому существу или <b>копнуть глубже</b>. Тогда цель делает <b>спасбросок Мудрости против Сл ${spellDC()}</b>. При провале ты понимаешь, как оно рассуждает, что чувствует и что для него сейчас важнее всего (чего боится, что любит, что ненавидит). При успехе заклинание кончается.</p><p>Когда копаешь глубже, цель <b>понимает это</b>. Если ты не переключишься, она может действием сделать проверку Интеллекта против твоей. Выиграла: заклинание кончается.</p><p>Ещё ты можешь действием почувствовать присутствие разумных существ в 9 м, которых не видишь. Мешают 60 см камня, 5 см металла, тонкий свинец или 90 см дерева.</p><p class="mu">Хорошо работает на допросе: вопросы сами направляют мысли собеседника.</p>`},
+ enhance_ability:{n:'Улучшение характеристики',lv:2,soc:1,conc:1,where:'касание',short:'преимущество на одну характеристику',meta:'2 круг · 1 действие · касание · концентрация до 1 часа · В, С, М (шерсть или перо зверя)',
+  d:()=>`<p>Ты касаешься существа и даёшь ему на час одно усиление:</p><p>• <b>Выносливость медведя</b>: преимущество на проверки Телосложения и <b>2к6 временных хитов</b> (пропадают, когда заклинание кончится).<br>• <b>Сила быка</b>: преимущество на проверки Силы, переносимый вес вдвое.<br>• <b>Грация кошки</b>: преимущество на проверки Ловкости, не получает урона от падения с 6 м и ниже, если не недееспособно.<br>• <b>Великолепие орла</b>: преимущество на проверки <b>Харизмы</b>.<br>• <b>Хитрость лиса</b>: преимущество на проверки Интеллекта.<br>• <b>Мудрость совы</b>: преимущество на проверки Мудрости.</p><p class="mu">Ячейкой 3 круга и выше: +1 цель за каждый круг выше второго.</p>`},
+ enlarge_reduce:{n:'Увеличение/уменьшение',lv:2,fight:1,conc:1,where:'9 м',short:'цель вдвое больше или меньше',meta:'2 круг · 1 действие · 9 м · концентрация до 1 минуты · В, С, М (щепотка толчёного железа)',
+  d:()=>`<p>Существо или предмет в пределах 9 м, которые видишь, <b>растут или уменьшаются</b> на минуту. Несогласное существо делает <b>спасбросок Телосложения против Сл ${spellDC()}</b>, при успехе ничего не происходит.</p><p><b>Увеличение</b>: вдвое больше во всех измерениях, в 8 раз тяжелее, на один размер крупнее. <b>Преимущество</b> на проверки и спасброски Силы. Оружие растёт вместе с ним: <b>+1к4</b> к урону.</p><p><b>Уменьшение</b>: вдвое меньше, в 8 раз легче, на один размер мельче (не меньше крошечного). <b>Помеха</b> на проверки и спасброски Силы. Урон оружия <b>−1к4</b> (не меньше 1).</p><p class="mu">Если места не хватает, цель вырастает, сколько может.</p>`},
+ gust_of_wind:{n:'Порыв ветра',lv:2,fight:1,conc:1,where:'линия 18 м',short:'ветер отталкивает на 4,5 м',meta:'2 круг · 1 действие · на себя, линия 18 м × 3 м · концентрация до 1 минуты · В, С, М (бобовое семечко)',
+  d:()=>`<p>От тебя бьёт сильный ветер: линия <b>18 м</b> длиной и <b>3 м</b> шириной.</p><p>Каждое существо, которое <b>начинает ход</b> в этой линии, делает <b>спасбросок Силы против Сл ${spellDC()}</b>. При провале его <b>отталкивает на 4,5 м</b> от тебя вдоль линии.</p><p>Идти против ветра тяжело: каждый метр к тебе стоит 2 м скорости.</p><p>Ветер разгоняет газ и туман, гасит свечи, факелы и открытый огонь. Огонь в фонаре колышется и гаснет с шансом 50%.</p><p class="mu">В следующие ходы бонусным действием можешь развернуть линию в другую сторону.</p>`},
+ invisibility:{n:'Невидимость',lv:2,soc:1,fight:1,conc:1,where:'касание',short:'невидим, пока не атакуешь',meta:'2 круг · 1 действие · касание · концентрация до 1 часа · В, С, М (ресница в смоле)',
+  d:()=>`<p>Существо, которого ты касаешься, становится <b>невидимым</b> на час вместе со всем, что на нём надето и что оно несёт.</p><p>Заклинание кончается для цели, как только она <b>атакует или творит заклинание</b>.</p><p class="mu">Невидимого всё ещё можно услышать и найти по следам. Ячейкой 3 круга и выше: +1 цель за каждый круг выше второго.</p>`},
+ knock:{n:'Открывание',lv:2,where:'18 м',short:'открыть замок, громкий стук',meta:'2 круг · 1 действие · 18 м · мгновенно · В',
+  d:()=>`<p>Выбери предмет в пределах 18 м: дверь, сундук, кандалы, навесной замок, что-то запертое. Один замок, засов или задвижка <b>открывается</b>, застрявшее отходит. Если замков несколько, открывается один.</p><p>Магический замок (Волшебный замок) не снимается, а <b>отключается на 10 минут</b>.</p><p>Раздаётся <b>громкий стук</b>, его слышно за 90 м.</p>`},
+ levitate:{n:'Левитация',lv:2,fight:1,conc:1,where:'18 м',short:'поднять существо в воздух на 6 м',meta:'2 круг · 1 действие · 18 м · концентрация до 10 минут · В, С, М (кожаная петелька или изогнутая золотая проволочка)',
+  d:()=>`<p>Существо или незакреплённый предмет весом до <b>225 кг</b> в пределах 18 м <b>поднимается в воздух</b> на высоту до 6 м и висит там. Несогласное существо делает <b>спасбросок Телосложения против Сл ${spellDC()}</b>.</p><p>Цель может двигаться, только отталкиваясь от стен и опор, как будто лезет. В свой ход ты можешь поднять или опустить её до 6 м. Если цель ты сам, двигаешься вверх и вниз своим перемещением.</p><p>Когда заклинание кончается, цель плавно опускается на землю.</p>`},
+ mirror_image:{n:'Отражения',lv:2,fight:1,where:'на себя',short:'три копии принимают удары',meta:'2 круг · 1 действие · на себя · 1 минута · В, С',
+  d:()=>`<p>Вокруг тебя появляются <b>три иллюзорные копии</b>. Они двигаются с тобой и повторяют каждое движение, так что не понять, где настоящий.</p><p>Когда тебя атакуют, брось <b>к20</b>, не попадёт ли удар в копию. Три копии: в копию на <b>6+</b>. Две: на <b>8+</b>. Одна: на <b>11+</b>.</p><p>У копии КД <b>${10+mod(S.ab.dex)}</b> (10 + Ловкость). Попадание её уничтожает. Копии гибнут только от попаданий атакой. Когда исчезнут все три, заклинание кончается.</p><p class="mu">Концентрации не нужно. Не действует на тех, кто тебя не видит, видит без глаз или видит истину.</p>`,
+  rolls:[{l:'к20: удар в копию?',s:20,t:'три копии: в копию на 6+ · две: на 8+ · одна: на 11+'}]},
+ phantasmal_force:{n:'Воображаемая сила',lv:2,fight:1,soc:1,conc:1,where:'18 м',short:'иллюзия в голове у одной цели',meta:'2 круг · 1 действие · 18 м · концентрация до 1 минуты · В, С, М (клочок шерсти)',
+  d:()=>`<p>Ты лепишь иллюзию <b>прямо в разуме</b> одного существа в пределах 18 м. Оно делает <b>спасбросок Интеллекта против Сл ${spellDC()}</b>. При провале видит предмет, существо или явление, какое придумаешь, размером не больше куба <b>3 м</b>. Видит его только цель.</p><p>Цель считает иллюзию настоящей и объясняет себе всё странное («верёвка порвалась», «мост был гнилой»). Она может действием изучить иллюзию: проверка Интеллекта (Анализ) против <b>Сл ${spellDC()}</b>. Поняла, что это обман, и заклинание для неё кончилось.</p><p>Если иллюзия может ранить (огонь, обрушенный пол, чудовище), цель получает <b>1к6 психического урона</b> каждый твой ход, пока стоит в ней или рядом с иллюзорным существом (1,5 м). Цель сама верит, что это огонь или когти.</p>`,
+  rolls:[{l:'Воображаемая сила: урон',n:1,s:6,t:'психической энергией, раз в твой ход'}]},
+ scorching_ray:{n:'Палящий луч',lv:2,fight:1,atk:1,hit:()=>'3 луча по 2к6',rays:c=>3+Math.max(0,(c||2)-2),dmg:c=>({dn:2,ds:6,t:'огнём',fx:'fire'}),where:'36 м',short:'3 огненных луча, каждый 2к6',meta:'2 круг · 1 действие · 36 м · мгновенно · В, С',
+  d:()=>`<p>Ты выпускаешь <b>три огненных луча</b> в одну или несколько целей в пределах 36 м.</p><p>Каждый луч это <b>отдельная дальнобойная атака заклинанием: к20 ${sg(spellAtk())}</b>. При попадании <b>2к6 урона огнём</b>.</p><p class="mu">Ячейкой 3 круга и выше: +1 луч за каждый круг выше второго.</p><div class="how">В приложении: после каждого луча внизу кнопка «Следующий луч». Лучи бросаются по одному.</div>`},
+ see_invisibility:{n:'Видение невидимого',lv:2,where:'на себя',short:'видеть невидимое и эфир, 1 час',meta:'2 круг · 1 действие · на себя · 1 час · В, С, М (тальк и серебряная пыль)',
+  d:()=>`<p>На час ты <b>видишь невидимых существ и предметы</b> так, будто они видимы.</p><p>Ещё ты заглядываешь на <b>Эфирный план</b>: всё, что там, выглядит призрачным и полупрозрачным.</p><p class="mu">Концентрации не нужно.</p>`},
+ shatter:{n:'Дребезги',lv:2,fight:1,where:'18 м',short:'звон 3к8, спасбросок Телосложения',roll:{n:3,s:8,up:1,t:'звуком, спасбросок Телосложения (камень, металл и кристалл с помехой)',half:1},fx:'snd',meta:'2 круг · 1 действие · 18 м · сфера радиусом 3 м · В, С, М (осколок слюды)',
+  d:()=>`<p>Из точки в пределах 18 м бьёт <b>оглушительный звон</b>. Каждое существо в сфере радиусом <b>3 м</b> делает <b>спасбросок Телосложения против Сл ${spellDC()}</b>: при провале <b>3к8 урона звуком</b>, при успехе половина.</p><p>Существа из камня, кристалла или металла делают спасбросок <b>с помехой</b>. Предметы в сфере, которые никто не держит, тоже получают урон.</p><p class="mu">Ячейкой 3 круга и выше: +1к8 за каждый круг выше второго.</p>`},
+ spider_climb:{n:'Паук',lv:2,conc:1,where:'касание',short:'ходить по стенам и потолку',meta:'2 круг · 1 действие · касание · концентрация до 1 часа · В, С, М (капля битума и паук)',
+  d:()=>`<p>Согласное существо, которого ты касаешься, на час может <b>ходить по стенам и потолку</b>, вниз головой, и руки остаются свободными.</p><p>Его скорость лазания равна обычной скорости.</p>`},
+ web:{n:'Паутина',lv:2,fight:1,conc:1,where:'18 м',short:'липкая паутина, опутывает',meta:'2 круг · 1 действие · 18 м · куб 6 м · концентрация до 1 часа · В, С, М (кусочек паутины)',
+  d:()=>`<p>Ты заполняешь куб со стороной <b>6 м</b> в пределах 18 м густой липкой паутиной. Это <b>труднопроходимая местность</b> и лёгкое укрытие от взгляда.</p><p>Паутина должна держаться за две опоры (стены, деревья) или лечь слоем на пол, стену или потолок (тогда слой 1,5 м). Если опор нет, она рушится в начале твоего следующего хода.</p><p>Существо, которое <b>начинает ход</b> в паутине или <b>входит</b> в неё, делает <b>спасбросок Ловкости против Сл ${spellDC()}</b>. При провале оно <b>опутано</b>, пока не выберется. Выбраться: действие, проверка Силы против <b>Сл ${spellDC()}</b>.</p><p>Паутина горит: куб 1,5 м сгорает за раунд, а тот, кто начинает ход в огне, получает <b>2к4 урона огнём</b>.</p>`},
  counterspell:{n:'Контрзаклинание',lv:3,fight:1,react:1,where:'18 м',short:'сорвать чужое заклинание, реакция',meta:'3 круг · реакция · 18 м · мгновенно · С',
   d:()=>`<p>Реакция: когда ты видишь, как существо в пределах 18 м <b>творит заклинание</b>.</p><p>Заклинание <b>3 круга и ниже</b> срывается без броска. Если круг выше, сделай проверку <b>Харизмы ${sg(mod(S.ab.cha))}</b> против Сл 10 + круг того заклинания. При успехе оно тоже срывается.</p><p><b>Ячейкой выше 3 круга</b>: без броска срываются заклинания до круга этой ячейки.</p>`},
  fireball:{n:'Огненный шар',lv:3,fight:1,where:'45 м',short:'спасбросок Ловкости, 8к6 огнём',roll:{n:8,s:6,up:1,t:'огнём, спасбросок Ловкости'},meta:'3 круг · 1 действие · 45 м · сфера радиусом 6 м · В, С, М (сера и гуано)',
@@ -1124,13 +1267,20 @@ const known=()=>S.known||KNOWN;
 const ROM=['','I','II','III','IV','V','VI','VII','VIII','IX'],rn=p=>p.lv?`<i class="rn">${ROM[p.lv]}</i>`:'';
 /* метамагия: tw = можно удвоить (одна цель, не на себя); twUp = на круге выше цель и так не одна; nq = нельзя ускорить */
 ['fire_bolt','chromatic_orb','hold_person','dominate_person','greater_invisibility','charm_person','friends','message','suggestion','counterspell'].forEach(k=>{if(SPELLS[k])SPELLS[k].tw=1});
-['hold_person','charm_person'].forEach(k=>{if(SPELLS[k])SPELLS[k].twUp=1});
+['blindness_deafness','crown_of_madness','darkvision','enhance_ability','enlarge_reduce','invisibility','levitate','phantasmal_force','spider_climb'].forEach(k=>{if(SPELLS[k])SPELLS[k].tw=1});
+['hold_person','charm_person','blindness_deafness','enhance_ability','invisibility'].forEach(k=>{if(SPELLS[k])SPELLS[k].twUp=1});
 ['shield','counterspell','misty_step'].forEach(k=>{if(SPELLS[k])SPELLS[k].nq=1});
-function metaOk(m,k,c){const p=SPELLS[k];if(m==='twinned')return !!p.tw&&!(p.twUp&&c&&c>p.lv);if(m==='quickened')return !p.nq;return true}
-function metaCost(m,k,c){return m==='subtle'?1:m==='quickened'?2:Math.max(1,c||SPELLS[k].lv||0)}
-const MWHY={twinned:'у этого заклинания не одна цель или цель ты сам',quickened:'оно и так творится не действием'};
-const MDO={subtle:'без слов и жестов, никто не заметит',quickened:'бонусным действием',twinned:'две цели'};
-const CAP={fireball:'спасбросок Ловкости',misty_step:'телепорт 9 м',hold_person:'гуманоид',dominate_person:'гуманоид',hypnotic_pattern:'',counterspell:'сорвать заклинание',greater_invisibility:'невидим и в атаке',shield:'к классу доспеха'};
+/* есть ли у заклинания спасбросок, урон, дистанция, длительность от минуты (для метамагии) */
+const spSave=k=>{const p=SPELLS[k];return /спасброс/i.test(p.d()+(p.roll?p.roll.t:''))},
+ spDmg=k=>{const p=SPELLS[k];return !!(p.atk||p.dmg||(p.roll&&!p.roll.pool)||p.rolls&&p.rolls.some(x=>x.n))},
+ spFar=k=>!/^(?:\d круг|заговор) · [^·]+ · на себя/.test(SPELLS[k].meta),
+ spLong=k=>/(минут|час|дн)/.test(SPELLS[k].meta.split(' · ').slice(2).join(' '))&&!/до 1 раунда|1 раунд/.test(SPELLS[k].meta);
+function metaOk(m,k,c){const p=SPELLS[k];if(m==='twinned')return !!p.tw&&!(p.twUp&&c&&c>p.lv);if(m==='quickened')return !p.nq;
+ if(m==='careful'||m==='heightened')return spSave(k);if(m==='empowered')return spDmg(k);if(m==='distant')return spFar(k);if(m==='extended')return spLong(k);return true}
+function metaCost(m,k,c){return m==='twinned'?Math.max(1,c||SPELLS[k].lv||0):META[m].cost}
+const MWHY={twinned:'у этого заклинания не одна цель или цель ты сам',quickened:'оно и так творится не действием',careful:'у него нет спасброска',heightened:'у него нет спасброска',empowered:'оно не наносит урон',distant:'оно действует только на тебя',extended:'оно длится меньше минуты'};
+const MDO={subtle:'без слов и жестов, никто не заметит',quickened:'бонусным действием',twinned:'две цели',careful:'свои проходят спасбросок сами',distant:'дистанция вдвое дальше',empowered:'перебрось слабые кубики урона',extended:'длится вдвое дольше',heightened:'одна цель с помехой на спасбросок'};
+const CAP={scorching_ray:'3 луча по 2к6',shatter:'спасбросок Телосложения',web:'опутывает',blur:'помеха по тебе',mirror_image:'3 копии',invisibility:'невидимость',cloud_of_daggers:'4к4 каждый ход',blindness_deafness:'слепота или глухота',crown_of_madness:'гуманоид',fireball:'спасбросок Ловкости',misty_step:'телепорт 9 м',hold_person:'гуманоид',dominate_person:'гуманоид',hypnotic_pattern:'',counterspell:'сорвать заклинание',greater_invisibility:'невидим и в атаке',shield:'к классу доспеха'};
 const KNOWN=['fire_bolt','friends','minor_illusion','message','shield','chromatic_orb','charm_person'];
 function renderSmag(){const list=known().filter(k=>SPELLS[k]&&SPELLS[k].soc&&S.smagShow.includes(k)),sl=S.slots;
  $('smag').innerHTML=`<div class="smh">Магия<span class="lg"> в разговоре</span><i></i><button class="dc" data-info="spelldc">сложность заклинаний ${spellDC()}</button><span class="sl" title="ячейки 1 круга">${Array.from({length:slotsTot()},(_,i)=>`<span class="charge v ${i<sl.used?'used':''}"></span>`).join('')}</span></div><div class="spl">${list.map(k=>{const p=SPELLS[k],on=S.conc===k;return `<button class="sp ${p.lv?'lv':''} ${on?'on':''} ${metaArm?(metaOk(metaArm,k,p.lv)?'mglow':'mno'):''}" data-info="sp_${k}"><b>${rn(p)}${p.n}</b><small>${on?'действует · концентрация':p.short}</small></button>`}).join('')}<button class="sp more" data-info="smagpick">${list.length?'выбрать заклинания ›':'+ выбрать заклинания для этого экрана'}</button></div>`}
@@ -1155,7 +1305,7 @@ function renderFight(){
  const em=effMax(),hp=Math.min(S.hp.cur,em),sp=effSpeed();
  $('fVit').innerHTML=`<button class="tok hp" data-hp="1"><div class="k">Хиты</div><div class="v">${hp} <small>/ ${em}</small>${S.hp.temp?` <span class="temp">+${S.hp.temp}</span>`:''}</div><div class="hpbar"><i style="width:${Math.max(0,Math.min(100,hp/em*100))}%"></i></div></button>
  <button class="tok ${S.shieldOn?'shield':''}" data-info="ac"><div class="k">Класс доспеха</div><div class="v">${effAC()}</div></button>
- <button class="tok" data-finit="1"><div class="k">Инициатива</div><div class="v">${sg(mod(S.ab.dex))}</div></button>
+ <button class="tok" data-finit="1"><div class="k">Инициатива</div><div class="v">${sg(initB())}</div></button>
  <button class="tok" data-info="move"><div class="k">Скорость</div><div class="v ${sp!==S.speed?'warn':''}">${String(sp).replace('.',',')}<small>м</small></div></button>`;
  const left=slotsLeft();
  const fs=known().filter(k=>SPELLS[k]&&SPELLS[k].fight&&S.fSpellShow.includes(k));
@@ -1177,7 +1327,7 @@ function renderFight(){
  $('fRes').innerHTML=`<div class="flexp">
   <button class="fr" data-info="slots"><span class="t">Ячейки</span><span class="sgs">${circ.map(c=>{const t=cTot(c),l=cLeft(c);return `<span class="sg ${l?'':'z'}" data-c="${c}"><span class="ch">${Array.from({length:t},(_,i)=>`<span class="charge v ${i>=l?'used':''}"></span>`).join('')}</span><i>${c} круг</i></span>`}).join('')}</span></button>
   <button class="fr frp" data-info="flex"><span class="t">Единицы чародейства <small>${L} из ${S.spt.max}</small></span><span class="ch">${pips(S.spt.max,S.spt.used,'')}</span></button>
-  ${mm.length?`<div class="fxr"><button class="lb mlb" data-info="meta">метамагия ›</button>${mm.filter(m=>m!=='twinned').map(m=>{const n=m==='subtle'?1:2;return `<button class="fq mq ${metaArm===m?'armed':''}" data-act="arm:${m}" ${L>=n||metaArm===m?'':'disabled'}>${META[m].n.split(' ')[0]} <span class="cpips">${'<i class="charge"></i>'.repeat(n)}</span></button>`}).join('')}${mm.includes('twinned')?`<button class="fq mq x2 ${metaArm==='twinned'?'armed':''}" data-act="arm:twinned" ${L>=1||metaArm==='twinned'?'':'disabled'}><b style="font:700 19px/1 &quot;Cormorant Garamond&quot;,serif">×2</b></button>`:''}</div>`:''}
+  ${mm.length?`<div class="fxr"><button class="lb mlb" data-info="meta">метамагия ›</button>${mm.filter(m=>m!=='twinned'&&META[m]).map(m=>{const n=META[m].cost;return `<button class="fq mq ${metaArm===m?'armed':''}" data-act="arm:${m}" ${L>=n||metaArm===m?'':'disabled'}>${META[m].n.split(' ')[0]} <span class="cpips">${'<i class="charge"></i>'.repeat(n)}</span></button>`}).join('')}${mm.includes('twinned')?`<button class="fq mq x2 ${metaArm==='twinned'?'armed':''}" data-act="arm:twinned" ${L>=1||metaArm==='twinned'?'':'disabled'}><b style="font:700 19px/1 &quot;Cormorant Garamond&quot;,serif">×2</b></button>`:''}</div>`:''}
  </div>
  <div class="fres4">
  <button class="fc ${chaosArmed?'armed':''}" data-info="chaos"><span class="t">Поток хаоса</span><span class="ch">${pips(S.chaos.max,S.chaos.used,'v')}</span></button>
@@ -1240,12 +1390,12 @@ const SURGE=[
  'Минуту ты и все существа в 9 м от тебя уязвимы к колющему урону.',
  'Минуту вокруг тебя звучит тихая призрачная музыка.',
  'Ты восстанавливаешь все потраченные единицы чародейства.'];
-function surgeTable(){dice({label:'Волна дикой магии: к100',n:1,s:100,fx:'chaos',after:v=>{const i=Math.min(49,Math.floor((v-1)/2)),lo=i*2+1,hi=i*2+2;let x='';
+function surgeTable(two){dice({label:'Волна дикой магии: к100'+(two?' · второй бросок':''),n:1,s:100,fx:'chaos',after:v=>{const i=Math.min(49,Math.floor((v-1)/2)),lo=i*2+1,hi=i*2+2;let x='';
  if(i===29&&S.slots.used>0){S.slots.used--;x='<div class="br">Лист уже вернул ячейку.</div>'}
  if(i===49&&S.spt.used>0){S.spt.used=0;x='<div class="br">Лист уже вернул единицы.</div>'}
  if(S.chaos.used>0){S.chaos.used=0;x+='<div class="br">Поток хаоса снова готов.</div>'}
  save();setTimeout(renderAll,50);
- return `<div class="br">строка ${String(lo).padStart(2,'0')}–${hi===100?'00':String(hi).padStart(2,'0')}</div><div class="surge">${SURGE[i]}</div>${x}`}})}
+ return `<div class="br">строка ${String(lo).padStart(2,'0')}–${hi===100?'00':String(hi).padStart(2,'0')}</div><div class="surge">${SURGE[i]}</div>${x}${S.level>=14&&!two?`<div class="br" style="color:var(--gold2)">Контролируемый хаос: бросай к100 ещё раз и выбери любой из двух эффектов</div><div class="acts"><button data-surge2>Второй бросок к100</button></div>`:two?'<div class="br" style="color:var(--gold2)">Выбери этот эффект или прошлый</div>':''}`}})}
 function deathCommit(die){const D=S.death;let msg='';
  if(die===20){S.hp.cur=Math.max(1,S.hp.cur);S.death={s:0,f:0};msg='Двадцатка! Филипп приходит в себя с 1 хитом';}
  else{if(die===1)D.f+=2;else if(die>=10)D.s++;else D.f++;
@@ -1478,7 +1628,7 @@ const mod=s=>Math.floor((s-10)/2);
 const sg=n=>(n>=0?'+':'−')+Math.abs(n);
 const prof=()=>Math.ceil(S.level/4)+1;
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let metaArm=null,twinPend=null,rollMode='norm',editing=false,chaosArmed=false,inspArmed=false,openAb=null,openInfoKey=null;
+let metaArm=null,twinPend=null,rayPend=null,rollMode='norm',editing=false,chaosArmed=false,inspArmed=false,openAb=null,openInfoKey=null;
 const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
 const d20i='<svg class="d20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 2l-5 9h10z M7 11l5 11 5-11"/></svg>';
 
@@ -1493,7 +1643,7 @@ function renderHead(){
  document.body.classList.toggle('test',TEST);$('cl').innerHTML=`<b>${S.cls}</b> · ${S.sub} · ${S.level} ур. · мастерство ${sg(prof())}`;
  const em=effMax();$('hpCur').textContent=Math.min(S.hp.cur,em);$('hpMax').textContent=em;$('hpMax').classList.toggle('warn',em<S.hp.max);$('hpTemp').textContent=S.hp.temp?'+'+S.hp.temp:'';
  $('hpBar').style.width=Math.max(0,Math.min(100,Math.min(S.hp.cur,em)/em*100))+'%';
- $('acV').textContent=effAC();$('acV').parentNode.classList.toggle('shield',!!S.shieldOn);{const sp=effSpeed();$('spV').innerHTML=`${String(sp).replace('.',',')}<small>м</small>`;$('spV').classList.toggle('warn',sp!==S.speed)}$('initV').textContent=sg(mod(S.ab.dex));
+ $('acV').textContent=effAC();$('acV').parentNode.classList.toggle('shield',!!S.shieldOn);{const sp=effSpeed();$('spV').innerHTML=`${String(sp).replace('.',',')}<small>м</small>`;$('spV').classList.toggle('warn',sp!==S.speed)}$('initV').textContent=sg(initB());
 }
 function renderAbil(){
  const p=prof();
@@ -1512,7 +1662,9 @@ function renderFate(){
 }
 const COINS=[['pp','платина',['#c9c6d4','#7c7988']],['gp','золото',['#f3cf7a','#a8761e']],['sp','серебро',['#d9d0c2','#837a6c']],['cp','медь',['#d38b55','#6e3f22']]];
 function renderCoins(){}
-function pas(k){const a={perception:'wis',insight:'wis',investigation:'int'}[k];return 10+mod(S.ab[a])+(S.skills[k]?prof():0)}
+function pas(k){const a={perception:'wis',insight:'wis',investigation:'int'}[k];return 10+mod(S.ab[a])+(S.skills[k]?prof():0)+(k!=='insight'&&hasFeat('observant')?5:0)}
+const hasFeat=k=>(S.feats||[]).some(f=>f.k===k);
+const initB=()=>mod(S.ab.dex)+(hasFeat('alert')?5:0),initBon=()=>{const b=[{l:'Ловкость',v:mod(S.ab.dex)}];if(hasFeat('alert'))b.push({l:'Бдительный',v:5});return b};
 function renderSenses(){$('senses').innerHTML=[['perception','Пассивное восприятие'],['insight','Пассивная проницат.'],['investigation','Пассивный анализ']].map(([k,n])=>`<button class="sense" data-info="senses"><b>${pas(k)}</b><span>${n}</span></button>`).join('')}
 function renderLog(){if(S.log.length>7){S.log=S.log.slice(0,7);save()}$('log').innerHTML=S.log.length?S.log.map(l=>`<div><span>${esc(l.l)}</span><b>${l.t}</b></div>`).join(''):'<div><span>Пока ни одного броска</span></div>'}
 function skAb(id){for(const k in SK)if(SK[k].some(x=>x[0]===id))return k}
@@ -1592,7 +1744,8 @@ function dice(spec){
  throwMany(faces,()=>{
   const mx=Math.max(...rolls),mn=Math.min(...rolls);
   const br=spec.s===100?`к100: десятки <b>${faces[0].v}</b> и единицы <b>${faces[1].v}</b>`:`${spec.n}к${spec.s}${spec.n>1?`<div class="chips">${rolls.map(v=>`<span class="${v===spec.s?'mx':v===1?'mn':''}">${v}</span>`).join('')}</div>`:`: <b>${rolls[0]}</b>`}${spec.k?`<div>${spec.n>1?'сумма '+sum:''} ${spec.k>0?'+':'−'} ${Math.abs(spec.k)} ${spec.kl||''}</div>`:''}`;
-  const res=$('res');res.innerHTML=`<div class="lbl">${esc(spec.label)}</div><div class="tot">${total}</div><div class="br">${br}</div>${spec.after?spec.after(total):''}<div class="hint">нажми, чтобы закрыть</div>`;
+  const bomb=S.level>=18&&spec.s<100&&/урон/.test(spec.label)&&rolls.includes(spec.s)?`<div class="br" style="color:var(--gold2)">Бомбардировка заклинаниями: кубик выпал на ${spec.s}. Раз в ход можно бросить ещё 1к${spec.s} и прибавить</div><div class="acts"><button data-bomb="${spec.s}">Бросить ещё 1к${spec.s}</button></div>`:'';
+  const res=$('res');res.innerHTML=`<div class="lbl">${esc(spec.label)}</div><div class="tot">${total}</div><div class="br">${br}</div>${spec.after?spec.after(total):''}${bomb}<div class="hint">нажми, чтобы закрыть</div>`;
   res.classList.add('on');pushLog(spec.label,total);
  },spec.fx);
 }
@@ -1760,7 +1913,7 @@ function showRes(){
   ${resExtra(used)}<div class="acts">${luckLeft&&!spec.noLuck?`<button data-luck>🍀 Везунчик: ещё к20 (осталось ${luckLeft})</button>`:''}</div><div class="hint">нажми мимо, чтобы закрыть</div>`;
  cur.final=used;res.classList.add('on');pushLog(spec.label,total);skillFx(spec,used);
 }
-function twBtn(){return twinPend?`<button data-twin style="background:linear-gradient(90deg,rgba(165,124,255,.35),rgba(233,189,108,.35));border-color:var(--gold2)">Удвоенное: атака по второй цели</button>`:''}
+function twBtn(){if(rayPend)return `<button data-ray style="background:linear-gradient(90deg,rgba(226,80,30,.35),rgba(233,189,108,.35));border-color:var(--gold2)">Следующий луч: ${rayPend.i+1} из ${rayPend.n}</button>`;return twinPend?`<button data-twin style="background:linear-gradient(90deg,rgba(165,124,255,.35),rgba(233,189,108,.35));border-color:var(--gold2)">Удвоенное: атака по второй цели</button>`:''}
 function metaShow(n,mt){const res=$('res');cur={dice:true};$('roll').classList.add('on');res.innerHTML=`<div class="lbl">${esc(n)}</div><div class="tot" style="font-size:34px;color:var(--gold2)">${esc(mt.split(':')[0])}</div><div class="br">${esc(mt.split(': ')[1]||'')}</div><div class="hint">нажми, чтобы закрыть</div>`;res.classList.add('on')}
 function resExtra(die){const sp=cur.spec;let h=sp.after?sp.after(die):'';
  if(sp.dmg){const g=sp.dmg,crit=die===20,n=crit?g.dn*2:g.dn;h+=`<div class="acts">${die===1?'':`<button class="red" data-dmg="${n}">${crit?'Крит! ':''}Попал: урон ${n}к${g.ds}${g.k?sg(g.k):''}</button>`}${twBtn()}</div>`}
@@ -1781,7 +1934,10 @@ $('roll').addEventListener('click',e=>{
  if(e.target.closest('[data-luck]')){useLuck();return}
  const p=e.target.closest('[data-pick]');if(p){const v=+p.dataset.pick+cur.bonus;cur.final=+p.dataset.pick;S.log[0]={l:cur.spec.label+' (Везунчик)',t:v};save();$('res').innerHTML=`<div class="lbl">${esc(cur.spec.label)}</div><div class="tot">${v}</div><div class="br">оставлен кубик <b>${p.dataset.pick}</b></div>${resExtra(cur.final)}<div class="hint">нажми, чтобы закрыть</div>`;vib(15);return}
  const dm=e.target.closest('[data-dmg]');if(dm){const g=cur.spec.dmg,n=+dm.dataset.dmg;lastPt={x:e.clientX,y:e.clientY};vib([20,30,40]);dice({label:`${g.n}: урон`,n,s:g.ds,k:g.k,kl:g.kl,min:0,fx:g.fx,after:()=>`<div class="br">${g.t}${n>g.dn?' · критическое попадание, кубиков вдвое':''}</div>${twinPend?`<div class="acts">${twBtn()}</div>`:''}`});return}
+ {const bb=e.target.closest('[data-bomb]');if(bb){const sd=+bb.dataset.bomb;lastPt={x:e.clientX,y:e.clientY};vib([20,30,40]);return dice({label:'Бомбардировка заклинаниями',n:1,s:sd,min:0,fx:'fire',after:()=>'<div class="br">прибавь к урону заклинания</div>'})}}
+ if(e.target.closest('[data-ray]')){const t=rayPend;if(!t)return;t.i++;if(t.i>=t.n)rayPend=null;lastPt={x:e.clientX,y:e.clientY};vib([15,30,40]);const sp=atkSpec(t.k,t.c);sp.label=sp.label.replace(': атака',`: луч ${t.i} из ${t.n}`);busy=false;return d20(sp)}
  if(e.target.closest('[data-twin]')){const t=twinPend;twinPend=null;if(!t)return;lastPt={x:e.clientX,y:e.clientY};vib([15,30,40]);const sp=atkSpec(t.k,t.c);sp.label=sp.label.replace(': атака',': вторая цель')+' · Удвоенное';busy=false;return d20(sp)}
+ if(e.target.closest('[data-surge2]')){lastPt={x:e.clientX,y:e.clientY};vib([30,20,60]);surgeTable(1);return}
  if(e.target.closest('[data-surge]')){lastPt={x:e.clientX,y:e.clientY};vib([30,20,60]);surgeTable();return}
  if(e.target.closest('.res button'))return;
  if(cur&&cur.spec&&cur.spec.commit&&!cur.done){cur.done=1;cur.spec.commit(cur.final)}
@@ -2333,9 +2489,9 @@ document.addEventListener('click',e=>{
  if(t.dataset.info)return openInfo(t.dataset.info);
  if(t.classList.contains('fq')){act(t.dataset.act);if(openInfoKey==='flex'){openInfoKey=null}setTimeout(()=>{flash('#fRes .flexp','#a57cff')},20);return}
  if(t.dataset.act)return act(t.dataset.act);
- if(t.id==='initTok')return d20({label:'Инициатива',bonus:[{l:'ЛОВ',v:mod(S.ab.dex)}],kind:'check',ab:'dex'});
+ if(t.id==='initTok')return d20({label:'Инициатива',bonus:initBon(),kind:'check',ab:'dex'});
  if(t.id==='hpTok'||t.dataset.hp)return hpSheet();
- if(t.dataset.finit)return d20({label:'Инициатива',bonus:[{l:'Ловкость',v:mod(S.ab.dex)}],kind:'check',ab:'dex'});
+ if(t.dataset.finit)return d20({label:'Инициатива',bonus:initBon(),kind:'check',ab:'dex'});
  if(t.dataset.orb){S.orbT=t.dataset.orb;save();renderFight();openInfo('sp_chromatic_orb',true);orbHit(S.orbT);vib(12);return}
  if(t.id==='editBtn')return editSheet();
 });
@@ -2387,7 +2543,7 @@ const INFO={
   <div class="how">Сейчас: <b>${inspArmed?'потрачено на следующий бросок':S.insp?'есть':'нет'}</b>.</div>`,
   acts:S.insp?(inspArmed?`<button class="ghost" data-act="inspOff">Не тратить, передумал</button>`:`<button data-act="inspUse">Потратить: следующий бросок с преимуществом</button><button class="ghost" data-act="inspGive">Отдал другому игроку</button>`):`<button data-act="inspGet">Мастер дал вдохновение</button>`}),
  short:()=>({t:'Короткий отдых',sub:'около часа',body:`<p>Час покоя: перевязать раны, поесть, отдышаться. Во время короткого отдыха можно тратить <b>кости хитов</b>, чтобы лечиться.</p>
-  <p>Везунчик, Поток хаоса и ячейки заклинаний короткий отдых <b>не возвращает</b>.</p>`,acts:`<button data-act="toHd">Открыть кости хитов</button>`}),
+  <p>Везунчик, Поток хаоса и ячейки заклинаний короткий отдых <b>не возвращает</b>.</p>`,acts:`<button data-act="toHd">Открыть кости хитов</button>`+(S.level>=20?`<button data-act="sorcRest" ${S.spt.used?'':'disabled'}>Восстановление чародейства: вернуть 4 единицы</button>`:'')}),
  long:()=>({t:'Долгий отдых',sub:'8 часов, раз в сутки',body:`<p>Не меньше <b>8 часов</b>: сон и спокойные дела. Не чаще раза в сутки. Если отдых прервал бой больше чем на час, его надо начать заново.</p>
   <p>После него возвращается:</p><p>• все <b>хиты</b><br>• половина <b>костей хитов</b> (минимум 1)<br>• все очки <b>Везунчика</b><br>• <b>Поток хаоса</b><br>• снимается 1 уровень <b>истощения</b>, если ты поел и попил<br>• все ячейки заклинаний и единицы чародейства</p>`,acts:`<button data-act="longRest">Отдохнуть до утра</button>`}),
  smagpick:()=>({t:'Заклинания на экране',sub:`галочка = показать в «Общении» · ${S.smagShow.length} из 8`,body:`<button class="bookbtn" data-info="book">Книга заклинаний: какие Филипп знает ›</button>`+known().filter(k=>SPELLS[k]&&SPELLS[k].soc).map(k=>{const sh=S.smagShow.includes(k),p=SPELLS[k];return `<button class="crow ck ${sh?'on':''}" data-sshow="${k}"><span><i class="box">${sh?'✓':''}</i>${rn(p)}${p.n}</span><small>${p.lv?'':'заговор'}</small></button>`}).join('')+`<div class="how" style="margin-top:10px">Здесь только заклинания Филиппа, которые помогают в разговоре: очарование, иллюзии, послания. Боевые (Огненный снаряд, Щит, Цветной шарик) сюда не попадают. Отметь до 8.</div>`,acts:`<button data-act="closeD">Готово</button>`}),
@@ -2435,6 +2591,7 @@ Object.keys(SPELLS).forEach(k=>INFO['sp_'+k]=()=>{const p=SPELLS[k],on=S.conc===
  else acts=`<button data-act="cast:${k}" ${p.lv&&!left?'disabled':''}>${p.lv&&!left?'Нет свободных ячеек':vb+(p.lv?` (ячеек ${left})`:'')+ct}</button>`+(p.conc&&S.conc?`<div class="mu" style="text-align:center;font-size:12.5px">прервёт ${SPELLS[S.conc].n}</div>`:'');
  if(S.hi&&p.lv&&can&&!noAct()&&!(p.conc&&on)&&!(k==='shield'&&S.shieldOn)&&!(k==='mage_armor'&&S.mArm)){const vb=k==='shield'?'Поднять Щит':p.atk?'Атаковать':'Сотворить';
   const cs=[1,...hiC()].filter(c=>c>=p.lv);acts=cs.map(c=>`<button data-act="cast:${k}:${c}" ${cLeft(c)?'':'disabled'} class="${c>p.lv?'ghost':''}">${vb}: ячейка ${c} круга${c>p.lv?' (усиленное)':''} · осталось ${cLeft(c)}${ct}</button>`).join('')+(p.conc&&S.conc?`<div class="mu" style="text-align:center;font-size:12.5px">прервёт ${SPELLS[S.conc].n}</div>`:'')}
+ if(p.rolls)acts+=p.rolls.map((x,i)=>`<button class="ghost" data-act="sproll:${k}:${i}">${x.l}${x.n?': '+x.n+'к'+x.s:''}</button>`).join('');
  return{t:rn(p)+p.n,sub:p.lv?p.meta.replace(/^\d круг · /,''):p.meta,body:offWhy(k)+p.d()+(p.react?REACT1:'')+(p.cost?compNote(p):'')+(k==='chromatic_orb'?`<div class="orbs">${ORB.map(o=>`<button class="${S.orbT===o?'on':''}" data-orb="${o}">${o}</button>`).join('')}</div>`:'')+(p.lv?`<div class="how">Ты чародей дикой магии: после заклинания 1 круга и выше мастер может попросить бросить к20. На <b>1</b> случается волна дикой магии. Ячейки возвращает долгий отдых.</div>`:'')+(metaArm?(metaOk(metaArm,k,p.lv)?`<div class="how" style="border-color:var(--gold2)"><b>Заряжено: ${META[metaArm].n}</b>. ${metaArm==='twinned'?'Две цели. Спишется столько единиц, какой круг ячейки'+(p.lv?'':' (заговор: 1)'):'Спишется '+META[metaArm].c}. ${metaArm==='twinned'&&p.twUp?'Только ячейкой '+p.lv+' круга: выше у заклинания и так несколько целей.':''}</div>`:`<div class="how"><b>${META[metaArm].n} сюда не подходит</b>: ${MWHY[metaArm]}. Заклинание сотворится без метамагии, единицы не спишутся.</div>`):'')+(k==='friends'?`<div class="how">В приложении: пока Дружба действует, все проверки Харизмы идут с преимуществом сами. Не забудь выключить, когда цель сменится или время выйдет.</div>`:''),acts}});
 
 /* полный текст заклинаний (PHB 2014, по смыслу dnd.su, ничего не упрощено) + ссылка на дословный текст */
@@ -2566,16 +2723,17 @@ function act(a){
    if(metaOk(m,k,c)&&S.spt.max-S.spt.used>=metaCost(m,k,c)){metaArm=null;S.spt.used+=metaCost(m,k,c);mt=META[m].n.split(' ')[0]+': '+MDO[m];mtw=m==='twinned';setTimeout(()=>flash('#fRes .flexp','#e9bd6c'),30)}}
   if(p.conc)S.conc=k;if(k==='shield')S.shieldOn=1;if(k==='mage_armor')S.mArm=1;save();renderAll();
   if(k==='shield'){closeDrawer();barrier();flash('#fVit .tok.shield','#a57cff');toast(`Щит: класс доспеха ${effAC()} до твоего хода. Мастер может попросить к20 на волну`);return}
-  if(p.atk){closeDrawer();const sp=atkSpec(k,c);if(c>p.lv)sp.label=sp.label.replace(': атака',` (${c} круг): атака`);if(paid)sp.label+=` · ${paid}`;if(mt)sp.label+=' · '+mt;if(mtw){twinPend={k,c};sp.label=sp.label.replace(': атака',': первая цель')}return d20(sp)}
+  if(p.atk){closeDrawer();const sp=atkSpec(k,c);if(c>p.lv)sp.label=sp.label.replace(': атака',` (${c} круг): атака`);if(paid)sp.label+=` · ${paid}`;if(mt)sp.label+=' · '+mt;if(mtw){twinPend={k,c};sp.label=sp.label.replace(': атака',': первая цель')}if(p.rays){const n=p.rays(c);rayPend=n>1?{k,c,i:1,n}:null;sp.label=sp.label.replace(': атака',`: луч 1 из ${n}`)}return d20(sp)}
   const pl=paid?`<div class="br" style="color:var(--gold2)">${paid}</div>`:'',ml=mt?`<div class="br" style="color:var(--gold2)">${mt}</div>`:'';
   if(k==='false_life'){closeDrawer();const up=Math.max(0,c-1)*5;return dice({label:`${p.n}${c>1?' ('+c+' круг)':''}: временные хиты`,n:1,s:4,k:4+up,kl:'',min:1,after:v=>{const was=S.hp.temp||0;S.hp.temp=Math.max(was,v);save();renderAll();return `<div class="br">временные хиты ${was} → <b>${S.hp.temp}</b>${was>v?' (старые больше, остаются они)':''}</div>${pl}${ml}`}})}
   if(p.roll){closeDrawer();const R=p.roll,n=(typeof R.n==='function'?R.n():R.n)+Math.max(0,c-p.lv)*(R.up||0);
-   const tx=R.pool?`${R.t}: начиная с самого слабого, пока хватает этих хитов`:R.per?`${n} стрел по 1к4 + 1, ${R.t}`:`${R.t}, сложность ${spellDC()}: ${R.half?'при успехе половина':'при успехе урона нет'}`;
+   const tx=R.ns?R.t:R.pool?`${R.t}: начиная с самого слабого, пока хватает этих хитов`:R.per?`${n} стрел по 1к4 + 1, ${R.t}`:`${R.t}, сложность ${spellDC()}: ${R.half?'при успехе половина':'при успехе урона нет'}`;
    return dice({label:`${p.n}${c>p.lv?' ('+c+' круг)':''}: ${R.pool?'запас хитов':'урон'}`,n,s:R.s,k:R.per?n:0,kl:R.per?'по +1 каждой стреле':'',min:0,fx:k==='fireball'?'fireball':p.fx||null,after:()=>`<div class="br">${tx}</div>${pl}${ml}`})}
   closeDrawer();vib([15,30,15]);castWave(k);if(mtw)setTimeout(()=>castWave(k),420);if(mt)metaShow(p.n,mt);toast(p.lv?`${p.n}: ячейка ${c} круга потрачена. Мастер может попросить к20 на волну`:p.conc?`${p.n} действует`:`${p.n} сотворено`);return}
  if(a.startsWith('buyc:')||a.startsWith('havec:')){const [w,k]=a.split(':'),p=SPELLS[k],c=p.cost;if(canPay(p))return;
   if(w==='buyc'){if(!payCp(costCp(p)))return;coinDrop(tapPt.x,tapPt.y,Math.min(9,3+Math.round(c.gp/20)));vib([10,25,10,25,30])}else vib([12,30,18]);
   S.items[c.key]=Object.assign(S.items[c.key]||{},{q:1});syncItems();save();renderAll();openInfo('sp_'+k,true);return}
+ if(a.startsWith('sproll:')){const [,k,i]=a.split(':'),x=SPELLS[k].rolls[+i];closeDrawer();vib([15,30,15]);if(x.n)return dice({label:x.l,n:x.n,s:x.s,min:0,fx:'chaos',after:()=>`<div class="br">${x.t}</div>`});return dice({label:x.l,n:1,s:x.s,min:0,after:()=>`<div class="br">${x.t}</div>`})}
  if(a==='wbolt'){closeDrawer();vib([20,30,40]);return dice({label:'Ведьмин снаряд: урон',n:1,s:12,min:0,fx:'elec',after:()=>`<div class="br">электричеством, без броска атаки</div>`})}
  if(a==='mArmOff'){S.mArm=0;re();closeDrawer();vib(10);return}
  if(a==='concEnd'){const k=S.conc;S.conc=null;save();renderAll();closeDrawer();vib(10);if(k==='friends')toast('Существо поняло, что на него влияли магией');return}
@@ -2589,7 +2747,7 @@ function act(a){
  if(a==='slot2pt'){if(!S.spt.used||!useSlot())return;S.spt.used--;re();openInfo('flex',true);vib([15,30,40]);toast('Ячейка рассыпалась в единицу чародейства');return}
  if(a==='surgeD20'){closeDrawer();return d20({label:'Проверка дикой магии',bonus:[],noLuck:1,mode:'norm',after:d=>d===1?`<div class="crit" style="color:var(--violet)">Волна дикой магии!</div><div class="acts"><button class="vio" data-surge>Бросить к100 по таблице</button></div>`:'<div class="br">Магия спокойна. Ничего не случилось</div>'})}
  if(a==='surgeD100'){closeDrawer();return surgeTable()}
- if(a==='concSave'){closeDrawer();const b=[{l:'Телосложение',v:mod(S.ab.con)}];if(S.saves.con)b.push({l:'мастерство',v:prof()});return d20({label:'Концентрация: спасбросок Телосложения',bonus:b,kind:'save',ab:'con',after:()=>'<div class="br">сложность 10 или половина урона, если больше</div>'})}
+ if(a==='concSave'){closeDrawer();const b=[{l:'Телосложение',v:mod(S.ab.con)}];if(S.saves.con)b.push({l:'мастерство',v:prof()});return d20({label:'Концентрация: спасбросок Телосложения',bonus:b,kind:'save',ab:'con',conc:1,after:()=>'<div class="br">сложность 10 или половина урона, если больше</div>'})}
  if(a==='deathRoll'){closeDrawer();return d20({label:'Спасбросок от смерти',bonus:[],kind:'save',after:d=>`<div class="br">${d===20?'Двадцатка: приходишь в себя с 1 хитом':d===1?'Единица: два провала':d>=10?'Успех':'Провал'}</div>`,commit:deathCommit})}
  if(a==='deathHit'){S.death.f=Math.min(3,S.death.f+1);re();openInfo('death',true);vib([40,30,20]);return}
  if(a==='deathReset'){S.death={s:0,f:0};re();openInfo('death',true);vib(10);return}
@@ -2606,7 +2764,7 @@ function act(a){
  if(a==='inspGive'){S.insp=0;re()}
  if(a==='toHd')openInfo('hd',true);
  if(a==='hdRoll'){if(S.hd.used>=S.level)return;S.hd.used++;save();const c=mod(S.ab.con);
-  dice({label:'Кость хитов',n:1,s:S.hd.die,k:c,kl:'ТЕЛ',min:1,after:v=>{const before=S.hp.cur;S.hp.cur=Math.min(S.hp.max,S.hp.cur+v);save();renderAll();return `<div class="br">хиты ${before} → <b>${S.hp.cur}</b></div>`}})}
+  dice({label:'Кость хитов',n:1,s:S.hd.die,k:c,kl:'ТЕЛ',min:hasFeat('durable')?Math.max(1,2*c):1,after:v=>{const before=S.hp.cur;S.hp.cur=Math.min(S.hp.max,S.hp.cur+v);save();renderAll();return `<div class="br">хиты ${before} → <b>${S.hp.cur}</b></div>`}})}
  if(a==='longRest'){if(S.exh)S.exh--;S.slots.used=0;S.slots.extra=0;hiC().forEach(c=>{S.hi[c].used=0;S.hi[c].extra=0});const dw=dawnItems();setTimeout(()=>{if(dw.length)toast('Рассвет: '+dw.join(', '))},2600);S.spt.used=0;S.shieldOn=0;S.mArm=0;S.death={s:0,f:0};S.conc=null;S.hp.cur=S.hp.max;S.hp.temp=0;S.luck.used=0;S.chaos.used=0;S.hd.used=Math.max(0,S.hd.used-Math.max(1,Math.floor(S.level/2)));save();closeDrawer();renderAll();flash('#hpTok','#86c79c');toast('Утро. Силы вернулись');vib([10,60,10])}
 }
 function hpSheet(){
@@ -2690,10 +2848,15 @@ fixGap();addEventListener('resize',()=>{fixGap();fit();wideFix();fitFight()});ad
 
 /* ---------- тестовый 10 уровень: ячейки всех кругов, метамагия, подчинение удачи ---------- */
 const META={
- subtle:{n:'Неприметное заклинание',c:'1 единица',d:'Заклинание творится <b>без вербальных и соматических компонентов</b>: ни слов, ни жестов. Никто не поймёт, что ты колдуешь. Лучший друг Внушения и Очарования посреди разговора.'},
- quickened:{n:'Ускоренное заклинание',c:'2 единицы',d:'Заклинание, которое творится за <b>1 действие</b>, ты творишь <b>бонусным действием</b>. Помни правило: тогда другим заклинанием в этот ход может быть только заговор.'},
+ careful:{n:'Осторожное заклинание',c:'1 единица',cost:1,d:()=>`Если у заклинания есть спасбросок, выбери до <b>${Math.max(1,mod(S.ab.cha))}</b> существ (столько, сколько твой модификатор Харизмы, минимум 1). Они <b>автоматически проходят</b> этот спасбросок. Огненный шар посреди своих без вреда для них.`},
+ distant:{n:'Дальнее заклинание',c:'1 единица',cost:1,d:'Заклинание с дистанцией от 1,5 м бьёт <b>вдвое дальше</b>. Заклинание «касанием» достаёт на <b>9 м</b>.'},
+ empowered:{n:'Усиленное заклинание',c:'1 единица',cost:1,d:()=>`Когда бросаешь урон заклинания, можешь <b>перебросить до ${Math.max(1,mod(S.ab.cha))}</b> кубиков урона (модификатор Харизмы, минимум 1) и взять новые значения. Единственная метамагия, которую можно добавить поверх другой.`},
+ extended:{n:'Продлённое заклинание',c:'1 единица',cost:1,d:'Заклинание, которое длится <b>1 минуту и дольше</b>, длится <b>вдвое дольше</b>, но не больше 24 часов.'},
+ heightened:{n:'Повышенное заклинание',c:'3 единицы',cost:3,d:'Одна цель заклинания делает <b>первый спасбросок против него с помехой</b>. Для Удержания личности или Внушения, когда нельзя промахнуться.'},
+ subtle:{n:'Неприметное заклинание',c:'1 единица',cost:1,d:'Заклинание творится <b>без вербальных и соматических компонентов</b>: ни слов, ни жестов. Никто не поймёт, что ты колдуешь. Лучший друг Внушения и Очарования посреди разговора.'},
+ quickened:{n:'Ускоренное заклинание',c:'2 единицы',cost:2,d:'Заклинание, которое творится за <b>1 действие</b>, ты творишь <b>бонусным действием</b>. Помни правило: тогда другим заклинанием в этот ход может быть только заговор.'},
  twinned:{n:'Удвоенное заклинание',c:'единиц столько, какой круг (заговор: 1)',d:'Заклинание, которое целится только в <b>одно существо</b> и не «на себя», получает <b>вторую цель</b> в пределах дистанции.'}};
-INFO.meta=()=>{const L=S.spt.max-S.spt.used;return{t:'Метамагия',sub:`единицы чародейства: ${L} из ${S.spt.max}`,body:`<p>Пока творишь заклинание, можешь потратить единицы чародейства и изменить его. На одно заклинание одна метамагия.</p>`+S.meta.map(m=>`<p><b>${META[m].n}</b> · ${META[m].c}<br>${META[m].d}</p>`).join('')+`<div class="how">Нажми метамагию, она загорится. Следующее заклинание получит её, а единицы спишутся в момент сотворения. Нажми ещё раз, чтобы снять.</div>`,
+INFO.meta=()=>{const L=S.spt.max-S.spt.used;return{t:'Метамагия',sub:`единицы чародейства: ${L} из ${S.spt.max}`,body:`<p>Пока творишь заклинание, можешь потратить единицы чародейства и изменить его. На одно заклинание одна метамагия.</p>`+S.meta.map(m=>`<p><b>${META[m].n}</b> · ${META[m].c}<br>${typeof META[m].d==='function'?META[m].d():META[m].d}</p>`).join('')+`<div class="how">Нажми метамагию, она загорится. Следующее заклинание получит её, а единицы спишутся в момент сотворения. Нажми ещё раз, чтобы снять.</div>`,
  acts:S.meta.map(m=>`<button data-act="arm:${m}" class="${metaArm===m?'':'ghost'}">${metaArm===m?'Снять: '+META[m].n:'Зарядить: '+META[m].n+' · '+META[m].c}</button>`).join('')}};
 INFO.bend=()=>({t:'Подчинение удачи',sub:`дикая магия, 6 уровень · единиц ${S.spt.max-S.spt.used}`,body:`<p>Когда другое существо, которое ты видишь, делает бросок атаки, проверку или спасбросок, ты можешь <b>реакцией</b> потратить <b>2 единицы чародейства</b> и бросить <b>1к4</b>.</p><p>Результат ты <b>прибавляешь или вычитаешь</b> из его броска, на выбор. Решать нужно после того, как существо бросило, но до того, как мастер сказал, что вышло.</p>`,
  acts:`<button data-act="bend" ${S.spt.max-S.spt.used>=2?'':'disabled'}>Потратить 2 единицы и бросить 1к4</button>`});
@@ -2705,6 +2868,7 @@ INFO.flex=()=>{const d=_flexInfo();if(!S.hi)return d;const L=S.spt.max-S.spt.use
  if(S.meta&&S.meta.length)d.acts=`<button data-info="meta">Метамагия ›</button>`+(S.level>=6?`<button data-info="bend">Подчинение удачи ›</button>`:'')+d.acts;
  d.body+=`<p><b>Цена ячеек выше</b>: 2 круг 3 единицы, 3 круг 5, 4 круг 6, 5 круг 7. Погасив ячейку, получаешь столько единиц, какой у неё круг.</p>`+hiC().map(c=>`<div class="slrow"><span>${c} круг</span><button data-act="pt2slotC:${c}" ${L>=FONT[c]?'':'disabled'}>${FONT[c]} единиц → ячейка</button><button data-act="slot2ptC:${c}" ${cLeft(c)&&S.spt.used>=1?'':'disabled'}>ячейка → ${c}</button></div>`).join('');return d};
 function hiAct(a){const [w,x,y]=a.split(':'),c=+x,L=S.spt.max-S.spt.used,re=k=>{save();renderAll();openInfo(k,true)};
+ if(w==='sorcRest'){S.spt.used=Math.max(0,S.spt.used-4);save();renderAll();closeDrawer();flash('#hpTok','#a57cff');vib([15,30,40]);return true}
  if(w==='slotBackC'){if(c===1){if(S.slots.used>0)S.slots.used--}else if(S.hi[c].used>0)S.hi[c].used--;re('slots');vib(10);return true}
  if(w==='pt2slotC'){if(L<FONT[c])return true;S.spt.used+=FONT[c];const h=S.hi[c];if(h.used>0)h.used--;else h.extra=(h.extra||0)+1;re('flex');vib([15,30,40]);toast(`${FONT[c]} единиц сплавлены в ячейку ${c} круга`);return true}
  if(w==='slot2ptC'){if(!useSlotC(c))return true;S.spt.used=Math.max(0,S.spt.used-c);re('flex');vib([15,30,40]);toast(`Ячейка ${c} круга рассыпалась в единицы`);return true}
@@ -2724,10 +2888,283 @@ function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip')
  setTimeout(()=>location.reload(),400)}
 {let m='';try{m=sessionStorage.getItem('filipp-tmsg')||'';sessionStorage.removeItem('filipp-tmsg')}catch(e){}
  if(m){document.querySelector('.page.on').classList.add('unflip');setTimeout(()=>toast(m==='test'?'Тестовый 10 уровень. Настоящий лист сохранён, нажми на портрет, чтобы вернуться':`Снова настоящий лист: ${S.level} уровень`),500)}}
+/* ===================== ПОВЫШЕНИЕ УРОВНЯ (PHB 2014, чародей · дикая магия) =====================
+   Кнопка «+» у портрета → пошаговое окно #lvl (по одному вопросу на экран).
+   Черновик выбора в LV, ничего не меняется в S до последней кнопки «Повысить уровень».
+   Перед повышением снимок в S.lvHist: «Вернуть прошлый уровень» в шторке «Умения и черты» (нажатие на имя). */
+const SLT=[null,[2],[3],[4,2],[4,3],[4,3,2],[4,3,3],[4,3,3,1],[4,3,3,2],[4,3,3,3,1],[4,3,3,3,2],[4,3,3,3,2,1],[4,3,3,3,2,1],[4,3,3,3,2,1,1],[4,3,3,3,2,1,1],[4,3,3,3,2,1,1,1],[4,3,3,3,2,1,1,1],[4,3,3,3,2,1,1,1,1],[4,3,3,3,3,1,1,1,1],[4,3,3,3,3,2,1,1,1],[4,3,3,3,3,2,2,1,1]];
+const ASI_L=[4,8,12,16,19],META_N={3:2,10:1,17:1},FULLN={1:20,2:24,3:20,4:10,5:11,6:10,7:8,8:5,9:5};
+const CLF=[
+ {lv:1,k:'cf_cast',n:'Колдовство',s:'заговоры и заклинания, через Харизму'},
+ {lv:1,k:'surge',n:'Волна дикой магии',s:'после заклинания мастер может попросить к20'},
+ {lv:1,k:'chaos',n:'Поток хаоса',s:'преимущество на один бросок'},
+ {lv:2,k:'flex',n:'Источник магии',s:'единицы чародейства, ячейки из единиц и обратно'},
+ {lv:3,k:'meta',n:'Метамагия',s:'меняешь заклинание за единицы чародейства'},
+ {lv:4,k:'cf_asi',n:'Улучшение характеристик',s:'на 4, 8, 12, 16 и 19 уровнях: +2 или черта'},
+ {lv:6,k:'bend',n:'Подчинение удачи',s:'реакцией 1к4 к чужому броску или из него'},
+ {lv:14,k:'cf_cchaos',n:'Контролируемый хаос',s:'на волне дикой магии бросаешь дважды и выбираешь'},
+ {lv:18,k:'cf_bomb',n:'Бомбардировка заклинаниями',s:'кубик урона на максимуме: бросаешь ещё один'},
+ {lv:20,k:'cf_rest',n:'Восстановление чародейства',s:'короткий отдых возвращает 4 единицы'}];
+INFO.cf_cast=()=>({t:'Колдовство',sub:'чародей · 1 уровень',body:`<p>Магия у тебя в крови, и ты колдуешь через <b>Харизму</b>.</p><p><b>Сложность спасброска</b> от твоих заклинаний: <b>${spellDC()}</b> (8 + мастерство ${prof()} + Харизма ${sg(mod(S.ab.cha))}).<br><b>Атака заклинанием</b>: <b>${sg(spellAtk())}</b> (мастерство + Харизма).</p><p>Заговоров ты знаешь <b>${cantKnown(S.level)}</b>, заклинаний 1 круга и выше <b>${spKnown(S.level)}</b>. Ячейки тратятся на заклинания и возвращаются после долгого отдыха.</p><p class="mu">С каждым новым уровнем можно заменить одно известное заклинание другим. Заговоры не меняются.</p>`,acts:`<button data-info="book">Книга заклинаний ›</button>`});
+INFO.cf_asi=()=>({t:'Улучшение характеристик',sub:'4, 8, 12, 16 и 19 уровни',body:`<p>На этих уровнях выбираешь одно:</p><p>• <b>+2 к характеристикам</b>: +2 к одной или +1 к двум. Выше 20 поднять нельзя.<br>• <b>Черта</b>: особое умение вместо прибавки.</p><p class="mu">Если вырастет Телосложение, максимум хитов растёт задним числом: +1 за каждый уровень на каждый +1 модификатора.</p>`});
+INFO.cf_cchaos=()=>({t:'Контролируемый хаос',sub:'дикая магия · 14 уровень',body:`<p>Когда бросаешь к100 по таблице волны дикой магии, бросаешь <b>дважды</b> и выбираешь, какой из двух эффектов случится.</p><div class="how">В приложении: под результатом волны появится кнопка «Второй бросок к100».</div>`});
+INFO.cf_bomb=()=>({t:'Бомбардировка заклинаниями',sub:'дикая магия · 18 уровень',body:`<p>Когда бросаешь урон заклинания и на каком-то кубике выпал <b>максимум</b>, можешь бросить ещё один такой кубик и прибавить к урону. <b>Раз в ход.</b></p><div class="how">В приложении: если на кубике урона выпал максимум, под итогом появится кнопка «Бросить ещё».</div>`});
+INFO.cf_rest=()=>({t:'Восстановление чародейства',sub:'чародей · 20 уровень',body:`<p>Когда заканчиваешь <b>короткий отдых</b>, возвращаешь <b>4 единицы чародейства</b>.</p>`,acts:`<button data-act="sorcRest" ${S.spt.used?'':'disabled'}>Короткий отдых закончен: +4 единицы</button>`});
+
+/* ---- черты PHB 2014. pre() → '' если можно, иначе причина. ab: какую характеристику +1 (одна = сразу, несколько = выбрать) ---- */
+const AB13=(a,n)=>()=>S.ab[a]>=13?'':`нужно ${n} 13 и выше`;
+const FEATS={
+ actor:{n:'Артистичный',ab:['cha'],s:'+1 Харизма, подражаешь голосам и людям',d:'<p><b>+1 к Харизме.</b></p><p>Преимущество на проверки Обмана и Выступления, когда выдаёшь себя за другого человека.</p><p>Подражаешь речи человека или звукам существа, которые слышал хотя бы минуту. Чтобы раскусить подделку, слушателю нужна проверка Проницательности против твоего Обмана.</p>'},
+ alert:{n:'Бдительный',s:'+5 к инициативе, тебя не застать врасплох',d:'<p><b>+5 к инициативе.</b></p><p>Пока ты в сознании, тебя нельзя застать врасплох.</p><p>Существа, которых ты не видишь, не получают из-за этого преимущества на атаки по тебе.</p>',fx:'инициатива +5 считается в листе сама'},
+ athlete:{n:'Атлетичный',ab:['str','dex'],s:'+1 Сила или Ловкость, легче лазать и прыгать',d:'<p><b>+1 к Силе или Ловкости.</b></p><p>Подняться из положения лёжа стоит всего 1,5 м перемещения.</p><p>Лазание не тратит лишнего перемещения.</p><p>Прыжок с разбега выходит после разбега всего в 1,5 м.</p>'},
+ charger:{n:'Налётчик',s:'после Рывка удар или толчок с разгона',d:'<p>Когда совершаешь Рывок, можешь бонусным действием сделать одну рукопашную атаку оружием или толкнуть существо.</p><p>Если перед этим пробежал по прямой хотя бы 3 м: <b>+5 к урону</b> атаки или толкаешь цель на 3 м.</p>'},
+ crossbow_expert:{n:'Эксперт в арбалетах',s:'арбалеты без перезарядки, стрельба вплотную',d:'<p>Перезарядка арбалета не мешает стрелять несколько раз.</p><p>Стоя вплотную к врагу (1,5 м), стреляешь без помехи.</p><p>Когда атакуешь одноручным оружием, можешь бонусным действием выстрелить из ручного арбалета.</p>'},
+ defensive_duelist:{n:'Оборонительный дуэлянт',pre:AB13('dex','Ловкость'),s:'кинжалом парируешь удар: +мастерство к КД',d:'<p>Если у тебя в руке <b>фехтовальное оружие</b>, которым ты владеешь (например, кинжал), и по тебе попадает рукопашная атака, можешь <b>реакцией</b> прибавить мастерство к КД против этой атаки. Может превратить попадание в промах.</p>'},
+ dual_wielder:{n:'Использование двух оружий',s:'+1 к КД с оружием в каждой руке',d:'<p><b>+1 к КД</b>, пока держишь по рукопашному оружию в каждой руке.</p><p>Можешь сражаться двумя оружиями, даже если они не лёгкие.</p><p>Достаёшь или убираешь два одноручных оружия за раз.</p>'},
+ dungeon_delver:{n:'Исследователь подземелий',s:'чуешь ловушки и потайные двери',d:'<p>Преимущество на Восприятие и Анализ, чтобы найти <b>потайные двери</b>.</p><p>Преимущество на спасброски от <b>ловушек</b>, сопротивление их урону.</p><p>Ищешь ловушки на обычной скорости, а не медленно.</p>'},
+ durable:{n:'Стойкий',ab:['con'],s:'+1 Телосложение, кости хитов лечат больше',d:'<p><b>+1 к Телосложению.</b></p><p>Когда тратишь кость хитов, восстанавливаешь минимум вдвое больше модификатора Телосложения (не меньше 2).</p>',fx:'минимум для костей хитов лист считает сам'},
+ elemental_adept:{n:'Стихийный адепт',rep:1,opt:'el',s:'одна стихия пробивает сопротивление',d:'<p>Выбери стихию: <b>кислота, холод, огонь, электричество или звук</b>.</p><p>Твои заклинания этой стихии <b>игнорируют сопротивление</b> к ней.</p><p>Когда бросаешь урон этой стихии, единицы на кубиках считаются <b>двойками</b>.</p><p class="mu">Можно брать несколько раз, каждый раз другую стихию.</p>'},
+ grappler:{n:'Борец',pre:AB13('str','Сила'),s:'держишь и прижимаешь схваченных',d:'<p>Преимущество на атаки по существу, которое ты держишь в захвате.</p><p>Действием можешь прижать схваченное: ещё одна проверка захвата. Успех: вы оба опутаны, пока захват не кончится.</p>'},
+ great_weapon_master:{n:'Мастер большого оружия',s:'тяжёлым оружием −5 к атаке, +10 к урону',d:'<p>Когда критом или добиванием рукопашным оружием роняешь врага до 0, можешь бонусным действием ударить ещё раз.</p><p>Перед атакой тяжёлым оружием, которым владеешь, можешь взять −5 к атаке, чтобы получить +10 к урону.</p>'},
+ healer:{n:'Лекарь',s:'набор целителя лечит 1к6 + 4 и больше',d:'<p>Когда стабилизируешь умирающего набором целителя, он ещё и получает <b>1 хит</b>.</p><p>Действием и одним использованием набора лечишь существо на <b>1к6 + 4 + число его костей хитов</b>. Каждое существо так лечится раз между отдыхами.</p>'},
+ heavily_armored:{n:'Знаток тяжёлых доспехов',ab:['str'],pre:()=>hasFeat('moderately_armored')?'':'нужно владеть средними доспехами',s:'+1 Сила, тяжёлые доспехи',d:'<p><b>+1 к Силе.</b></p><p>Владеешь <b>тяжёлыми доспехами</b>.</p>'},
+ heavy_armor_master:{n:'Мастер тяжёлых доспехов',ab:['str'],pre:()=>hasFeat('heavily_armored')?'':'нужно владеть тяжёлыми доспехами',s:'+1 Сила, в латах урон оружием −3',d:'<p><b>+1 к Силе.</b></p><p>В тяжёлом доспехе дробящий, колющий и рубящий урон от немагического оружия по тебе <b>уменьшается на 3</b>.</p>'},
+ inspiring_leader:{n:'Воодушевляющий лидер',pre:AB13('cha','Харизма'),s:'речь даёт друзьям временные хиты',d:()=>`<p>10 минут вдохновляешь до шести союзников (и себя) в пределах 9 м, которые тебя слышат и понимают.</p><p>Каждый получает <b>временные хиты</b>: твой уровень + Харизма (сейчас <b>${S.level+mod(S.ab.cha)}</b>). Каждое существо получает их раз между отдыхами.</p>`},
+ keen_mind:{n:'Отличная память',ab:['int'],s:'+1 Интеллект, помнишь всё за месяц',d:'<p><b>+1 к Интеллекту.</b></p><p>Всегда знаешь, где север, и сколько часов до восхода или заката.</p><p>Точно помнишь всё, что видел или слышал за последний месяц.</p>'},
+ lightly_armored:{n:'Знаток лёгких доспехов',ab:['str','dex'],s:'+1 Сила или Ловкость, лёгкие доспехи',d:'<p><b>+1 к Силе или Ловкости.</b></p><p>Владеешь <b>лёгкими доспехами</b>: кожаный, стёганый, проклёпанный. В проклёпанной коже КД 12 + Ловкость.</p><p class="mu">Чародеи без владения доспехами не могут колдовать в доспехах.</p>'},
+ linguist:{n:'Языковед',ab:['int'],s:'+1 Интеллект, три новых языка, шифры',d:'<p><b>+1 к Интеллекту.</b></p><p>Учишь <b>три языка</b> на выбор (договорись с мастером).</p><p>Придумываешь шифры. Чтобы разгадать, нужна магия или проверка Интеллекта против твоего Интеллекта + мастерство.</p>'},
+ lucky:{n:'Везунчик',s:'3 очка удачи: перебросить к20',d:'<p>3 очка удачи в день: перебросить свою атаку, проверку или спасбросок, или чужую атаку по тебе.</p>'},
+ mage_slayer:{n:'Убийца магов',s:'бьёшь колдующих рядом с тобой',d:'<p>Когда существо в 1,5 м от тебя творит заклинание, можешь реакцией ударить его оружием.</p><p>Если ранишь того, кто держит концентрацию, его спасбросок с помехой.</p><p>Преимущество на спасброски от заклинаний тех, кто в 1,5 м от тебя.</p>'},
+ magic_initiate:{n:'Посвящённый в магию',s:'2 заговора и 1 заклинание другого класса',d:'<p>Выбери класс: бард, волшебник, друид, жрец, колдун или чародей.</p><p>Учишь <b>2 заговора</b> и <b>1 заклинание 1 круга</b> из его списка. Это заклинание раз в день творишь без ячейки.</p><p class="mu">Выбор согласуй с мастером: в книге листа пока только заклинания чародея.</p>'},
+ martial_adept:{n:'Воинский адепт',s:'два приёма мастера боевых искусств',d:'<p>Учишь <b>два приёма</b> мастера боевых искусств (подсечка, финт, обезоруживание и другие) и получаешь кость превосходства <b>к6</b>. Она возвращается после любого отдыха.</p>'},
+ medium_armor_master:{n:'Мастер средних доспехов',pre:()=>hasFeat('moderately_armored')?'':'нужно владеть средними доспехами',s:'тише и крепче в средних доспехах',d:'<p>Средние доспехи не дают помехи на Скрытность.</p><p>В среднем доспехе прибавляешь к КД Ловкость до +3, а не до +2.</p>'},
+ mobile:{n:'Подвижный',s:'+3 м скорости, уходишь без Удара вслед',d:'<p><b>Скорость +3 м.</b></p><p>Во время Рывка труднопроходимая местность не замедляет.</p><p>Если атаковал существо вплотную, оно не может сделать по тебе Удар вслед до конца хода, попал ты или нет.</p>',fx:'скорость +3 м прибавится сама'},
+ moderately_armored:{n:'Знаток средних доспехов',ab:['str','dex'],pre:()=>hasFeat('lightly_armored')?'':'нужно владеть лёгкими доспехами',s:'+1 Сила или Ловкость, средние доспехи и щит',d:'<p><b>+1 к Силе или Ловкости.</b></p><p>Владеешь <b>средними доспехами и щитами</b>.</p>'},
+ mounted_combatant:{n:'Верховой боец',s:'сражаешься верхом',d:'<p>Преимущество на рукопашные атаки по пешим существам меньше твоего скакуна.</p><p>Можешь перевести на себя атаку по скакуну.</p><p>Скакун при спасброске Ловкости на половину урона не получает урона при успехе и половину при провале.</p>'},
+ observant:{n:'Внимательный',ab:['int','wis'],s:'+1 Интеллект или Мудрость, +5 к пассивным',d:'<p><b>+1 к Интеллекту или Мудрости.</b></p><p>Читаешь по губам, если видишь рот и знаешь язык.</p><p><b>+5 к пассивному Восприятию и пассивному Анализу.</b></p>',fx:'+5 к пассивным лист прибавит сам'},
+ polearm_master:{n:'Мастер древкового оружия',s:'бьёшь древком, держишь дистанцию',d:'<p>Атакуя глефой, алебардой или боевым посохом, можешь бонусным действием ударить другим концом (1к4 дробящего).</p><p>Существо, которое входит в зону твоей досягаемости, провоцирует Удар вслед.</p>'},
+ resilient:{n:'Устойчивый',ab:['str','dex','con','int','wis','cha'],save:1,s:'+1 к характеристике и её спасброскам',d:'<p>Выбери характеристику: <b>+1</b> к ней и <b>владение её спасбросками</b>.</p><p class="mu">Телосложение и Харизма у Филиппа уже с владением. Чародею часто советуют Мудрость: от очарования, страха и подчинения спасает она.</p>',fx:'владение спасброском отметится само'},
+ ritual_caster:{n:'Ритуальный заклинатель',pre:()=>S.ab.int>=13||S.ab.wis>=13?'':'нужно Интеллект или Мудрость 13 и выше',s:'книга ритуалов без ячеек',d:'<p>Получаешь книгу ритуалов с двумя ритуалами 1 круга выбранного класса и творишь их ритуалом (на 10 минут дольше, без ячейки). Найденные ритуалы можно переписывать в книгу.</p>'},
+ savage_attacker:{n:'Дикий атакующий',s:'перебросить урон рукопашного оружия',d:'<p>Раз в ход, когда бросаешь урон рукопашного оружия, можешь перебросить кубики и взять любой из двух результатов.</p>'},
+ sentinel:{n:'Страж',s:'останавливаешь врагов Ударом вслед',d:'<p>Если попал Ударом вслед, скорость цели 0 до конца хода.</p><p>Отход не спасает от твоего Удара вслед.</p><p>Если враг в 1,5 м от тебя бьёт другого, можешь реакцией ударить его.</p>'},
+ sharpshooter:{n:'Меткий стрелок',s:'стрельба без помех, −5 к атаке, +10 к урону',d:'<p>Дальняя дистанция не даёт помехи. Половинное и три четверти укрытия не мешают.</p><p>Перед выстрелом из оружия, которым владеешь, можешь взять −5 к атаке ради +10 к урону.</p>'},
+ shield_master:{n:'Мастер щитов',s:'толкаешь щитом, прячешься за ним',d:'<p>После атаки можешь бонусным действием толкнуть щитом.</p><p>Против заклинаний на одну цель прибавляешь КД щита к спасброску Ловкости.</p><p>Если от эффекта на половину урона прошёл спасбросок Ловкости, можешь реакцией не получить урона совсем.</p>'},
+ skilled:{n:'Одарённый',opt:'sk',s:'три новых навыка',d:'<p>Получаешь владение <b>тремя навыками</b> на выбор.</p><p class="mu">По книге можно брать и инструменты вместо навыков: это согласуй с мастером.</p>',fx:'навыки отметятся в листе'},
+ skulker:{n:'Проныра',pre:AB13('dex','Ловкость'),s:'прячешься в полумраке',d:'<p>Пытаешься спрятаться, даже когда ты лишь слегка скрыт.</p><p>Промах из укрытия не выдаёт тебя.</p><p>Тусклый свет не даёт помехи на Восприятие.</p>'},
+ spell_sniper:{n:'Меткие заклинания',s:'дальность атак заклинаниями вдвое, +1 заговор',d:'<p>Заклинания с броском атаки бьют <b>вдвое дальше</b>.</p><p>Половинное и три четверти укрытия не мешают таким атакам.</p><p>Учишь один заговор с броском атаки из списка любого класса.</p>'},
+ tavern_brawler:{n:'Драчун',ab:['str','con'],s:'+1 Сила или Телосложение, дерёшься чем попало',d:'<p><b>+1 к Силе или Телосложению.</b></p><p>Владеешь импровизированным оружием. Безоружный удар 1к4.</p><p>Попав безоружным ударом или импровизированным оружием, можешь бонусным действием схватить цель.</p>'},
+ tough:{n:'Крепкий',s:'+2 хита за каждый уровень',d:()=>`<p>Максимум хитов растёт на <b>2 за каждый уровень</b>: сразу <b>+${2*(LV?LV.to:S.level)}</b> и ещё +2 с каждым новым уровнем.</p>`,fx:'хиты прибавятся сами'},
+ war_caster:{n:'Боевой заклинатель',s:'преимущество на концентрацию, колдуешь вместо Удара вслед',d:'<p><b>Преимущество</b> на спасброски Телосложения, чтобы удержать концентрацию.</p><p>Соматические жесты получаются, даже если руки заняты оружием или щитом.</p><p>Когда враг провоцирует Удар вслед, можешь реакцией сотворить по нему заклинание (если оно творится действием и бьёт только его).</p>',fx:'преимущество на концентрацию лист даст сам'},
+ weapon_master:{n:'Мастер оружия',ab:['str','dex'],s:'+1 Сила или Ловкость, 4 вида оружия',d:'<p><b>+1 к Силе или Ловкости.</b></p><p>Владеешь четырьмя видами оружия на выбор, простого или воинского.</p>'}
+};
+const ELEM=['кислота','холод','огонь','электричество','звук'];
+const fD=f=>typeof f.d==='function'?f.d():f.d;
+const featName=f=>FEATS[f.k]?FEATS[f.k].n+(f.x?' ('+f.x+')':''):f.k;
+
+if(!S.feats)S.feats=[{k:'lucky'}];
+if(!S.lvHist)S.lvHist=[];
+
+/* ---- что меняется при переходе на уровень t ---- */
+function lvDelta(t){const p0=Math.ceil((t-1)/4)+1,p1=Math.ceil(t/4)+1,a=SLT[t-1]||[],b=SLT[t];
+ return{prof:[p0,p1],slots:b.map((n,i)=>({c:i+1,was:a[i]||0,now:n})).filter(x=>x.now!==x.was),spt:t>=2?[t===2?0:t-1,t]:null,
+  cant:cantKnown(t)-cantKnown(t-1),sp:spKnown(t)-spKnown(t-1),asi:ASI_L.includes(t),meta:META_N[t]||0,
+  cantDie:[1+(t-1>=5)+(t-1>=11)+(t-1>=17),1+(t>=5)+(t>=11)+(t>=17)],feat:CLF.filter(f=>f.lv===t&&f.k!=='cf_asi'),newC:b.length>a.length?b.length:0}}
+
+/* ---- черновик ---- */
+let LV=null;
+function lvNew(){const t=S.level+1;LV={to:t,i:0,hpHow:null,hpV:null,asi:null,ab:{},feat:null,fab:null,fx:null,fsk:[],meta:[],cant:[],sp:[],swapOut:null,swapIn:null,det:null,dir:1}}
+function lvSteps(){const d=lvDelta(LV.to),st=['intro','hp'];
+ if(d.asi){st.push('asi');if(LV.asi==='ab')st.push('ab');if(LV.asi==='feat'){st.push('feat');const f=FEATS[LV.feat];if(f&&(f.opt||(f.ab&&f.ab.length>1)))st.push('fopt')}}
+ if(d.meta)st.push('meta');if(d.cant>0)st.push('cant');if(d.sp>0)st.push('spell');
+ st.push('swap');if(LV.swapOut)st.push('swapin');st.push('done');return st}
+const lvKnown=()=>known().filter(k=>SPELLS[k]);
+/* какие характеристики выйдут после выбора */
+function lvAb(){const a={...S.ab};if(LV.asi==='ab')for(const k in LV.ab)a[k]+=LV.ab[k];
+ if(LV.asi==='feat'&&LV.feat){const f=FEATS[LV.feat];if(f.ab){const k=f.ab.length===1?f.ab[0]:LV.fab;if(k)a[k]=Math.min(20,a[k]+1)}}return a}
+function lvHp(){const a=lvAb(),c0=mod(S.ab.con),c1=mod(a.con),t=LV.to,tough=LV.asi==='feat'&&LV.feat==='tough';
+ const roll=LV.hpV||0,lvg=Math.max(1,roll+c1),retro=(c1-c0)*(t-1),tg=tough?2*t:hasFeat('tough')?2:0;
+ return{roll,c1,lvg,retro,tg,add:lvg+retro+tg,max:S.hp.max+lvg+retro+tg}}
+function lvOk(st){switch(st){
+ case 'hp':return LV.hpV!=null;
+ case 'asi':return !!LV.asi;
+ case 'ab':return Object.values(LV.ab).reduce((s,x)=>s+x,0)===2;
+ case 'feat':return !!LV.feat;
+ case 'fopt':{const f=FEATS[LV.feat];if(f.opt==='el')return !!LV.fx;if(f.opt==='sk')return LV.fsk.length===3;return !!LV.fab}
+ case 'meta':return LV.meta.length===lvDelta(LV.to).meta;
+ case 'cant':return LV.cant.length===lvDelta(LV.to).cant;
+ case 'spell':return LV.sp.length===lvDelta(LV.to).sp;
+ case 'swapin':return !!LV.swapIn;
+ default:return true}}
+
+/* ---- разметка шагов ---- */
+const ABI={str:'art/ab-str.webp',dex:'art/ab-dex.webp',con:'art/ab-con.webp',int:'art/ab-int.webp',wis:'art/ab-wis.webp',cha:'art/ab-cha.webp'};
+const lvPip=n=>`<i class="charge"></i>`.repeat(n);
+function lvRow(k,on,dis,name,small,tag){return `<button class="lvrow ${on?'on':''} ${dis?'dis':''}" data-lvpick="${k}"><i class="box">${on?'✓':''}</i><span class="tx"><b>${name}</b><small>${small}</small></span>${tag?`<em>${tag}</em>`:''}</button>`}
+function lvDet(html){return `<div class="lvdet" id="lvdet">${html||'<p class="mu">Нажми на строку, чтобы прочитать, что это.</p>'}</div>`}
+function spDet(k){const p=SPELLS[k];return `<div class="dh2">${rn(p)}${p.n}</div><div class="mu sm">${p.meta}</div>${p.d()}${p.cost?compNote(p):''}`}
+function lvBody(st){const t=LV.to,d=lvDelta(t),a=lvAb();
+ if(st==='intro'){const rows=[];const hp=Math.max(1,4+mod(S.ab.con));
+  rows.push(['♥',`<b>Хиты</b> +к6 ${sg(mod(S.ab.con))} <small>или ровно +${hp}</small>`]);
+  if(d.prof[0]!==d.prof[1])rows.push(['◆',`<b>Мастерство</b> ${sg(d.prof[0])} → ${sg(d.prof[1])} <small>сложность заклинаний ${spellDC()} → ${spellDC()+1}, атака ${sg(spellAtk())} → ${sg(spellAtk()+1)}, навыки тоже</small>`]);
+  d.slots.forEach(x=>rows.push(['<i class="rn">'+ROM[x.c]+'</i>',`<b>Ячейки ${ROM[x.c]} круга</b> ${x.was?x.was+' → ':''}${x.now} ${x.was?'':'<small>новый круг заклинаний!</small>'}`]));
+  if(d.spt&&d.spt[0])rows.push(['✦',`<b>Единицы чародейства</b> ${d.spt[0]} → ${d.spt[1]}`]);
+  if(d.cantDie[0]!==d.cantDie[1])rows.push(['✺',`<b>Заговоры сильнее</b> <small>Огненный снаряд ${d.cantDie[0]}к10 → ${d.cantDie[1]}к10</small>`]);
+  d.feat.forEach(f=>rows.push(['★',`<b>${f.n}</b> <small>${f.s}</small>`]));
+  const ch=[];if(d.asi)ch.push('+2 к характеристикам или черта');if(d.meta)ch.push(d.meta===1?'ещё одна метамагия':d.meta+' метамагии');if(d.cant)ch.push('новый заговор');if(d.sp)ch.push('новое заклинание');ch.push('по желанию заменить одно заклинание');
+  rows.push(['?',`<b>Выбрать</b> <small>${ch.join(', ')}</small>`]);
+  return `<div class="lvbig"><span class="o">${t-1}</span><svg viewBox="0 0 40 16"><path d="M2 8h32M28 2l7 6-7 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="n">${t}</span></div><div class="lvlist plain">${rows.map(r=>`<div class="lvi"><span class="ic">${r[0]}</span><span>${r[1]}</span></div>`).join('')}</div>`}
+ if(st==='hp'){const c=mod(a.con),av=4;
+  const res=LV.hpV!=null?(()=>{const h=lvHp();return `<div class="lvres" id="lvhpres"><span class="k">${LV.hpHow==='roll'?'выпало '+LV.hpV:'среднее '+LV.hpV} ${sg(h.c1)}</span><b>+${h.lvg}</b><span class="k">хиты ${S.hp.max} → ${S.hp.max+h.lvg}${h.retro||h.tg?' (и ещё прибавки дальше)':''}</span></div>`})():'';
+  return `<div class="lvcards"><button class="lvcard ${LV.hpHow==='roll'?'on':''} ${LV.hpHow==='roll'?'lock':''}" data-lvhp="roll" ${LV.hpHow==='roll'?'disabled':''}><span class="big">${d20i}к6</span><b>Бросить кубик</b><small>от 1 до 6, и ${sg(c)} Телосложение</small></button>
+   <button class="lvcard ${LV.hpHow==='avg'?'on':''}" data-lvhp="avg" ${LV.hpHow==='roll'?'disabled':''}><span class="big">${av}</span><b>Взять среднее</b><small>всегда ${av} ${sg(c)} = ${Math.max(1,av+c)}, надёжно</small></button></div>${res}
+   <div class="how">${LV.hpHow==='roll'?'Кубик брошен, по правилам переигрывать нельзя.':'По правилам выбирают до броска: бросил, значит, бросил. Среднее чуть выгоднее в долгую.'}</div>`}
+ if(st==='asi')return `<div class="lvcards"><button class="lvcard ${LV.asi==='ab'?'on':''}" data-lvasi="ab"><span class="big">+2</span><b>Характеристики</b><small>+2 к одной или +1 к двум, не выше 20</small></button><button class="lvcard ${LV.asi==='feat'?'on':''}" data-lvasi="feat"><span class="big">★</span><b>Черта</b><small>особое умение вместо прибавки</small></button></div>
+   <div class="how">Совет: Харизма — главное у чародея. ${S.ab.cha<20?`Харизма ${S.ab.cha} → ${Math.min(20,S.ab.cha+2)}${mod(Math.min(20,S.ab.cha+2))>mod(S.ab.cha)?` даст +1 к сложности и атаке заклинаний и ко всем навыкам Харизмы`:''}.`:'Харизма уже 20.'}</div>`;
+ if(st==='ab'||(st==='fopt'&&FEATS[LV.feat].ab&&!FEATS[LV.feat].opt)){const fe=st==='fopt',allow=fe?FEATS[LV.feat].ab:AB.map(x=>x[0]),used=fe?(LV.fab?1:0):Object.values(LV.ab).reduce((s,x)=>s+x,0),max=fe?1:2;
+  return `<div class="lvpts" id="lvpts"><span>${fe?'Выбери одну: +1':'Очки'}</span><span class="ch">${Array.from({length:max},(_,i)=>`<span class="charge ${i<used?'used':''}"></span>`).join('')}</span></div>
+  <div class="lvab">${AB.map(([k,n])=>{const add=fe?(LV.fab===k?1:0):(LV.ab[k]||0),v=S.ab[k]+add,ok=allow.includes(k)&&!(fe&&FEATS[LV.feat].save&&S.saves[k]),full=S.ab[k]+add>=20;
+   return `<button class="lvt ${add?'on':''} ${ok?'':'dis'}" data-lvab="${k}"><img class="px" src="${ABI[k]}" alt=""><span class="nm">${n}</span><span class="v"><b>${v}</b> <small>${sg(mod(v))}</small></span>${add?`<span class="plus">+${add}</span>`:''}${!ok?`<span class="why">${fe&&FEATS[LV.feat].save&&S.saves[k]?'уже владеешь':'нельзя'}</span>`:full&&!add?'<span class="why">уже 20</span>':''}</button>`}).join('')}</div>
+  <div class="how">${fe?'Нажми на характеристику.':'Нажимай на характеристики: каждое нажатие +1. Нажми ещё раз на уже поднятую, чтобы забрать очко.'}</div>`}
+ if(st==='feat'){const ks=Object.keys(FEATS).sort((x,y)=>FEATS[x].n.localeCompare(FEATS[y].n,'ru'));
+  return `<div class="lvlist">${ks.map(k=>{const f=FEATS[k],has=hasFeat(k)&&!f.rep,why=has?'уже есть':f.pre?f.pre():'';return lvRow(k,LV.feat===k,!!why,f.n,why?why:f.s,'')}).join('')}</div>${lvDet(LV.det&&FEATS[LV.det]?`<div class="dh2">${FEATS[LV.det].n}</div>${fD(FEATS[LV.det])}${FEATS[LV.det].fx?`<p class="mu">В листе: ${FEATS[LV.det].fx}.</p>`:''}`:'')}`}
+ if(st==='fopt'){const f=FEATS[LV.feat];
+  if(f.opt==='el'){const had=S.feats.filter(x=>x.k==='elemental_adept').map(x=>x.x);return `<div class="lvcards c5">${ELEM.map(e=>`<button class="lvcard sm ${LV.fx===e?'on':''} ${had.includes(e)?'dis':''}" data-lvel="${e}" ${had.includes(e)?'disabled':''}><b>${e}</b></button>`).join('')}</div><div class="how">Твои заклинания этой стихии пробивают сопротивление. Огненный снаряд, Огненный шар и Палящий луч бьют огнём.</div>`}
+  if(f.opt==='sk'){const all=AB.flatMap(([a])=>SK[a].map(x=>[x[0],x[1],a]));return `<div class="lvlist">${all.map(([k,n,ab])=>{const has=!!S.skills[k],on=LV.fsk.includes(k);return lvRow(k,on||has,has||(!on&&LV.fsk.length>=3),n,has?'уже владеешь':ABN[ab][1],'')}).join('')}</div><div class="how">Выбрано ${LV.fsk.length} из 3.</div>`}}
+ if(st==='meta'){const ks=['careful','distant','empowered','extended','heightened','quickened','subtle','twinned'],have=S.meta||[];
+  return `<div class="lvlist">${ks.map(k=>{const m=META[k],h=have.includes(k);return lvRow(k,LV.meta.includes(k)||h,h,m.n,h?'уже есть':MDO[k],`<span class="cpips">${lvPip(k==='twinned'?1:m.cost)}</span>${k==='twinned'?'+':''}`)}).join('')}</div>${lvDet(LV.det&&META[LV.det]?`<div class="dh2">${META[LV.det].n} · ${META[LV.det].c}</div><p>${typeof META[LV.det].d==='function'?META[LV.det].d():META[LV.det].d}</p>`:'')}`}
+ if(st==='cant'||st==='spell'||st==='swapin'){const kn=lvKnown(),mc=maxCircle(t),cant=st==='cant';
+  const taken=[...LV.cant,...LV.sp];const sel=st==='cant'?LV.cant:st==='spell'?LV.sp:(LV.swapIn?[LV.swapIn]:[]);
+  const pool=Object.keys(SPELLS).filter(k=>{const p=SPELLS[k];return (cant?!p.lv:p.lv&&p.lv<=mc)&&!kn.includes(k)&&(sel.includes(k)||!taken.includes(k))&&k!==LV.swapOut});
+  let html='';for(let c=cant?0:1;c<=(cant?0:mc);c++){const g=pool.filter(k=>(SPELLS[k].lv||0)===c).sort((x,y)=>SPELLS[x].n.localeCompare(SPELLS[y].n,'ru'));if(!g.length)continue;
+   if(!cant){const have=Object.keys(SPELLS).filter(k=>SPELLS[k].lv===c).length;html+=`<div class="lvgh">${ROM[c]} круг${have<FULLN[c]?` <small>в листе пока ${have} из ${FULLN[c]}</small>`:''}</div>`}
+   html+=g.map(k=>{const p=SPELLS[k];return lvRow(k,sel.includes(k),false,rn(p)+p.n,p.short,p.conc?'конц.':'')}).join('')}
+  return `<div class="lvlist">${html}</div>${lvDet(LV.det&&SPELLS[LV.det]?spDet(LV.det):'')}`}
+ if(st==='swap'){const kn=lvKnown().filter(k=>SPELLS[k].lv).sort((x,y)=>SPELLS[x].lv-SPELLS[y].lv||SPELLS[x].n.localeCompare(SPELLS[y].n,'ru'));
+  return `<button class="lvcard wide ${LV.swapOut?'':'on'}" data-lvswap="0"><b>Оставить как есть</b><small>ничего не менять</small></button><div class="lvgh">или забыть одно, чтобы выучить другое:</div><div class="lvlist">${kn.map(k=>{const p=SPELLS[k];return lvRow(k,LV.swapOut===k,false,rn(p)+p.n,p.short,LV.swapOut===k?'забыть':'')}).join('')}</div>`}
+ if(st==='done'){const h=lvHp(),na=lvAb(),rows=[];
+  rows.push(['♥',`<b>Хиты</b> ${S.hp.max} → <b>${h.max}</b> <small>${LV.hpHow==='roll'?'кубик '+h.roll:'среднее '+h.roll} ${sg(h.c1)}${h.retro?`, Телосложение задним числом +${h.retro}`:''}${h.tg?`, Крепкий +${h.tg}`:''}</small>`]);
+  if(d.prof[0]!==d.prof[1])rows.push(['◆',`<b>Мастерство</b> ${sg(d.prof[0])} → <b>${sg(d.prof[1])}</b>`]);
+  AB.forEach(([k,n])=>{if(na[k]!==S.ab[k])rows.push(['↑',`<b>${n}</b> ${S.ab[k]} → <b>${na[k]}</b>${mod(na[k])!==mod(S.ab[k])?` <small>модификатор ${sg(mod(na[k]))}</small>`:''}`])});
+  if(LV.asi==='feat'&&LV.feat){const f=FEATS[LV.feat],fa=f.ab&&f.ab.length>1?LV.fab:null;rows.push(['★',`<b>Черта: ${f.n}${LV.fx?' ('+LV.fx+')':''}</b>${LV.fsk.length?` <small>${LV.fsk.map(k=>skName(k)).join(', ')}</small>`:''}${f.save&&fa?` <small>владение спасбросками: ${ABN[fa][1]}</small>`:''}`])}
+  d.slots.forEach(x=>rows.push(['<i class="rn">'+ROM[x.c]+'</i>',`<b>Ячейки ${ROM[x.c]} круга</b> ${x.was?x.was+' → ':''}<b>${x.now}</b>${x.was?'':' <small>новый круг</small>'}`]));
+  if(d.spt&&d.spt[0])rows.push(['✦',`<b>Единицы чародейства</b> ${d.spt[0]} → <b>${d.spt[1]}</b>`]);
+  d.feat.filter(f=>!(f.k==='meta'&&LV.meta.length)).forEach(f=>rows.push(['★',`<b>${f.n}</b> <small>${f.s}</small>`]));
+  if(LV.meta.length)rows.push(['★',`<b>Метамагия</b> <small>${LV.meta.map(m=>META[m].n).join(', ')}</small>`]);
+  [...LV.cant,...LV.sp].forEach(k=>rows.push(['✚',`<b>${rn(SPELLS[k])}${SPELLS[k].n}</b> <small>новое${SPELLS[k].fight&&!SPELLS[k].react?', появится в Бою':''}${SPELLS[k].soc?', в Общении':''}</small>`]));
+  if(LV.swapOut&&LV.swapIn)rows.push(['⇄',`<b>${SPELLS[LV.swapOut].n}</b> → <b>${SPELLS[LV.swapIn].n}</b>`]);
+  return `<div class="lvbig sm"><span class="n">${t}</span><span class="lt">уровень</span></div><div class="lvlist plain">${rows.map(r=>`<div class="lvi"><span class="ic">${r[0]}</span><span>${r[1]}</span></div>`).join('')}</div>`}
+ return ''}
+const skName=k=>{for(const a in SK){const x=SK[a].find(y=>y[0]===k);if(x)return x[1]}return k};
+const LVT={intro:['Новый уровень',''],hp:['Сколько хитов прибавится?','Кость хитов чародея к6. К ней прибавляется Телосложение.'],asi:['Характеристики или черта?','На этом уровне одно из двух.'],ab:['Куда вложить +2?','Две единицы: обе в одну или по одной в две.'],feat:['Какую черту взять?','Серые недоступны: под названием написано почему.'],fopt:['Уточни черту',''],meta:['Новая метамагия','Выбери, как ещё сможешь менять заклинания.'],cant:['Новый заговор','Заговоры не тратят ячеек и остаются навсегда.'],spell:['Новое заклинание','Можно взять любого круга, на который есть ячейки.'],swap:['Заменить одно заклинание?','Чародей может, получив уровень, забыть одно заклинание и выучить вместо него другое.'],swapin:['Что выучить вместо?',''],done:['Всё готово','Проверь и жми, когда готов.']};
+
+function lvRender(anim){const st=lvSteps();if(LV.i>=st.length)LV.i=st.length-1;const s=st[LV.i],[h,sub0]=LVT[s];
+ let sub=sub0;if(s==='fopt'){const f=FEATS[LV.feat];sub=f.opt==='el'?'Какая стихия?':f.opt==='sk'?'Какие три навыка?':'Какую характеристику +1?'}
+ if(s==='meta'){const n=lvDelta(LV.to).meta;sub=`Выбери ${n===1?'одну':n}. Ромбы: сколько единиц стоит.`}
+ if(s==='swapin')sub=`Вместо: ${SPELLS[LV.swapOut].n}`;
+ const last=s==='done',first=s==='intro';
+ $('lvc').innerHTML=`<div class="lvtop"><div class="lvsteps">${st.map((x,i)=>`<i class="${i<LV.i?'d':i===LV.i?'c':''}"></i>`).join('')}</div><button class="lvx" data-lv="close" aria-label="Закрыть">✕</button></div>
+ <div class="lvmain" id="lvmain"><div class="lvhd"><div class="lvk">${LV.to} уровень · шаг ${LV.i+1} из ${st.length}</div><h2>${h}</h2>${sub?`<p>${sub}</p>`:''}</div><div class="lvbody ${['feat','meta','cant','spell','swapin','swap','fopt'].includes(s)?'lst':''}">${lvBody(s)}</div></div>
+ <div class="lvnav">${first?'':'<button class="ghost" data-lv="back">Назад</button>'}<button class="${last?'go':''}" data-lv="${last?'commit':'next'}" ${lvOk(s)?'':'disabled'}>${first?'Начать':last?`Стать ${LV.to} уровня`:'Дальше'}</button></div>`;
+ const det=$('lvdet');if(det)det.scrollTop=0;
+ if(anim&&!RM)$('lvmain').animate([{opacity:0,transform:`translateX(${LV.dir*28}px)`},{opacity:1,transform:'none'}],{duration:220,easing:'cubic-bezier(.2,.9,.3,1)'})}
+function lvOpen(){if(S.level>=20)return;if(!LV||LV.to!==S.level+1)lvNew();closeDrawer();const el=$('lvl'),b=$('lvBtn').getBoundingClientRect(),x=b.left+b.width/2,y=b.top+b.height/2;
+ lvRender(false);el.classList.add('on');vib([12,30,20]);
+ if(!RM){const R=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));el.animate([{clipPath:`circle(0px at ${x}px ${y}px)`},{clipPath:`circle(${R}px at ${x}px ${y}px)`}],{duration:460,easing:'cubic-bezier(.3,.9,.3,1)'})}}
+function lvClose(){const el=$('lvl');if(RM){el.classList.remove('on');return}const b=$('lvBtn').getBoundingClientRect(),x=b.left+b.width/2,y=b.top+b.height/2,R=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+ el.animate([{clipPath:`circle(${R}px at ${x}px ${y}px)`},{clipPath:`circle(0px at ${x}px ${y}px)`}],{duration:300,easing:'cubic-bezier(.6,0,.8,.4)'}).onfinish=()=>el.classList.remove('on')}
+function lvGo(d){LV.dir=d;LV.det=null;LV.i=Math.max(0,LV.i+d);lvRender(true);vib(8)}
+
+/* золотой ромбик летит из счётчика в плитку характеристики и бьёт по ней */
+function lvToken(from,to,done){if(RM||!from||!to){done();return}const a=from.getBoundingClientRect(),b=to.getBoundingClientRect(),x0=a.left+a.width/2,y0=a.top+a.height/2,x1=b.left+b.width/2,y1=b.top+b.height*.42;
+ const t=document.createElement('i');t.className='lvtok';document.body.appendChild(t);const mx=(x0+x1)/2,my=Math.min(y0,y1)-70;
+ t.animate([{transform:`translate(${x0}px,${y0}px) rotate(45deg) scale(1)`},{transform:`translate(${mx}px,${my}px) rotate(225deg) scale(1.25)`,offset:.5},{transform:`translate(${x1}px,${y1}px) rotate(405deg) scale(.9)`}],{duration:380,easing:'cubic-bezier(.4,0,.7,1)'}).onfinish=()=>{t.remove();done();vib([18,20,10]);
+  to.animate([{transform:'scale(.9) translateY(3px)'},{transform:'scale(1.04)',offset:.55},{transform:'none'}],{duration:320,easing:'ease-out'});
+  if(typeof spawn==='function')for(let i=0;i<10;i++){const g=RN(-Math.PI*.95,-Math.PI*.05),v=RN(90,240);spawn({x:x1,y:y1,vx:Math.cos(g)*v,vy:Math.sin(g)*v,g:900,m:RN(.35,.7),s:RN(2,3.2),c:['#fff3cf','#f6d58e','#e9bd6c'],add:1})}}}
+function lvStamp(el){if(!el||RM)return;el.animate([{transform:'scale(1.5)',opacity:.2},{transform:'scale(.92)',opacity:1,offset:.6},{transform:'none'}],{duration:360,easing:'cubic-bezier(.2,1.4,.4,1)'})}
+
+$('lvBtn').addEventListener('click',e=>{e.stopPropagation();const b=$('lvBtn');if(!RM)b.animate([{transform:'scale(.7)'},{transform:'scale(1.12)'},{transform:'none'}],{duration:260});lvOpen()});
+$('lvl').addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;e.stopPropagation();lastPt={x:e.clientX,y:e.clientY};
+ const st=lvSteps(),s=st[LV.i],ds=t.dataset;
+ if(ds.lv==='close')return lvClose();
+ if(ds.lv==='next'){if(lvOk(s))lvGo(1);return}
+ if(ds.lv==='back')return lvGo(-1);
+ if(ds.lv==='commit')return lvCommit();
+ if(ds.lvhp){if(LV.hpHow==='roll')return;
+  if(ds.lvhp==='avg'){LV.hpHow='avg';LV.hpV=4;lvRender();lvStamp($('lvhpres'));vib([20,30,15]);return}
+  LV.hpHow='roll';lvRender();vib([15,25,40]);
+  return dice({label:'Хиты нового уровня: к6',n:1,s:6,k:mod(lvAb().con),kl:'ТЕЛ',min:1,after:v=>{LV.hpV=v-mod(lvAb().con);if(LV.hpV<1)LV.hpV=1;setTimeout(()=>{lvRender();},30);return `<div class="br">к максимуму хитов. Закрой и жми «Дальше»</div>`}})}
+ if(ds.lvasi){if(LV.asi!==ds.lvasi){LV.asi=ds.lvasi;LV.ab={};LV.feat=null;LV.fab=null;LV.fx=null;LV.fsk=[]}lvRender();lvStamp(t.parentNode.querySelector('.on'));vib(10);return}
+ if(ds.lvab){const k=ds.lvab;if(t.classList.contains('dis'))return vib([20,40,20]);
+  if(s==='fopt'){if(LV.fab===k){LV.fab=null;lvRender();vib(8);return}const from=document.querySelector('#lvpts .charge:not(.used)');LV.fab=k;const tile=t;lvToken(from,tile,()=>{lvRender();lvStamp(document.querySelector(`.lvt[data-lvab="${k}"] .plus`))});return}
+  const used=Object.values(LV.ab).reduce((x,y)=>x+y,0),cur=LV.ab[k]||0;
+  if(used>=2||S.ab[k]+cur>=20){if(cur){LV.ab[k]--;if(!LV.ab[k])delete LV.ab[k];lvRender();vib(8)}else vib([20,40,20]);return}
+  const from=document.querySelector('#lvpts .charge:not(.used)');LV.ab[k]=cur+1;lvToken(from,t,()=>{lvRender();lvStamp(document.querySelector(`.lvt[data-lvab="${k}"] .plus`))});return}
+ if(ds.lvel){LV.fx=ds.lvel;lvRender();vib(10);return}
+ if(ds.lvswap!=null){LV.swapOut=null;LV.swapIn=null;lvRender();vib(8);return}
+ if(ds.lvpick){const k=ds.lvpick;LV.det=k;
+  if(s==='feat'){if(!t.classList.contains('dis')){LV.feat=LV.feat===k?null:k;LV.fab=null;LV.fx=null;LV.fsk=[]}}
+  else if(s==='fopt'){if(t.classList.contains('dis'))return vib([20,40,20]);const i=LV.fsk.indexOf(k);if(i>=0)LV.fsk.splice(i,1);else if(LV.fsk.length<3)LV.fsk.push(k)}
+  else if(s==='meta'){if(t.classList.contains('dis')){lvRender();return}const n=lvDelta(LV.to).meta,i=LV.meta.indexOf(k);if(i>=0)LV.meta.splice(i,1);else{if(LV.meta.length>=n)LV.meta.shift();LV.meta.push(k)}}
+  else if(s==='cant'||s==='spell'){const arr=s==='cant'?LV.cant:LV.sp,n=s==='cant'?lvDelta(LV.to).cant:lvDelta(LV.to).sp,i=arr.indexOf(k);if(i>=0)arr.splice(i,1);else{if(arr.length>=n)arr.shift();arr.push(k)}}
+  else if(s==='swap'){LV.swapOut=LV.swapOut===k?null:k;LV.swapIn=null}
+  else if(s==='swapin'){LV.swapIn=LV.swapIn===k?null:k}
+  const sc=document.querySelector('.lvbody .lvlist'),top=sc?sc.scrollTop:0;lvRender();const sc2=document.querySelector('.lvbody .lvlist');if(sc2)sc2.scrollTop=top;
+  const b=document.querySelector(`.lvrow[data-lvpick="${k}"] .box`);if(b&&b.textContent){b.classList.remove('stamp');void b.offsetWidth;b.classList.add('stamp');vib([12,25,12])}else vib(8);return}
+});
+
+/* ---- применить ---- */
+const LVKEYS=['level','hp','ab','saves','skills','known','slots','hi','spt','meta','feats','speed','fSpellShow','smagShow'];
+function lvCommit(){const t=LV.to,h=lvHp(),na=lvAb(),old={hp:S.hp.max,lvl:S.level};
+ const snap={};LVKEYS.forEach(k=>snap[k]=S[k]===undefined?null:structuredClone(S[k]));S.lvHist.push(snap);if(S.lvHist.length>10)S.lvHist.shift();
+ S.level=t;S.ab=na;
+ if(LV.asi==='feat'&&LV.feat){const f=FEATS[LV.feat],o={k:LV.feat};if(f.ab)o.ab=f.ab.length===1?f.ab[0]:LV.fab;if(LV.fx)o.x=LV.fx;if(LV.fsk.length){o.sk=LV.fsk.slice();LV.fsk.forEach(k=>S.skills[k]=1)}
+  if(f.save&&o.ab)S.saves[o.ab]=1;if(LV.feat==='mobile')S.speed+=3;S.feats.push(o)}
+ S.hp.max=h.max;S.hp.cur=Math.min(S.hp.max,S.hp.cur+h.add);
+ const sl=SLT[t];S.slots.max=sl[0];if(sl.length>1){S.hi=S.hi||{};for(let c=2;c<=sl.length;c++){const x=S.hi[c]||(S.hi[c]={max:0,used:0,extra:0});x.max=sl[c-1]}}
+ if(t>=2){S.spt.max=t}
+ if(LV.meta.length)S.meta=[...(S.meta||[]),...LV.meta];
+ if(!S.known)S.known=KNOWN.slice();
+ if(LV.swapOut&&LV.swapIn){S.known=S.known.filter(k=>k!==LV.swapOut);S.fSpellShow=S.fSpellShow.filter(k=>k!==LV.swapOut);S.smagShow=S.smagShow.filter(k=>k!==LV.swapOut)}
+ const add=[...LV.cant,...LV.sp,...(LV.swapIn?[LV.swapIn]:[])];
+ add.forEach(k=>{if(!S.known.includes(k))S.known.push(k);const p=SPELLS[k];if(p.fight&&S.fSpellShow.length<9&&!S.fSpellShow.includes(k))S.fSpellShow.push(k);if(p.soc&&S.smagShow.length<8&&!S.smagShow.includes(k))S.smagShow.push(k)});
+ LV=null;save();
+ const el=$('lvl'),b=$('lvBtn').getBoundingClientRect(),x=b.left+b.width/2,y=b.top+b.height/2,R=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+ const fin=()=>{el.classList.remove('on');renderAll();lvImpact(old)};
+ if(RM)return fin();
+ el.animate([{clipPath:`circle(${R}px at ${x}px ${y}px)`},{clipPath:`circle(0px at ${x}px ${y}px)`}],{duration:340,easing:'cubic-bezier(.7,0,.9,.5)'}).onfinish=fin}
+/* удар: окно схлопнулось в «+», портрет вздрагивает, от него золотая волна, цифра уровня впечатывается, хиты дорастают */
+function lvImpact(old){vib([35,40,90]);const face=document.querySelector('#faceBtn .face'),b=face.getBoundingClientRect(),x=b.left+b.width/2,y=b.top+b.height/2;
+ $('lvBtn').classList.toggle('max',S.level>=20);
+ if(RM)return;
+ face.animate([{transform:'scale(.82)',filter:'brightness(2.2)'},{transform:'scale(1.12)',filter:'brightness(1.4)',offset:.35},{transform:'none',filter:'none'}],{duration:620,easing:'cubic-bezier(.2,1.2,.4,1)'});
+ document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake');
+ spawn({k:'flash',x,y,s:46,gr:1.2,m:.3,c:'rgba(255,214,130,.95)',add:1});
+ spawn({k:'ring',x,y,r0:20,r1:Math.max(innerWidth,innerHeight)*.75,m:.75,c:'#f6d58e',w:3,fp:1});
+ spawn({k:'ring',x,y,r0:14,r1:Math.max(innerWidth,innerHeight)*.45,m:.6,c:'#a57cff',w:2,fp:1});
+ for(let i=0;i<34;i++){const g=RN(-Math.PI*.98,Math.PI*.4),v=RN(160,520);spawn({x,y,vx:Math.cos(g)*v,vy:Math.sin(g)*v,g:1200,dr:.5,m:RN(.7,1.5),s:RN(2,4),c:['#fff6da','#f6d58e','#e9bd6c','#c58a2c'],add:1,bo:.35,fl:innerHeight-80})}
+ const cl=$('cl');cl.animate([{transform:'scale(1.25)',textShadow:'0 0 18px #f6d58e',color:'#fff3cf'},{transform:'scale(.97)',offset:.4},{transform:'none',textShadow:'none'}],{duration:700,easing:'cubic-bezier(.2,1.3,.4,1)'});
+ flash('#hpTok','#f6d58e');
+ const m=$('hpMax'),to=effMax(),from=Math.min(old.hp,to),t0=performance.now();(function tick(n){const k=Math.min(1,(n-t0)/650);m.textContent=Math.round(from+(to-from)*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(tick)})(t0)}
+
+/* ---- шторка «Умения и черты»: нажатие на имя и класс ---- */
+INFO.feats=()=>{const cf=CLF.filter(f=>f.lv<=S.level),last=S.lvHist.length?S.lvHist[S.lvHist.length-1]:null;
+ return{t:'Умения и черты',sub:`${S.cls} · ${S.sub} · ${S.level} уровень · мастерство ${sg(prof())}`,
+ body:`<div class="lvgh" style="margin-top:0">Умения чародея</div><div class="lvlist plain">${cf.map(f=>`<button class="lvi btn" data-info="${f.k}"><span class="ic">${f.lv}</span><span><b>${f.n}</b> <small>${f.s}</small></span></button>`).join('')}</div>
+ <div class="lvgh">Черты</div><div class="lvlist plain">${S.feats.map((f,i)=>`<button class="lvi btn" data-info="ft_${i}"><span class="ic">★</span><span><b>${featName(f)}</b> <small>${FEATS[f.k]?FEATS[f.k].s:''}</small></span></button>`).join('')}</div>
+ ${S.meta&&S.meta.length?`<div class="lvgh">Метамагия</div><div class="lvlist plain"><button class="lvi btn" data-info="meta"><span class="ic">✦</span><span><b>${S.meta.map(m=>META[m].n.split(' ')[0]).join(', ')}</b></span></button></div>`:''}
+ ${S.level<20?`<div class="how">Следующий уровень: нажми золотой «+» у портрета.</div>`:''}`,
+ acts:(S.level<20?`<button data-act="lvOpen">Повысить уровень до ${S.level+1}</button>`:'')+(last?`<button class="ghost" data-act="lvUndo">Вернуть ${last.level} уровень (отменить последнее повышение)</button>`:'')}};
+for(let i=0;i<40;i++)INFO['ft_'+i]=()=>{const f=S.feats[i];if(!f)return{t:'',body:''};const F=FEATS[f.k];return{t:featName(f),sub:'черта',body:(F?fD(F):'')+(f.ab?`<p class="mu">Взято: +1 ${ABN[f.ab][1]}.</p>`:'')+(f.sk?`<p class="mu">Навыки: ${f.sk.map(skName).join(', ')}.</p>`:'')+(i===0&&f.k==='lucky'?'<p class="mu">Взята на 1 уровне (человек, вариант).</p>':''),acts:f.k==='lucky'?`<button data-info="luck">Очки удачи ›</button>`:''}};
+function lvUndo(){const s=S.lvHist.pop();if(!s)return;const cur=S.hp.cur;LVKEYS.forEach(k=>{if(s[k]===null)delete S[k];else S[k]=s[k]});S.hp.cur=Math.min(cur,S.hp.max);
+ S.hd.used=Math.min(S.hd.used,S.level);LV=null;save();closeDrawer();renderAll();$('lvBtn').classList.remove('max');vib([30,20,10]);
+ if(!RM)$('cl').animate([{transform:'translateY(-4px)',opacity:.3},{transform:'none',opacity:1}],{duration:400,easing:'ease-out'})}
+{const _act=act;act=function(a){if(a==='lvOpen'){closeDrawer();return setTimeout(lvOpen,260)}if(a==='lvUndo')return lvUndo();return _act(a)}}
+$('lvBtn').classList.toggle('max',S.level>=20);
+
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-27-55';
+const BUILD='2026-11-27-56';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
