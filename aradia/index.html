@@ -4096,7 +4096,7 @@ function lvDelta(t){const p0=Math.ceil((t-1)/4)+1,p1=Math.ceil(t/4)+1,a=SLT[t-1]
 
 /* ---- черновик ---- */
 let LV=null;
-function lvNew(){const t=S.level+1;LV={to:t,i:0,hpHow:null,hpV:null,asi:null,ab:{},feat:null,fab:null,fx:null,fsk:[],cant:[],sp:[],swapOut:null,swapIn:null,det:null,q:0,dir:1}}
+function lvNew(){const t=S.level+1;LV={to:t,i:0,hpHow:null,hpV:null,asi:null,ab:{},feat:null,fab:null,fx:null,fsk:[],cant:[],sp:[],swapOut:null,swapIn:null,det:null,q:0,dir:1,fo:{}}}
 /* подготовка: Мудрость (после прибавки) + новый уровень; сколько уже подготовлено (без бонусов Звёздной карты) */
 const lvPrep=()=>Math.max(1,mod(lvAb().wis)+LV.to);
 const lvPrepNow=()=>picked().filter(k=>SPELLS[k].lv).length;
@@ -4171,9 +4171,10 @@ function lvBody(st){const t=LV.to,d=lvDelta(t),a=lvAb();
   const sel=st==='cant'?LV.cant:st==='prep'?LV.sp:(LV.swapIn?[LV.swapIn]:[]);const taken=[...LV.cant,...(LV.swapIn?[LV.swapIn]:[])];
   const pool=Object.keys(SPELLS).filter(k=>{const p=SPELLS[k];return (cant?!p.lv:p.lv&&p.lv<=mc)&&!kn.includes(k)&&!(chartOn()&&CHART.includes(k))&&(sel.includes(k)||!taken.includes(k))&&k!==LV.swapOut});
   let html='';for(let c=cant?0:1;c<=(cant?0:mc);c++){const g=pool.filter(k=>(SPELLS[k].lv||0)===c).sort((x,y)=>SPELLS[x].n.localeCompare(SPELLS[y].n,'ru'));
-   if(!cant)html+=`<div class="lvgh">${c} круг</div>`;
+   const fo=!cant&&g.length,op=!!LV.fo[c],nsel=g.filter(k=>sel.includes(k)).length;
+   if(!cant)html+=fo?`<button class="fold ${op?'open':''}" data-lvfold="${c}"><span class="fa">▸</span><span class="ft">${c} круг</span><em>${nsel?'выбрано '+nsel:g.length+' шт.'}</em></button><div class="fbody" ${op?'':'hidden'}>`:`<div class="lvgh">${c} круг</div>`;
    if(!g.length){if(!cant)html+=`<div class="lvi"><span class="mu">${Object.keys(SPELLS).some(k=>SPELLS[k].lv===c)?'все заклинания этого круга уже подготовлены':'заклинаний этого круга в листе пока нет, их добавит следующее обновление. Ячейки уже будут.'}</span></div>`;continue}
-   html+=g.map(k=>{const p=SPELLS[k];return lvRow(k,sel.includes(k),false,rn(p)+p.n,p.short,[p.ritual?'ритуал':'',p.conc?'концентрация':''].filter(Boolean).join(', '))}).join('')}
+   html+=g.map(k=>{const p=SPELLS[k];return lvRow(k,sel.includes(k),false,rn(p)+p.n,p.short,[p.ritual?'ритуал':'',p.conc?'концентрация':''].filter(Boolean).join(', '))}).join('')+(fo?'</div>':'')}
   const foot=st==='prep'?`<div class="how">Выбрано ${LV.sp.length} из ${lvFree()}. Место можно оставить пустым и подготовить потом, после долгого отдыха.</div>`:'';
   return `<div class="lvlist">${html}</div>${foot}${lvDet(LV.det&&SPELLS[LV.det]?spDet(LV.det)+lvSpQ(LV.det):st==='prep'?lvQ(['cast']):'')}`}
  if(st==='done'){const h=lvHp(),na=lvAb(),rows=[];
@@ -4225,6 +4226,7 @@ $('lvl').addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
  if(ds.lv==='next'){if(lvOk(s))lvGo(1);return}
  if(ds.lv==='back')return lvGo(-1);
  if(ds.lv==='commit')return lvCommit();
+ if(ds.lvfold){const c=ds.lvfold;LV.fo[c]=!LV.fo[c];t.classList.toggle('open',!!LV.fo[c]);const fb=t.nextElementSibling;if(fb)fb.hidden=!LV.fo[c];vib(6);return}
  if(ds.lvq){const d0=$('lvdet'),top=d0?d0.scrollTop:0;LV.q=LV.q?0:1;lvRender();const dt=$('lvdet'),q=dt&&dt.querySelector('.lvq');if(dt&&q)dt.scrollTop=Math.min(top,q.offsetTop);vib(8);return}
  if(ds.lvhp){if(LV.hpHow==='roll')return;
   if(ds.lvhp==='avg'){LV.hpHow='avg';LV.hpV=5;lvRender();lvStamp($('lvhpres'));vib([20,30,15]);return}
