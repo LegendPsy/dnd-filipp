@@ -1066,12 +1066,47 @@ h1,h2,h3{font-family:var(--serif);font-weight:400}
 /* что ещё собирается: Магия в разговоре и Предметы появятся в следующих тредах */
 #sres,#sItems,.itmh{display:none!important}
 
-/* вкладки, которые ещё не готовы */
-.page.wip .screen>*:not(.soon){display:none!important}
-.soon{flex:1;display:grid;place-items:center;text-align:center;padding:0 14px}
-.soon img{width:110px;height:110px;margin:0 auto 10px;display:block;-webkit-mask:radial-gradient(circle,#000 50%,transparent 70%);mask:radial-gradient(circle,#000 50%,transparent 70%)}
-.soon h2{font:400 34px/1 var(--serif);color:#eef0f2}
-.soon p{font:italic 400 15px/1.4 var(--text);color:var(--mute);max-width:30ch;margin:10px auto 0}
+/* ИНВЕНТАРЬ И ЭКИПИРОВКА (тред 4): кожаные карточки со строчкой, надетое светлым сукном, как в концепте */
+.coin2{background:linear-gradient(#2d251f,#221c18);border:1px solid rgba(0,0,0,.55);outline:1px dashed var(--stitch);outline-offset:-3px}
+.coin2 b{font:400 18px/1 var(--serif);color:#ece4d6}
+.ifilt{background:linear-gradient(#2c241f,#211b17);border:1px solid rgba(0,0,0,.5);outline:1px dashed var(--stitch);outline-offset:-3px}
+.ifilt button{font:400 13px var(--text);color:#bfb4a4}
+.ifilt button.on,.ifilt button.on[data-f]{background:linear-gradient(#efe9dc,#d8cebb);color:var(--woolink);border-color:transparent;box-shadow:0 2px 6px rgba(0,0,0,.45);font-weight:500}
+.itm{background:linear-gradient(#2d251f,#221c18);border:1px solid rgba(0,0,0,.55);outline:1px dashed var(--stitch);outline-offset:-4px;box-shadow:0 3px 8px rgba(0,0,0,.4)}
+.itm b{font:400 15.5px/1.1 var(--serif);color:#ece4d6}
+.itm small{font:italic 400 11.5px var(--text);color:#a8998a}
+.itm .q{color:#c9b9a3}.itm .q.v{color:var(--rune)}
+.itm .tg.s{color:var(--rune)}.itm .tg.f{color:#d68f96}.itm .tg.c{color:var(--lamp)}.itm .tg.e{color:#6d685e}
+.itm.mag{background:linear-gradient(#27313c,#1a222b);border-color:rgba(169,201,234,.4);outline-color:rgba(169,201,234,.25)}
+.itm.comp{border-color:rgba(240,196,122,.35)}
+.itm.eq::before{display:none}
+.itm.eq{background:linear-gradient(#eee8db,#d7cdb9);border-color:rgba(255,255,255,.4);outline-color:rgba(60,50,40,.25)}
+.itm.eq b{color:var(--woolink)}.itm.eq small,.itm.eq .tg{color:var(--woolsub)}.itm.eq .q{color:var(--woolsub)}
+.itm.att::after{background:var(--rune);box-shadow:0 0 6px var(--runeg)}
+.itm.add{background:none;border:1px dashed rgba(201,214,228,.25);outline:0;box-shadow:none}.itm.add b{font:italic 400 13.5px var(--text);color:var(--mist,#c9d2da)}
+/* экипировка: арка с фигурой Арадии, ячейки по краям */
+.efig .fw{height:100%;max-height:100%;aspect-ratio:212/466;border-radius:999px 999px 16px 16px;overflow:hidden;box-shadow:0 0 0 1px rgba(169,201,234,.16),0 0 0 5px rgba(14,18,24,.5),0 10px 26px rgba(0,0,0,.6)}
+.efig .fw::after{content:'';position:absolute;inset:0;background:radial-gradient(120% 70% at 50% 45%,transparent 55%,rgba(14,18,24,.55));pointer-events:none}
+.efig img{object-fit:cover;object-position:34% 0;filter:none}
+.efig::before{display:none}
+.eslot .bx{background:linear-gradient(180deg,rgba(40,50,61,.9),rgba(24,30,38,.95));border:1px solid rgba(201,214,228,.14);box-shadow:0 4px 10px rgba(0,0,0,.45)}
+.eslot .bx svg{stroke:rgba(201,214,228,.7);opacity:.4}
+.eslot .nm{font:400 11.5px/1.15 var(--text);color:#7f8a95}
+.eslot.full .bx{background:linear-gradient(#eee8db,#d5cbb6);border-color:rgba(255,255,255,.4);outline:1px dashed rgba(60,50,40,.25);outline-offset:-4px;box-shadow:0 3px 9px rgba(0,0,0,.5)}
+.eslot.full .bx svg{stroke:#35506c;stroke-width:1.7;opacity:1;filter:none}
+.eslot.full .nm{color:#e9ecef}
+.eslot.mag .bx{background:linear-gradient(#e3ebf3,#c3d2e0);border-color:rgba(169,201,234,.8)}
+.eslot .dm{border-color:#35506c}.eslot .dm.on{background:#35506c;box-shadow:0 0 5px rgba(53,80,108,.7)}
+.eatt{background:linear-gradient(180deg,rgba(40,50,61,.85),rgba(26,33,42,.9));border:1px solid rgba(169,201,234,.25)}
+.eatt>span:first-child{font:400 17px var(--serif)}
+.eatt .d{font:italic 400 12px var(--text)}
+/* окно класса доспеха и форма предмета */
+.acbox{border:1px solid var(--line);border-radius:10px;padding:2px 10px;margin:8px 0}
+.acrow{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px dotted rgba(201,214,228,.18);font-size:15px}
+.acrow:first-child{border-top:0}.acrow b{font:400 17px var(--serif);color:#f1f2f3}.acrow.tot{font-weight:600}.acrow.tot b{color:var(--lamp);font-size:20px}
+.info .how.bad{border-left-color:var(--red2);background:rgba(208,101,111,.09)}
+.prs{margin:0 0 8px}.prs small{display:block;font:italic 13px var(--text);color:var(--mute);margin-bottom:5px}
+.prs div{display:flex;flex-wrap:wrap;gap:6px}.prs .pr{padding:6px 10px;border-radius:9px;font:400 13px var(--text);background:linear-gradient(#30271f,#231c17);color:#e1d8c8;border:1px solid rgba(0,0,0,.5);outline:1px dashed var(--stitch);outline-offset:-3px}
 
 /* шторка, окна */
 .drawer{background:linear-gradient(175deg,#1f2832,#11161c);border-top:1px solid rgba(169,201,234,.30)}
@@ -1289,15 +1324,13 @@ h1,h2,h3{font-family:var(--serif);font-weight:400}
   <div class="fform" id="fForm"></div>
   <div class="fres4" id="fRes"></div>
  </div></section>
-<section class="page wip" id="p-inv"><div class="screen">
-  <div class="soon"><div><img src="art/t-inv.webp" alt=""><h2>Инвентарь</h2><p>Снаряжение друида и амулет «Звёздная карта» появятся здесь в следующих обновлениях.</p></div></div>
+<section class="page" id="p-inv"><div class="screen">
   <div class="shead"><img src="art/t-inv.webp" alt=""><div><h1>Инвентарь</h1><div class="cls" id="iSub"></div></div><button class="turnq" data-act="iadd">+ предмет</button></div>
   <div class="coins2" id="coins"></div>
   <div class="ifilt" id="iFilt"><button data-f="all" class="on">Всё</button><button data-f="soc">Разговор</button><button data-f="fight">Бой</button><button data-f="mag">Магия</button></div>
   <div class="igrid" id="igrid"></div>
  </div></section>
-<section class="page wip" id="p-equip"><div class="screen">
-  <div class="soon"><div><img src="art/t-equip.webp" alt=""><h2>Экипировка</h2><p>Фигура Арадии и надетые вещи появятся здесь в следующих обновлениях.</p></div></div>
+<section class="page" id="p-equip"><div class="screen">
   <div class="shead"><img src="art/t-equip.webp" alt=""><div><h1>Экипировка</h1><div class="cls" id="eSub"></div></div></div>
   <div class="eqwrap" id="eqwrap">
    <div class="ecol" id="eL"></div>
@@ -1388,7 +1421,18 @@ function cLeft(c){if(c===1)return slotsLeft();const h=S.hi&&S.hi[c];return h?cTo
 function firstC(lv){for(let c=Math.max(1,lv);c<=9;c++)if(cLeft(c)>0)return c;return 0}
 function useSlotC(c){if(c===1)return useSlot();const h=S.hi&&S.hi[c];if(!h||cLeft(c)<=0)return false;if(h.extra>0)h.extra--;else h.used++;return true}
 const FONT={2:3,3:5,4:6,5:7};
-const effAC=()=>wfB()?wfB().ac:(S.mArm?Math.max(S.ac,13+mod(S.ab.dex)):S.ac)+(S.shieldOn?5:0);
+/* класс доспеха считается от надетого: доспех в «Теле» (основа + Ловкость), щит, вещи с прибавкой; вручную можно вписать своё число (S.acManual) */
+const armOf=k=>{const o=S.items[k];if(!o)return null;const c=ICAT[k]||{};if(c.arm)return c.arm;if(o.armt&&o.armt!=='shield')return{b:+o.armb||10,dx:o.armt==='light'?'full':o.armt==='medium'?'max2':'none'};return null};
+function acParts(){const dx=mod(S.ab.dex),bk=S.eq&&S.eq.body,A=bk&&S.items[bk]?armOf(bk):null;
+ const dxv=A?(A.dx==='full'?dx:A.dx==='max2'?Math.min(2,dx):0):dx,base=A?A.b:10;let sh=0,shk=null;const other=[];
+ Object.keys(S.eq||{}).forEach(sl=>{const k=S.eq[sl],o=S.items[k];if(!o)return;const c=ICAT[k]||{},b=c.acb||+o.acb||0;if(!b||(c.att&&!o.on))return;
+  if(c.shield||o.shield){if(shk)return;shk=k;sh=b}else other.push([k,b])});
+ const oth=other.reduce((a,x)=>a+x[1],0);return{A,bk:A?bk:null,base,dx,dxv,sh,shk,other,oth,total:base+dxv+sh+oth}}
+function acWarn(){const w=[],seen={};Object.keys(S.eq||{}).forEach(sl=>{const k=S.eq[sl],o=S.items[k];if(!o||seen[k])return;seen[k]=1;const A=armOf(k),c=ICAT[k]||{};
+ if((A||c.shield||o.shield)&&o.metal)w.push({t:`<b>${esc(ITEMS[k].n)}</b> из металла. Друиды не носят доспехи и щиты из металла: это их правило, нарушать его или нет, решаете вы с мастером.`});
+ if(A&&A.dx==='none')w.push({t:`<b>${esc(ITEMS[k].n)}</b> тяжёлый доспех, а владения им у друида нет. Помеха на проверки, спасброски и броски атаки Силы и Ловкости, и <b>колдовать нельзя</b>.`})});return w}
+const autoAC=()=>acParts().total,acNow=()=>S.acManual!=null?S.acManual:autoAC();
+const effAC=()=>wfB()?wfB().ac:acNow();
 /* ===== ЗАКЛИНАНИЯ ДРУИДА (PHB 2014, своими словами, расстояния в футах) =====
    Поля: n имя, lv круг (0 = заговор), soc набор «Общение», fight набор «Бой», conc концентрация, ritual ритуал,
    atk:1 + hit() + dmg(c) атака заклинанием (c = круг ячейки), heal {n,s,up} лечение 1кS + Мудрость,
@@ -1517,13 +1561,14 @@ function coinDrop(x,y,n){if(RM)return;for(let i=0;i<n;i++){const c=document.crea
  const a=c.animate([{transform:'translate(-50%,-50%) rotate(0)'},{transform:`translate(calc(-50% + ${dx*.4}px),calc(-50% - ${up}px)) rotate(${rot*.3}deg)`,offset:.28,easing:'cubic-bezier(.4,0,1,1)'},{transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${fall}px)) rotate(${rot}deg)`}],{duration:900+Math.random()*250,delay:i*55,easing:'cubic-bezier(.2,.6,.4,1)',fill:'both'});a.onfinish=()=>c.remove()}}
 /* ===== МАГИЯ ДРУИДА: подготовка, ячейки, ритуалы, Звёздная карта =====
    S.known = выбранные заговоры + подготовленные заклинания (без бонусных от карты). S.chart={used} бесплатные Направляющие снаряды.
-   S.chartLost = карта потеряна (бонусы карты пропадают). known() = всё, что можно творить сейчас. */
+   Карта = предмет «starmap» в инвентаре (количество больше 0); нет предмета = карта потеряна, бонусы пропадают. known() = всё, что можно творить сейчас. */
 const cantKnown=l=>l>=10?4:l>=4?3:2;
 const prepMax=()=>Math.max(1,mod(S.ab.wis)+S.level);
 const spKnown=l=>prepMax(); /* старое имя для окна повышения уровня (его переделает тред «Повышение уровня») */
 const maxCircle=l=>Math.min(9,Math.ceil(l/2));
 const CHART=['guidance','guiding_bolt'];
-const chartOn=()=>S.level>=2&&!S.chartLost;
+const chartHas=()=>!!(S.items&&S.items.starmap&&S.items.starmap.q>0);
+const chartOn=()=>S.level>=2&&chartHas();
 const chartLeft=()=>chartOn()?Math.max(0,prof()-((S.chart&&S.chart.used)||0)):0;
 const isBonus=k=>chartOn()&&CHART.includes(k);
 const picked=()=>(S.known||KNOWN).filter(k=>SPELLS[k]&&!isBonus(k));
@@ -1636,7 +1681,7 @@ function deathCommit(die){const D=S.death;let msg='';
 
 
 /* ---------- ПРЕДМЕТЫ НА ЭКРАНАХ «Общение» и «Бой» ----------
-   Инвентарь подключается так: кладёт описание предмета в ITEMS[ключ] и ключ в S.inv (что у Филиппа есть).
+   Инвентарь подключается так: кладёт описание предмета в ITEMS[ключ] и ключ в S.inv (что у Арадии есть).
    ITEMS[ключ] = {n:'Название', short:'коротко, что даёт', soc:1 — полезен в разговоре, fight:1 — в бою,
                   meta:'строка под заголовком', d:()=>'<p>точное описание механики</p>', acts:()=>'<button data-act="...">…</button>'}
    Что показано на экране, выбирает игрок галочками: S.sItemShow (Общение), S.fItemShow (Бой), до 4 штук. */
@@ -1650,68 +1695,43 @@ function renderSRes(){const el=$('sres');if(!el)return;
  <button class="fc ${chaosArmed?'armed':''}" data-info="chaos"><div class="t">Поток хаоса<small>${chaosArmed?'готов!':'преимущество'}</small></div><div class="ch">${Array.from({length:S.chaos.max},(_,i)=>`<span class="charge v ${i<S.chaos.used?'used':''}"></span>`).join('')}</div></button>`;
  renderItems('soc')}
 
-/* ---------- предметы: справочник. Что у Филиппа есть и где помечено, лежит в S.items ----------
+/* ---------- предметы: справочник. Что у Арадии есть и где помечено, лежит в S.items ----------
    ключ: n имя, short строка на плитке, meta подзаголовок шторки, d() описание механики,
    soc/fight где пригодится по умолчанию, cons расходуется, use как применить, ch заряды, att нужна настройка, mag магический */
 const IMP=()=>mod(S.ab.dex); /* импровизированное оружие: без мастерства */
 const ICAT={
- dagger:{n:'Кинжал',short:'1к4 колющий',fight:1,meta:'простое оружие · фехтовальное, лёгкое, метательное',
-  d:()=>WEAP.dagger.d(),use:'weapon'},
- diamond:{n:'Бриллиант',short:'для Цветного шарика',comp:1,meta:'компонент заклинания · стоит 50 зм · не тратится',
-  d:()=>`<p>Чистый бриллиант стоимостью не меньше <b>50 зм</b>. Нужен для заклинания <b>Цветной шарик</b>: без него шарик не сотворить. При сотворении бриллиант <b>не тратится</b>.</p><p class="mu">Если его отнимут или он потеряется, шарик снова станет недоступен, пока не добудешь новый. Мешочек с компонентами его не заменяет.</p>`},
- pouch:{n:'Мешочек с компонентами',short:'для заклинаний',comp:1,meta:'снаряжение · компоненты заклинаний',
-  d:()=>`<p>Поясная сумка с отделениями: травы, пыль, перья, кусочки воска. Заменяет все <b>материальные компоненты</b> заклинаний, у которых не указана цена и которые не расходуются.</p><p class="mu">Нужен для Дружбы (немного косметики) и Малой иллюзии (клок шерсти). Если сумку отнимут, такие заклинания творить нельзя.</p>`},
+ leather:{n:'Кожаный доспех',short:'КД 11 + Ловкость',fight:1,meta:'лёгкий доспех · не из металла',arm:{b:11,dx:'full'},
+  d:()=>`<p>Лёгкий доспех из вываренной кожи. Пока он надет, <b>класс доспеха равен 11 + Ловкость</b>: сейчас ${11+mod(S.ab.dex)}.</p><p>Надевается за <b>1 минуту</b> и снимается за 1 минуту. Без надетого доспеха класс доспеха был бы 10 + Ловкость.</p><p class="mu">Друиды владеют лёгкими доспехами, а кожа не металл: этот доспех Арадии подходит.</p>`},
+ shield:{n:'Деревянный щит',short:'+2 к классу доспеха',fight:1,meta:'щит · из дерева',acb:2,shield:1,
+  d:()=>`<p>Щит из дерева, носится в одной руке. Пока он надет, <b>класс доспеха растёт на 2</b>. Преимущество даёт только один щит за раз.</p><p>Надевается и снимается за <b>1 действие</b>.</p><p class="mu">Друиды не носят щиты из металла: деревянный им разрешён.</p>`},
+ scimitar:{n:'Скимитар',short:'1к6 рубящий',fight:1,meta:'воинское оружие · фехтовальное, лёгкое',use:'scim',
+  d:()=>{const [l,v]=scimAb();return `<p><b>Рукопашная атака: к20 ${sg(scimHit())}</b> (${l} ${sg(v)} + мастерство ${prof()}). Урон <b>1к6 ${sg(v)}</b> рубящий. Цель в пределах 5 футов.</p><p>Оружие <b>фехтовальное</b>: для атаки и урона берётся Сила или Ловкость, что выше. Оружие <b>лёгкое</b>: подходит для боя двумя оружиями.</p><p class="mu">Друиды владеют скимитарами.</p>`}},
+ staff:{n:'Боевой посох',short:'1к6 дробящий',fight:1,meta:'простое оружие · универсальное',use:'staff',
+  d:()=>{const v=mod(S.ab.str);return `<p><b>Рукопашная атака: к20 ${sg(v+prof())}</b> (Сила ${sg(v)} + мастерство ${prof()}). Урон <b>1к6 ${sg(v)}</b> дробящий, а если держать <b>двумя руками</b>, то 1к8 ${sg(v)}. Цель в пределах 5 футов.</p><p class="mu">Это обычная палка, а не волшебная: фокусировкой друида она становится только если мастер так решит.</p>`}},
+ focus:{n:'Фокусировка друидов',short:'тисовая палочка',meta:'фокусировка · заклинания',
+  d:()=>`<p>Тисовая палочка: ею <b>заменяются материальные компоненты</b> заклинаний, у которых нет цены. Нужна свободная рука, чтобы творить заклинание с её помощью.</p><p>Если у компонента указана <b>цена</b>, фокусировка его не заменяет: нужен сам предмет (например, драгоценный камень).</p><p class="mu">Это вторая фокусировка: первая, Звёздная карта, всегда с Арадией. Название можно поменять на веточку омелы, тотем или посох.</p>`},
+ starmap:{n:'Звёздная карта',short:'амулет из вороньего пера',soc:1,fight:1,mag:1,meta:'фокусировка · Крошечный предмет · Круг Звёзд',
+  d:()=>`<p>Амулет из вороньего пера в обсидиане, на котором Арадия видит звёзды. Это <b>заклинательная фокусировка</b> друида.</p><p>Пока карта при ней: заговор <b>Указание</b> знаком сверх обычных, <b>Направляющий снаряд</b> всегда подготовлен и творится без ячейки ${prof()} раз до долгого отдыха. Сейчас карта <b>${chartOn()?'при ней':'потеряна'}</b>.</p><p class="mu">Если убрать карту из инвентаря или поставить «0 штук», она считается потерянной: бонусы пропадают. Вернуть её можно обрядом в окне «Звёздная карта».</p>`},
+ travel:{n:'Дорожная одежда',short:'удобная в пути',meta:'снаряжение · одежда',d:()=>`<p>Крепкая одежда для долгой дороги: плащ, штаны, ботинки. Под доспехом или поверх него, как удобнее.</p>`},
  explorer:{n:'Набор путешественника',short:'рюкзак, верёвка, еда',meta:'снаряжение · набор',
-  d:()=>`<p>В рюкзаке: спальник, столовый набор, трутница, 10 факелов, 10 дней рационов, бурдюк с водой и пеньковая верёвка 15 м.</p><p class="mu">Еда и вода нужны для долгого отдыха: без них не снимается истощение.</p>`},
- clothes:{n:'Обычная одежда',short:'не выделяться',meta:'снаряжение',d:()=>`<p>Простая одежда горожанина или селянина. В ней Филипп не привлекает внимания в деревне.</p>`},
- fine:{n:'Дорогая одежда',short:'для знати',soc:1,meta:'снаряжение',d:()=>`<p>Камзол, шёлк, хорошие сапоги. В ней тебя пустят туда, куда простолюдина не пустят, и знать говорит с тобой как с равным. Мастер может дать <b>преимущество</b> на проверку Убеждения при дворе, если одежда к месту.</p>`},
- trinket:{n:'Безделушка',short:'выбрать с мастером',soc:1,meta:'предыстория Преследуемый',
-  d:()=>`<p>Странная вещица из прошлого: её дал <b>мастер</b> или выпал бросок по таблице безделушек готического ужаса.</p><p class="mu">Пока не выбрана. Когда узнаешь, что это, поправь название и описание.</p>`},
- chest:{n:'Сундук',short:'для добычи',meta:'набор охотника на монстров',d:()=>`<p>Окованный сундук, в нём лежит весь набор охотника. Тяжёлый: обычно его оставляют в повозке или на постоялом дворе.</p>`},
- crowbar:{n:'Лом',short:'вскрыть, поднять',meta:'набор охотника на монстров',d:()=>`<p>Если рычаг помогает (поднять плиту, вскрыть ящик, сорвать доски с окна), проверка <b>Силы</b> идёт с <b>преимуществом</b>.</p>`},
- hammer:{n:'Молоток',short:'вбить кол',meta:'набор охотника на монстров',d:()=>`<p>Обычный молоток. Нужен, чтобы вбить кол, гвоздь или крюк.</p>`},
- stake:{n:'Деревянный кол',short:'против вампира',fight:1,cons:1,meta:'набор охотника на монстров',
-  d:()=>`<p>Острый осиновый кол. В бою это <b>импровизированное оружие</b>: к20 ${sg(IMP())} (Ловкость, без мастерства), урон <b>1к4</b>.</p><p>Против вампира кол в сердце обездвиженного или поверженного вампира может его остановить. Что именно случится, решает <b>мастер</b>.</p>`,
-  use:{k:'atk',l:'Удар колом',dmg:{n:'Кол',dn:1,ds:4,k:0,t:'колющий'}}},
- symbol:{n:'Святой символ',short:'знак веры',soc:1,meta:'набор охотника на монстров',
-  d:()=>`<p>Амулет или эмблема бога. Филипп не жрец, магию через символ он не творит.</p><p>Его можно <b>показать</b>: священнику, селянам, иногда нежити. Сработает ли это, решает <b>мастер</b>, а ты, скорее всего, бросишь <b>Убеждение</b> или <b>Религию</b>.</p>`},
- holy:{n:'Святая вода',short:'2к6 нежити',fight:1,cons:1,meta:'расходуется · действие',
-  d:()=>`<p><b>Действием</b> выплесни флягу на существо в пределах 1,5 м или <b>брось</b> её до 6 м, тогда фляга разбивается.</p><p>Это дальнобойная атака импровизированным оружием: <b>к20 ${sg(IMP())}</b> (Ловкость, без мастерства).</p><p>При попадании <b>исчадие или нежить</b> получает <b>2к6 урона излучением</b>. Живым она не вредит.</p>`,
-  use:{k:'atk',l:'Святая вода: бросок',dmg:{n:'Святая вода',dn:2,ds:6,k:0,t:'излучением, только нежити и исчадию'}}},
- manacles:{n:'Кандалы',short:'сковать пленника',fight:1,meta:'набор охотника на монстров',
-  d:()=>`<p>Сковывают существо Маленького или Среднего размера. Надеть их можно на того, кто <b>схвачен, обездвижен или недееспособен</b>.</p><p>Вырваться: проверка <b>Ловкости Сл 20</b>. Разорвать: проверка <b>Силы Сл 20</b>. Без ключа замок вскрывают воровскими инструментами, Сл 15.</p>`},
- mirror:{n:'Стальное зеркало',short:'кто без отражения',meta:'набор охотника на монстров',
-  d:()=>`<p>Небольшое зеркальце. Можно заглянуть за угол, не высовываясь, или подать блик.</p><p class="mu">Вампиры <b>не отражаются</b> в зеркале.</p>`},
- oil:{n:'Масло',short:'облить и поджечь',fight:1,cons:1,meta:'расходуется · действие',
-  d:()=>`<p><b>Действием</b> облей существо в пределах 1,5 м или <b>брось</b> флягу до 6 м: дальнобойная атака импровизированным оружием, <b>к20 ${sg(IMP())}</b>.</p><p>При попадании цель облита. Если до конца минуты она получит урон огнём (например, от Огненного снаряда), то ещё <b>5 урона огнём</b> от масла.</p><p>Или разлей на землю квадратом 1,5 м и подожги: 2 раунда горит, кто входит или заканчивает там ход, получает 5 урона огнём.</p>`,
-  use:{k:'atk',l:'Масло: бросок',dmg:null,hit:'при попадании цель облита: следующий урон огнём +5'}},
- tinder:{n:'Трутница',short:'огонь',meta:'снаряжение',d:()=>`<p>Огниво и трут. Зажечь факел, лампу или костёр <b>действием</b>. Другой огонь разжигается около минуты.</p>`},
- torch:{n:'Факел',short:'свет 6 м',fight:1,cons:1,meta:'расходуется · горит 1 час',
-  d:()=>`<p>Горит <b>1 час</b>: яркий свет на 6 м и тусклый ещё на 6 м.</p><p>Им можно ударить как импровизированным оружием: <b>к20 ${sg(IMP())}</b>, при попадании <b>1 урон огнём</b>.</p>`,
+  d:()=>`<p>В рюкзаке: спальник, столовый набор, трутница, 10 факелов, рационы на 10 дней, бурдюк и 50 футов пеньковой верёвки.</p><p class="mu">Еда и вода нужны для долгого отдыха: без них не снимается истощение.</p>`},
+ trap:{n:'Охотничий капкан',short:'1к4, Ловкость Сл 13',fight:1,meta:'снаряжение · ловушка',
+  d:()=>`<p>Устанавливается <b>действием</b>: стальное кольцо с зубцами, привязано цепью к колышку или дереву.</p><p>Существо, наступившее в центр, делает спасбросок <b>Ловкости Сл 13</b>: при провале получает <b>1к4 колющего урона</b> и останавливается. Освободиться можно <b>действием</b>: проверка Силы Сл 13, каждая неудача причиняет ещё 1 урона.</p>`},
+ trophy:{n:'Трофей',short:'с убитого зверя',soc:1,meta:'предыстория Чужеземец',
+  d:()=>`<p>Память о звере, которого Арадия когда-то выследила: клык, коготь или перья. Мастер может позволить показать его в разговоре как доказательство опыта.</p><p class="mu">Что именно это за трофей, не записано: поправь название и описание кнопкой «Изменить».</p>`},
+ /* ---- справочник, из которого предметы добавляются кнопкой «+ предмет» ---- */
+ herbkit:{n:'Набор травника',short:'травы, зелья, противоядие',pre:1,meta:'инструменты · Арадия им владеет',
+  d:()=>`<p>Ножницы, ступка с пестиком, мешочки и флаконы. Арадия <b>владеет</b> этим набором: к проверкам по опознанию и применению трав добавляется бонус мастерства <b>${sg(prof())}</b>.</p><p>Набор нужен, чтобы приготовить противоядие или зелье лечения.</p>`},
+ dagger:{n:'Кинжал',short:'1к4 колющий',pre:1,fight:1,meta:'простое оружие · фехтовальное, лёгкое, метательное',use:'dagger',
+  d:()=>`<p><b>Рукопашная атака: к20 ${sg(daggerHit())}</b> (Ловкость ${sg(mod(S.ab.dex))} + мастерство ${prof()}). Урон 1к4 ${sg(mod(S.ab.dex))} колющий. Цель в пределах 5 футов.</p><p>Можно <b>метнуть</b>: дальность 20 футов, с помехой до 60 футов.</p>`},
+ torch:{n:'Факел',short:'свет 20 футов',pre:1,fight:1,cons:1,meta:'расходуется · горит 1 час',
+  d:()=>`<p>Горит <b>1 час</b>: яркий свет на 20 футов и тусклый ещё на 20 футов.</p><p>Им можно ударить как импровизированным оружием: <b>к20 ${sg(IMP())}</b>, при попадании <b>1 урон огнём</b>.</p>`,
   use:{k:'atk',l:'Удар факелом',dmg:null,hit:'при попадании 1 урон огнём'}},
- /* ---- для тестового 10 уровня ---- */
- kit:{n:'Набор для грима',short:'изменить лицо',soc:1,meta:'инструменты',d:()=>`<p>Краска, пудра, накладные брови и парики. С ним можно изменить внешность без магии. Если ты владеешь им, бонус мастерства добавляется к проверкам, где грим помогает.</p><p class="mu">Филипп им не владеет: бросай просто Харизму.</p>`},
- heal:{n:'Зелье лечения',short:'2к4 + 2 хитов',fight:1,cons:1,mag:1,meta:'зелье · обычное · действие',
-  d:()=>`<p><b>Действием</b> выпей сам или влей в рот союзнику рядом.</p><p>Восстанавливает <b>2к4 + 2 хитов</b>. Лист сам прибавит их к твоим хитам, если пьёшь ты.</p>`,use:{k:'heal',l:'Зелье лечения',n:2,s:4,b:2}},
- heal2:{n:'Зелье большого лечения',short:'4к4 + 4 хитов',fight:1,cons:1,mag:1,meta:'зелье · необычное · действие',
-  d:()=>`<p><b>Действием</b> выпей сам или влей в рот союзнику рядом.</p><p>Восстанавливает <b>4к4 + 4 хитов</b>. Лист сам прибавит их к твоим хитам.</p>`,use:{k:'heal',l:'Зелье большого лечения',n:4,s:4,b:4}},
- cloak:{n:'Плащ защиты',short:'+1 КД и спасброски',fight:1,mag:1,att:1,meta:'чудесный предмет · необычный · нужна настройка',
-  d:()=>`<p>Пока ты настроен на плащ и носишь его, у тебя <b>+1 к классу доспеха</b> и <b>+1 ко всем спасброскам</b>.</p><p class="mu">В тестовом листе этот +1 уже вписан в класс доспеха.</p>`},
- wand:{n:'Палочка волшебных снарядов',short:'1–3 заряда за раз',fight:1,mag:1,ch:7,rg:{n:1,s:6,b:1},meta:'палочка · необычная · 7 зарядов',
-  d:()=>`<p><b>Действием</b> потрать 1 заряд: вылетают <b>3 светящихся дротика</b>, каждый без промаха бьёт выбранную цель на 1к4 + 1 урона силовым полем. Каждый лишний заряд даёт ещё один дротик.</p><p>На рассвете восстанавливается <b>1к6 + 1</b> заряд. Если потратил последний, брось к20: на 1 палочка рассыпается в пепел.</p>`,
-  use:{k:'dice',l:'Волшебные снаряды: 3 дротика',n:3,s:4,b:3,t:'силовым полем, без промаха'}},
- hat:{n:'Шляпа маскировки',short:'Маскировка без ячеек',soc:1,mag:1,att:1,meta:'чудесный предмет · необычный · нужна настройка',
-  d:()=>`<p>Пока шляпа на тебе, можешь <b>действием</b> сотворить на себя <b>Маскировку</b> сколько угодно раз, без ячеек. Если шляпу снять, маскировка спадает.</p><p class="mu">Другой рост, голос не меняется. Кто трогает или пристально изучает, может раскусить проверкой Анализа против твоей сложности заклинаний.</p>`},
- amulet:{n:'Медальон мыслей',short:'читать мысли',soc:1,mag:1,att:1,ch:3,rg:{n:1,s:3,b:0},meta:'чудесный предмет · необычный · нужна настройка · 3 заряда',
-  d:()=>`<p><b>Действием</b> потрать 1 заряд и сотвори <b>Обнаружение мыслей</b> (сложность 13). Первые мысли существа рядом видны сразу, а глубже нужна новая попытка, и существо делает спасбросок Мудрости.</p><p>На рассвете восстанавливается <b>1к3</b> заряда.</p>`,use:{k:'charge',l:'Обнаружение мыслей'}},
- eyes:{n:'Глаза очарования',short:'Очарование, 3 заряда',soc:1,mag:1,att:1,ch:3,meta:'чудесный предмет · необычный · нужна настройка',
-  d:()=>`<p>Хрустальные линзы на глаза. <b>Действием</b> потрать 1 заряд: <b>Очарование личности</b> (сложность 13) на гуманоида в пределах 9 м, если вы видите друг друга.</p><p>Все заряды возвращаются на рассвете.</p>`,use:{k:'charge',l:'Очарование личности'}},
- stones:{n:'Камни послания',short:'связь с другом',soc:1,mag:1,meta:'чудесный предмет · необычный · пара камней',
-  d:()=>`<p>Пара гладких камней. Раз в день, держа один, можешь <b>действием</b> сотворить <b>Послание</b> тому, у кого второй камень: 25 слов и ответ.</p>`,use:{k:'charge',l:'Послание через камень'},ch:1},
- dust:{n:'Пыль исчезновения',short:'невидим на 2к4 минуты',fight:1,cons:1,mag:1,meta:'чудесный предмет · необычный · действие',
-  d:()=>`<p><b>Действием</b> подбрось пыль: ты и все в пределах 3 м становитесь <b>невидимы</b> на <b>2к4 минуты</b>. Невидимость кончается, если существо атакует или творит заклинание.</p>`,use:{k:'dice',l:'Пыль исчезновения: минут',n:2,s:4,b:0,t:'минут невидимости'}},
- scroll:{n:'Свиток Огненного шара',short:'8к6 огнём',fight:1,cons:1,mag:1,meta:'свиток · необычный · действие',
-  d:()=>`<p>Прочитай свиток <b>действием</b>: это Огненный шар 3 круга без ячейки. Взрыв радиусом 6 м в точке до 45 м. Каждый в нём делает спасбросок <b>Ловкости Сл ${spellDC()}</b>: при провале <b>8к6 огнём</b>, при успехе половина.</p><p>После прочтения свиток рассыпается.</p>`,use:{k:'dice',l:'Огненный шар со свитка',n:8,s:6,b:0,t:'огнём, при успехе спасброска половина'}}
+ tinder:{n:'Трутница',short:'огонь',pre:1,meta:'снаряжение',d:()=>`<p>Кремень, кресало и трут. Зажечь факел или что-то легковоспламеняющееся можно <b>действием</b>. Другой огонь разжигается около минуты.</p>`},
+ heal:{n:'Зелье лечения',short:'2к4 + 2 хитов',pre:1,fight:1,cons:1,mag:1,meta:'зелье · обычное · действие',
+  d:()=>`<p><b>Действием</b> выпей сама или влей в рот союзнику рядом.</p><p>Восстанавливает <b>2к4 + 2 хитов</b>. Лист сам прибавит их к твоим хитам, если пьёшь ты.</p>`,use:{k:'heal',l:'Зелье лечения',n:2,s:4,b:2}},
+ heal2:{n:'Зелье большого лечения',short:'4к4 + 4 хитов',pre:1,fight:1,cons:1,mag:1,meta:'зелье · необычное · действие',
+  d:()=>`<p><b>Действием</b> выпей сама или влей в рот союзнику рядом.</p><p>Восстанавливает <b>4к4 + 4 хитов</b>. Лист сам прибавит их к твоим хитам.</p>`,use:{k:'heal',l:'Зелье большого лечения',n:4,s:4,b:4}}
 };
 
 /* ---------- ИНВЕНТАРЬ ----------
@@ -1728,15 +1748,19 @@ const icat=k=>ICAT[k]||{};
 const isComp=k=>!!(icat(k).comp||(S.items[k]&&S.items[k].comp));
 const chMax=k=>icat(k).ch||0,chLeft=k=>chMax(k)-(S.items[k].used||0);
 const attN=()=>S.inv.filter(k=>S.items[k].on).length;
-function itemMeta(k){const o=S.items[k],c=icat(k);let m=c.meta||'свой предмет';if(o.q>1||c.cons)m+=` · ${o.q} шт.`;if(c.ch)m+=` · зарядов ${chLeft(k)} из ${c.ch}`;if(c.att)m+=o.on?' · настроен':' · не настроен';if(S.eq&&Object.values(S.eq).includes(k))m+=' · надето';return m}
+const ARMT={light:'лёгкий доспех',medium:'средний доспех',heavy:'тяжёлый доспех',shield:'щит'};
+function itemMeta(k){const o=S.items[k],c=icat(k);let m=c.meta||('свой предмет'+(o.armt?' · '+ARMT[o.armt]:''));if(o.metal)m+=' · металл';if(o.q>1||c.cons)m+=` · ${o.q} шт.`;if(c.ch)m+=` · зарядов ${chLeft(k)} из ${c.ch}`;if(c.att)m+=o.on?' · настроен':' · не настроен';if(S.eq&&Object.values(S.eq).includes(k))m+=' · надето';return m}
 function itemBody(k){const o=S.items[k],c=icat(k);
  let h=c.d?c.d():`<p>${esc(o.txt||o.short||'Описания пока нет. Нажми «Изменить» и впиши, что предмет делает.')}</p>`;
+ if(!c.d&&(o.armt||o.acb)){const A=armOf(k);h+=`<p><b>Класс доспеха:</b> ${A?`основа ${A.b}${A.dx==='full'?' + Ловкость':A.dx==='max2'?' + Ловкость (не больше +2)':''}`:o.shield?`+${o.acb} за щит`:`+${o.acb}`}${A&&o.acb?`, ещё +${o.acb} от вещи`:''}. Работает, пока вещь надета на вкладке «Экипировка».</p>`}
+ if(o.metal&&(o.armt||o.shield))h+=`<div class="how bad">Металлический: друиды не носят доспехи и щиты из металла.</div>`;
  h+=`<div class="itags"><button class="crow ck ${o.soc?'on':''}" data-itag="${k}:soc"><span><i class="box">${o.soc?'✓':''}</i>Пригодится в разговоре</span></button><button class="crow ck ${o.fight?'on':''}" data-itag="${k}:fight"><span><i class="box">${o.fight?'✓':''}</i>Пригодится в бою</span></button></div>`;
  h+=`<div class="iqty"><span>Сколько</span><button data-iq="${k}:-1" ${o.q>0?'':'disabled'}>−</button><b>${o.q}</b><button data-iq="${k}:1">+</button>${c.ch?`<span class="ich">${Array.from({length:c.ch},(_,i)=>`<span class="charge v ${i<(o.used||0)?'used':''}"></span>`).join('')}</span>`:''}</div>`;
  if(c.att)h+=`<div class="how">Настройка: короткий отдых рядом с предметом. Настроенных предметов не больше ${ATT_MAX}, сейчас <b>${attN()}</b>.</div>`;
  return h}
 function itemActs(k){const o=S.items[k],c=icat(k),u=c.use;let a='';
- if(u==='weapon')a+=`<button data-act="atk:dagger">Атаковать: к20 ${sg(daggerHit())}</button>`;
+ if(u==='scim'||u==='staff'||u==='dagger'){const hit=u==='scim'?scimHit():u==='staff'?mod(S.ab.str)+prof():daggerHit();
+  a+=wfB()?`<button disabled>В облике зверя оружие не взять в лапы</button>`:`<button data-act="atk:${u}">Атаковать: к20 ${sg(hit)}</button>`}
  else if(u&&u.k==='atk')a+=`<button data-act="iuse:${k}" ${o.q>0?'':'disabled'}>${c.cons?'Бросить':'Ударить'}: к20 ${sg(IMP())}${c.cons?` (останется ${Math.max(0,o.q-1)})`:''}</button>`;
  else if(u&&u.k==='heal')a+=`<button data-act="iuse:${k}" ${o.q>0?'':'disabled'}>Выпить: ${u.n}к${u.s} + ${u.b} хитов</button>`;
  else if(u&&(u.k==='dice'||u.k==='charge')){const ok=c.ch?chLeft(k)>0:o.q>0;a+=`<button data-act="iuse:${k}" ${ok?'':'disabled'}>${c.ch?'Потратить заряд':'Использовать'}${u.k==='dice'?`: ${u.n}к${u.s}${u.b?' + '+u.b:''}`:''}</button>`}
@@ -1773,12 +1797,15 @@ function renderInv(){const g=$('igrid');if(!g)return;
  /* всё на одном экране: если не помещается, плитки ужимаются */
  requestAnimationFrame(()=>{if(g.scrollHeight>g.clientHeight+1)g.classList.add('tight');if(g.scrollHeight>g.clientHeight+1)g.classList.add('tiny')})}
 function itemForm(k){const o=k?S.items[k]:{q:1},c=k?icat(k):{};const f=$('form');
+ const pre=k?[]:Object.keys(ICAT).filter(x=>ICAT[x].pre&&!S.items[x]);
  f.innerHTML=`<h2>${k?'Изменить предмет':'Новый предмет'}</h2>
+ ${pre.length?`<div class="prs"><small>Из справочника одним нажатием</small><div>${pre.map(x=>`<button type="button" class="pr" data-iprs="${x}">${ICAT[x].n}</button>`).join('')}</div></div>`:''}
  <label>Название<input name="n" value="${esc(o.n||c.n||'')}" style="text-align:left"></label>
  <label>Коротко, что даёт<input name="sh" value="${esc(o.short??c.short??'')}" style="text-align:left"></label>
  ${c.d?'':`<label>Описание<input name="tx" value="${esc(o.txt||'')}" style="text-align:left"></label>`}
  <div class="three"><label>Сколько<input name="q" type="number" inputmode="numeric" value="${o.q}"></label><label class="chk"><input type="checkbox" name="soc" ${o.soc?'checked':''}> разговор</label><label class="chk"><input type="checkbox" name="fight" ${o.fight?'checked':''}> бой</label></div>
  ${k&&ICAT[k]?'':`<label>Куда надевается<select name="slot"><option value="">не надевается</option>${Object.entries(EQTN).map(([v,n])=>`<option value="${v}" ${o.slot===v?'selected':''}>${n}</option>`).join('')}</select></label>`}
+ ${k&&ICAT[k]?'':`<div class="three"><label>Доспех<select name="armt"><option value="">не доспех</option>${Object.entries(ARMT).map(([v,n])=>`<option value="${v}" ${o.armt===v?'selected':''}>${n.replace(' доспех','')}</option>`).join('')}</select></label><label>Основа КД<input name="armb" type="number" inputmode="numeric" value="${o.armb||''}" placeholder="щит: +2"></label><label>Прибавка КД<input name="acb" type="number" inputmode="numeric" value="${o.armt==='shield'?'':(o.acb||'')}" placeholder="кольцо +1"></label></div><label class="chk" style="justify-content:flex-start"><input type="checkbox" name="metal" ${o.metal?'checked':''}> из металла (друиды не носят металлические доспехи и щиты)</label>`}
  ${c.comp?'':`<label class="chk" style="justify-content:flex-start"><input type="checkbox" name="comp" ${o.comp?'checked':''}> компонент для заклинаний (покажется в «Магии»)</label>`}
  <button class="go gold" type="submit">Сохранить</button>`;
  closeDrawer();$('sheet').classList.add('on');
@@ -1786,6 +1813,9 @@ function itemForm(k){const o=k?S.items[k]:{q:1},c=k?icat(k):{};const f=$('form')
   const key=k||('u'+Date.now().toString(36));const it=S.items[key]||(S.items[key]={});
   if(!c.n||nm!==c.n)it.n=nm;else delete it.n;const sh=f.sh.value.trim();if(sh!==(c.short??''))it.short=sh;else delete it.short;if(f.tx)it.txt=f.tx.value.trim();
   it.q=Math.max(0,parseInt(f.q.value)||0);it.soc=f.soc.checked?1:0;it.fight=f.fight.checked?1:0;if(f.comp)it.comp=f.comp.checked?1:0;if(f.slot){if(f.slot.value)it.slot=f.slot.value;else delete it.slot}
+  if(f.armt){const t=f.armt.value,ab=+f.armb.value||0,bn=+f.acb.value||0;delete it.armt;delete it.armb;delete it.shield;delete it.acb;
+   if(t==='shield'){it.armt=t;it.shield=1;it.acb=ab||2;it.slot='hand'}else if(t){it.armt=t;it.armb=ab||({light:11,medium:13,heavy:16})[t];if(bn)it.acb=bn;it.slot='body'}else if(bn)it.acb=bn;
+   if(f.metal.checked)it.metal=1;else delete it.metal}
   syncItems();save();renderAll();$('sheet').classList.remove('on');vib([10,40,15]);toast(k?'Сохранено':'Предмет в сумке')}}
 function invAct(a){const [w,k]=a.split(':');
  if(w.startsWith('eq'))return eqAct(w,k);
@@ -1802,6 +1832,7 @@ function invAct(a){const [w,k]=a.split(':');
 document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
  if(t.dataset.itag){const [k,f]=t.dataset.itag.split(':');S.items[k][f]=S.items[k][f]?0:1;syncItems();save();renderAll();openInfo('it_'+k,true);vib(8);e.stopImmediatePropagation();return}
  if(t.dataset.iq){const [k,d]=t.dataset.iq.split(':');const o=S.items[k];o.q=Math.max(0,o.q+ +d);save();renderAll();openInfo('it_'+k,true);vib(8);e.stopImmediatePropagation();return}
+ if(t.dataset.iprs){const x=t.dataset.iprs,c=ICAT[x];S.items[x]={q:1,fight:c.fight?1:0,soc:c.soc?1:0};syncItems();save();renderAll();$('sheet').classList.remove('on');e.stopImmediatePropagation();return}
  if(t.dataset.f&&t.closest('#iFilt')){invFilter=t.dataset.f;renderInv();vib(6);e.stopImmediatePropagation();return}
 },true);
 
@@ -1825,8 +1856,10 @@ const DEFAULT={v:2,name:'Арадия',race:'Шадар-кай',cls:'Друид'
  wild:{max:2,used:0},raven:{max:1,used:0},luck:{max:0,used:0},chaos:{max:0,used:0},insp:0,feats:[],
  langs:['Общий','Друидический','Бездны'],charTxt:'Скрытная, задумчивая, своеобразное мышление.',
  money:{pp:0,gp:10,sp:0,cp:0},log:[]};
-/* стартовое снаряжение: пока только то, что уже есть в справочнике; набор друида добавит тред «Инвентарь» */
-const KIT={explorer:{q:1},clothes:{q:1},pouch:{q:1}};
+/* стартовое снаряжение друида (набор друида и предыстория Чужеземец) + Звёздная карта */
+const KIT={leather:{q:1,fight:1},shield:{q:1,fight:1},scimitar:{q:1,fight:1},staff:{q:1,fight:1},focus:{q:1},starmap:{q:1,soc:1,fight:1},travel:{q:1},explorer:{q:1},trap:{q:1,fight:1},trophy:{q:1,soc:1}};
+/* что надето сначала: ключ предмета -> место */
+const EQ0={body:'leather',off:'shield',main:'scimitar',neck:'starmap',cloak:'travel',back:'explorer',belt:'focus'};
 /* тестового профиля у Арадии нет */
 let TEST=false;
 const SKEY='aradia-sheet-v1';
@@ -1837,7 +1870,9 @@ if(!S.cond)S.cond={};if(!S.condShow)S.condShow=COND_MAIN.slice();if(S.exh==null)
 /* магия друида (тред 2): наборы заклинаний вместо чародейских, запас Звёздной карты */
 if(!S.chart)S.chart={used:0};if(!S.mag2){S.mag2=1;S.fSpellShow=['produce_flame','thorn_whip','guiding_bolt','healing_word','entangle','faerie_fire','fog_cloud'];S.smagShow=['guidance','speak_with_animals','fog_cloud']}
 S.fSpellShow=S.fSpellShow.filter(k=>SPELLS[k]);S.smagShow=S.smagShow.filter(k=>SPELLS[k]);if(S.conc&&!SPELLS[S.conc])S.conc=null;if(S.known)S.known=S.known.filter(k=>SPELLS[k]);
-if(!S.items){S.items=structuredClone(KIT);if(!S.fItemShow.length)S.fItemShow=['holy','oil'];if(!S.sItemShow.length)S.sItemShow=['symbol','trinket']}
+/* инвентарь друида (тред 4): набор Арадии вместо прежнего пробного, свои предметы остаются; один раз */
+if(!S.inv2){S.inv2=1;const mine={};Object.keys(S.items||{}).filter(k=>/^u/.test(k)).forEach(k=>mine[k]=S.items[k]);S.items=Object.assign(structuredClone(KIT),mine);S.eq=Object.assign({},EQ0);S.sItemShow=[];S.fItemShow=[];if(S.chartLost)S.items.starmap.q=0;delete S.chartLost}
+if(!S.items)S.items=structuredClone(KIT);
 syncItems();
 const save=()=>{try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}};
 const $=id=>document.getElementById(id);
@@ -2809,7 +2844,12 @@ Object.assign(INFO,{
   <p>Один раз, потом нужен <b>долгий отдых</b>.</p>
   <p>${S.level>=3?'<b>С 3 уровня</b>: сразу после переноса у тебя <b>сопротивление всему урону</b> до начала твоего следующего хода. Ты в это время полупрозрачная.':'<span class="mu">С 3 уровня сразу после переноса будет ещё сопротивление всему урону до начала следующего хода.</span>'}</p>`,
   acts:`<button data-act="ravenUse" ${l?'':'disabled'}>Перенестись: потратить</button><button class="ghost" data-act="ravenBack" ${S.raven.used?'':'disabled'}>Вернуть (ошиблась)</button>`}},
- ac:()=>({t:'Класс доспеха',sub:`сейчас ${effAC()}`,body:`<p>Сколько должен выбросить враг на атаке (с бонусами), чтобы попасть по тебе.</p><p>Рекомендованный расчёт для Арадии: <b>кожаный доспех 11 + Ловкость ${sg(mod(S.ab.dex))} + деревянный щит 2 = ${11+mod(S.ab.dex)+2}</b>. Без щита ${11+mod(S.ab.dex)}.</p><p class="mu">Друиды не носят доспехи и щиты из металла.</p><div class="how">Число меняется в «Правке листа» (карандаш сверху). Считать класс доспеха от надетых вещей будет вкладка «Экипировка».</div>`,acts:`<button class="ghost" data-act="editChar">Изменить</button>`}),
+ ac:()=>{const P=acParts(),man=S.acManual!=null,W=acWarn(),row=(a,b,c)=>`<div class="acrow ${c||''}"><span>${a}</span><b>${b}</b></div>`;
+  return{t:'Класс доспеха',sub:man?`вписано вручную · ${S.acManual}`:`считается от надетого · ${P.total}`,
+   body:`<p>Сколько должен выбросить враг (к20 и его бонус), чтобы <b>попасть</b> по тебе.</p><div class="acbox">${row(P.A?esc(ITEMS[P.bk].n)+', основа':'Доспеха нет, основа',P.base)}${row('Ловкость'+(P.A&&P.A.dx==='max2'?', не больше +2':P.A&&P.A.dx==='none'?', тяжёлый доспех её не прибавляет':''),sg(P.dxv))}${P.shk?row(esc(ITEMS[P.shk].n),'+'+P.sh):''}${P.other.map(x=>row(esc(ITEMS[x[0]].n),'+'+x[1])).join('')}${row('Итого',P.total,'tot')}</div>`
+    +(man?`<div class="how">Сейчас в «Правке листа» вписано <b>${S.acManual}</b>. По надетым вещам вышло бы ${P.total}.</div>`:'')
+    +W.map(x=>`<div class="how bad">${x.t}</div>`).join('')+`<p class="mu">Класс доспеха меняется, когда надеваешь или снимаешь доспех и щит на вкладке «Экипировка».</p>`,
+   acts:man?`<button data-act="acAuto">Считать от надетого: ${P.total}</button>`:`<button class="ghost" data-act="editChar">Вписать своё число</button>`,bang:'qt_ac'}},
  move:()=>({t:'Скорость',sub:`${effSpeed()} футов за ход`,body:`<p>Столько футов можешь пройти за свой ход. Одна клетка на карте обычно 5 футов, значит <b>${Math.floor(effSpeed()/5)} клеток</b>.</p><p>Движение можно делить: пройти, сделать действие, пройти ещё.</p>${effSpeed()!==baseSpd()?'<p class="mu">Сейчас скорость снижена состоянием или истощением.</p>':''}`,acts:''}),
  r_dark:()=>({t:'Тёмное зрение',sub:'шадар-кай · 60 футов',body:`<p>В пределах <b>60 футов</b> ты видишь в тусклом свете как при ярком, а в темноте как при тусклом.</p><p>В темноте цвета не различаешь, только оттенки серого.</p>`,acts:''}),
  r_fey:()=>({t:'Наследие фей',sub:'шадар-кай',body:`<p>• <b>Преимущество</b> на спасброски против того, чтобы тебя <b>очаровали</b>.</p><p>• Магия не может тебя <b>усыпить</b>.</p><div class="how">Когда мастер просит спасбросок против очарования, включи «Преимущество» над листками характеристик и бросай.</div>`,acts:''}),
@@ -2964,9 +3004,44 @@ const QUOTE={
  chart:{h:"Круг звёзд: Звёздная карта",s:"Tasha's Cauldron of Everything",u:'https://dnd.su/class/90-druid/#circle.stars',
   t:`<p>Занимаясь изучением небес над головой, вы создали звёздную карту. Эта карта является Крошечным объектом, служащим в качестве заклинательной фокусировки для ваших заклинаний друида. Вы можете сами решить, как будет выглядеть этот объект, или можете совершить бросок по таблице «Звёздная карта».</p><p>Держа эту карту, вы получаете следующие преимущества:</p><p>Вы узнаёте заговор указание [guidance].</p><p>Вы подготавливаете заклинание направляющий снаряд [guiding bolt]. Для вас оно считается заклинанием друида. Оно всегда считается подготовленным и не учитывается при подсчёте количества заклинаний, которые можно подготовить.</p><p>Вы можете накладывать направляющий снаряд [guiding bolt] без использования ячеек заклинаний. Вы можете делать это количество раз, равное вашему бонусу мастерства, и восстанавливаете все потраченные использования после окончания продолжительного отдыха.</p><p>Если вы потеряете свою звёздную карту, то вы можете провести ритуал длительностью 1 час, чтобы сделать новую. Эта церемония может быть проведена в течение короткого или продолжительного отдыха, и старая карта уничтожается после создания новой.</p>`},
  form:{h:"Круг звёзд: Звёздный облик",s:"Tasha's Cauldron of Everything",u:'https://dnd.su/class/90-druid/#circle.stars',
-  t:`<p>Бонусным действием вы можете потратить одно использование умения «Дикий облик», чтобы принять звёздный облик, а не облик Зверя.</p><p>Находясь в звёздном облике, вы сохраняете все свои игровые показатели, однако ваше тело становится светящимся: ваши суставы мерцают как звёзды, и их, подобно изображениям на звёздных картах, соединяют светящиеся линии. Этот облик излучает яркий свет в пределах 10 футов и тусклый свет в пределах еще 10 футов. Этот облик активен в течение 10 минут. Он заканчивается раньше, если вы становитесь недееспособны, умираете или используете его ещё раз.</p><p>Каждый раз, когда вы принимаете звёздный облик, выберите одно из указанных ниже созвездий, которое будет мерцать на вашем теле. Ваш выбор определяет преимущества, пока вы находитесь в звёздном облике:</p><p>Лучник. На вас проявляется созвездие лучника. Когда вы активируете этот облик, а также в ваши последующие ходы бонусным действием, пока он активен, вы можете совершать дальнобойные атаки заклинанием, направляя светящиеся стрелы в цель, находящуюся в пределах 60 футов от вас. При попадании цель получает урон излучением в количестве, равном 1к8 + ваш модификатор Мудрости.</p><p>Чаша. На вас проявляется созвездие животворящего кубка. Когда вы накладываете заклинание, которое тратит ячейку заклинания и восстанавливает хиты существа, вы или другое существо в пределах 30 футов от вас можете восстановить хиты в количестве, равном 1к8 + ваш модификатор Мудрости.</p><p>Дракон. На вас проявляется созвездие мудрого дракона. Когда вы совершаете проверку Интеллекта или Мудрости, а также когда вы совершаете спасбросок Телосложения для поддержания концентрации на заклинании, вы можете при выпадении на к20 результата «1–9» считать, что выпало «10».</p>`}
+  t:`<p>Бонусным действием вы можете потратить одно использование умения «Дикий облик», чтобы принять звёздный облик, а не облик Зверя.</p><p>Находясь в звёздном облике, вы сохраняете все свои игровые показатели, однако ваше тело становится светящимся: ваши суставы мерцают как звёзды, и их, подобно изображениям на звёздных картах, соединяют светящиеся линии. Этот облик излучает яркий свет в пределах 10 футов и тусклый свет в пределах еще 10 футов. Этот облик активен в течение 10 минут. Он заканчивается раньше, если вы становитесь недееспособны, умираете или используете его ещё раз.</p><p>Каждый раз, когда вы принимаете звёздный облик, выберите одно из указанных ниже созвездий, которое будет мерцать на вашем теле. Ваш выбор определяет преимущества, пока вы находитесь в звёздном облике:</p><p>Лучник. На вас проявляется созвездие лучника. Когда вы активируете этот облик, а также в ваши последующие ходы бонусным действием, пока он активен, вы можете совершать дальнобойные атаки заклинанием, направляя светящиеся стрелы в цель, находящуюся в пределах 60 футов от вас. При попадании цель получает урон излучением в количестве, равном 1к8 + ваш модификатор Мудрости.</p><p>Чаша. На вас проявляется созвездие животворящего кубка. Когда вы накладываете заклинание, которое тратит ячейку заклинания и восстанавливает хиты существа, вы или другое существо в пределах 30 футов от вас можете восстановить хиты в количестве, равном 1к8 + ваш модификатор Мудрости.</p><p>Дракон. На вас проявляется созвездие мудрого дракона. Когда вы совершаете проверку Интеллекта или Мудрости, а также когда вы совершаете спасбросок Телосложения для поддержания концентрации на заклинании, вы можете при выпадении на к20 результата «1–9» считать, что выпало «10».</p>`},
+ arm_gen:{h:"Доспехи: владение, Класс Доспеха, щиты",s:"Player's Handbook",u:'https://dnd.su/articles/inventory/147-armor-arms-equipment-tools/',
+  t:`<p><b>Владение доспехами.</b> Кто угодно может напялить доспех или пристегнуть щит к руке. Но только тот, кто знает, как носить доспех, может носить его эффективно. Ваш класс даёт владение некоторыми видами доспехов. Если вы носите доспех, которым не владеете, вы совершаете с помехой все проверки характеристик, спасброски и броски атаки, использующие Силу или Ловкость, и вы не можете накладывать заклинания.</p><p><b>Класс Доспеха (КД).</b> Доспех защищает владельца от атак. Надетый доспех (и щит) определяет базовый Класс Доспеха.</p><p><b>Щиты.</b> Щит изготавливается из дерева или металла, и несётся одной рукой. Использование щита увеличивает КД на 2. Вы получаете преимущество только от одного щита одновременно.</p>`},
+ arm_leather:{h:"Таблица «Доспехи»: Кожаный",s:"Player's Handbook",u:'https://dnd.su/articles/inventory/147-armor-arms-equipment-tools/',
+  t:`<p><b>Лёгкий доспех. Кожаный.</b> Стоимость: 10 зм. Класс Доспеха (КД): 11 + модификатор Лов. Сила: —. Скрытность: —. Вес: 10 фнт.</p><p><b>Кожаный.</b> Нагрудник и плечи этого доспеха изготовлены из кожи, вываренной в масле. Остальные части доспеха сделаны из более мягких и гибких материалов.</p>`},
+ arm_shield:{h:"Таблица «Доспехи»: Щит",s:"Player's Handbook",u:'https://dnd.su/articles/inventory/147-armor-arms-equipment-tools/',
+  t:`<p><b>Щит.</b> Стоимость: 10 зм. Класс Доспеха (КД): 2. Сила: —. Скрытность: —. Вес: 6 фнт.</p><p><b>Щиты.</b> Щит изготавливается из дерева или металла, и несётся одной рукой. Использование щита увеличивает КД на 2. Вы получаете преимущество только от одного щита одновременно.</p>`},
+ arm_time:{h:"Надевание и снятие доспехов",s:"Player's Handbook",u:'https://dnd.su/articles/inventory/147-armor-arms-equipment-tools/',
+  t:`<p>Время, нужное для надевания и снятия доспехов, зависит от их вида.</p><p><b>Надевание.</b> Столько времени требуется для надевания доспеха. Вы получаете КД от доспеха только если потратили нужное время на его надевание.</p><p><b>Снятие.</b> Столько времени требуется на снятие доспеха. Если вам помогают, уменьшите время вдвое.</p><p><b>Лёгкий доспех:</b> надевание 1 минута, снятие 1 минута. <b>Средний доспех:</b> надевание 5 минут, снятие 1 минута. <b>Тяжёлый доспех:</b> надевание 10 минут, снятие 5 минут. <b>Щит:</b> надевание 1 действие, снятие 1 действие.</p>`},
+ druid_prof:{h:"Друид: Владение и снаряжение",s:"Player's Handbook",u:'https://dnd.su/class/90-druid/',
+  t:`<p><b>Доспехи:</b> Лёгкие доспехи, средние доспехи, щиты (друиды не носят доспехи и щиты из металла)</p><p><b>Оружие:</b> Боевые посохи, булавы, дротики, дубинки, кинжалы, копья, метательные копья, пращи, серпы, скимитары</p><p><b>Инструменты:</b> Набор травника</p><p>Вы начинаете со следующим снаряжением в дополнение к снаряжению, полученному за вашу предысторию: а) деревянный щит или б) одно простое оружие а) скимитар или б) простое рукопашное оружие Кожаный доспех, набор путешественника и фокусировка друидов Если вы откажетесь от этого снаряжения, а также от предметов, предлагаемых вашей предысторией, то вы начнёте игру с 2к4 × 10 зм для покупки снаряжения.</p>`},
+ w_scim:{h:"Оружие: Скимитар",s:"Player's Handbook",u:'https://dnd.su/articles/inventory/147-armor-arms-equipment-tools/',
+  t:`<p><b>Воинское рукопашное оружие. Скимитар.</b> Стоимость: 25 зм. Урон: 1к6 рубящий. Вес: 3 фнт. Свойства: лёгкое, фехтовальное.</p><p><b>Лёгкое.</b> Лёгкое оружие маленькое и удобное, и идеально подходит для сражения двумя оружиями. Смотрите правила по сражению двумя оружиями в главе 9.</p><p><b>Фехтовальное.</b> При совершении атаки фехтовальным оружием вы сами выбираете, какой модификатор использовать при совершении бросков атаки и урона — модификатор Силы или Ловкости. Для обоих бросков должен использоваться один и тот же модификатор.</p>`},
+ w_staff:{h:"Оружие: Боевой посох",s:"Player's Handbook",u:'https://dnd.su/articles/inventory/147-armor-arms-equipment-tools/',
+  t:`<p><b>Простое рукопашное оружие. Боевой посох.</b> Стоимость: 2 см. Урон: 1к6 дробящий. Вес: 4 фнт. Свойства: универсальное (1к8).</p><p><b>Универсальное.</b> Это оружие можно использовать как одной, так и двумя руками. Урон, указанный в скобках после этого свойства, означает урон при совершении рукопашной атаки двумя руками.</p>`},
+ w_dagger:{h:"Оружие: Кинжал",s:"Player's Handbook",u:'https://dnd.su/articles/inventory/147-armor-arms-equipment-tools/',
+  t:`<p><b>Простое рукопашное оружие. Кинжал.</b> Стоимость: 2 зм. Урон: 1к4 колющий. Вес: 1 фнт. Свойства: лёгкое, метательное (дис. 20/60), фехтовальное.</p><p><b>Лёгкое.</b> Лёгкое оружие маленькое и удобное, и идеально подходит для сражения двумя оружиями. Смотрите правила по сражению двумя оружиями в главе 9.</p><p><b>Метательное.</b> Если у оружия есть свойство «метательное», вы можете совершать им дальнобойные атаки, метая его. Если это рукопашное оружие, вы используете для бросков атаки и урона тот же модификатор характеристики, что и при совершении рукопашной атаки этим оружием. Например, если вы метаете ручной топор, вы используете Силу, а если метаете кинжал, то можете использовать либо Силу, либо Ловкость, так как у кинжала есть свойство «фехтовальное».</p><p><b>Фехтовальное.</b> При совершении атаки фехтовальным оружием вы сами выбираете, какой модификатор использовать при совершении бросков атаки и урона — модификатор Силы или Ловкости. Для обоих бросков должен использоваться один и тот же модификатор.</p>`},
+ focus:{h:"Снаряжение: Фокусировка друидов",s:"Player's Handbook",u:'https://dnd.su/articles/inventory/147-armor-arms-equipment-tools/',
+  t:`<p><b>Фокусировка друидов.</b> Фокусировкой друида может быть веточка омелы или падуба, палочка или скипетр из тиса или другого дерева, посох, созданный из живого дерева, или тотем с перьями, мехом, костями и зубами священных животных. Друид может использовать эти предметы в качестве фокусировки для заклинаний, как описано в главе 10.</p><p><b>Фокусировка друидов (таблица «Снаряжение»):</b> веточка омелы 1 зм; деревянный посох 5 зм, 4 фнт.; тисовая палочка 10 зм, 1 фнт.; тотем 1 зм.</p>`},
+ pack:{h:"Наборы снаряжения: Набор путешественника",s:"Player's Handbook",u:'https://dnd.su/articles/inventory/147-armor-arms-equipment-tools/',
+  t:`<p><b>Набор путешественника (10 зм).</b> Включает рюкзак, спальник, столовый набор, трутницу, 10 факелов, рационы на 10 дней и бурдюк. В набор также входит 50-футовая пеньковая верёвка, закреплённая сбоку.</p>`},
+ trap:{h:"Снаряжение: Охотничий капкан",s:"Player's Handbook",u:'https://dnd.su/articles/inventory/147-armor-arms-equipment-tools/',
+  t:`<p><b>Охотничий капкан.</b> Если вы действием установите эту ловушку, она образует стальное кольцо с зазубренными краями, которая захлопывается, когда в её центр наступает существо. Капкан привязывается толстой цепью к неподвижному предмету, такому как дерево или колышек, вбитый в землю. Существо, наступившее в центр, должно преуспеть в спасброске Ловкости Сл 13, иначе оно получает 1к4 колющего урона и прекращает перемещение. Впоследствии, пока существо не высвободится из ловушки, его перемещения ограничены длиной цепи (обычно 1 метр). Любое существо может действием совершить проверку Силы Сл 13, чтобы высвободить себя или другое существо, находящееся в пределах досягаемости. Каждая проваленная проверка причиняет пойманному существу 1 колющего урона.</p>`},
+ torch:{h:"Снаряжение: Факел",s:"Player's Handbook",u:'https://dnd.su/articles/inventory/147-armor-arms-equipment-tools/',
+  t:`<p><b>Факел.</b> Факел горит 1 час, испуская яркий свет в пределах 20 футов и тусклый свет в пределах ещё 20 футов. Если вы совершаете рукопашную атаку горящим факелом и попадаете, он причиняет урон огнём 1.</p>`},
+ tinder:{h:"Снаряжение: Трутница",s:"Player's Handbook",u:'https://dnd.su/articles/inventory/147-armor-arms-equipment-tools/',
+  t:`<p><b>Трутница.</b> В этом небольшом контейнере находится кремень, кресало и трут (обычно это сухая тряпка, вымоченная в масле), используемые для разжигания огня. Использование его для разжигания факела — или чего-нибудь другого, легковоспламеняющегося — требует одного действия. Разжигание другого огня требует 1 минуты.</p>`},
+ herb:{h:"Инструменты: Набор травника",s:"Player's Handbook",u:'https://dnd.su/articles/inventory/147-armor-arms-equipment-tools/',
+  t:`<p><b>Набор травника.</b> В этот набор входят разнообразные инструменты, такие как ножницы, ступка и пестик, а также мешочки и флаконы, используемые травниками при создании снадобий и зелий. Владение этим набором позволяет добавлять бонус мастерства к проверкам характеристик, совершённым при опознании и использовании трав. Кроме того, владение этим набором требуется для создания противоядия и зелья лечения.</p>`},
+ clothes:{h:"Таблица «Снаряжение»: Одежда, дорожная",s:"Player's Handbook",u:'https://dnd.su/articles/inventory/147-armor-arms-equipment-tools/',
+  t:`<p><b>Одежда, дорожная.</b> Стоимость: 2 зм. Вес: 4 фнт.</p><p><i>В таблице снаряжения у этого предмета нет отдельного описания.</i></p>`},
+ potion:{h:"Зелье лечения",s:"Dungeon Master's Guide",u:'https://dnd.su/items/61-potion-of-healing/',
+  t:`<p><i>Зелье, редкость варьируется (обычный, необычный, редкий, очень редкий)</i></p><p>Вы восстанавливаете хиты, когда выпиваете это зелье. Количество восстанавливаемых хитов зависит от редкости зелья, как показано в таблице «зелья лечения». Вне зависимости от силы зелья оно представляет собой красную жидкость, сверкающую при встряхивании.</p><p><b>Таблица «Зелья лечения»:</b> зелье лечения, обычное: 2к4 + 2 хитов. Зелье большого лечения, необычное: 4к4 + 4 хитов. Зелье отличного лечения, редкое: 8к4 + 8 хитов. Зелье превосходного лечения, очень редкое: 10к4 + 20 хитов.</p>`}
 };
 const QMAP={cf_cast:['cast','ritual','comp'],book:['cast'],spelldc:['dc'],slots:['slots'],chart:['chart'],cf_circle:['chart','form'],conc:['conc']};
+Object.assign(QMAP,{ac:['arm_gen','druid_prof'],eqs_body:['arm_gen','arm_time','druid_prof'],eqs_main:['druid_prof'],eqs_off:['arm_shield','druid_prof'],
+ it_leather:['arm_leather','arm_gen','arm_time','druid_prof'],it_shield:['arm_shield','arm_time','druid_prof'],it_scimitar:['w_scim','druid_prof'],it_staff:['w_staff','druid_prof'],it_dagger:['w_dagger','druid_prof'],
+ it_focus:['focus','comp'],it_starmap:['chart','comp'],it_explorer:['pack'],it_trap:['trap'],it_torch:['torch'],it_tinder:['tinder'],it_herbkit:['herb','druid_prof'],it_travel:['clothes'],it_heal:['potion'],it_heal2:['potion']});
 const qHtml=q=>{const Q=QUOTE[q];return `<div class="qbox"><div class="qh">${Q.h}</div>${Q.t}<div class="qsrc">Источник: ${Q.s}, перевод dnd.su. <a class="dsu" href="${Q.u}" target="_blank" rel="noopener">Открыть на dnd.su ↗</a></div></div>`};
 Object.keys(QMAP).forEach(k=>INFO['qt_'+k]=()=>({t:'Правила дословно',sub:'точная цитата с dnd.su, можно показать мастеру',body:QMAP[k].map(qHtml).join(''),acts:`<button class="ghost" data-info="${k}">← Назад</button>`}));
 /* «!» у заклинания: полный текст заклинания дословно + общие правила, которые к нему относятся */
@@ -2975,10 +3050,10 @@ Object.keys(SPFULL).forEach(k=>INFO['full_'+k]=()=>{const f=SPFULL[k],p=SPELLS[k
 /* ---------- ЭКИПИРОВКА ----------
    S.eq[слот] = ключ предмета из S.items. Надеваются только носимые вещи: EQK[ключ] (типы мест) или у своего предмета поле slot.
    Расходные (cons) не надеваются никогда. Настройка (o.on) общая с инвентарём, до ATT_MAX. */
-const ESLOT={head:{n:'Голова',p:[.485,.06]},eyes:{n:'Глаза',p:[.485,.11]},neck:{n:'Шея',p:[.485,.19]},cloak:{n:'Плечи',p:[.485,.245]},body:{n:'Тело',p:[.485,.35]},
- hands:{n:'Кисти рук',p:[.15,.56]},belt:{n:'Пояс',p:[.485,.483]},ring1:{n:'Кольцо',p:[.14,.58]},ring2:{n:'Кольцо',p:[.86,.58]},feet:{n:'Обувь',p:[.485,.94]},
- main:{n:'Правая рука',p:[.14,.56]},back:{n:'Спина',p:[.485,.3]},off:{n:'Левая рука',p:[.86,.56]}};
-const EQK={hat:['head'],eyes:['eyes'],amulet:['neck'],symbol:['neck','hand'],cloak:['cloak'],fine:['body'],clothes:['body'],pouch:['belt'],explorer:['back'],dagger:['hand'],wand:['hand']};
+const ESLOT={head:{n:'Голова',p:[.5,.1]},eyes:{n:'Глаза',p:[.5,.155]},neck:{n:'Шея',p:[.5,.3]},cloak:{n:'Плечи',p:[.3,.4]},body:{n:'Тело',p:[.5,.48]},
+ hands:{n:'Кисти рук',p:[.94,.58]},belt:{n:'Пояс',p:[.55,.545]},ring1:{n:'Кольцо',p:[.94,.6]},ring2:{n:'Кольцо',p:[.06,.6]},feet:{n:'Обувь',p:[.5,.95]},
+ main:{n:'Правая рука',p:[.06,.58]},back:{n:'Спина',p:[.5,.44]},off:{n:'Левая рука',p:[.94,.58]}};
+const EQK={leather:['body'],shield:['hand'],scimitar:['hand'],staff:['hand'],dagger:['hand'],focus:['hand','belt'],starmap:['neck'],travel:['cloak','body'],explorer:['back']};
 const EQTN={head:'Голова (шляпа, шлем)',eyes:'Глаза (линзы, очки)',neck:'Шея (амулет)',cloak:'Плечи (плащ)',body:'Тело (одежда, доспех)',hands:'Кисти рук (перчатки)',belt:'Пояс',ring:'Палец (кольцо)',feet:'Ноги (обувь)',hand:'Рука (оружие, щит, посох)',back:'Спина (рюкзак)'};
 const EQI={
  head:'<path d="M4 21c4 2.5 20 2.5 24 0M8 20.5c0-6 2.5-11 8-11s8 5 8 11M8.6 16.5h14.8"/>',
@@ -2994,10 +3069,12 @@ const EQI={
  off:'<path d="M10.5 28V15.5L8 10a1.5 1.5 0 0 1 2.7-1.3l2 3.8V5.5a1.5 1.5 0 0 1 3 0v6.5-8a1.5 1.5 0 0 1 3 0v8-6a1.5 1.5 0 0 1 3 0v10l1.2-2.6a1.5 1.5 0 0 1 2.7 1.2L23.5 22c-1 3.8-2.8 6-5.5 6Z"/>',
  back:'<path d="M11 8.5c0-3.5 2-5.5 5-5.5s5 2 5 5.5"/><path d="M7 12c0-2 1.8-3.5 4-3.5h10c2.2 0 4 1.5 4 3.5v14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2Z"/><path d="M7 16.5h18M14 16.5v4h4v-4"/>'};
 const EQII={dagger:EQI.main,
- wand:'<path d="M6.5 26.5 22 11"/><path d="M5 25l2.5 2.5"/><path d="M25 3v8M21 7h8M22.2 4.2l5.6 5.6M27.8 4.2l-5.6 5.6" stroke-width="1"/>',
- symbol:'<circle cx="16" cy="16" r="5.5"/><path d="M16 3v5M16 24v5M3 16h5M24 16h5M6.8 6.8l3.5 3.5M21.7 21.7l3.5 3.5M25.2 6.8l-3.5 3.5M10.3 21.7l-3.5 3.5"/>',
- pouch:'<path d="M10.5 10.5c-3 3-4.5 8-3.5 12 1 4 5 6 9 6s8-2 9-6c1-4-.5-9-3.5-12Z"/><path d="M11 10.5h10M13 6l3 4.5 3-4.5"/>',
- fine:'<path d="M11 5 5 9l2 6 3-1v14h12V14l3 1 2-6-6-4c-1 2-3 3-5 3s-4-1-5-3Z"/><path d="M16 8v20M13.5 13h.1M13.5 17h.1M13.5 21h.1"/>'};
+ shield:'<path d="M16 3.5 6.5 7v8.5c0 6 4 10 9.5 13 5.5-3 9.5-7 9.5-13V7Z"/><circle cx="16" cy="14.5" r="3.2"/><path d="M16 3.5v7.8M16 17.7v10.3"/>',
+ scimitar:'<path d="M23.5 4.5C23 11 18 17 12.5 19.5l2 2.5c7-3 12-10 9-17.5Z"/><path d="M9 17.5l7 6.5M12.5 22 6.5 27.5"/><circle cx="5.6" cy="28.4" r="1.4"/>',
+ staff:'<path d="M6.5 27.5 24 6"/><path d="M24 6c-1.5-2.5.5-4 2.5-3.5 1.8.4 2.3 2.7.6 3.9M20.5 10 26 9"/>',
+ focus:'<path d="M6.5 26.5 22 11"/><path d="M5 25l2.5 2.5"/><path d="M25 3v8M21 7h8M22.2 4.2l5.6 5.6M27.8 4.2l-5.6 5.6" stroke-width="1"/>',
+ starmap:'<path d="M7 4c0 8 4 12.5 9 13.5M25 4c0 8-4 12.5-9 13.5"/><path d="M16 18.5l1.8 3.7 3.8.9-3.8 1 -1.8 3.9-1.8-3.9-3.8-1 3.8-.9Z"/>',
+ travel:EQI.cloak};
 let eqBusy=false;
 const stype=s=>s.startsWith('ring')?'ring':(s==='main'||s==='off')?'hand':s;
 function wearT(k){const o=S.items[k];if(!o||icat(k).cons)return[];return o.slot?[o.slot]:(EQK[k]||[])}
@@ -3006,10 +3083,8 @@ const wornN=k=>Object.values(S.eq).filter(x=>x===k).length;
 const slotsOf=k=>Object.keys(ESLOT).filter(s=>S.eq[s]===k);
 function eqClean(){for(const s in S.eq){const k=S.eq[s];if(!ESLOT[s]||!S.items[k]||!fits(k,s))delete S.eq[s]}
  S.inv.forEach(k=>{const sl=slotsOf(k);while(sl.length>Math.max(0,S.items[k].q))delete S.eq[sl.pop()]})}
-if(!S.eq){S.eq={};const put=(s,k)=>{if(S.items[k]&&S.items[k].q>0&&!S.eq[s]&&fits(k,s))S.eq[s]=k};
- put('body',S.items.clothes?'clothes':'fine');put('belt','pouch');put('back','explorer');put('main','dagger');
- S.inv.filter(k=>S.items[k].on).forEach(k=>{const s=Object.keys(ESLOT).find(s=>fits(k,s)&&!S.eq[s]);if(s)S.eq[s]=k});eqClean();save()}
-function freeSlot(k){const ok=Object.keys(ESLOT).filter(s=>fits(k,s));return ok.find(s=>!S.eq[s])||ok[0]}
+if(!S.eq)S.eq=Object.assign({},EQ0);eqClean();save();
+function freeSlot(k){const ok=Object.keys(ESLOT).filter(s=>fits(k,s));if(icat(k).shield)ok.sort((a,b)=>(b==='off')-(a==='off'));return ok.find(s=>!S.eq[s])||ok[0]}
 function slotHtml(s){const k=S.eq[s],o=k&&S.items[k],c=k?icat(k):{};
  const ic=(k&&EQII[k])||(k&&!EQK[k]&&EQI[s.startsWith('ring')?'ring':s])||EQI[s.startsWith('ring')?'ring':s];
  return `<button class="eslot ${k?'full':''} ${c.mag?'mag':''}" data-es="${s}" aria-label="${ESLOT[s].n}"><span class="bx" id="eb_${s}"><svg viewBox="0 0 32 32">${ic}</svg>${c.att?`<i class="dm ${o.on?'on':''}"></i>`:''}</span><span class="nm">${esc(k?ITEMS[k].n:ESLOT[s].n)}</span></button>`}
@@ -3031,7 +3106,7 @@ INFO.attune=()=>{const at=S.inv.filter(k=>S.items[k].on),need=S.inv.filter(k=>ic
   body:`<p>Некоторые волшебные вещи работают, только если ты <b>настроен</b> на них: между тобой и вещью есть связь. Настроиться можно не больше чем на <b>${ATT_MAX}</b> предмета сразу.</p><p>Настроиться: провести <b>короткий отдых</b> рядом с вещью. Если вещь надо носить (плащ, шляпа, медальон, линзы), то она действует, только пока надета и настроена.</p>`
    +([...at,...need].map(k=>`<button class="crow" data-info="it_${k}"><span>${S.items[k].on?'◆':'◇'} ${esc(ITEMS[k].n)}</span><small>${S.items[k].on?'настроен':'не настроен'}${wornN(k)?' · надето':''}</small></button>`).join('')||'<p class="mu">Пока нет вещей, которым нужна настройка.</p>'),acts:''}};
 /* физика: вещь падает в ячейку, по нити бежит свет к месту на теле, тело чуть вздрагивает */
-function eqFx(s,k){if(RM)return;const bx=$('eb_'+s),wr=$('eqwrap'),fw=$('efw');if(!bx||!wr||!fw)return;const col=icat(k).mag?'165,124,255':'233,189,108';
+function eqFx(s,k){if(RM)return;const bx=$('eb_'+s),wr=$('eqwrap'),fw=$('efw');if(!bx||!wr||!fw)return;const col=icat(k).mag?'169,201,234':'240,196,122';
  bx.animate([{transform:'translateY(-16px) scale(1.28)',opacity:.15},{transform:'translateY(0) scale(.86)',opacity:1,offset:.45},{transform:'scale(1.05)',offset:.72},{transform:'scale(1)'}],{duration:430,easing:'cubic-bezier(.3,.7,.4,1)'});
  bx.animate([{boxShadow:`0 0 0 0 rgba(${col},.95),inset 0 0 0 3px rgba(0,0,0,.35)`},{boxShadow:`0 0 0 16px rgba(${col},0),inset 0 0 0 3px rgba(0,0,0,.35)`}],{duration:560,delay:190,easing:'ease-out'});
  const W=wr.getBoundingClientRect(),B=bx.getBoundingClientRect(),F=fw.getBoundingClientRect(),p=ESLOT[s].p;
@@ -3090,7 +3165,7 @@ function act(a){
  if(a.startsWith('castl:')){const k=a.slice(6);if(!SPELLS[k]||noAct())return;closeDrawer();castWave(k);return}
  if(a.startsWith('buyc:')||a.startsWith('havec:')){const [w,k]=a.split(':'),p=SPELLS[k],c=p.cost;if(canPay(p))return;
   if(w==='buyc'){if(!payCp(costCp(p)))return;coinDrop(tapPt.x,tapPt.y,Math.min(9,3+Math.round(c.gp/20)));vib([10,25,10,25,30])}else vib([12,30,18]);
-  S.items[c.key]=Object.assign(S.items[c.key]||{},{q:1});syncItems();save();renderAll();openInfo('sp_'+k,true);return}
+  S.items[c.key]=Object.assign(S.items[c.key]||{},{q:1},ICAT[c.key]?{}:{n:c.what.charAt(0).toUpperCase()+c.what.slice(1),short:`для «${p.n}», ${c.gp} зм`,comp:1,txt:`Платный компонент заклинания «${p.n}»: ${c.what} стоимостью ${c.gp} золотых. ${c.cons?'Расходуется при сотворении.':'При сотворении не тратится.'} Пока он в инвентаре, заклинание можно творить; золото за сотворение не списывается.`});syncItems();save();renderAll();openInfo('sp_'+k,true);return}
  if(a.startsWith('sproll:')){const [,k,i]=a.split(':'),x=SPELLS[k].rolls[+i];closeDrawer();if(x.end&&S.conc===k){S.conc=null;save();renderAll()}vib([15,30,15]);
   if(x.att){if(noAct())return;const A=x.att,w=mod(S.ab.wis);return d20({label:x.l+': атака',bonus:[{l:'Мудрость',v:w},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:SPELLS[k].n,dn:A.dn,ds:A.ds,k:w,kl:'Мудрость',t:A.t,fx:A.fx||'steel'}})}
   const tt=typeof x.t==='function'?x.t():x.t;
@@ -3120,6 +3195,7 @@ function act(a){
  if(a==='ravenBack'){S.raven.used=0;re();openInfo('raven',true);return}
  if(a==='shortRest'){S.wild.used=0;S.wf=null;S.star=null;re();closeDrawer();flash('#fate .fc','#a9c9ea');return}
  if(a==='editLangs'||a==='editChar'){closeDrawer();return editSheet()}
+ if(a==='acAuto'){delete S.acManual;save();renderAll();openInfo('ac',true);return}
  if(a==='luckSpend'){S.luck.used++;re();toast('Очко удачи потрачено');vib(15)}
  if(a==='luckBack'){S.luck.used=Math.max(0,S.luck.used-1);re()}
  if(a==='chaosOn'){chaosArmed=true;re();closeDrawer();toast('Следующий бросок будет с преимуществом');vib(15)}
@@ -3150,7 +3226,7 @@ function hpSheet(){
 function editSheet(){
  const f=$('form');
  f.innerHTML=`<h2>Правка листа</h2>
- <div class="three"><label>Уровень<input name="level" type="number" inputmode="numeric" value="${S.level}"></label><label>Максимум хитов<input name="hp" type="number" inputmode="numeric" value="${S.hp.max}"></label><label>Класс доспеха<input name="ac" type="number" inputmode="numeric" value="${S.ac}"></label></div>
+ <div class="three"><label>Уровень<input name="level" type="number" inputmode="numeric" value="${S.level}"></label><label>Максимум хитов<input name="hp" type="number" inputmode="numeric" value="${S.hp.max}"></label><label>Класс доспеха<input name="ac" type="number" inputmode="numeric" value="${acNow()}"></label></div>
  <div class="three">${AB.map(([k,n])=>`<label>${n}<input name="${k}" type="number" inputmode="numeric" value="${S.ab[k]}"></label>`).join('')}</div>
  <div class="three"><label>Скорость, футов<input name="speed" type="number" inputmode="numeric" value="${S.speed}"></label><label style="grid-column:span 2">Языки через запятую<input name="langs" type="text" value="${esc(S.langs.join(', '))}" style="text-align:left"></label></div>
  <label class="wide">Характер<textarea name="charTxt" rows="2">${esc(S.charTxt||'')}</textarea></label>
@@ -3160,7 +3236,7 @@ function editSheet(){
  $('sheet').classList.add('on');
  $('profBtn').onclick=()=>{editing=!editing;$('editBtn').classList.toggle('on',editing);$('sheet').classList.remove('on');toast(editing?'Правка владений включена: открой характеристику и нажимай на навыки':'Правка владений выключена')};
  f.onsubmit=e=>{e.preventDefault();const g=n=>+f[n].value;
-  S.level=Math.max(1,Math.min(20,g('level')||1));S.hp.max=Math.max(1,g('hp')||1);S.hp.cur=Math.min(S.hp.cur,S.hp.max);S.ac=g('ac')||10;S.speed=Math.max(0,g('speed')||0);
+  S.level=Math.max(1,Math.min(20,g('level')||1));S.hp.max=Math.max(1,g('hp')||1);S.hp.cur=Math.min(S.hp.cur,S.hp.max);{const v=g('ac');if(!v||v===autoAC())delete S.acManual;else S.acManual=v}S.speed=Math.max(0,g('speed')||0);
   S.langs=f.langs.value.split(/[,;]/).map(x=>x.trim()).filter(Boolean);S.charTxt=f.charTxt.value.trim();
   AB.forEach(([k])=>S.ab[k]=Math.max(1,Math.min(30,g(k)||10)));save();renderAll();$('sheet').classList.remove('on');toast('Сохранено')};
 }
@@ -3549,8 +3625,8 @@ INFO.smagpick=()=>({t:'Заклинания на экране',sub:`галочк
 {const _act=act;act=function(a){
  if(a==='longRest'){if(S.chart)S.chart.used=0}
  if(a==='chartBack'){if(S.chart.used>0)S.chart.used--;save();renderAll();openInfo('chart',true);return}
- if(a==='chartLost'){S.chartLost=1;if(S.conc&&CHART.includes(S.conc)&&!picked().includes(S.conc))S.conc=null;save();renderAll();openInfo('chart',true);return}
- if(a==='chartFound'){S.chartLost=0;save();renderAll();openInfo('chart',true);return}
+ if(a==='chartLost'){if(S.items.starmap)S.items.starmap.q=0;eqClean();if(S.conc&&CHART.includes(S.conc)&&!picked().includes(S.conc))S.conc=null;save();renderAll();openInfo('chart',true);return}
+ if(a==='chartFound'){S.items.starmap=Object.assign(S.items.starmap||{soc:1,fight:1},{q:1});syncItems();if(!S.eq.neck)S.eq.neck='starmap';save();renderAll();openInfo('chart',true);return}
  return _act(a)}}
 INFO.feats=()=>{const cf=DCLF.filter(f=>f.lv<=S.level),last=S.lvHist.length?S.lvHist[S.lvHist.length-1]:null;
  return{t:'Умения и черты',sub:`${S.cls} · ${S.sub} · ${S.level} уровень · мастерство ${sg(prof())}`,
@@ -3611,6 +3687,7 @@ const scimAb=()=>mod(S.ab.dex)>=mod(S.ab.str)?['Ловкость',mod(S.ab.dex)]
 const scimHit=()=>scimAb()[1]+prof();
 {const _as=atkSpec;atkSpec=function(k,c){
  if(k==='scim'){const [l,v]=scimAb();return{label:'Скимитар: атака',bonus:[{l,v},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:'Скимитар',dn:1,ds:6,k:v,kl:l,t:'рубящий',fx:'steel'}}}
+ if(k==='staff'){const v=mod(S.ab.str);return{label:'Боевой посох: атака',bonus:[{l:'Сила',v},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:'Боевой посох',dn:1,ds:6,k:v,kl:'Сила',t:'дробящий (1к8, если держишь двумя руками)',fx:'steel'}}}
  if(k==='archer'){const w=mod(S.ab.wis);return{label:'Лучник: атака заклинанием',bonus:[{l:'Мудрость',v:w},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:'Лучник',dn:starDie(),ds:8,k:w,kl:'Мудрость',t:'излучением, светящаяся стрела до 60 футов',fx:'snd'}}}
  if(k.startsWith('b')&&wfB()){const B=wfB(),a=B.at[+k.slice(1)];if(a)return{label:`${B.n}: ${a.n}`,bonus:[{l:'атака зверя',v:a.b}],kind:'atk',
   dmg:{n:a.n,dn:a.dn||1,ds:a.ds||1,k:a.k,t:a.t+(a.x?'. '+a.x:''),fx:'steel',flat:!a.dn,p:a.p||null}}}
@@ -3799,12 +3876,12 @@ function bstForm(i){const nw=i<0,B=nw?{k:'own'+Date.now(),n:'',cr:'1/4',size:'С
  const c=$('race').querySelector('.cnds');if(c)c.insertAdjacentHTML('afterbegin',B?`<button class="cnd frm" data-info="wfnow">В облике: ${esc(B.n)}</button>`:`<button class="cnd frm" data-info="st_${S.star.c}">Звёздный облик: ${CST[S.star.c].n}</button>`)}}
 
 {const _f=INFO.fspellpick;INFO.fspellpick=()=>{const d=_f();d.body=d.body.replace(/<div class="how"[^>]*>Здесь только.*?<\/div>$/,'<div class="how" style="margin-top:10px">Здесь боевые заклинания Арадии. Отметь нужные, до 9: обычные встанут в «Действие», а бонусные (как Лечащее слово) в «Бонусное действие». Скимитар, Удар вслед и облики остаются всегда.</div>');return d}}
-{const _ac=INFO.ac;INFO.ac=()=>{const B=wfB();if(!B)return _ac();return{t:'Класс доспеха',sub:`облик: ${B.n.toLowerCase()} · ${B.ac}`,body:`<p>В облике зверя класс доспеха берётся у зверя: <b>${B.ac}</b>. Твой обычный ${S.ac} вернётся вместе с обликом.</p><p>Сколько должен выбросить враг на атаке (с бонусами), чтобы попасть по тебе.</p>`,acts:'',bang:'qt_wild'}}}
+{const _ac=INFO.ac;INFO.ac=()=>{const B=wfB();if(!B)return _ac();return{t:'Класс доспеха',sub:`облик: ${B.n.toLowerCase()} · ${B.ac}`,body:`<p>В облике зверя класс доспеха берётся у зверя: <b>${B.ac}</b>. Твой обычный ${acNow()} вернётся вместе с обликом.</p><p>Сколько должен выбросить враг на атаке (с бонусами), чтобы попасть по тебе.</p>`,acts:'',bang:'qt_wild'}}}
 
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-27-6';
+const BUILD='aradia-2026-11-27-7';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
