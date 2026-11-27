@@ -1252,6 +1252,13 @@ h1,h2,h3{font-family:var(--serif);font-weight:400}
 #p-fight.inbeast .shead h1{color:var(--gold2)}
 @media (max-height:760px){.cst svg{width:40px;height:22px}.cst b{font-size:14px}.cst small{font-size:10px}}
 #p-fight.d3 .cst small{display:none}
+/* ===== эффекты Арадии (тред 5): перья, звёздный свет, туман ===== */
+.ccon{position:absolute;pointer-events:none;color:#cfe3f7;transform:scaleY(.42);transform-origin:50% 50%;filter:drop-shadow(0 0 4px rgba(169,201,234,.8))}
+.ccon svg,.stfx svg,.cwv svg{width:100%;height:100%;overflow:visible;display:block}
+.stfx{position:fixed;z-index:128;pointer-events:none;color:#e8f2ff;filter:drop-shadow(0 0 6px #a9c9ea) drop-shadow(0 0 14px rgba(169,201,234,.6))}
+.cwv{position:fixed;inset:0;z-index:125;pointer-events:none}
+.cwv .rvn{position:absolute;width:72px;height:72px;margin:-36px 0 0 -36px;overflow:visible;filter:drop-shadow(0 0 5px rgba(169,201,234,.55))}
+.cwv .rvn .b{fill:#0d1218;stroke:#cfe3f7;stroke-width:.8}.cwv .rvn .w{fill:none;stroke:#cfe3f7;stroke-width:1.4;stroke-linecap:round}
 </style>
 </head>
 <body>
@@ -1447,7 +1454,7 @@ const SPELLS={
   d:()=>`<p>Ты касаешься союзника или себя. Пока заклинание держится, он <b>один раз</b> может бросить <b>к4</b> и прибавить выпавшее к одной своей <b>проверке характеристики</b>: навыку, взлому, поиску. К атакам и спасброскам не прибавляется.</p><p>Бросить можно до или после самой проверки. После броска заклинание кончается.</p><p class="mu">Держится до 1 минуты, это концентрация. В приложении: когда союзник решит бросать, нажми «Бросить к4 Указания».</p>`},
  produce_flame:{n:'Сотворение пламени',lv:0,fight:1,atk:1,light:1,hit:()=>cantN()+'к8 огнём',dmg:()=>({dn:cantN(),ds:8,t:'огнём',fx:'fire'}),where:'30 футов',short:'огонь в ладони: свет или бросок',meta:'заговор · 1 действие · на себя · 10 минут · слова, жесты',
   d:()=>`<p>В твоей ладони загорается пламя. Оно не жжёт ни тебя, ни вещи и светит: <b>ярко на 10 футов</b> и тускло ещё на 10. Горит <b>10 минут</b>, пока не погасишь его действием или не сотворишь заново.</p><p>Пламя можно <b>метнуть</b> в существо в пределах <b>30 футов</b>: сразу при сотворении или действием в следующие ходы. Это <b>дальнобойная атака заклинанием: к20 ${sg(spellAtk())}</b>. При попадании <b>${cantN()}к8 урона огнём</b>. Брошенное пламя гаснет.</p><p class="mu">Урон растёт с уровнем: 2к8 на 5, 3к8 на 11, 4к8 на 17.</p>`},
- thorn_whip:{n:'Терновый кнут',lv:0,fight:1,atk:1,hit:()=>cantN()+'к6 колющий',dmg:()=>({dn:cantN(),ds:6,t:'колющий. Цель не больше Большой: подтяни её к себе до 10 футов',fx:'steel'}),where:'30 футов',short:'1к6 и подтянуть на 10 футов',meta:'заговор · 1 действие · 30 футов · мгновенно · слова, жесты, стебель с шипами',
+ thorn_whip:{n:'Терновый кнут',lv:0,fight:1,atk:1,hit:()=>cantN()+'к6 колющий',dmg:()=>({dn:cantN(),ds:6,t:'колющий. Цель не больше Большой: подтяни её к себе до 10 футов',fx:'thorn'}),where:'30 футов',short:'1к6 и подтянуть на 10 футов',meta:'заговор · 1 действие · 30 футов · мгновенно · слова, жесты, стебель с шипами',
   d:()=>`<p>Из руки вырастает длинная плеть с шипами и хлещет существо в пределах <b>30 футов</b>. Это <b>рукопашная атака заклинанием: к20 ${sg(spellAtk())}</b>, хотя цель далеко.</p><p>При попадании <b>${cantN()}к6 колющего урона</b>, и если цель размером не больше Большой, ты <b>подтягиваешь её к себе</b> на расстояние до 10 футов.</p><p class="mu">Стащить врага с края или выдернуть его к союзникам. Урон растёт с уровнем: 2к6 на 5, 3к6 на 11, 4к6 на 17.</p>`},
  healing_word:{n:'Лечащее слово',lv:1,fight:1,heal:{n:1,s:4,up:1},where:'60 футов',short:'бонусным действием 1к4 + Мудрость хитов',meta:'1 круг · бонусное действие · 60 футов · мгновенно · слова',
   d:()=>`<p>Ты произносишь слово, и существо, которое ты видишь в пределах <b>60 футов</b>, восстанавливает <b>1к4 + ${mod(S.ab.wis)} хитов</b> (1к4 + Мудрость).</p><p>Нежить и конструкты так не лечатся.</p><p class="mu">Тратит бонусное действие, а не действие: можно поднять упавшего союзника издалека и всё равно атаковать. Но если в этот ход колдуешь бонусным действием, действием можно сотворить только заговор. Ячейкой 2 круга и выше: +1к4 за каждый круг выше первого.</p>`},
@@ -1459,7 +1466,7 @@ const SPELLS={
   d:c=>`<p>В точке в пределах <b>120 футов</b> появляется сфера густого тумана <b>радиусом 20 футов</b>. Туман огибает углы, внутри <b>сильно заслонено</b>: сквозь него ничего не видно.</p><p>Держится, пока держишь концентрацию (до 1 часа), или пока его не развеет ветер не слабее 10 миль в час.</p><p class="mu">Скрыться, отступить, оторваться от лучников. Ячейкой 2 круга и выше радиус больше на 20 футов за каждый круг выше первого.</p>`},
  speak_with_animals:{n:'Разговор с животными',lv:1,soc:1,ritual:1,where:'на себя',short:'понимаешь зверей 10 минут',meta:'1 круг · 1 действие · на себя · 10 минут · ритуал · слова, жесты',
   d:()=>`<p>На <b>10 минут</b> ты понимаешь <b>зверей</b> и можешь говорить с ними вслух.</p><p>Многие звери не очень умны, но обычно могут рассказать о местах и чудовищах поблизости, в том числе о тех, кого видели за последний день. Мастер может позволить уговорить зверя немного помочь.</p>`},
- guiding_bolt:{n:'Направляющий снаряд',lv:1,fight:1,atk:1,hit:()=>'4к6 излучением',dmg:c=>({dn:4+Math.max(0,(c||1)-1),ds:6,t:'излучением. Следующая атака по цели до конца твоего следующего хода с преимуществом',fx:'snd'}),where:'120 футов',short:'4к6 излучением, потом атака с преимуществом',meta:'1 круг · 1 действие · 120 футов · 1 раунд · слова, жесты',
+ guiding_bolt:{n:'Направляющий снаряд',lv:1,fight:1,atk:1,hit:()=>'4к6 излучением',dmg:c=>({dn:4+Math.max(0,(c||1)-1),ds:6,t:'излучением. Следующая атака по цели до конца твоего следующего хода с преимуществом',fx:'star'}),where:'120 футов',short:'4к6 излучением, потом атака с преимуществом',meta:'1 круг · 1 действие · 120 футов · 1 раунд · слова, жесты',
   d:()=>`<p>Вспышка звёздного света летит в существо в пределах <b>120 футов</b>. Это <b>дальнобойная атака заклинанием: к20 ${sg(spellAtk())}</b>.</p><p>При попадании <b>4к6 урона излучением</b>, и на цели остаётся мерцание: <b>следующая атака по ней</b> до конца твоего следующего хода идёт <b>с преимуществом</b>.</p><p class="mu">Ячейкой 2 круга и выше: +1к6 за каждый круг выше первого.</p>`},
  druidcraft:{n:'Искусство друидов',lv:0,soc:1,where:'30 футов',short:'цветок, искра, запах или лёгкий ветерок',meta:'заговор · 1 действие · 30 футов · мгновенно · слова, жесты',
   d:()=>`<p>Шепчешься с духами природы и создаёшь один безвредный эффект в пределах <b>30 футов</b>: крохотный знак погоды на ближайшие 24 часа (шарик, облачко, снежинка; держится 1 раунд), мгновенно раскрытый цветок или проросшее семечко, мелкое ощущение в кубе 5 футов (падающие листья, порыв ветра, звук зверька, запах), зажечь или потушить свечу, факел или небольшой костёр.</p>`},
@@ -1519,7 +1526,7 @@ const SPELLS={
   d:()=>`<p>Касаешься дружественного или очарованного тобой <b>зверя с Интеллектом не больше 3</b> и создаёшь телепатическую связь (концентрация, до 10 минут, пока вы видите друг друга). Он понимает тебя и передаёт простые чувства и образы.</p><p>Пока связь держится, зверь бьёт с <b>преимуществом</b> по любому существу в <b>5 футах</b> от тебя, которое ты видишь.</p>`},
  earth_tremor:{n:'Дрожь земли',lv:1,fight:1,roll:{n:1,s:6,up:1,t:'дробящим, спасбросок Ловкости: радиус 10 футов вокруг тебя. Провал: ещё и сбиты с ног',half:0,ns:0},where:'10 футов вокруг',short:'1к6 дробящим, сбить с ног',meta:'1 круг · 1 действие · 10 футов · мгновенно · слова, жесты',
   d:()=>`<p>Земля вокруг дрожит в круге <b>10 футов</b>. Каждое существо, кроме тебя, делает <b>спасбросок Ловкости против сложности ${spellDC()}</b>. Провал: <b>1к6 дробящего урона</b> и <b>сбито с ног</b>. Рыхлая земля и камень становятся труднопроходимыми.</p><p>Ячейкой выше: +1к6 за каждый круг выше первого.</p>`},
- ice_knife:{n:'Ледяной кинжал',lv:1,fight:1,atk:1,hit:()=>'1к10 колющим, потом холод',dmg:c=>({dn:1,ds:10,t:'колющим. Потом осколок взрывается: кнопка «Ледяной взрыв» ниже',fx:'steel'}),rolls:[{l:'Ледяной взрыв',n:2,s:6,t:()=>`холодом: цель и все в 5 футах от неё, спасбросок Ловкости, сложность ${spellDC()}. Взрыв и при промахе. Успех: урона нет`}],where:'60 футов',short:'1к10 колющим, взрыв 2к6 холодом вокруг',meta:'1 круг · 1 действие · 60 футов · мгновенно · жесты, капля воды или кусочек льда',
+ ice_knife:{n:'Ледяной кинжал',lv:1,fight:1,atk:1,hit:()=>'1к10 колющим, потом холод',dmg:c=>({dn:1,ds:10,t:'колющим. Потом осколок взрывается: кнопка «Ледяной взрыв» ниже',fx:'cold'}),rolls:[{l:'Ледяной взрыв',n:2,s:6,t:()=>`холодом: цель и все в 5 футах от неё, спасбросок Ловкости, сложность ${spellDC()}. Взрыв и при промахе. Успех: урона нет`}],where:'60 футов',short:'1к10 колющим, взрыв 2к6 холодом вокруг',meta:'1 круг · 1 действие · 60 футов · мгновенно · жесты, капля воды или кусочек льда',
   d:()=>`<p>Бросаешь осколок льда в цель в пределах <b>60 футов</b>: <b>дальнобойная атака заклинанием, к20 ${sg(spellAtk())}</b>. Попадание: <b>1к10 колющего</b>.</p><p>Потом, <b>даже при промахе</b>, осколок взрывается. Цель и все в <b>5 футах</b> делают <b>спасбросок Ловкости против сложности ${spellDC()}</b>. Провал: <b>2к6 холодом</b>. Ячейкой выше: +1к6 холодом за круг.</p>`},
  snare:{n:'Силок',lv:1,where:'касание',short:'невидимая ловушка-петля на 8 часов',meta:'1 круг · 1 минута · касание · 8 часов · слова, жесты, 25 футов верёвки, расходуемые заклинанием',
   d:()=>`<p>Колдуется <b>1 минуту</b>: из 25 футов верёвки (она исчезает) на земле создаётся почти невидимый круг радиусом 5 футов. Найти его можно проверкой <b>Интеллекта (Расследование)</b> против сложности ${spellDC()}.</p><p>Когда Маленькое, Среднее или Большое существо входит, оно делает <b>спасбросок Ловкости</b>. Провал: его вздёргивает вверх ногами на 3 фута над землёй, и оно <b>опутано</b>. Держится до 8 часов. Выбраться можно спасброском Ловкости в конце своего хода или помощью: проверка Интеллекта (Магия) против той же сложности.</p>`},
@@ -2070,7 +2077,7 @@ function throwDie(sides,final,other,m,done){
   if(!hit2&&k>=.78){hit2=1;vib(12)}
   if(k<1)requestAnimationFrame(f);else{
    die.style.transform=`translate(${ex}px,${ey}px)`;
-   if(sides===20&&final===20)die.style.filter='drop-shadow(0 0 26px #f6d58e)';
+   if(sides===20&&final===20)die.style.filter='drop-shadow(0 0 26px #f6dca8)';
    if(sides===20&&final===1){die.style.filter='drop-shadow(0 0 18px #b3233a) grayscale(.5)'}
    if(other!=null){const d2=document.createElement('div');d2.className='die2';d2.innerHTML=dieSvg(other,'n');d2.style.left=(ex+92)+'px';d2.style.top=(ey-40)+'px';ov.appendChild(d2);d2.animate([{transform:'translate(-60px,20px) rotate(-90deg)',opacity:0},{transform:'none',opacity:.5}],{duration:300,easing:'cubic-bezier(.3,1.5,.5,1)'})}
    if(sides===20&&final===20&&!matchMedia('(prefers-reduced-motion:reduce)').matches){critFx(ex,ey,()=>{done();if(cur&&!cur.dice){const t=$('res').querySelector('.tot');if(t)t.classList.add('gold')}setTimeout(()=>busy=false,250)});return}
@@ -2081,7 +2088,7 @@ function throwDie(sides,final,other,m,done){
 /* ---------- КРИТ: печать хаоса, из неё прорывается живое пламя, кубик парит внутри ---------- */
 const QS=new URLSearchParams(location.search),FORCE20=QS.has('nat20');
 if(FORCE20){const b=document.createElement('div');b.className='testmode';b.textContent='режим проверки: каждый бросок 20';document.body.appendChild(b)}
-const FXI={};['sigil','burst','flame1','flame2'].forEach(n=>{const i=new Image();i.src='fx/'+n+'.webp';FXI[n]=i});
+const FXI={};[].forEach(n=>{const i=new Image();i.src='fx/'+n+'.webp';FXI[n]=i});
 let critStop=null;
 function critClear(){wspClear();if(critStop){critStop();critStop=null}document.querySelectorAll('#cfx,.cfront,.cword').forEach(e=>e.remove());[$('die'),$('shd')].forEach(e=>e.getAnimations().forEach(a=>a.cancel()))}
 function bigShake(){document.body.classList.remove('shake','shake2');void document.body.offsetWidth;document.body.classList.add('shake2')}
@@ -2092,7 +2099,7 @@ function critFx(ex,ey,done){
  const front=document.createElement('div');front.className='cfront';ov.appendChild(front);
  const cv=document.createElement('canvas');cv.width=Math.ceil(W*dpr);cv.height=Math.ceil(H*dpr);fx.appendChild(cv);
  const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
- const P=[],floor=ey+58,GOLD=['#fff3cf','#f6d58e','#e9bd6c'],VIO=['#a57cff','#d58cff','#7b4dff'],pick=a=>a[Math.floor(Math.random()*a.length)];
+ const P=[],floor=ey+58,GOLD=['#fff3cf','#f6dca8','#f0c47a'],VIO=['#7fa6cc','#a9c9ea','#4d6f94'],pick=a=>a[Math.floor(Math.random()*a.length)];
  let run=true;critStop=()=>{run=false};
  const el=(cls,css,par)=>{const d=document.createElement('div');d.className=cls;Object.assign(d.style,css||{});(par||fx).appendChild(d);return d};
  const img=(n,w,h,x,y,flat,par)=>{const b=el('im',{width:w+'px',height:h+'px',transform:`translate(${x-w/2}px,${y-h/2}px)${flat?' scaleY(.42)':''}`},par);const i=document.createElement('img');i.src='fx/'+n+'.webp';b.appendChild(i);return i};
@@ -2122,12 +2129,12 @@ function critFx(ex,ey,done){
   c.drawImage(sc,0,0,bw*dpr,bh*dpr,-cx,-bh+2,bw,bh);c.restore()}
  /* 1. кубик дрожит: магия рвётся наружу */
  svg.animate([{transform:'none'},{transform:'translate(-2px,1px) scale(1.04)'},{transform:'translate(2px,-1px) scale(1.07)'},{transform:'translate(-2px,-1px) scale(1.1)'},{transform:'none'}],{duration:170});
- die.animate([{filter:'drop-shadow(0 0 8px #f6d58e) brightness(1)'},{filter:'drop-shadow(0 0 30px #fff) brightness(1.8)'}],{duration:170,fill:'forwards'});vib(10);
+ die.animate([{filter:'drop-shadow(0 0 8px #f6dca8) brightness(1)'},{filter:'drop-shadow(0 0 30px #fff) brightness(1.8)'}],{duration:170,fill:'forwards'});vib(10);
  setTimeout(()=>{if(!run)return;
-  die.animate([{filter:'drop-shadow(0 0 30px #fff) brightness(1.8)'},{filter:'drop-shadow(0 0 22px #f6d58e) brightness(1.05)'}],{duration:500,fill:'forwards'});
+  die.animate([{filter:'drop-shadow(0 0 30px #fff) brightness(1.8)'},{filter:'drop-shadow(0 0 22px #f6dca8) brightness(1.05)'}],{duration:500,fill:'forwards'});
   /* 2. прорыв: вспышка, удар, взрыв молний, гаснет */
   const f=el('cflash');f.style.setProperty('--fx',ex+'px');f.style.setProperty('--fy',ey+'px');f.animate([{opacity:1},{opacity:0}],{duration:380,easing:'ease-out',fill:'forwards'});
-  vib([70,30,120]);bigShake();ring(ex,ey,'#f6d58e',520,6);debris(ex,ey,60,900);
+  vib([70,30,120]);bigShake();ring(ex,ey,'#f6dca8',520,6);debris(ex,ey,60,900);
   /* 3. печать раскрывается на столе, кубик всплывает */
   const SG=Math.min(W*.98,400),si=img('sigil',SG,SG,ex,floor,true);
   si.animate([{transform:'scale(0) rotate(260deg)',opacity:0},{transform:'scale(1.12) rotate(-12deg)',opacity:1,offset:.7},{transform:'scale(1) rotate(0)',opacity:1}],{duration:820,delay:120,easing:'cubic-bezier(.2,.8,.3,1)',fill:'backwards'}).onfinish=()=>{if(run){si.animate([{transform:'rotate(0)'},{transform:'rotate(360deg)'}],{duration:36000,iterations:Infinity});si.parentNode.animate([{filter:'brightness(1)'},{filter:'brightness(1.45)'},{filter:'brightness(1)'}],{duration:2400,iterations:Infinity})}};
@@ -2143,7 +2150,7 @@ function critFx(ex,ey,done){
    sp.animate([{transform:`translate(${dx}px,${dy}px) rotate(${(i%2?1:-1)*120}deg) scale(.4)`,opacity:.2},{transform:'none',opacity:1}],{duration:300,easing:'cubic-bezier(.6,0,.9,.45)'}).onfinish=()=>{if(!run)return;
     vib(i===L.length-1?[30,20,70]:24);const r=sp.getBoundingClientRect();debris(r.left+r.width/2,r.bottom-14,12,300);
     sp.animate([{transform:'scale(1.3,.7)'},{transform:'scale(.9,1.12)'},{transform:'none'}],{duration:240,easing:'ease-out'});
-    if(i===L.length-1){bigShake();ring(ex,ey-175,'#f6d58e',460,4);L.forEach((s,j)=>{s.classList.add('idle');s.style.animationDelay=(j*.18)+'s';s.animate([{transform:'translateY(0)'},{transform:'translateY(-4px)'},{transform:'translateY(0)'}],{duration:2200,delay:j*180,iterations:Infinity,easing:'ease-in-out'})})}}},420+i*150));
+    if(i===L.length-1){bigShake();ring(ex,ey-175,'#f6dca8',460,4);L.forEach((s,j)=>{s.classList.add('idle');s.style.animationDelay=(j*.18)+'s';s.animate([{transform:'translateY(0)'},{transform:'translateY(-4px)'},{transform:'translateY(0)'}],{duration:2200,delay:j*180,iterations:Infinity,easing:'ease-in-out'})})}}},420+i*150));
   setTimeout(()=>{if(run)done()},1150);
  },170);
  /* частицы: осколки падают и отскакивают от стола, искры поднимаются, огоньки кружат над печатью */
@@ -2160,7 +2167,7 @@ function critFx(ex,ey,done){
  requestAnimationFrame(frame);
 }
 
-function dust(x,y,gold){const ov=$('roll');for(let i=0;i<(gold?28:14);i++){const d=document.createElement('div');d.className='dust';d.style.left=x+'px';d.style.top=y+'px';if(gold)d.style.background=Math.random()<.5?'#f6d58e':'#fff';else d.style.opacity=.55;ov.appendChild(d);
+function dust(x,y,gold){const ov=$('roll');for(let i=0;i<(gold?28:14);i++){const d=document.createElement('div');d.className='dust';d.style.left=x+'px';d.style.top=y+'px';if(gold)d.style.background=Math.random()<.5?'#f6dca8':'#fff';else d.style.opacity=.55;ov.appendChild(d);
  const dir=Math.random()<.5?-1:1,dx=dir*(30+Math.random()*90),dy=-(Math.random()*(gold?90:30));
  d.animate([{transform:'translate(0,0)',opacity:1},{transform:`translate(${dx}px,${dy}px)`,opacity:0}],{duration:420+Math.random()*380,easing:'cubic-bezier(.2,.8,.4,1)',fill:'forwards'})}}
 function showRes(){
@@ -2173,7 +2180,7 @@ function showRes(){
   ${resExtra(used)}<div class="acts">${luckLeft&&!spec.noLuck?`<button data-luck>🍀 Везунчик: ещё к20 (осталось ${luckLeft})</button>`:''}</div><div class="hint">нажми мимо, чтобы закрыть</div>`;
  cur.final=used;res.classList.add('on');pushLog(spec.label,total);skillFx(spec,used);
 }
-function twBtn(){if(rayPend)return `<button data-ray style="background:linear-gradient(90deg,rgba(226,80,30,.35),rgba(233,189,108,.35));border-color:var(--gold2)">Следующий луч: ${rayPend.i+1} из ${rayPend.n}</button>`;return twinPend?`<button data-twin style="background:linear-gradient(90deg,rgba(165,124,255,.35),rgba(233,189,108,.35));border-color:var(--gold2)">Удвоенное: атака по второй цели</button>`:''}
+function twBtn(){if(rayPend)return `<button data-ray style="background:linear-gradient(90deg,rgba(226,80,30,.35),rgba(240,196,122,.35));border-color:var(--gold2)">Следующий луч: ${rayPend.i+1} из ${rayPend.n}</button>`;return twinPend?`<button data-twin style="background:linear-gradient(90deg,rgba(127,166,204,.35),rgba(240,196,122,.35));border-color:var(--gold2)">Удвоенное: атака по второй цели</button>`:''}
 function metaShow(n,mt){const res=$('res');cur={dice:true};$('roll').classList.add('on');res.innerHTML=`<div class="lbl">${esc(n)}</div><div class="tot" style="font-size:34px;color:var(--gold2)">${esc(mt.split(':')[0])}</div><div class="br">${esc(mt.split(': ')[1]||'')}</div><div class="hint">нажми, чтобы закрыть</div>`;res.classList.add('on')}
 function resExtra(die){const sp=cur.spec;let h=sp.after?sp.after(die):'';
  if(sp.dmg){const g=sp.dmg,crit=die===20,n=crit&&!g.flat?g.dn*2:g.dn;h+=`<div class="acts">${die===1?'':`<button class="red" data-dmg="${n}">${crit?'Крит! ':''}Попал: урон ${g.flat?g.k:n+'к'+g.ds+(g.k?sg(g.k):'')}</button>`}${twBtn()}</div>`}
@@ -2196,7 +2203,7 @@ $('roll').addEventListener('click',e=>{
  const dm=e.target.closest('[data-dmg]');if(dm){const g=cur.spec.dmg,n=+dm.dataset.dmg;lastPt={x:e.clientX,y:e.clientY};vib([20,30,40]);const P=g.p;
   if(g.flat){cur={dice:true};$('res').innerHTML=`<div class="lbl">${esc(g.n)}: урон</div><div class="tot">${g.k}</div><div class="br">${g.t}. Урон у этой атаки всегда ${g.k}, кубик не нужен</div><div class="hint">нажми, чтобы закрыть</div>`;pushLog(g.n+': урон',g.k);return}
   dice({label:`${g.n}: урон`,n,s:g.ds,k:g.k,kl:g.kl,min:0,fx:g.fx,after:()=>{if(P)poisPend=P;return `<div class="br">${g.t}${n>g.dn?' · критическое попадание, кубиков вдвое':''}</div>${P?`<div class="acts"><button class="red" data-pois>${P.l}: бросить ${P.dn}к${P.ds}</button></div>`:''}${twinPend?`<div class="acts">${twBtn()}</div>`:''}`}});return}
- if(e.target.closest('[data-pois]')&&poisPend){const P=poisPend;poisPend=null;lastPt={x:e.clientX,y:e.clientY};return dice({label:P.l,n:P.dn,s:P.ds,min:0,fx:'chaos',after:()=>`<div class="br">${P.t}</div>`})}
+ if(e.target.closest('[data-pois]')&&poisPend){const P=poisPend;poisPend=null;lastPt={x:e.clientX,y:e.clientY};return dice({label:P.l,n:P.dn,s:P.ds,min:0,fx:'poi',after:()=>`<div class="br">${P.t}</div>`})}
  if(e.target.closest('[data-chal]')&&chalPend){chalPend=0;lastPt={x:e.clientX,y:e.clientY};return chaliceRoll()}
  {const bb=e.target.closest('[data-bomb]');if(bb){const sd=+bb.dataset.bomb;lastPt={x:e.clientX,y:e.clientY};vib([20,30,40]);return dice({label:'Бомбардировка заклинаниями',n:1,s:sd,min:0,fx:'fire',after:()=>'<div class="br">прибавь к урону заклинания</div>'})}}
  if(e.target.closest('[data-ray]')){const t=rayPend;if(!t)return;t.i++;if(t.i>=t.n)rayPend=null;lastPt={x:e.clientX,y:e.clientY};vib([15,30,40]);const sp=atkSpec(t.k,t.c);sp.label=sp.label.replace(': атака',`: луч ${t.i} из ${t.n}`);busy=false;return d20(sp)}
@@ -2214,7 +2221,7 @@ const ELK={'звук':'snd','кислота':'acid','огонь':'fire','хол�
 const EL={fire:{c:['#fff4c8','#ffd05a','#ff9a3a','#e2501e','#7a2412'],g:'#ff8a2a'},
  cold:{c:['#ffffff','#e2f6ff','#aee2ff','#6fb6e8'],g:'#bfe9ff'},
  acid:{c:['#f4ffc8','#c8f560','#9be84a','#4f8f2a'],g:'#a6e85a'},
- elec:{c:['#ffffff','#fffbe0','#ffe14a','#c9a8ff'],g:'#fff0a0'},
+ elec:{c:['#ffffff','#fffbe0','#ffe14a','#9fc0e0'],g:'#fff0a0'},
  snd:{c:['#ffffff','#efe6ff','#c9b6ff','#8a6cff'],g:'#d6c6ff'},
  poi:{c:['#eaffd6','#a6e07a','#78b852','#6a4a8a'],g:'#8fd14f'}};
 /* слой эффекта на кнопке: только CSS, без постоянного JS */
@@ -2357,21 +2364,21 @@ function whispers(){wspClear();if(RM)return;const ov=$('roll'),W=innerWidth,H=in
 function wspClear(){wspT.forEach(clearTimeout);wspT=[];document.querySelectorAll('.wsp').forEach(e=>e.remove())}
 
 /* ---------- эффекты, часть 2 ---------- */
-Object.assign(EL,{steel:{c:['#ffffff','#fff6d8','#e9bd6c','#8a7a6a'],g:'#fff6d8'},shield:{c:['#ffffff','#e3d4ff','#a57cff','#5a3aa8'],g:'#c9a8ff'},
- mist:{c:['#ffffff','#e8e6f0','#bdb8cc','#7a7488'],g:'#e8e6f0'},hold:{c:['#ffffff','#e3d4ff','#a57cff','#6a3ad8'],g:'#c9a8ff'},
- counter:{c:['#ffffff','#f0e6ff','#c9a8ff','#7b4dff'],g:'#e3d4ff'},invis:{c:['#ffffff','#dfe8ff','#9fb0d8','#5a6a8a'],g:'#dfe8ff'},
- dom:{c:['#ffffff','#f6d58e','#d58cff','#7b4dff'],g:'#f0e0ff'},charm:{c:['#ffffff','#ffd0e0','#ff7aa8','#b0306a'],g:'#ff9ac0'},
- friend:{c:['#fff6d8','#f6d58e','#e9bd6c','#a8761e'],g:'#f6d58e'},sugg:{c:['#ffffff','#e3d4ff','#d58cff','#8a4dd8'],g:'#d58cff'},
+Object.assign(EL,{steel:{c:['#ffffff','#fff6d8','#f0c47a','#8a7a6a'],g:'#fff6d8'},shield:{c:['#ffffff','#dbe8f5','#7fa6cc','#3f5f84'],g:'#9fc0e0'},
+ mist:{c:['#ffffff','#e8e6f0','#bdb8cc','#7a7488'],g:'#e8e6f0'},hold:{c:['#ffffff','#dbe8f5','#7fa6cc','#3f5f84'],g:'#9fc0e0'},
+ counter:{c:['#ffffff','#f0e6ff','#9fc0e0','#4d6f94'],g:'#dbe8f5'},invis:{c:['#ffffff','#dfe8ff','#9fb0d8','#5a6a8a'],g:'#dfe8ff'},
+ dom:{c:['#ffffff','#f6dca8','#a9c9ea','#4d6f94'],g:'#e8f2ff'},charm:{c:['#ffffff','#ffd0e0','#ff7aa8','#b0306a'],g:'#ff9ac0'},
+ friend:{c:['#fff6d8','#f6dca8','#f0c47a','#a8761e'],g:'#f6dca8'},sugg:{c:['#ffffff','#dbe8f5','#a9c9ea','#5f86b0'],g:'#a9c9ea'},
  illu:{c:['#ffffff','#ffb0e0','#a0e8ff','#fff0a0'],g:'#ffd0f0'},msg:{c:['#fff6d8','#e9b88a','#d38b55','#6e3f22'],g:'#e9b88a'},
- glyph:{c:['#fff6d8','#f6d58e','#e9bd6c','#a57cff'],g:'#f6d58e'},spark:{c:['#ffffff','#ffd36a','#a0e8ff','#ff9ad0'],g:'#ffffff'},
- hand:{c:['#ffffff','#d8fff0','#8fe8c8','#3a8a70'],g:'#8fe8c8'},chaos:{c:['#ffffff','#f0b0ff','#d58cff','#7b4dff'],g:'#d58cff'},
- luck:{c:['#ffffff','#fff3cf','#f6d58e','#e9bd6c'],g:'#f6d58e'},heal:{c:['#ffffff','#d8ffe0','#86c79c','#3a8a5a'],g:'#a8e6b8'}});
+ glyph:{c:['#fff6d8','#f6dca8','#f0c47a','#7fa6cc'],g:'#f6dca8'},spark:{c:['#ffffff','#ffd36a','#a0e8ff','#ff9ad0'],g:'#ffffff'},
+ hand:{c:['#ffffff','#d8fff0','#8fe8c8','#3a8a70'],g:'#8fe8c8'},chaos:{c:['#ffffff','#cfe3f7','#a9c9ea','#4d6f94'],g:'#a9c9ea'},
+ luck:{c:['#ffffff','#fff3cf','#f6dca8','#f0c47a'],g:'#f6dca8'},heal:{c:['#ffffff','#d8ffe0','#86c79c','#3a8a5a'],g:'#a8e6b8'}});
 EL.fireball=EL.fire;
 const RUNES='ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ';
 const _fxL=fxLayer;
 fxLayer=function(el){const n=(k,f)=>Array.from({length:k},(_,i)=>f(i)).join(''),dl=m=>`animation-delay:-${RN(0,m).toFixed(2)}s`;
  if(el==='steel'||el==='invis'||el==='illu'||el==='hand')return '';
- if(el==='shield'){const id='h'+Math.random().toString(36).slice(2,7);return `<svg><defs><pattern id="${id}" width="14" height="12" patternUnits="userSpaceOnUse"><path d="M3.5 0H10.5L14 6L10.5 12H3.5L0 6Z" fill="none" stroke="#c9a8ff" stroke-width=".8" stroke-opacity=".55"/></pattern></defs><rect width="100%" height="100%" fill="url(#${id})"/></svg>`}
+ if(el==='shield'){const id='h'+Math.random().toString(36).slice(2,7);return `<svg><defs><pattern id="${id}" width="14" height="12" patternUnits="userSpaceOnUse"><path d="M3.5 0H10.5L14 6L10.5 12H3.5L0 6Z" fill="none" stroke="#9fc0e0" stroke-width=".8" stroke-opacity=".55"/></pattern></defs><rect width="100%" height="100%" fill="url(#${id})"/></svg>`}
  if(el==='mist')return n(4,i=>`<s style="left:${i*26+RN(-6,6)}%;${dl(5)}"></s>`);
  if(el==='hold')return '<u></u><u></u>';
  if(el==='counter')return '<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" stroke-dasharray="3 2"/><path d="M20 6 L18 14 L23 19 L16 26 L19 34 M23 19 L31 22"/></svg>';
@@ -2402,22 +2409,22 @@ burst=function(el,x,y,pw,fl){const C=EL[el];if(!C)return;
  if(el==='fireball'){_burst('fire',x,y,pw*1.6,fl);spawn({k:'ring',x,y,r0:10,r1:Math.min(innerWidth*.42,60*pw),m:.4,c:'#ffd36a',w:3,fp:1.5,fy:.45});spawn({k:'flash',x,y,s:40*pw,gr:1,m:.35,c:'rgba(255,170,60,.95)',add:1});return}
  const A=-Math.PI,sq=Math.sqrt(pw),sp=(n,v0,v1,o)=>{for(let i=0;i<n;i++){const a=o&&o.a!=null?o.a+RN(-.4,.4):RN(A,0),v=RN(v0,v1)*sq;spawn(Object.assign({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,m:RN(.5,1),s:RN(2,3.2),c:C.c,add:1},o||{}))}};
  if(el==='steel'){const L=26*pw,a=RN(-.6,-.3);spawn({k:'zap',pts:[[x-Math.cos(a)*L,y-Math.sin(a)*L],[x+Math.cos(a)*L,y+Math.sin(a)*L]],m:.14,c:'#ffffff',sc:'#fff6d8',w:2.5,fp:1});sp(10*pw,180,460,{g:1300,dr:1.5,fl,bo:.4,m:RN(.3,.6)});return}
- if(el==='shield'){spawn({k:'ring',x,y,r0:6,r1:40*pw,m:.4,c:'#c9a8ff',w:3,fp:1});spawn({k:'flash',x,y,s:14*pw,gr:.5,m:.2,c:'rgba(165,124,255,.8)',add:1});sp(8*pw,120,300,{g:900,fl,bo:.3});return}
+ if(el==='shield'){spawn({k:'ring',x,y,r0:6,r1:40*pw,m:.4,c:'#9fc0e0',w:3,fp:1});spawn({k:'flash',x,y,s:14*pw,gr:.5,m:.2,c:'rgba(127,166,204,.8)',add:1});sp(8*pw,120,300,{g:900,fl,bo:.3});return}
  if(el==='mist'){for(let i=0;i<9*pw;i++){const a=RN(0,6.283),v=RN(30,120)*sq;spawn({k:'puff',x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v*.5,dr:2.4,m:RN(1,1.7),s:RN(7,12)*sq,gr:1.6,c:'rgba(225,222,240,.35)',fin:.12,fp:1.3})}return}
- if(el==='hold'){spawn({k:'ring',x,y,r0:60*sq,r1:6,m:.32,c:'#c9a8ff',w:2.5,fp:.6});spawn({k:'ring',x,y,r0:44*sq,r1:4,m:.26,c:'#ffffff',w:1.5,fp:.6});
-  setTimeout(()=>{spawn({k:'flash',x,y,s:12*pw,gr:.4,m:.16,c:'rgba(200,170,255,.9)',add:1});sp(8*pw,80,200,{dr:4,m:.45})},300);return}
- if(el==='counter'){spawn({k:'ring',x,y,r0:4,r1:46*pw,m:.35,c:'#e3d4ff',w:3,fp:1});for(let i=0;i<12*pw;i++){const a=RN(0,6.283),v=RN(140,380)*sq;spawn({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:900,dr:.8,m:RN(.5,1),s:RN(2,4),c:C.c,fl,bo:.3})}return}
+ if(el==='hold'){spawn({k:'ring',x,y,r0:60*sq,r1:6,m:.32,c:'#9fc0e0',w:2.5,fp:.6});spawn({k:'ring',x,y,r0:44*sq,r1:4,m:.26,c:'#ffffff',w:1.5,fp:.6});
+  setTimeout(()=>{spawn({k:'flash',x,y,s:12*pw,gr:.4,m:.16,c:'rgba(180,205,235,.9)',add:1});sp(8*pw,80,200,{dr:4,m:.45})},300);return}
+ if(el==='counter'){spawn({k:'ring',x,y,r0:4,r1:46*pw,m:.35,c:'#dbe8f5',w:3,fp:1});for(let i=0;i<12*pw;i++){const a=RN(0,6.283),v=RN(140,380)*sq;spawn({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:900,dr:.8,m:RN(.5,1),s:RN(2,4),c:C.c,fl,bo:.3})}return}
  if(el==='invis'){for(let i=0;i<14*pw;i++)spawn({x:x+RN(-20,20)*pw,y:y+RN(-12,12)*pw,vx:RN(-20,20),vy:RN(-40,-10),m:RN(.5,1),s:2,c:C.c,a:.8});return}
- if(el==='dom'){for(let i=-1;i<=1;i++)spawn({k:'zap',pts:zapPts(x+i*14,0,x+i*4,y,8,3),m:.35,c:'#f0e0ff',sc:'#d58cff',w:1,fp:1});spawn({k:'flash',x,y,s:10*pw,gr:.4,m:.2,c:'rgba(213,140,255,.8)',add:1});return}
+ if(el==='dom'){for(let i=-1;i<=1;i++)spawn({k:'zap',pts:zapPts(x+i*14,0,x+i*4,y,8,3),m:.35,c:'#e8f2ff',sc:'#a9c9ea',w:1,fp:1});spawn({k:'flash',x,y,s:10*pw,gr:.4,m:.2,c:'rgba(169,201,234,.8)',add:1});return}
  if(el==='charm'||el==='friend'||el==='sugg'||el==='luck'||el==='heal'||el==='chaos'||el==='spark'||el==='hand'){
   spawn({k:'flash',x,y,s:12*pw,gr:.5,m:.22,c:C.g,add:1});
-  if(el==='chaos'){for(let i=0;i<16*pw;i++){const a0=RN(0,6.283),r0=RN(4,10),w=RN(5,9)*(Math.random()<.5?1:-1);spawn({x,y,m:RN(.6,1),s:RN(2,3),c:C.c,add:1,tick:(p,dt)=>{p.a0=(p.a0??a0)+w*dt;p.r=(p.r??r0)+60*sq*dt;p.x=x+Math.cos(p.a0)*p.r;p.y=y+Math.sin(p.a0)*p.r*.8;p.vx=p.vy=0}})}spawn({k:'ring',x,y,r0:4,r1:36*pw,m:.4,c:'#d58cff',w:2,fp:1});return}
+  if(el==='chaos'){for(let i=0;i<16*pw;i++){const a0=RN(0,6.283),r0=RN(4,10),w=RN(5,9)*(Math.random()<.5?1:-1);spawn({x,y,m:RN(.6,1),s:RN(2,3),c:C.c,add:1,tick:(p,dt)=>{p.a0=(p.a0??a0)+w*dt;p.r=(p.r??r0)+60*sq*dt;p.x=x+Math.cos(p.a0)*p.r;p.y=y+Math.sin(p.a0)*p.r*.8;p.vx=p.vy=0}})}spawn({k:'ring',x,y,r0:4,r1:36*pw,m:.4,c:'#a9c9ea',w:2,fp:1});return}
   if(el==='heal'){for(let i=0;i<6*pw;i++)spawn({x:x+RN(-14,14)*sq,y:y-30*sq-RN(0,20),vy:RN(60,160),g:900,m:.9,s:2.5,c:'#bfe9ff',fl:y+4,stick:1,fp:3})}
   sp(12*pw,40,160,{vy:0,g:-60,dr:1.5,m:RN(.8,1.4),k:'sq'});
   for(let i=0;i<10*pw;i++)spawn({x:x+RN(-18,18)*sq,y:y+RN(-8,8),vx:RN(-14,14),vy:RN(-80,-30),dr:1,m:RN(.8,1.4),s:RN(2,3),c:C.c,add:1});return}
  if(el==='illu'){for(let i=0;i<18;i++){const a=i/18*6.283,v=110*sq;spawn({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v*.8,dr:3,m:.7,s:2.5,c:['#ffb0e0','#a0e8ff','#fff0a0'][i%3],add:1})}return}
  if(el==='msg'){for(let i=0;i<6;i++){const ph=i*.5;spawn({x,y,m:.8,s:2,c:C.c,add:1,tick:(p,dt)=>{p.t=(p.t||0)+dt;p.vx=0;p.vy=0;p.x=x+p.t*240;p.y=y+Math.sin(p.t*14+ph)*5}})}return}
- if(el==='glyph'){for(let i=0;i<6*pw;i++)spawn({k:'txt',t:RUNES[RN(0,RUNES.length)|0],x:x+RN(-20,20)*sq,y,vx:RN(-30,30),vy:RN(-70,-30),dr:1.2,m:RN(.8,1.3),s:14,c:'#f6d58e',add:1});return}
+ if(el==='glyph'){for(let i=0;i<6*pw;i++)spawn({k:'txt',t:RUNES[RN(0,RUNES.length)|0],x:x+RN(-20,20)*sq,y,vx:RN(-30,30),vy:RN(-70,-30),dr:1.2,m:RN(.8,1.3),s:14,c:'#f6dca8',add:1});return}
 };
 /* рисовальщик текстовых частиц и линий-трещин: расширяем pTick через тик-частицы */
 const _sp=spawn;
@@ -2452,16 +2459,16 @@ const _ul=useLuck;useLuck=function(){if(!cur||cur.dice||busy)return;rollTrail='l
 /* навыки: у каждого свой маленький жест вокруг кубика */
 const EYE=['....11111....','..112222211..','.12222222221.','1222222222221','.12222222221.','..112222211..','....11111....'];
 function eyeDraw(c,open,dx){const g=c.getContext('2d');g.clearRect(0,0,13,7);
- if(!open){g.fillStyle='#2a1a0c';g.fillRect(2,3,9,1);g.fillRect(0,3,1,1);g.fillRect(12,3,1,1);g.fillStyle='#e9bd6c';g.fillRect(4,4,1,1);g.fillRect(6,4,1,1);g.fillRect(8,4,1,1);return}
+ if(!open){g.fillStyle='#2a1a0c';g.fillRect(2,3,9,1);g.fillRect(0,3,1,1);g.fillRect(12,3,1,1);g.fillStyle='#f0c47a';g.fillRect(4,4,1,1);g.fillRect(6,4,1,1);g.fillRect(8,4,1,1);return}
  const cx=6+dx;EYE.forEach((r,y)=>[...r].forEach((ch,x)=>{if(ch==='.')return;let col=ch==='1'?'#1a0d06':'#cdbf9f';
   if(ch==='2'&&Math.abs(x-cx)<=2&&Math.abs(y-3)<=1&&!(Math.abs(x-cx)===2&&Math.abs(y-3)===1))col='#5a2aa8';
-  if(ch==='2'&&Math.abs(x-cx)<=1&&Math.abs(y-3)<=1&&!(Math.abs(x-cx)===1&&Math.abs(y-3)===1))col='#a57cff';
+  if(ch==='2'&&Math.abs(x-cx)<=1&&Math.abs(y-3)<=1&&!(Math.abs(x-cx)===1&&Math.abs(y-3)===1))col='#7fa6cc';
   if(x===cx&&y===3)col='#120a06';g.fillStyle=col;g.fillRect(x,y,1,1)}));g.fillStyle='#fff';g.fillRect(cx+1,2,1,1)}
 function eyeFx(x,y){const ov=$('roll'),c=document.createElement('canvas');c.width=13;c.height=7;c.className='peye wsp';c.style.transform=`translate(${x-45}px,${y-24}px)`;ov.appendChild(c);
  const seq=[[0,0],[1,0],[1,0],[1,-2],[1,-2],[1,-2],[1,2],[1,2],[1,2],[1,0],[0,0],[1,0],[1,0],[1,0]];eyeDraw(c,0,0);
  c.animate([{opacity:0,transform:c.style.transform+' scale(.6)'},{opacity:1,transform:c.style.transform}],{duration:240,easing:'cubic-bezier(.3,1.4,.5,1)',fill:'forwards'});
  seq.forEach(([o,d],i)=>wspT.push(setTimeout(()=>eyeDraw(c,o,d),200+i*130)));
- wspT.push(setTimeout(()=>{spawn({k:'ring',x,y,r0:10,r1:70,m:.6,c:'#e9bd6c',w:1.5,fp:1,fy:.55})},330));
+ wspT.push(setTimeout(()=>{spawn({k:'ring',x,y,r0:10,r1:70,m:.6,c:'#f0c47a',w:1.5,fp:1,fy:.55})},330));
  wspT.push(setTimeout(()=>c.animate([{opacity:1},{opacity:0,filter:'blur(3px)'}],{duration:500,fill:'forwards'}),200+seq.length*130+200))}
 function orbitTxt(chars,x,y,rx,ry,m,col,sz){chars.forEach((t,i)=>{const ph=i/chars.length*6.283;spawn({k:'txt',t,x,y,m,s:sz,c:col,add:1,fp:3,tick:(p,dt)=>{p.tt=(p.tt||0)+dt;const a=ph+p.tt*1.6;p.vx=p.vy=0;p.x=x+Math.cos(a)*rx;p.y=y+Math.sin(a)*ry;p.u=Math.sin(a)<0}})})}
 function skillFx(spec,used){if(RM)return;const l=spec.label,W=innerWidth,H=innerHeight,ex=W/2,ey=H/2-80,fl=ey+62,die=$('die');
@@ -2471,14 +2478,14 @@ function skillFx(spec,used){if(RM)return;const l=spec.label,W=innerWidth,H=inner
   bigShake();vib([70,30,110]);dust(ex,fl-4,false);spawn({k:'flash',x:ex,y:fl,s:70,gr:.6,m:.4,c:'rgba(179,35,58,.45)'});
   for(let i=0;i<6;i++){const dir=i%2?1:-1,pts=[[ex+RN(-14,14),fl]];let x=pts[0][0],y=fl;const n=RN(4,7)|0;for(let j=0;j<n;j++){x+=dir*RN(12,26);y+=RN(-5,6);pts.push([x,y])}
    spawn({k:'zap',pts,m:1.6,c:'#1a0306',sc:'#b3233a',w:1.6,fp:4,u:1})}return}
- if(l==='Убеждение'){for(let i=0;i<3;i++)setTimeout(()=>spawn({k:'ring',x:ex,y:fl,r0:20,r1:130,m:1.3,c:'#f6d58e',w:2,fp:1,fy:.32}),i*260);under(()=>burst('friend',ex,ey+20,1.4,fl));return}
- if(l==='Выступление'){for(let i=0;i<9;i++){const ph=i*.7,t=['♪','♫','♩'][i%3];setTimeout(()=>spawn({k:'txt',t,x:ex,y:fl,m:1.8,s:RN(16,22),c:i%2?'#d58cff':'#f6d58e',add:1,u:1,tick:(p,dt)=>{p.tt=(p.tt||0)+dt;p.vx=p.vy=0;p.x=ex+Math.sin(p.tt*3.2+ph)*(40+p.tt*30);p.y=fl-p.tt*110}}),i*110)}return}
+ if(l==='Убеждение'){for(let i=0;i<3;i++)setTimeout(()=>spawn({k:'ring',x:ex,y:fl,r0:20,r1:130,m:1.3,c:'#f6dca8',w:2,fp:1,fy:.32}),i*260);under(()=>burst('friend',ex,ey+20,1.4,fl));return}
+ if(l==='Выступление'){for(let i=0;i<9;i++){const ph=i*.7,t=['♪','♫','♩'][i%3];setTimeout(()=>spawn({k:'txt',t,x:ex,y:fl,m:1.8,s:RN(16,22),c:i%2?'#a9c9ea':'#f6dca8',add:1,u:1,tick:(p,dt)=>{p.tt=(p.tt||0)+dt;p.vx=p.vy=0;p.x=ex+Math.sin(p.tt*3.2+ph)*(40+p.tt*30);p.y=fl-p.tt*110}}),i*110)}return}
  if(l==='Проницательность'||l==='Восприятие')return eyeFx(ex,ey-128);
- if(l==='Магия'){orbitTxt([...'ᚠᚱᛟᛉᚨᛞᛊᚷ'],ex,ey+4,96,30,2.2,'#d6c0ff',17);burst('chaos',ex,ey,1,fl);return}
+ if(l==='Магия'){orbitTxt([...'ᚠᚱᛟᛉᚨᛞᛊᚷ'],ex,ey+4,96,30,2.2,'#cfe3f7',17);burst('chaos',ex,ey,1,fl);return}
  if(l==='Медицина'){for(let i=0;i<10;i++)setTimeout(()=>spawn({x:ex+RN(-40,40),y:ey-150,vy:RN(80,160),g:1100,m:1.2,s:RN(2,3.5),c:'#cfeeff',fl:ey-50+RN(-6,10),stick:1,fp:3}),i*70);setTimeout(()=>burst('heal',ex,ey+10,1.2,fl),500);return}
  if(l==='Анализ'){const P=Array.from({length:6},(_,i)=>{const a=i/6*6.283+RN(-.3,.3),r=RN(80,110);return[ex+Math.cos(a)*r,ey+Math.sin(a)*r*.7]});
-  P.forEach((p,i)=>{setTimeout(()=>{spawn({x:p[0],y:p[1],m:1.8-i*.12,s:4,c:'#f6d58e',add:1,fp:4,u:1});spawn({k:'flash',x:p[0],y:p[1],s:10,m:.25,c:'rgba(246,213,142,.8)',add:1,u:1});
-   if(i)spawn({k:'zap',pts:[P[i-1],p],m:1.6-i*.12,c:'#e9bd6c',w:1,fp:4,u:1})},i*150)});setTimeout(()=>spawn({k:'zap',pts:[P[5],P[0]],m:.8,c:'#e9bd6c',w:1,fp:4,u:1}),900);return}
+  P.forEach((p,i)=>{setTimeout(()=>{spawn({x:p[0],y:p[1],m:1.8-i*.12,s:4,c:'#f6dca8',add:1,fp:4,u:1});spawn({k:'flash',x:p[0],y:p[1],s:10,m:.25,c:'rgba(246,220,168,.8)',add:1,u:1});
+   if(i)spawn({k:'zap',pts:[P[i-1],p],m:1.6-i*.12,c:'#f0c47a',w:1,fp:4,u:1})},i*150)});setTimeout(()=>spawn({k:'zap',pts:[P[5],P[0]],m:.8,c:'#f0c47a',w:1,fp:4,u:1}),900);return}
  if(l==='Скрытность'){for(let i=0;i<12;i++){const a=RN(0,6.283);spawn({k:'puff',x:ex+Math.cos(a)*60,y:ey+Math.sin(a)*40,vx:-Math.cos(a)*30,vy:-Math.sin(a)*20,m:RN(1.2,1.8),s:RN(14,22),gr:.8,c:'rgba(10,6,14,.6)',fin:.3,fp:1.2})}
   die.animate([{opacity:1},{opacity:.3,offset:.35},{opacity:.3,offset:.7},{opacity:1}],{duration:1700});return}
  if(l==='Ловкость рук'){burst('steel',ex+30,ey-30,.8,fl);burst('spark',ex,ey,1,fl);return}
@@ -2494,7 +2501,7 @@ EL.flee=EL.steel;
 {const _b=burst;burst=function(el,...r){return _b(el==='flee'?'steel':el,...r)}}
 const _fxL2=fxLayer;
 fxLayer=function(el){
- if(el==='steel')return pxArt(DAGGER,{w:'#fbf7ee',l:'#cfc8bc',d:'#7d776c',b:'#e9e4da',g:'#e9bd6c',h:'#8a5a32',p:'#e9bd6c'});
+ if(el==='steel')return pxArt(DAGGER,{w:'#fbf7ee',l:'#cfc8bc',d:'#7d776c',b:'#e9e4da',g:'#f0c47a',h:'#8a5a32',p:'#f0c47a'});
  if(el==='flee')return pxArt(FLEE.map(r=>'.....'+r),{o:'#e9dcc0'},'flee')+`<svg class="pxa flee" viewBox="0 0 17 12" style="aspect-ratio:17/12;opacity:.3"><rect x="1" y="3" width="4" height="1" fill="#e9dcc0"/><rect x="0" y="6" width="5" height="1" fill="#e9dcc0"/><rect x="2" y="9" width="3" height="1" fill="#e9dcc0"/></svg>`;
  return _fxL2(el)};
 const _fxD2=fxDecor;
@@ -2512,7 +2519,7 @@ function castWave(k){if(RM)return;const W=innerWidth,H=innerHeight,cx=W/2,cy=H*.
   const a=mk('ring',260),b=mk('ring b',200);
   gone(a,a.animate([{transform:'scale(3.2) rotate(0)',opacity:0},{transform:'scale(1.6) rotate(60deg)',opacity:.9,offset:.4},{transform:'scale(.28) rotate(150deg)',opacity:1,offset:.78},{transform:'scale(.22) rotate(155deg)',opacity:0}],{duration:820,easing:'cubic-bezier(.6,0,.9,.6)',fill:'forwards'}));
   gone(b,b.animate([{transform:'scale(3.6) rotate(0)',opacity:0},{transform:'scale(1.8) rotate(-50deg)',opacity:.8,offset:.4},{transform:'scale(.3) rotate(-140deg)',opacity:1,offset:.78},{transform:'scale(.24) rotate(-145deg)',opacity:0}],{duration:820,easing:'cubic-bezier(.6,0,.9,.6)',fill:'forwards'}));
-  setTimeout(()=>{burst('hold',cx,cy,1.6,cy+60);spawn({k:'flash',x:cx,y:cy,s:60,gr:.5,m:.3,c:'rgba(200,170,255,.7)',add:1});vib([50,20,30]);document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake')},640);return}
+  setTimeout(()=>{burst('hold',cx,cy,1.6,cy+60);spawn({k:'flash',x:cx,y:cy,s:60,gr:.5,m:.3,c:'rgba(180,205,235,.7)',add:1});vib([50,20,30]);document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake')},640);return}
  if(k==='misty_step'){/* серебристый туман проходит по экрану снизу вверх и рассеивается */
   for(let i=0;i<16;i++){const x=RN(-.1,1.1)*W,y=H+RN(10,120);spawn({k:'puff',x,y,vx:RN(-30,30),vy:-RN(700,1000),dr:2.2,m:RN(1,1.4),s:RN(50,90),gr:.8,c:'rgba(225,222,240,.22)',fin:.15,fp:1.4})}
   vib(20);return}}
@@ -2521,17 +2528,17 @@ function castWave(k){if(RM)return;const W=innerWidth,H=innerHeight,cx=W/2,cy=H*.
  const shake=()=>{document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake')};
  if(k==='counterspell'){/* знак встаёт посреди экрана, его сдавливает, и он разлетается осколками */
   const d=document.createElement('div');d.className='cwave';d.style.cssText=`width:220px;height:220px;margin:-110px 0 0 -110px;top:${cy}px;mix-blend-mode:normal;border-radius:0`;
-  d.innerHTML='<svg viewBox="0 0 40 40" style="width:100%;height:100%;stroke:#e3d4ff;stroke-width:1;fill:none;filter:drop-shadow(0 0 6px #a57cff)"><circle cx="20" cy="20" r="14" stroke-dasharray="3 2"/><path d="M20 6 L28 31 L7 15 L33 15 L12 31 Z"/></svg>';document.body.appendChild(d);
+  d.innerHTML='<svg viewBox="0 0 40 40" style="width:100%;height:100%;stroke:#dbe8f5;stroke-width:1;fill:none;filter:drop-shadow(0 0 6px #7fa6cc)"><circle cx="20" cy="20" r="14" stroke-dasharray="3 2"/><path d="M20 6 L28 31 L7 15 L33 15 L12 31 Z"/></svg>';document.body.appendChild(d);
   d.animate([{transform:'scale(.4) rotate(-40deg)',opacity:0},{transform:'scale(1) rotate(0)',opacity:.9,offset:.45},{transform:'scale(.92,1.06)',opacity:.9,offset:.6},{transform:'scale(1.1)',opacity:0}],{duration:720,easing:'cubic-bezier(.2,.8,.3,1)',fill:'forwards'}).onfinish=()=>d.remove();
   setTimeout(()=>{burst('counter',cx,cy,3,H*.8);shake();vib([40,20,60])},440);return}
  if(k==='greater_invisibility'){/* всё вокруг на миг становится прозрачным: тебя не видно */
   if(pg)pg.animate([{opacity:1,filter:'none'},{opacity:.18,filter:'blur(1.5px)',offset:.35},{opacity:.18,filter:'blur(1.5px)',offset:.6},{opacity:1,filter:'none'}],{duration:1100,easing:'ease-in-out'});
   for(let i=0;i<40;i++)spawn({x:RN(0,W),y:RN(H*.1,H*.85),vx:RN(-10,10),vy:RN(-30,-8),m:RN(.6,1.2),s:2,c:EL.invis.c,a:.8,fin:.3});vib(15);return}
  if(k==='dominate_person'){/* сверху падают нити и натягиваются */
-  for(let i=0;i<5;i++){const x0=W*(.15+i*.175),xt=cx+(i-2)*14;setTimeout(()=>{spawn({k:'zap',pts:zapPts(x0,0,xt,cy,10,6),m:.7,c:'#f0e0ff',sc:'#d58cff',w:1.2,fp:2})},i*50)}
+  for(let i=0;i<5;i++){const x0=W*(.15+i*.175),xt=cx+(i-2)*14;setTimeout(()=>{spawn({k:'zap',pts:zapPts(x0,0,xt,cy,10,6),m:.7,c:'#e8f2ff',sc:'#a9c9ea',w:1.2,fp:2})},i*50)}
   setTimeout(()=>{burst('dom',cx,cy,2,cy+60);vib([30,15,50])},320);return}
  if(k==='charm_person'||k==='friends'||k==='suggestion'){/* тёплая волна снизу и искры своего цвета */
-  const col=k==='charm_person'?'rgba(255,122,168,.32)':k==='friends'?'rgba(246,213,142,.3)':'rgba(213,140,255,.3)',el=k==='charm_person'?'charm':k==='friends'?'friend':'sugg';
+  const col=k==='charm_person'?'rgba(255,122,168,.32)':k==='friends'?'rgba(246,220,168,.3)':'rgba(169,201,234,.3)',el=k==='charm_person'?'charm':k==='friends'?'friend':'sugg';
   spawn({k:'flash',x:cx,y:H+40,s:H*.5,gr:.6,m:.9,c:col,fp:1.4,fin:.2});
   for(let i=0;i<30;i++)spawn({x:RN(0,W),y:H+RN(0,40),vx:RN(-20,20),vy:-RN(250,520),dr:1.2,m:RN(.8,1.4),s:RN(2,4),c:EL[el].c,add:1});
   if(k==='suggestion'){for(let i=0;i<24;i++){const a0=i/24*6.283,r0=Math.max(W,H)*.6;spawn({x:cx,y:cy,m:1,s:2.5,c:EL.sugg.c,add:1,tick:(p,dt)=>{p.tt=(p.tt||0)+dt;const r=r0*(1-p.tt),a=a0+p.tt*5;p.vx=p.vy=0;p.x=cx+Math.cos(a)*r;p.y=cy+Math.sin(a)*r*.8}})}}
@@ -2549,10 +2556,10 @@ function castWave(k){if(RM)return;const W=innerWidth,H=innerHeight,cx=W/2,cy=H*.
 function pxRects(rows,pal,ox,oy,cls){let r='';rows.forEach((row,y)=>[...row].forEach((c,x)=>{if(pal[c])r+=`<rect x="${x+ox}" y="${y+oy}" width="1" height="1" fill="${pal[c]}"/>`}));return cls?`<g class="${cls}">${r}</g>`:r}
 const EMB={
  charm:()=>`<span class="emb sway"><svg viewBox="0 0 7 14"><rect x="3" y="0" width="1" height="7" fill="#ffd0e0" opacity=".6"/>${pxRects(['.11.11.','1221221','1222221','.12221.','..121..','...1...'],{1:'#ff7aa8',2:'#ffb3cc'},0,7)}</svg></span>`,
- friend:()=>`<span class="emb sway"><svg viewBox="0 0 12 16" style="shape-rendering:auto"><line x1="6" y1="0" x2="6" y2="6" stroke="#f6d58e" stroke-opacity=".6" stroke-width=".6"/><circle cx="4.3" cy="10" r="3" fill="none" stroke="#f6d58e" stroke-width="1"/><circle cx="7.7" cy="10" r="3" fill="none" stroke="#e9bd6c" stroke-width="1"/></svg></span>`,
- sugg:()=>`<span class="emb spin"><svg viewBox="-10 -10 20 20"><path d="M0 0 C1 -1 2 0 2 1 C2 3 -1 4 -3 2 C-5 0 -3 -5 1 -5 C5 -5 7 -1 6 3 C5 7 -1 9 -5 7" fill="none" stroke="#d58cff" stroke-width="1.1" stroke-linecap="round"/></svg></span>`,
+ friend:()=>`<span class="emb sway"><svg viewBox="0 0 12 16" style="shape-rendering:auto"><line x1="6" y1="0" x2="6" y2="6" stroke="#f6dca8" stroke-opacity=".6" stroke-width=".6"/><circle cx="4.3" cy="10" r="3" fill="none" stroke="#f6dca8" stroke-width="1"/><circle cx="7.7" cy="10" r="3" fill="none" stroke="#f0c47a" stroke-width="1"/></svg></span>`,
+ sugg:()=>`<span class="emb spin"><svg viewBox="-10 -10 20 20"><path d="M0 0 C1 -1 2 0 2 1 C2 3 -1 4 -3 2 C-5 0 -3 -5 1 -5 C5 -5 7 -1 6 3 C5 7 -1 9 -5 7" fill="none" stroke="#a9c9ea" stroke-width="1.1" stroke-linecap="round"/></svg></span>`,
  msg:()=>`<span class="emb bob"><svg viewBox="0 0 9 7">${pxRects(['111111111','11.....11','1.1...1.1','1..1.1..1','1...1...1','1.......1','111111111'],{1:'#e9b88a'},0,0)}</svg></span>`,
- glyph:()=>`<span class="emb bob"><svg viewBox="0 0 10 12" style="shape-rendering:auto"><text x="5" y="10" text-anchor="middle" font-size="12" font-family="serif" font-weight="700" fill="#f6d58e">ᛟ</text></svg></span>`,
+ glyph:()=>`<span class="emb bob"><svg viewBox="0 0 10 12" style="shape-rendering:auto"><text x="5" y="10" text-anchor="middle" font-size="12" font-family="serif" font-weight="700" fill="#f6dca8">ᛟ</text></svg></span>`,
  spark:()=>`<span class="emb"><svg viewBox="0 0 5 12">${pxRects(['..1..','.121.','.121.','..1..'],{1:'#ffb347',2:'#fff3c4'},0,0,'fl')}${pxRects(['.333.','.343.','.333.','.333.','.333.','.333.','33333','.....'],{3:'#e9dcc0',4:'#b8a888'},0,4)}</svg></span>`,
  hand:()=>`<span class="emb bob"><svg viewBox="0 0 8 10">${pxRects(['...1.1..','.1.1.1..','.1.1.1.1','.111111.','1.11111.','1111111.','.111111.','..1111..','..1111..','..1111..'],{1:'#bff5e0'},0,0)}</svg></span>`};
 {const _l=fxLayer;fxLayer=function(el){if(EMB[el])return EMB[el]();return _l(el)}}
@@ -2587,7 +2594,7 @@ const SKFX={
   const d=sfx(`<svg viewBox="-150 -60 300 120">${L(-1)}${L(1)}</svg>`,ex,fl-28,300,120,{u:1,life:2600});sDraw(d,0,900);sPop(d,'.lf',300,110);vib(10)},
  'Религия':(ex,ey,fl)=>{/* за кубиком встаёт ореол с лучами, сверху падает столб света */
   const rays=Array.from({length:16},(_,i)=>{const a=i/16*6.283,r1=i%2?92:88,r2=i%2?104:122;return `<path data-d="${200+i*40}" d="M${(Math.cos(a)*r1).toFixed(1)} ${(Math.sin(a)*r1).toFixed(1)} L${(Math.cos(a)*r2).toFixed(1)} ${(Math.sin(a)*r2).toFixed(1)}"/>`}).join('');
-  const d=sfx(`<svg viewBox="-130 -130 260 260"><circle data-d="0" r="82"/><circle data-d="120" r="76" stroke="#d58cff" stroke-dasharray="2 5" style="stroke-dasharray:2 5"/>${rays}</svg>`,ex,ey,260,260,{u:1,life:2600});
+  const d=sfx(`<svg viewBox="-130 -130 260 260"><circle data-d="0" r="82"/><circle data-d="120" r="76" stroke="#a9c9ea" stroke-dasharray="2 5" style="stroke-dasharray:2 5"/>${rays}</svg>`,ex,ey,260,260,{u:1,life:2600});
   sDraw(d,0,700,'[data-d]:not([stroke-dasharray])');d.firstChild.animate([{transform:'rotate(-8deg) scale(.9)'},{transform:'rotate(8deg) scale(1)'}],{duration:3000,easing:'ease-out',fill:'forwards'});
   const b=document.createElement('div');b.className='sfx u beam';b.style.cssText=`left:${ex-60}px;top:0;width:120px;height:${fl}px`;$('roll').insertBefore(b,$('die'));
   b.animate([{opacity:0},{opacity:1,offset:.25},{opacity:0}],{duration:2400,fill:'forwards'}).onfinish=()=>b.remove();vib([10,60,10])},
@@ -2598,13 +2605,13 @@ const SKFX={
   d.querySelectorAll('[stroke-dasharray]').forEach((p,i)=>{p.style.opacity=0;p.animate([{opacity:0,clipPath:'inset(0 100% 0 0)'},{opacity:1,clipPath:'inset(0 0 0 0)'}],{duration:600,delay:500+i*220,fill:'forwards'})});
   ['MCCXL','год Пепла','DCCIX'].forEach((t,i)=>wspT.push(setTimeout(()=>spawn({k:'txt',t,x:ex+[-90,0,90][i],y:ey-70+[10,-30,14][i],vy:-14,m:2,s:16,c:'#e9dcc0',fp:2,fin:.25}),700+i*260)));vib(8)},
  'Выживание':(ex,ey,fl)=>{/* по столу к кубику тянется цепочка следов */
-  const paw=(x,y,r)=>`<g class="pw" transform="translate(${x} ${y}) rotate(${r})"><path d="M-5 4 C-6 -1 6 -1 5 4 C4 8 -4 8 -5 4Z" fill="rgba(233,189,108,.35)"/><g fill="rgba(233,189,108,.6)" stroke="none"><circle cx="-6" cy="-4" r="1.8"/><circle cx="-2" cy="-7" r="1.8"/><circle cx="2.5" cy="-7" r="1.8"/><circle cx="6.5" cy="-4" r="1.8"/></g></g>`;
+  const paw=(x,y,r)=>`<g class="pw" transform="translate(${x} ${y}) rotate(${r})"><path d="M-5 4 C-6 -1 6 -1 5 4 C4 8 -4 8 -5 4Z" fill="rgba(240,196,122,.35)"/><g fill="rgba(240,196,122,.6)" stroke="none"><circle cx="-6" cy="-4" r="1.8"/><circle cx="-2" cy="-7" r="1.8"/><circle cx="2.5" cy="-7" r="1.8"/><circle cx="6.5" cy="-4" r="1.8"/></g></g>`;
   const P=[[-160,30,80],[-128,10,70],[-96,30,82],[-64,10,72],[-32,30,86]].map(([x,y,r])=>paw(x,y,r)).join('');
   const d=sfx(`<svg viewBox="-180 -30 200 60" style="stroke-width:1.2"><g transform="scale(1.7) translate(70 0)">${P}</g></svg>`,ex-60,fl+10,200,60,{u:1,life:2600});
   d.querySelectorAll('.pw').forEach((e,i)=>{e.style.opacity=0;e.animate([{opacity:0},{opacity:1}],{duration:200,delay:i*170,fill:'forwards'});wspT.push(setTimeout(()=>spawn({x:ex-60+((+e.getAttribute('transform').match(/-?\d+/)[0])+70)*1.7+70,y:fl+12,vx:RN(-10,10),vy:RN(-20,-8),m:.6,s:2,c:'#8a7a6a',u:1}),i*170))});vib(6)},
  'Уход за животными':(ex,ey,fl,die)=>{/* прилетает птица из золотых линий, садится на кубик и улетает */
   const up='M0 0 C-4 -9 -12 -12 -18 -10 M0 0 C4 -9 12 -12 18 -10',dn='M0 0 C-5 3 -12 8 -18 12 M0 0 C5 3 12 8 18 12',fold='M0 0 C-5 -1 -9 1 -12 3 M0 0 C5 -1 9 1 12 3';
-  const d=sfx(`<svg viewBox="-30 -30 60 60"><path class="bd" d="M-9 2 C-4 -3 6 -4 10 -1 L15 -3 L11 1 C8 4 -4 6 -9 2Z" fill="rgba(165,124,255,.3)"/><path class="wg" d="${up}"/></svg>`,0,0,96,96,{life:3400});
+  const d=sfx(`<svg viewBox="-30 -30 60 60"><path class="bd" d="M-9 2 C-4 -3 6 -4 10 -1 L15 -3 L11 1 C8 4 -4 6 -9 2Z" fill="rgba(127,166,204,.3)"/><path class="wg" d="${up}"/></svg>`,0,0,96,96,{life:3400});
   const wg=d.querySelector('.wg'),W=innerWidth,top=ey-74;let f=0,flap=on=>{f=0;const t=()=>{if(!d.isConnected||!on())return;wg.setAttribute('d',f++%2?dn:up);wspT.push(setTimeout(t,120))};t()};
   let flying=true;flap(()=>flying);
   d.animate([{transform:`translate(${W+40}px,${top-120}px)`},{transform:`translate(${ex+60}px,${top-50}px)`,offset:.6},{transform:`translate(${ex}px,${top}px)`}],{duration:1000,easing:'cubic-bezier(.3,.7,.4,1)',fill:'forwards'});
@@ -2614,17 +2621,17 @@ const SKFX={
   d.style.left=d.style.top='-48px';d.firstChild.style.strokeWidth='1.3'},
  'Атлетика':(ex,ey,fl,die)=>{/* кубик давит в стол всем весом: стол прогибается, расходится волна */
   die.animate([{transform:`translate(${ex}px,${ey-26}px) scale(.96,1.05)`},{transform:`translate(${ex}px,${ey+10}px) scale(1.14,.82)`,offset:.35},{transform:`translate(${ex}px,${ey-4}px) scale(.97,1.04)`,offset:.65},{transform:`translate(${ex}px,${ey}px)`}],{duration:520,easing:'cubic-bezier(.5,0,.3,1)'});
-  wspT.push(setTimeout(()=>{bigShake();vib([60,30,90]);dust(ex,fl-4,false);for(let i=0;i<2;i++)spawn({k:'ring',x:ex,y:fl,r0:30,r1:150+i*40,m:.7+i*.2,c:i?'#a57cff':'#e9bd6c',w:2.4,fp:1,fy:.3});
+  wspT.push(setTimeout(()=>{bigShake();vib([60,30,90]);dust(ex,fl-4,false);for(let i=0;i<2;i++)spawn({k:'ring',x:ex,y:fl,r0:30,r1:150+i*40,m:.7+i*.2,c:i?'#7fa6cc':'#f0c47a',w:2.4,fp:1,fy:.3});
    const d=sfx(`<svg viewBox="-150 -40 300 80"><path data-d="0" d="M-40 -6 C-70 -20 -100 -20 -130 -8"/><path data-d="60" d="M-44 6 C-80 0 -110 6 -140 16"/><path data-d="0" d="M40 -6 C70 -20 100 -20 130 -8"/><path data-d="60" d="M44 6 C80 0 110 6 140 16"/></svg>`,ex,fl-10,300,80,{u:1,life:700});sDraw(d,0,300)},180))},
  'Акробатика':(ex,ey,fl,die)=>{/* кубик делает сальто, за ним остаётся золотая дуга */
   die.animate([{transform:`translate(${ex}px,${ey}px)`},{transform:`translate(${ex}px,${ey+6}px) scale(1.08,.9)`,offset:.12},{transform:`translate(${ex}px,${ey-90}px) rotate(180deg)`,offset:.5},{transform:`translate(${ex}px,${ey+4}px) rotate(360deg) scale(1.06,.93)`,offset:.88},{transform:`translate(${ex}px,${ey}px) rotate(360deg)`}],{duration:820,easing:'cubic-bezier(.4,0,.5,1)'});
-  const d=sfx(`<svg viewBox="-110 -150 220 200"><path data-d="80" d="M-70 40 C-90 -60 -40 -130 0 -132 C40 -130 90 -60 70 40" stroke-dasharray=""/><path data-d="200" d="M-56 44 C-70 -40 -30 -110 0 -112" stroke="#d58cff"/></svg>`,ex,ey-50,220,200,{life:1100});
+  const d=sfx(`<svg viewBox="-110 -150 220 200"><path data-d="80" d="M-70 40 C-90 -60 -40 -130 0 -132 C40 -130 90 -60 70 40" stroke-dasharray=""/><path data-d="200" d="M-56 44 C-70 -40 -30 -110 0 -112" stroke="#a9c9ea"/></svg>`,ex,ey-50,220,200,{life:1100});
   sDraw(d,0,620);wspT.push(setTimeout(()=>{vib(30);dust(ex,fl-4,false)},720))}
 };
 /* Убеждение: весы за кубиком. Чаша качается, в неё падают монеты, и она тяжело опускается на твою сторону */
 SKFX['Убеждение']=(ex,ey,fl,die,used)=>{const win=used>=10,L=110,CH=58,dish='M-26 0 Q0 16 26 0 Z';
- const pan=s=>`<g class="pn${s}"><path d="M0 0 L-22 ${CH} M0 0 L22 ${CH}" stroke="#cbb48a" stroke-width="1"/><g transform="translate(0 ${CH})"><path d="${dish}" fill="rgba(165,124,255,.22)"/><path d="M-26 0 L26 0"/></g></g>`;
- const d=sfx(`<svg viewBox="-150 -20 300 194"><path d="M0 -6 L0 154 M-34 154 L34 154 M-18 146 L18 146" /><circle cy="-10" r="4" fill="rgba(233,189,108,.3)"/><g class="bm"><path d="M-${L} 0 L${L} 0" stroke-width="2"/><path d="M-${L} 0 L-${L-14} -4 M${L} 0 L${L-14} -4"/></g>${pan('l')}${pan('r')}<circle r="3.5" fill="#e9bd6c"/></svg>`,ex,ey-15,300,194,{u:1,life:3000});
+ const pan=s=>`<g class="pn${s}"><path d="M0 0 L-22 ${CH} M0 0 L22 ${CH}" stroke="#cbb48a" stroke-width="1"/><g transform="translate(0 ${CH})"><path d="${dish}" fill="rgba(127,166,204,.22)"/><path d="M-26 0 L26 0"/></g></g>`;
+ const d=sfx(`<svg viewBox="-150 -20 300 194"><path d="M0 -6 L0 154 M-34 154 L34 154 M-18 146 L18 146" /><circle cy="-10" r="4" fill="rgba(240,196,122,.3)"/><g class="bm"><path d="M-${L} 0 L${L} 0" stroke-width="2"/><path d="M-${L} 0 L-${L-14} -4 M${L} 0 L${L-14} -4"/></g>${pan('l')}${pan('r')}<circle r="3.5" fill="#f0c47a"/></svg>`,ex,ey-15,300,194,{u:1,life:3000});
  const bm=d.querySelector('.bm'),pl=d.querySelector('.pnl'),pr=d.querySelector('.pnr'),Y=ey-92;
  let a=win?-.2:.12,v=0,tgt=0,t0=performance.now(),last=t0;const goal=win?.2:-.1;
  const set=()=>{const c=Math.cos(a)*L,s=Math.sin(a)*L;bm.setAttribute('transform',`rotate(${(a*57.3).toFixed(2)})`);pl.setAttribute('transform',`translate(${-c} ${-s})`);pr.setAttribute('transform',`translate(${c} ${s})`)};
@@ -2632,8 +2639,8 @@ SKFX['Убеждение']=(ex,ey,fl,die,used)=>{const win=used>=10,L=110,CH=58,
  d.animate([{opacity:0},{opacity:1}],{duration:260,fill:'forwards'});requestAnimationFrame(step);
  /* монеты падают в правую чашу по одной, каждая толкает её вниз */
  const n=win?5:2;for(let i=0;i<n;i++)wspT.push(setTimeout(()=>{const x=ex+Math.cos(a)*L,y=Y+Math.sin(a)*L+CH;
-  spawn({x:x+RN(-8,8),y:y-110,vy:120,g:1500,m:.36,s:5,c:['#fff6d8','#f6d58e','#e9bd6c'],u:1,fl:y,bo:.2,tick:p=>{if(p.y>=y-1&&!p.hit){p.hit=1;v+=win?.75:.4;tgt=Math.min(goal,tgt+goal/n*1.1);spawn({k:'flash',x:p.x,y,s:10,m:.2,c:'rgba(246,213,142,.8)',add:1,u:1});vib(8)}}})},350+i*230));
- if(win)wspT.push(setTimeout(()=>{tgt=goal;spawn({k:'ring',x:ex,y:fl,r0:20,r1:120,m:.9,c:'#f6d58e',w:1.5,fp:1,fy:.3});vib([20,40,30])},350+n*230+250));
+  spawn({x:x+RN(-8,8),y:y-110,vy:120,g:1500,m:.36,s:5,c:['#fff6d8','#f6dca8','#f0c47a'],u:1,fl:y,bo:.2,tick:p=>{if(p.y>=y-1&&!p.hit){p.hit=1;v+=win?.75:.4;tgt=Math.min(goal,tgt+goal/n*1.1);spawn({k:'flash',x:p.x,y,s:10,m:.2,c:'rgba(246,220,168,.8)',add:1,u:1});vib(8)}}})},350+i*230));
+ if(win)wspT.push(setTimeout(()=>{tgt=goal;spawn({k:'ring',x:ex,y:fl,r0:20,r1:120,m:.9,c:'#f6dca8',w:1.5,fp:1,fy:.3});vib([20,40,30])},350+n*230+250));
  else wspT.push(setTimeout(()=>{tgt=-.12;v-=1.2},350+n*230+250))};
 /* Медицина: вокруг кубика туго наматывается бинт, кубик сжимается, под ним тёплый свет */
 SKFX['Медицина']=(ex,ey,fl,die)=>{const band=(y,r,dl)=>`<g transform="rotate(${r})"><path class="bd" data-dl="${dl}" d="M-95 ${y-9} L95 ${y-9} L95 ${y+9} L-95 ${y+9} Z" fill="rgba(240,232,214,.82)" stroke="#e9dcc0" stroke-width="1"/><path class="bd" data-dl="${dl}" d="M-95 ${y-3} L95 ${y-3} M-95 ${y+3} L95 ${y+3}" stroke="#cbb48a" stroke-width=".6" stroke-dasharray="2 3" style="stroke-dasharray:2 3"/></g>`;
@@ -2661,13 +2668,13 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act="longR
 {const _cw=castWave;castWave=function(k){if(k!=='dominate_person'||RM)return _cw(k);const W=innerWidth,H=innerHeight,cx=W/2,cy=H*.48,pg=document.querySelector('.page.on');
  const ends=[-60,-22,22,60].map((dx,i)=>[cx+dx*2,cy+(i%3?-14:18)]);
  const d=document.createElement('div');d.className='domw';
- d.innerHTML=`<svg viewBox="0 0 ${W} ${H}"><g class="vg"><g class="cr"><path d="M${cx-95} 150 L${cx+95} 150" stroke-width="4"/><path d="M${cx} 122 L${cx} 180" stroke-width="4"/><circle cx="${cx-95}" cy="150" r="5" fill="#e9bd6c"/><circle cx="${cx+95}" cy="150" r="5" fill="#e9bd6c"/><circle cx="${cx}" cy="180" r="5" fill="#e9bd6c"/><path d="M${cx} 122 L${cx} 0" stroke="#cbb48a" stroke-width="1"/></g>
- ${ends.map(([x,y],i)=>`<path class="th" d="M${[cx-95,cx-30,cx+30,cx+95][i]} 150 L${x} ${y}" stroke="#efe4ff" stroke-width="1.8"/><circle class="kn" cx="${x}" cy="${y}" r="6" fill="rgba(213,140,255,.25)" stroke="#d58cff" stroke-width="2"/>`).join('')}</g></svg>`;
+ d.innerHTML=`<svg viewBox="0 0 ${W} ${H}"><g class="vg"><g class="cr"><path d="M${cx-95} 150 L${cx+95} 150" stroke-width="4"/><path d="M${cx} 122 L${cx} 180" stroke-width="4"/><circle cx="${cx-95}" cy="150" r="5" fill="#f0c47a"/><circle cx="${cx+95}" cy="150" r="5" fill="#f0c47a"/><circle cx="${cx}" cy="180" r="5" fill="#f0c47a"/><path d="M${cx} 122 L${cx} 0" stroke="#cbb48a" stroke-width="1"/></g>
+ ${ends.map(([x,y],i)=>`<path class="th" d="M${[cx-95,cx-30,cx+30,cx+95][i]} 150 L${x} ${y}" stroke="#efe4ff" stroke-width="1.8"/><circle class="kn" cx="${x}" cy="${y}" r="6" fill="rgba(169,201,234,.25)" stroke="#a9c9ea" stroke-width="2"/>`).join('')}</g></svg>`;
  document.body.appendChild(d);d.animate([{background:'rgba(6,4,8,0)'},{background:'rgba(6,4,8,.45)',offset:.25},{background:'rgba(6,4,8,.45)',offset:.7},{background:'rgba(6,4,8,0)'}],{duration:2300,fill:'forwards'});const vg=d.querySelector('.vg');
  d.querySelectorAll('.th').forEach((p,i)=>{p.setAttribute('pathLength','1');p.style.strokeDasharray='1';p.style.strokeDashoffset='1';p.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:380,delay:330+i*50,easing:'cubic-bezier(.3,.7,.4,1)',fill:'forwards'})});
  d.querySelectorAll('.kn').forEach((c,i)=>{c.style.opacity=0;c.animate([{opacity:0},{opacity:1}],{duration:150,delay:650+i*50,fill:'forwards'})});
  vg.animate([{transform:'translateY(-180px)',opacity:1,offset:0},{transform:'translateY(8px)',offset:.22},{transform:'translateY(0)',offset:.3},{transform:'translateY(0)',offset:.55},{transform:'translateY(-30px)',offset:.62},{transform:'translateY(-22px)',offset:.7},{transform:'translateY(-22px)',opacity:1,offset:.8},{transform:'translateY(-260px)',opacity:0}],{duration:2300,easing:'cubic-bezier(.3,.6,.3,1)',fill:'forwards'}).onfinish=()=>d.remove();
- setTimeout(()=>{vib([40,20,60]);if(pg)pg.animate([{transform:'none'},{transform:'translateY(-6px) scale(.995)'},{transform:'none'}],{duration:320,easing:'cubic-bezier(.3,1.4,.5,1)'});ends.forEach(([x,y])=>spawn({k:'flash',x,y,s:14,m:.3,c:'rgba(213,140,255,.8)',add:1}))},1260)}}
+ setTimeout(()=>{vib([40,20,60]);if(pg)pg.animate([{transform:'none'},{transform:'translateY(-6px) scale(.995)'},{transform:'none'}],{duration:320,easing:'cubic-bezier(.3,1.4,.5,1)'});ends.forEach(([x,y])=>spawn({k:'flash',x,y,s:14,m:.3,c:'rgba(169,201,234,.8)',add:1}))},1260)}}
 /* Подчинение личности 2: нити марионетки. DOMV='page' — весь лист становится куклой; 'doll' — золотая марионетка поднимается на нитях */
 let DOMV='page';
 {const _cw=castWave;castWave=function(k){if(k!=='dominate_person'||RM)return _cw(k);
@@ -2679,10 +2686,10 @@ let DOMV='page';
  d.animate([{background:'rgba(6,4,8,0)'},{background:'rgba(6,4,8,.4)',offset:.2},{background:'rgba(6,4,8,.4)',offset:.75},{background:'rgba(6,4,8,0)'}],{duration:2600,fill:'forwards'});
  if(DOMV==='page'){/* нити падают сверху, цепляются за лист, натягиваются — лист повисает на них и качается */
   const N=5,ax=Array.from({length:N},(_,i)=>W*(.12+i*.19)),ay=H*.3;
-  const th=ax.map(()=>mk('path',{stroke:'#efe4ff','stroke-width':1.6,fill:'none'})),kn=ax.map(()=>mk('circle',{r:4,fill:'rgba(213,140,255,.35)',stroke:'#d58cff','stroke-width':1.6}));
+  const th=ax.map(()=>mk('path',{stroke:'#efe4ff','stroke-width':1.6,fill:'none'})),kn=ax.map(()=>mk('circle',{r:4,fill:'rgba(169,201,234,.35)',stroke:'#a9c9ea','stroke-width':1.6}));
   let sag=60,sv_=0,ey=-20,ev=0,lift=0,lv=0,rot=0,rv=0,hooked=false,tug=false,rel=false;
   const step=now=>{const tt=now-T0,dt=Math.min(.04,(now-last)/1000);last=now;
-   if(!hooked){[ey,ev]=sp(ey,ev,ay,60,9,dt);if(tt>520){hooked=true;vib(12);ax.forEach((x,i)=>spawn({k:'flash',x,y:ay,s:12,m:.25,c:'rgba(213,140,255,.8)',add:1}))}}
+   if(!hooked){[ey,ev]=sp(ey,ev,ay,60,9,dt);if(tt>520){hooked=true;vib(12);ax.forEach((x,i)=>spawn({k:'flash',x,y:ay,s:12,m:.25,c:'rgba(169,201,234,.8)',add:1}))}}
    if(tt>900&&!tug){tug=true;lv=-260;rv=2.2;vib([40,20,60])}
    if(tug){[sag,sv_]=sp(sag,sv_,0,90,10,dt);[lift,lv]=sp(lift,lv,rel?0:-10,70,5,dt);[rot,rv]=sp(rot,rv,0,40,3.2,dt)}
    if(tt>1900&&!rel){rel=true}
@@ -2704,23 +2711,23 @@ FXMAP.fireball=()=>'fball';FXMAP.chromatic_orb=()=>'chroma';
   const seg=C.map((c,i)=>{const a0=i/6*6.283-1.571,a1=(i+1)/6*6.283-1.571;return `<path d="M0 0 L${(Math.cos(a0)*8).toFixed(2)} ${(Math.sin(a0)*8).toFixed(2)} A8 8 0 0 1 ${(Math.cos(a1)*8).toFixed(2)} ${(Math.sin(a1)*8).toFixed(2)}Z" fill="${c}"/>`}).join('');
   return `<span class="elm chroma"><svg viewBox="-10 -10 20 20"><defs><radialGradient id="${id}" cx="35%" cy="30%" r="70%"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient></defs><g class="sg">${seg}</g><circle r="8" fill="url(#${id})"/><circle r="8" fill="none" stroke="#e9dcc0" stroke-opacity=".5" stroke-width=".6"/></svg></span>`}
  return _l(el)}}
-EMB.invis=()=>`<span class="emb inv"><svg viewBox="0 0 16 24"><defs><linearGradient id="ivg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3d4ff"/><stop offset=".55" stop-color="#c9b6ff" stop-opacity=".8"/><stop offset="1" stop-color="#c9b6ff" stop-opacity="0"/></linearGradient></defs><path d="M8 1 C3.5 1 2.5 5 2.8 8.5 C1.8 12 1 18 1.5 23 L14.5 23 C15 18 14.2 12 13.2 8.5 C13.5 5 12.5 1 8 1Z M5 8.5 C5.6 5.5 10.4 5.5 11 8.5 C10 10 6 10 5 8.5Z" fill="rgba(201,182,255,.12)" stroke="url(#ivg)" stroke-width=".9" fill-rule="evenodd"/></svg></span>`;
+EMB.invis=()=>`<span class="emb inv"><svg viewBox="0 0 16 24"><defs><linearGradient id="ivg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dbe8f5"/><stop offset=".55" stop-color="#c9b6ff" stop-opacity=".8"/><stop offset="1" stop-color="#c9b6ff" stop-opacity="0"/></linearGradient></defs><path d="M8 1 C3.5 1 2.5 5 2.8 8.5 C1.8 12 1 18 1.5 23 L14.5 23 C15 18 14.2 12 13.2 8.5 C13.5 5 12.5 1 8 1Z M5 8.5 C5.6 5.5 10.4 5.5 11 8.5 C10 10 6 10 5 8.5Z" fill="rgba(201,182,255,.12)" stroke="url(#ivg)" stroke-width=".9" fill-rule="evenodd"/></svg></span>`;
 EMB.spark=()=>`<span class="emb"><svg viewBox="0 0 12 26" style="shape-rendering:auto;overflow:visible"><defs><radialGradient id="cfl" cx="50%" cy="70%" r="60%"><stop offset="0" stop-color="#fff6d8"/><stop offset=".5" stop-color="#ffcf6a"/><stop offset="1" stop-color="#e8741e" stop-opacity=".6"/></radialGradient></defs><path class="fl" d="M6 1 C8 4 9 6.5 9 8.5 C9 10.4 7.6 11.6 6 11.6 C4.4 11.6 3 10.4 3 8.5 C3 6.5 4.6 4.5 6 1Z" fill="url(#cfl)"/><path d="M6 11.6 L6 13" stroke="#3a2a20" stroke-width=".8"/><path d="M2.5 13.5 L9.5 13.5 L9.5 25 L2.5 25 Z" fill="rgba(233,220,192,.16)" stroke="#e9dcc0" stroke-width=".8"/><path d="M2.5 15 C4 16.5 5 15.5 5.5 17.5" fill="none" stroke="#e9dcc0" stroke-width=".6" opacity=".7"/></svg></span>`;
 EMB.hand=()=>`<span class="emb bob"><svg viewBox="0 0 16 20" style="shape-rendering:auto;overflow:visible;height:64%"><path d="M4.5 19 C3 16 1.5 13.5 1.2 11.5 C1 10.3 2.4 9.9 3.2 10.9 L4.6 12.6 L4.6 3.2 C4.6 1.8 6.6 1.8 6.6 3.2 L6.6 9 L6.6 1.8 C6.6 .4 8.6 .4 8.6 1.8 L8.6 9 L8.6 2.6 C8.6 1.2 10.6 1.2 10.6 2.6 L10.6 9.4 L10.6 4.4 C10.6 3 12.6 3 12.6 4.4 L12.6 12 C12.6 15 11.6 17 10.6 19 Z" fill="rgba(143,232,200,.14)" stroke="#bff5e0" stroke-width=".9" stroke-linejoin="round"/></svg></span>`;
 {const _wc=wspClear;wspClear=function(){_wc();document.querySelectorAll('#roll .sfx').forEach(e=>e.remove())}}
 /* Обман: губы теперь в стиле кубика — тонкая золотая линия и фиолет, без пикселей */
 lipsCv=function(rows){const open=rows===LIPS.o,s=document.createElement('span');s.className='lp';
- s.innerHTML=`<svg viewBox="0 0 40 22"><path d="M2 11 C8 5 14 3 20 7 C26 3 32 5 38 11 C30 ${open?10:12} 10 ${open?10:12} 2 11Z" fill="rgba(165,124,255,.28)"/><path d="M2 11 C10 ${open?20:18} 30 ${open?20:18} 38 11 C30 ${open?17:12} 10 ${open?17:12} 2 11Z" fill="rgba(165,124,255,.22)"/>${open?'<path d="M5 11 C14 10 26 10 35 11 C26 16 14 16 5 11Z" fill="#0b080c" stroke="none"/>':''}</svg>`;return s};
+ s.innerHTML=`<svg viewBox="0 0 40 22"><path d="M2 11 C8 5 14 3 20 7 C26 3 32 5 38 11 C30 ${open?10:12} 10 ${open?10:12} 2 11Z" fill="rgba(127,166,204,.28)"/><path d="M2 11 C10 ${open?20:18} 30 ${open?20:18} 38 11 C30 ${open?17:12} 10 ${open?17:12} 2 11Z" fill="rgba(127,166,204,.22)"/>${open?'<path d="M5 11 C14 10 26 10 35 11 C26 16 14 16 5 11Z" fill="#0b080c" stroke="none"/>':''}</svg>`;return s};
 /* Проницательность и Восприятие: глаз из золотых линий, зрачок бегает, веко моргает */
 eyeFx=function(x,y){const ov=$('roll'),w=document.createElement('div');w.className='wsp seye';w.style.transform=`translate(${x-45}px,${y-24}px)`;
- w.innerHTML=`<svg viewBox="-46 -25 92 50"><g class="lid"><path d="M-42 0 C-24 -24 24 -24 42 0 C24 24 -24 24 -42 0Z" fill="rgba(20,12,26,.75)"/><g class="iris"><circle r="13" fill="rgba(165,124,255,.35)" stroke="#d58cff"/><circle r="5.5" fill="#0b080c" stroke="#e9bd6c"/><circle cx="-4" cy="-4" r="1.6" fill="#f6ead0" stroke="none"/></g><path d="M-42 0 C-24 -24 24 -24 42 0 C24 24 -24 24 -42 0Z"/></g><path d="M-30 -18 L-34 -24 M-15 -24 L-16 -31 M0 -26 L0 -33 M15 -24 L16 -31 M30 -18 L34 -24" stroke="#cbb48a" stroke-width="1"/></svg>`;ov.appendChild(w);
+ w.innerHTML=`<svg viewBox="-46 -25 92 50"><g class="lid"><path d="M-42 0 C-24 -24 24 -24 42 0 C24 24 -24 24 -42 0Z" fill="rgba(20,12,26,.75)"/><g class="iris"><circle r="13" fill="rgba(127,166,204,.35)" stroke="#a9c9ea"/><circle r="5.5" fill="#0b080c" stroke="#f0c47a"/><circle cx="-4" cy="-4" r="1.6" fill="#f6ead0" stroke="none"/></g><path d="M-42 0 C-24 -24 24 -24 42 0 C24 24 -24 24 -42 0Z"/></g><path d="M-30 -18 L-34 -24 M-15 -24 L-16 -31 M0 -26 L0 -33 M15 -24 L16 -31 M30 -18 L34 -24" stroke="#cbb48a" stroke-width="1"/></svg>`;ov.appendChild(w);
  const lid=w.querySelector('.lid'),ir=w.querySelector('.iris');lid.style.transformOrigin='50% 50%';lid.style.transformBox='fill-box';
  w.animate([{opacity:0,transform:w.style.transform+' scale(.6)'},{opacity:1,transform:w.style.transform}],{duration:240,easing:'cubic-bezier(.3,1.4,.5,1)',fill:'forwards'});
  lid.animate([{transform:'scaleY(.05)'},{transform:'scaleY(1)'}],{duration:260,delay:120,easing:'cubic-bezier(.3,1.3,.5,1)',fill:'both'});
  const look=[[0,500],[-16,700],[-16,1000],[16,1250],[16,1600],[0,1850]];
  look.forEach(([dx,t])=>wspT.push(setTimeout(()=>ir.animate([{transform:getComputedStyle(ir).transform==='none'?'translate(0,0)':getComputedStyle(ir).transform},{transform:`translate(${dx}px,0)`}],{duration:200,easing:'cubic-bezier(.3,.8,.4,1)',fill:'forwards'}),t)));
  wspT.push(setTimeout(()=>lid.animate([{transform:'scaleY(1)'},{transform:'scaleY(.05)'},{transform:'scaleY(1)'}],{duration:220}),1450));
- wspT.push(setTimeout(()=>{spawn({k:'ring',x,y,r0:10,r1:70,m:.6,c:'#e9bd6c',w:1.5,fp:1,fy:.55})},330));
+ wspT.push(setTimeout(()=>{spawn({k:'ring',x,y,r0:10,r1:70,m:.6,c:'#f0c47a',w:1.5,fp:1,fy:.55})},330));
  wspT.push(setTimeout(()=>w.animate([{opacity:1},{opacity:0,filter:'blur(3px)'}],{duration:500,fill:'forwards'}),2300))};
 /* ---------- броски из шторки ---------- */
 function rollFromDrawer(what){
@@ -3219,7 +3226,7 @@ function hpSheet(){
   if(how==='dmg'){let d=n;const t=Math.min(S.hp.temp,d);S.hp.temp-=t;d-=t;if(wfB()){const b0=S.wf.hp;S.wf.hp-=d;if(S.wf.hp>0)d=0;else{d=-S.wf.hp;wfDrop={n:wfB().n,over:d,b0};S.wf=null}}S.hp.cur=Math.max(0,S.hp.cur-d);flash('#hpTok','#e0485e');vib([40,30,20]);document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake')}
   else if(how==='heal'&&wfB()){S.wf.hp=Math.min(wfB().hp,S.wf.hp+n);flash('#hpTok','#86c79c')}
   else if(how==='heal'){if(S.hp.cur<=0)S.death={s:0,f:0};S.hp.cur=Math.min(S.hp.max,S.hp.cur+n);flash('#hpTok','#86c79c');vib(15)}
-  else{S.hp.temp=Math.max(S.hp.temp,n);flash('#hpTok','#a57cff')}
+  else{S.hp.temp=Math.max(S.hp.temp,n);flash('#hpTok','#7fa6cc')}
   save();renderAll();if(wfDrop){const w=wfDrop;wfDrop=null;setTimeout(()=>{lastDrop=w;openInfo('wfdrop')},60)}
  };
 }
@@ -3688,9 +3695,9 @@ const scimHit=()=>scimAb()[1]+prof();
 {const _as=atkSpec;atkSpec=function(k,c){
  if(k==='scim'){const [l,v]=scimAb();return{label:'Скимитар: атака',bonus:[{l,v},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:'Скимитар',dn:1,ds:6,k:v,kl:l,t:'рубящий',fx:'steel'}}}
  if(k==='staff'){const v=mod(S.ab.str);return{label:'Боевой посох: атака',bonus:[{l:'Сила',v},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:'Боевой посох',dn:1,ds:6,k:v,kl:'Сила',t:'дробящий (1к8, если держишь двумя руками)',fx:'steel'}}}
- if(k==='archer'){const w=mod(S.ab.wis);return{label:'Лучник: атака заклинанием',bonus:[{l:'Мудрость',v:w},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:'Лучник',dn:starDie(),ds:8,k:w,kl:'Мудрость',t:'излучением, светящаяся стрела до 60 футов',fx:'snd'}}}
+ if(k==='archer'){const w=mod(S.ab.wis);return{label:'Лучник: атака заклинанием',bonus:[{l:'Мудрость',v:w},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:'Лучник',dn:starDie(),ds:8,k:w,kl:'Мудрость',t:'излучением, светящаяся стрела до 60 футов',fx:'star'}}}
  if(k.startsWith('b')&&wfB()){const B=wfB(),a=B.at[+k.slice(1)];if(a)return{label:`${B.n}: ${a.n}`,bonus:[{l:'атака зверя',v:a.b}],kind:'atk',
-  dmg:{n:a.n,dn:a.dn||1,ds:a.ds||1,k:a.k,t:a.t+(a.x?'. '+a.x:''),fx:'steel',flat:!a.dn,p:a.p||null}}}
+  dmg:{n:a.n,dn:a.dn||1,ds:a.ds||1,k:a.k,t:a.t+(a.x?'. '+a.x:''),fx:'beast',flat:!a.dn,p:a.p||null}}}
  return _as(k,c)}}
 function chaliceRoll(){const w=mod(S.ab.wis);return dice({label:'Чаша: лечение',n:starDie(),s:8,k:w,kl:'Мудрость',min:1,after:()=>`<div class="br">столько хитов получает Арадия или другое существо в пределах 30 футов от неё</div>`})}
 /* созвездия: тонкие линии и звёзды, без движения */
@@ -3878,10 +3885,301 @@ function bstForm(i){const nw=i<0,B=nw?{k:'own'+Date.now(),n:'',cr:'1/4',size:'С
 {const _f=INFO.fspellpick;INFO.fspellpick=()=>{const d=_f();d.body=d.body.replace(/<div class="how"[^>]*>Здесь только.*?<\/div>$/,'<div class="how" style="margin-top:10px">Здесь боевые заклинания Арадии. Отметь нужные, до 9: обычные встанут в «Действие», а бонусные (как Лечащее слово) в «Бонусное действие». Скимитар, Удар вслед и облики остаются всегда.</div>');return d}}
 {const _ac=INFO.ac;INFO.ac=()=>{const B=wfB();if(!B)return _ac();return{t:'Класс доспеха',sub:`облик: ${B.n.toLowerCase()} · ${B.ac}`,body:`<p>В облике зверя класс доспеха берётся у зверя: <b>${B.ac}</b>. Твой обычный ${acNow()} вернётся вместе с обликом.</p><p>Сколько должен выбросить враг на атаке (с бонусами), чтобы попасть по тебе.</p>`,acts:'',bang:'qt_wild'}}}
 
+/* =====================================================================
+   ЭФФЕКТЫ АРАДИИ (тред 5): тёмные перья, звёздный свет, туман.
+   Всё только на действие: проигрывается один раз и гаснет или замирает. Повторов по таймеру нет.
+   Перо живёт по своей физике: вылетает быстро, воздух его тормозит, дальше оно качается,
+   переворачивается и медленно ложится на стол (или на низ экрана).
+   ===================================================================== */
+const SPR=(()=>{const d=2;
+ /* перо: очин внизу, кончик вверху; одна сторона опахала шире другой, на краях пара расщепов */
+ function quill(L,W,bend,cuts,tone,leaf){const w=Math.ceil(W*2+12),h=Math.ceil(L+12),c=document.createElement('canvas');c.width=w*d;c.height=h*d;
+  const g=c.getContext('2d');g.scale(d,d);g.translate(w/2,h/2+L/2);
+  const X=t=>bend*Math.sin(Math.PI*t)*t,Y=t=>-L*t,Wl=W,Wr=leaf?W:W*.62,t0=leaf?.02:.14;
+  g.beginPath();g.moveTo(X(t0),Y(t0));
+  g.bezierCurveTo(X(.25)-Wl*.95,Y(.28),X(.72)-Wl*1.05,Y(.62),X(1),Y(1));
+  g.bezierCurveTo(X(.75)+Wr*1.05,Y(.64),X(.3)+Wr*.95,Y(.3),X(t0),Y(t0));g.closePath();
+  const gr=g.createLinearGradient(-Wl,0,Wr,0);gr.addColorStop(0,tone[0]);gr.addColorStop(.4,tone[1]);gr.addColorStop(.5,tone[2]);gr.addColorStop(.62,tone[1]);gr.addColorStop(1,tone[0]);
+  g.fillStyle=gr;g.fill();g.strokeStyle=tone[3];g.lineWidth=.7;g.stroke();
+  g.save();g.clip();g.lineWidth=.5;
+  if(leaf){g.strokeStyle='rgba(230,255,200,.35)';for(let i=0;i<6;i++){const t=.18+i*.12;g.beginPath();g.moveTo(X(t),Y(t));g.lineTo(X(t)-Wl*.9,Y(t+.12));g.moveTo(X(t),Y(t));g.lineTo(X(t)+Wr*.9,Y(t+.12));g.stroke()}}
+  else for(let i=0;i<24;i++){const t=.15+i*.036;g.strokeStyle=i%2?(tone[5]||'rgba(220,235,250,.10)'):'rgba(0,0,0,.4)';g.beginPath();g.moveTo(X(t),Y(t));g.lineTo(X(t)-Wl*1.25,Y(t+.17));g.moveTo(X(t),Y(t));g.lineTo(X(t)+Wr*1.25,Y(t+.14));g.stroke()}
+  g.restore();
+  g.globalCompositeOperation='destination-out';
+  cuts.forEach(([t,s])=>{const x0=X(t)+s*(s<0?Wl:Wr)*1.2,y0=Y(t);g.beginPath();g.moveTo(x0,y0-2.5);g.lineTo(X(t+.05)+s*1.2,Y(t+.08));g.lineTo(x0,y0+2.5);g.closePath();g.fill()});
+  g.globalCompositeOperation='source-over';
+  if(!leaf){g.strokeStyle='rgba(205,220,235,.4)';g.lineWidth=.5;for(let i=0;i<8;i++){const t=.06+i*.012,s=i%2?1:-1;g.beginPath();g.moveTo(X(t),Y(t));g.quadraticCurveTo(X(t)+s*W*.5,Y(t)-3,X(t)+s*W*.85,Y(t)+2);g.stroke()}}
+  g.strokeStyle=tone[4];g.lineCap='round';g.lineWidth=leaf?.8:1.1;g.beginPath();g.moveTo(0,leaf?0:4);for(let t=0;t<=1.001;t+=.05)g.lineTo(X(t),Y(t));g.stroke();
+  return {c,w,h,L}}
+ const T=['#0c1118','#243041','#5f7893','rgba(190,215,240,.75)','rgba(232,241,250,.9)'],
+  G=['#24401f','#4f7a33','#86b45a','rgba(200,235,160,.6)','rgba(225,250,200,.8)'];
+ const TW=['#06080c','#121a25','#2e3e52','rgba(169,201,234,.45)','rgba(205,222,240,.55)','rgba(220,235,250,.035)'];
+ return {F:[quill(40,10,3,[[.5,-1]],T),quill(36,9,-2.5,[[.62,1],[.4,-1]],T),quill(44,10.5,4,[],T),quill(32,8.5,2,[[.55,-1]],T)],
+  L:[quill(18,6,1.5,[],G,1),quill(15,5,-1.5,[],G,1)],
+  W:[quill(110,15,5,[[.55,-1],[.72,1]],TW),quill(100,13,-4,[[.4,-1]],TW),quill(118,16,7,[[.62,-1]],TW)]}})();
+
+function fthDraw(g,p){const S=p.sp;g.save();g.translate(p.x,p.y);if(p.sy!==1)g.scale(1,p.sy);g.rotate(p.ang);
+ g.scale(Math.max(.2,Math.abs(Math.cos(p.fl2)))*p.z,p.z);g.drawImage(S.c,-S.w/2,-S.h/2,S.w,S.h);g.restore()}
+function fthTick(p,dt){
+ if(p.rest){p.vx*=Math.exp(-7*dt);p.vy=0;const k=Math.min(1,dt*9);p.ang+=(p.ra-p.ang)*k;p.sy+=(.45-p.sy)*k;p.fl2+=(Math.round(p.fl2/Math.PI)*Math.PI-p.fl2)*k;return}
+ const v=Math.hypot(p.vx,p.vy);p.vy+=p.G*dt;const f=1/(1+p.kd*v*dt);p.vx*=f;p.vy*=f;
+ const slow=Math.max(0,1-v/260);if(p.vy>0)p.vy*=Math.exp(-2.4*slow*dt);p.ph+=p.w*dt;p.av*=Math.exp(-2.5*dt);p.base+=p.av*dt;
+ p.vx+=Math.cos(p.ph)*p.sw*slow*dt;p.ang=p.base+Math.sin(p.ph)*.6*slow;p.fl2+=p.fw*dt*(.35+slow);
+ if(p.y>=p.flr&&p.vy>0){p.rest=1;p.y=p.flr;p.vy=0;p.vx*=.3;const a=((p.ang%6.283)+6.283)%6.283;p.ang=a;p.ra=(a<Math.PI?1.571:4.712)+RN(-.3,.3);p.m=p.l+RN(.9,1.5)}}
+/* одно перо. o: a угол вылета, v скорость, fl пол, z размер, spr набор картинок, ang угол, u за кубиком */
+function feather(x,y,o){o=o||{};const sp=o.spr||SPR.F,a=o.a!=null?o.a:RN(-Math.PI*.94,-Math.PI*.06),v=o.v!=null?o.v:RN(350,900),ang=o.ang!=null?o.ang:RN(0,6.283),ro=$('roll').classList.contains('on');
+ spawn({k:'fth',draw:fthDraw,tick:fthTick,x,y,vx:Math.cos(a)*v+(o.vx||0),vy:Math.sin(a)*v+(o.vy||0),g:0,dr:0,m:o.m||RN(2.6,3.6),fp:7,a:o.al||1,
+  sp:sp[RN(0,sp.length)|0],z:o.z||RN(.8,1.15),ang,base:ang,av:o.av!=null?o.av:RN(-14,14),ph:RN(0,6.283),w:RN(2.6,4),sw:RN(140,240),fl2:o.fl2||RN(0,6.283),fw:RN(2,5),
+  G:o.G||300,kd:o.kd||.014,flr:(o.fl!=null?o.fl:y+14)+RN(-3,8),sy:1,rest:0,u:o.u!=null?o.u:(Math.random()<.5?1:0),roll:o.roll!=null?o.roll:ro?1:0});
+ return PX.P[PX.P.length-1]}
+/* звёздный блик: четыре луча и точка, вспыхивает и гаснет */
+function glintDraw(g,p){const q=p.l/p.m,r=p.r*(q<.2?q/.2:1-(q-.2)/.8*.7);g.save();g.translate(p.x,p.y);g.rotate(p.rot||0);g.strokeStyle=p.c;g.lineWidth=p.w||1.2;g.lineCap='round';
+ g.shadowColor='#a9c9ea';g.shadowBlur=8;g.beginPath();g.moveTo(-r,0);g.lineTo(r,0);g.moveTo(0,-r*1.35);g.lineTo(0,r*1.35);g.moveTo(-r*.32,-r*.32);g.lineTo(r*.32,r*.32);g.moveTo(r*.32,-r*.32);g.lineTo(-r*.32,r*.32);g.stroke();
+ g.fillStyle='#fff';g.beginPath();g.arc(0,0,Math.max(.8,r*.13),0,6.283);g.fill();g.restore()}
+function glint(x,y,r,o){spawn(Object.assign({k:'gl',draw:glintDraw,x,y,r,m:.6,c:'#e8f2ff',add:1,fp:2,roll:$('roll').classList.contains('on')?1:0},o||{}))}
+const bodyShake=()=>{document.body.classList.remove('shake');void document.body.offsetWidth;document.body.classList.add('shake')};
+
+/* удар кубика о стол: вместо бумажной пыли — клуб тумана и тёмные перья */
+let dustT=0;
+{const _d=dust;dust=function(x,y,gold){if(RM)return _d(x,y,gold);const now=performance.now(),many=now-dustT<500;dustT=now;
+ for(let i=0;i<(gold?8:4);i++){const s=i%2?1:-1;spawn({k:'puff',x:x+s*RN(4,20),y:y+RN(-3,3),vx:s*RN(60,150),vy:-RN(4,18),dr:3.2,m:RN(.6,1.1),s:RN(5,9),gr:1.6,c:'rgba(185,205,225,.2)',fin:.12,fp:1.2,u:1,roll:1})}
+ spawn({k:'flash',x,y:y-4,s:many?10:16,gr:.5,m:.18,c:'rgba(200,225,250,.55)',add:1,u:1,roll:1});
+ const n=gold?16:many?2:RN(5,8)|0;for(let i=0;i<n;i++)feather(x+RN(-22,22),y-RN(10,40),{fl:y+RN(-4,10),v:RN(gold?500:380,gold?1000:820),roll:1})}}
+/* закрыли бросок или бросили снова: перья этого броска убираются вместе со столом */
+let keepP=0;{const _cc=critClear;critClear=function(){_cc();if(PX&&!keepP)PX.P=PX.P.filter(p=>!p.roll)}}
+
+/* новые стихии: звёздный свет (Направляющий снаряд, Лучник), терн (Терновый кнут), когти зверя */
+Object.assign(EL,{star:{c:['#ffffff','#e8f2ff','#cfe3f7','#a9c9ea','#6f93b8'],g:'#dbe8f5'},thorn:{c:['#efffd8','#b8dc8a','#7fae55','#3f6a2c'],g:'#b8dc8a'},
+ beast:{c:['#ffffff','#ebe4d5','#c9b9a0','#6a5a48'],g:'#ebe4d5'},feather:{c:['#e8f2ff','#a9c9ea','#46596f','#1e2836'],g:'#a9c9ea'}});
+{const _b=burst;burst=function(el,x,y,pw,fl){const q=Math.sqrt(pw),up=()=>RN(-Math.PI*.95,-Math.PI*.05);
+ if(el==='star'){spawn({k:'flash',x,y,s:22*pw,gr:.7,m:.25,c:'rgba(215,232,255,.95)',add:1});spawn({k:'ring',x,y,r0:6,r1:44*pw,m:.42,c:'#cfe3f7',w:2.4,fp:1,fy:.8});
+  glint(x,y,16*pw,{m:.7});for(let i=0;i<5;i++)glint(x+RN(-24,24)*pw,y+RN(-18,12)*pw,RN(5,9)*q,{m:RN(.4,.8),rot:RN(-.3,.3)});
+  for(let i=0;i<14*pw;i++){const a=up(),v=RN(150,420)*q;spawn({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:900,dr:1.2,m:RN(.6,1.2),s:RN(1.6,3),c:EL.star.c,add:1,fl,bo:.35,sh:1})}return}
+ if(el==='thorn'){spawn({k:'flash',x,y,s:12*pw,gr:.5,m:.18,c:'rgba(184,220,138,.7)',add:1});for(let i=0;i<(pw>1.5?6:3);i++)feather(x+RN(-10,10),y,{spr:SPR.L,fl:fl!=null?fl:y+20,v:RN(200,480),z:RN(.7,1)});
+  for(let i=0;i<10*pw;i++){const a=up(),v=RN(140,380)*q;spawn({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:1000,dr:1,m:RN(.5,1),s:RN(1.6,2.6),c:EL.thorn.c,fl,bo:.3})}return}
+ if(el==='beast'){for(let i=0;i<12*pw;i++){const a=up(),v=RN(160,420)*q;spawn({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:1100,dr:1,m:RN(.5,1),s:RN(1.6,3),c:EL.beast.c,fl,bo:.3})}
+  for(let i=0;i<4*pw;i++)spawn({k:'puff',x:x+RN(-14,14),y,vx:RN(-40,40),vy:RN(-30,-5),dr:2.5,m:RN(.6,1),s:RN(6,10),gr:1.4,c:'rgba(200,190,170,.18)',fin:.15,fp:1.2});return}
+ if(el==='feather'){for(let i=0;i<Math.round(5*pw);i++)feather(x,y,{fl:fl!=null?fl:y+40,v:RN(220,600)});spawn({k:'flash',x,y,s:12*pw,gr:.5,m:.2,c:'rgba(169,201,234,.5)',add:1});return}
+ return _b(el,x,y,pw,fl)}}
+/* след на гранях: звёздный налёт, царапины терна, следы когтей */
+{const _dc=dieCoat;dieCoat=function(d,el){if(!['star','thorn','beast'].includes(el))return _dc(d,el);const sv=d.querySelector('svg'),P=SHAPE[d._s]||SHAPE[20];if(!sv)return;const id='k'+Math.random().toString(36).slice(2,8);
+ const G=el==='star'?`<radialGradient id="g${id}" cx=".5" cy=".35"><stop offset="0" stop-color="#e8f2ff" stop-opacity=".5"/><stop offset=".6" stop-color="#a9c9ea" stop-opacity=".16"/><stop offset="1" stop-color="#a9c9ea" stop-opacity="0"/></radialGradient>`:`<radialGradient id="g${id}"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>`;
+ const ex=el==='star'?'<path d="M50 12 L52 21 L61 23 L52 25 L50 34 L48 25 L39 23 L48 21Z" fill="#fff" opacity=".85"/>'
+  :el==='thorn'?'<path d="M14 30 Q40 46 74 82 M26 18 Q52 40 86 64" fill="none" stroke="#9cc46a" stroke-width="1.6" opacity=".85"/><path d="M30 38 l4 -6 M46 52 l5 -5 M60 66 l5 -4 M44 32 l4 -6 M62 46 l5 -5" stroke="#cfe6a8" stroke-width="1.2" opacity=".8"/>'
+  :'<path d="M26 20 L60 82 M40 15 L72 74 M54 13 L84 64" fill="none" stroke="#2a0f0f" stroke-width="4" stroke-linecap="round" opacity=".55"/><path d="M26 20 L60 82 M40 15 L72 74 M54 13 L84 64" fill="none" stroke="#f3ead8" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>';
+ const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('class','coat '+el);
+ g.innerHTML=`<defs>${G}<clipPath id="c${id}"><path d="${P.o}"/></clipPath></defs><g clip-path="url(#c${id})"><path d="${P.o}" fill="url(#g${id})"/>${ex}</g>`;sv.insertBefore(g,sv.querySelector('text'))}}
+/* удар по выпавшим кубикам: звёздная стрела, хлёст лозы, когти */
+{const _ss=spellStrike;spellStrike=function(el,dies,done){if(!['star','thorn','beast'].includes(el))return _ss(el,dies,done);
+ const W=innerWidth,H=innerHeight,xs=dies.map(d=>d._x),ys=dies.map(d=>d._y),cx=xs.reduce((a,b)=>a+b,0)/xs.length,cy=ys.reduce((a,b)=>a+b,0)/ys.length,sz=dies[0]._sz,fl=Math.max(...ys)+sz*.46;
+ const knock=(h,side,dur)=>dies.forEach((d,i)=>{const b=`translate(${d._x}px,${d._y}px)`;dieCoat(d,el);
+  d.animate([{transform:b},{transform:b+` translate(${side*RN(6,12)+RN(-3,3)}px,${-h}px) rotate(${side*RN(6,14)}deg)`,offset:.3},{transform:b+` translate(${side*2}px,0) scale(1.08,.86)`,offset:.7},{transform:b}],{duration:dur,delay:i*25,easing:'cubic-bezier(.2,.7,.4,1)'})});
+ if(el==='beast'){/* три рваные полосы наискось, кубики отбрасывает вбок */
+  const s=Math.random()<.5?1:-1,R=Math.max(70,sz*1.1);
+  [0,1,2].forEach(i=>setTimeout(()=>{const o=(i-1)*sz*.32,x0=cx-s*R+o*.6,y0=cy-R*.9+o,x1=cx+s*R*.8+o*.6,y1=cy+R*.7+o;
+   spawn({k:'zap',pts:[[x0+2,y0+3],[x1+2,y1+3]],m:.6,c:'rgba(60,15,15,.7)',w:3,fp:2});spawn({k:'zap',pts:zapPts(x0,y0,x1,y1,5,3),m:.35,c:'#fff8ea',sc:'#ebe4d5',w:2.6,fp:1.4})},i*55));
+  setTimeout(()=>{burst('beast',cx,cy,2,fl);knock(10,s,420);bodyShake()},150);setTimeout(done,580);return}
+ if(el==='thorn'){/* лоза выхлёстывает снизу дугой и щёлкает по кубикам */
+  const x0=W*(Math.random()<.5?.1:.9),y0=H+10,mx=(x0+cx)/2+(x0<cx?-1:1)*W*.22,my=H*.6,T=300,t0=performance.now();
+  const B=t=>[(1-t)*(1-t)*x0+2*(1-t)*t*mx+t*t*cx,(1-t)*(1-t)*y0+2*(1-t)*t*my+t*t*cy];
+  (function f(now){const q=Math.min(1,(now-t0)/T),e=q*q*(.4+.6*q),pts=[];for(let i=0;i<=18;i++)pts.push(B(e*i/18));
+   spawn({k:'zap',pts,m:.05,c:'#7fae55',sc:'#b8dc8a',w:3,fp:1});
+   for(let i=3;i<18;i+=3){const [ax,ay]=pts[i],[bx,by]=pts[i-1],an=Math.atan2(ay-by,ax-bx)+(i%2?1.1:-1.1);spawn({k:'zap',pts:[[ax,ay],[ax+Math.cos(an)*7,ay+Math.sin(an)*7]],m:.05,c:'#cfe6a8',w:1.3,fp:1})}
+   if(q<1)requestAnimationFrame(f);else{spawn({k:'zap',pts,m:.55,c:'#5f8f3a',sc:'#b8dc8a',w:2.6,fp:2});burst('thorn',cx,cy,2.2,fl);knock(12,x0<cx?1:-1,440);bodyShake();setTimeout(done,460)}})(t0);return}
+ /* звёздная стрела: летит снизу, за ней тают искры */
+ const sx=W/2+RN(-.22,.22)*W,sy=H+12,T=320,t0=performance.now();let px=sx,py=sy;
+ (function f(now){const q=Math.min(1,(now-t0)/T),e=q*q*(.35+.65*q),x=sx+(cx-sx)*e,y=sy+(cy-sy)*e;
+  spawn({k:'zap',pts:[[px,py],[x,y]],m:.25,c:'#e8f2ff',sc:'#a9c9ea',w:2.2,fp:1});spawn({k:'flash',x,y,s:14,m:.06,c:'#dbe8f5',add:1});
+  for(let j=0;j<2;j++)spawn({x:x+RN(-4,4),y:y+RN(-4,4),vx:RN(-25,25),vy:RN(10,50),dr:2,m:RN(.35,.7),s:RN(1.4,2.6),c:EL.star.c,add:1,sh:1});
+  if(Math.random()<.35)glint(x+RN(-8,8),y+RN(-8,8),RN(4,7),{m:.45});
+  px=x;py=y;if(q<1)requestAnimationFrame(f);else{burst('star',cx,cy,2.3,fl);knock(16,Math.random()<.5?1:-1,460);bodyShake();setTimeout(done,460)}})(t0)}}
+/* стихии из книги, у которых раньше не было удара */
+{const FXK={frostbite:'cold',poison_spray:'poi',infestation:'poi',thunderclap:'snd',thunderwave:'snd',create_bonfire:'fire'};for(const k in FXK)if(SPELLS[k]&&!SPELLS[k].fx)SPELLS[k].fx=FXK[k]}
+
+/* ---------- КРИТ АРАДИИ: за кубиком раскрываются вороньи крылья, взмах поднимает его над столом,
+   на столе проступает её созвездие, буквы бьют по одной; потом перья осыпаются, кубик ложится обратно ---------- */
+critFx=function(ex,ey,done){
+ keepP=1;critClear();keepP=0;
+ const ov=$('roll'),die=$('die'),shd=$('shd'),svg=die.querySelector('svg'),W=innerWidth,H=innerHeight,dpr=Math.min(2,devicePixelRatio||1),floor=ey+58,sc=Math.min(1,(W-24)/380);
+ const fx=document.createElement('div');fx.className='cfx';fx.id='cfx';ov.insertBefore(fx,ov.firstChild);
+ const front=document.createElement('div');front.className='cfront';ov.appendChild(front);
+ const cv=document.createElement('canvas');cv.width=Math.ceil(W*dpr);cv.height=Math.ceil(H*dpr);const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
+ let run=true;critStop=()=>{run=false};const at=(t,f)=>setTimeout(()=>{if(run)f()},t);
+ const ring=(x,y,col,dur,to)=>{const r=document.createElement('div');r.className='cring';Object.assign(r.style,{left:x+'px',top:y+'px',borderColor:col});fx.appendChild(r);r.animate([{transform:'scale(.3)',opacity:1},{transform:`scale(${to||5})`,opacity:0}],{duration:dur||480,easing:'cubic-bezier(.1,.7,.3,1)',fill:'forwards'})};
+ /* созвездие на столе: любимое (или то, в котором она сейчас) */
+ const C=CST[(S.star&&S.star.c)||S.starPick||'archer']||CST.archer,CW=Math.min(W*.92,360),CH=CW*34/60;
+ const cd=document.createElement('div');cd.className='ccon';cd.style.cssText=`left:${ex-CW/2}px;top:${floor-CH/2}px;width:${CW}px;height:${CH}px`;cd.innerHTML=C.svg;
+ const rd=document.createElement('div');rd.className='ccon';rd.style.cssText=`left:${ex-CW*.55}px;top:${floor-CW*.55}px;width:${CW*1.1}px;height:${CW*1.1}px`;rd.innerHTML='<svg viewBox="-50 -50 100 100"><circle r="48" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="1.2 2.6" opacity=".55" vector-effect="non-scaling-stroke"/><circle r="44" fill="none" stroke="currentColor" stroke-width="1" opacity=".3" vector-effect="non-scaling-stroke"/></svg>';
+ fx.append(rd,cd,cv);
+ const csv=cd.querySelector('svg'),cpath=csv.querySelector('path'),cst=[...csv.querySelectorAll('circle')];
+ cpath.setAttribute('vector-effect','non-scaling-stroke');cpath.setAttribute('stroke-width','1.3');cpath.setAttribute('pathLength','1');cpath.style.strokeDasharray='1';cpath.style.strokeDashoffset='1';
+ cst.forEach(c=>{c.setAttribute('r',(+c.getAttribute('r')*.42).toFixed(2));c.style.opacity=0;c.style.transformBox='fill-box';c.style.transformOrigin='50% 50%'});
+ rd.style.opacity=0;
+ /* крылья: по 11 маховых и 6 кроющих перьев с каждой стороны */
+ /* крыло: «рука» от плеча к кисти, перья висят с неё вниз и наружу (внутренние вниз, маховые наружу) */
+ const ARM=[[0,0],[52,-48],[104,-72],[150,-58]],armAt=u=>{const n=ARM.length-1,x=Math.min(n-1e-6,u*n),j=Math.floor(x),k=x-j;return[ARM[j][0]+(ARM[j+1][0]-ARM[j][0])*k,ARM[j][1]+(ARM[j+1][1]-ARM[j][1])*k]};
+ const WG=[];[-1,1].forEach(s=>{for(let i=0;i<14;i++){const u=.08+i/13*.92;WG.push({s,i,n:14,u,th:(172-u*80)*Math.PI/180,L:56+u*72,sp:SPR.W[i%3]})}
+  for(let i=0;i<9;i++){const u=.04+i/8*.8;WG.push({s,i,n:9,u,th:(165-u*75)*Math.PI/180,L:(30+u*34),sp:SPR.W[(i+1)%3],cov:1})}});
+ const T0=performance.now(),eob=k=>{const c1=1.7,c3=c1+1;return 1+c3*Math.pow(k-1,3)+c1*Math.pow(k-1,2)};
+ const shX=18*sc,shY=-14*sc;
+ /* поза крыла во времени: раскрытие (поворот и размах), взмах вниз и обратно */
+ const pose=t=>{const k=Math.max(0,Math.min(1,(t-170)/420)),e=k<=0?0:eob(k),fl=t<600?0:t<800?Math.pow((t-600)/200,2):t<1120?1-(1-Math.pow(1-(t-800)/320,2)):0;
+  return{rot:(-.9*(1-e))+fl*.42,k:sc*(.3+.7*e)}};
+ /* где перо на экране: середина и угол */
+ const where=(f,t)=>{const P=pose(t),[ax,ay]=armAt(f.u),c=Math.cos(P.rot),sn=Math.sin(P.rot),lx=ax+Math.sin(f.th)*f.L/2,ly=ay-Math.cos(f.th)*f.L/2;
+  return{x:ex+f.s*(shX+(lx*c-ly*sn)*P.k),y:ey+shY+(lx*sn+ly*c)*P.k,ang:f.s*(f.th+P.rot),z:f.L*P.k/f.sp.L,P,ax,ay}};
+ let left=WG.length,glow=0;
+ function drawWing(f,t){const w=where(f,t);g.save();g.translate(w.x,w.y);g.rotate(w.ang);g.scale(f.s<0?-w.z:w.z,w.z);g.drawImage(f.sp.c,-f.sp.w/2,-f.sp.h/2,f.sp.w,f.sp.h);g.restore()}
+ function frame(now){if(!run)return;const t=now-T0;g.clearRect(0,0,W,H);
+  glow=t<170?0:t<700?Math.min(1,(t-170)/250):Math.max(left>0?.75:.3,1-(t-700)/2600);
+  if(glow>0){const gr=g.createRadialGradient(ex,ey-30,10,ex,ey-30,230*sc+40);gr.addColorStop(0,`rgba(215,232,255,${.34*glow})`);gr.addColorStop(.55,`rgba(169,201,234,${.14*glow})`);gr.addColorStop(1,'rgba(169,201,234,0)');g.fillStyle=gr;g.fillRect(0,0,W,H)}
+  if(t>170){for(const f of WG)if(!f.free&&!f.cov)drawWing(f,t);for(const f of WG)if(!f.free&&f.cov)drawWing(f,t);
+   /* передний край крыла: тонкая серебряная линия по «руке» */
+   const P=pose(t),c=Math.cos(P.rot),sn=Math.sin(P.rot);if(left>WG.length*.5){g.strokeStyle='rgba(207,227,247,.55)';g.lineWidth=1.2;for(const s of [-1,1]){g.beginPath();ARM.forEach(([x,y],j)=>{const X=ex+s*(shX+(x*c-y*sn)*P.k),Y=ey+shY+(x*sn+y*c)*P.k;j?g.lineTo(X,Y):g.moveTo(X,Y)});g.stroke()}}}
+  if(left>0||t<3000)requestAnimationFrame(frame)}
+ requestAnimationFrame(frame);
+ /* 1. кубик дрожит: что-то рвётся наружу */
+ svg.animate([{transform:'none'},{transform:'translate(-2px,1px) scale(1.04)'},{transform:'translate(2px,-1px) scale(1.07)'},{transform:'translate(-2px,-1px) scale(1.1)'},{transform:'none'}],{duration:170});
+ die.animate([{filter:'drop-shadow(0 0 8px #cfe3f7) brightness(1)'},{filter:'drop-shadow(0 0 30px #fff) brightness(1.8)'}],{duration:170,fill:'forwards'});
+ at(170,()=>{/* 2. вспышка, удар, крылья раскрываются */
+  die.animate([{filter:'drop-shadow(0 0 30px #fff) brightness(1.8)'},{filter:'drop-shadow(0 0 22px #cfe3f7) brightness(1.08)'}],{duration:500,fill:'forwards'});
+  const f=document.createElement('div');f.className='cflash';fx.appendChild(f);f.style.setProperty('--fx',ex+'px');f.style.setProperty('--fy',ey+'px');f.animate([{opacity:1},{opacity:0}],{duration:380,easing:'ease-out',fill:'forwards'});
+  bigShake();ring(ex,ey,'#cfe3f7',520,6);for(let i=0;i<10;i++)feather(ex+RN(-20,20),ey+RN(-10,20),{fl:floor,v:RN(450,950),z:RN(.5,.8)})});
+ at(600,()=>{/* 3. взмах: воздух бьёт в стол, туман и перья разлетаются, кубик поднимается */
+  svg.animate([{transform:'none'},{transform:'translateY(-40px)',offset:.55},{transform:'translateY(-30px)'}],{duration:520,easing:'cubic-bezier(.2,.9,.3,1.2)',fill:'forwards'});
+  shd.animate([{transform:'scale(1)',opacity:1},{transform:'scale(.7)',opacity:.45}],{duration:520,fill:'forwards'});
+  for(let i=0;i<14;i++){const s=i%2?1:-1;spawn({k:'puff',x:ex+s*RN(10,40),y:floor+RN(-4,4),vx:s*RN(240,460),vy:-RN(0,30),dr:2.4,m:RN(.8,1.3),s:RN(12,22),gr:1.3,c:'rgba(185,205,225,.2)',fin:.1,fp:1.2,u:1})}
+  for(let i=0;i<8;i++){const s=i%2?1:-1;feather(ex+s*RN(20,60),floor-4,{a:s>0?RN(-.6,-.1):RN(-Math.PI+.1,-Math.PI+.6),v:RN(420,800),fl:floor,z:RN(.4,.65),u:1})}});
+ at(700,()=>{/* 4. звёзды созвездия бьют в стол одна за другой, линии протягиваются */
+  rd.animate([{opacity:0,transform:'scaleY(.42) scale(.6)'},{opacity:1,transform:'scaleY(.42) scale(1)'}],{duration:500,easing:'cubic-bezier(.2,.8,.3,1)',fill:'forwards'});
+  cst.forEach((c,i)=>at(i*95,()=>{c.style.opacity=1;c.animate([{transform:'scale(3)',opacity:0},{transform:'scale(.8)',opacity:1,offset:.6},{transform:'none'}],{duration:240,easing:'cubic-bezier(.3,1.4,.5,1)'});
+   const r=c.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;glint(x,y,RN(8,12),{m:.55,u:1});spawn({k:'ring',x,y,r0:2,r1:20,m:.35,c:'#cfe3f7',w:1.4,fp:1,fy:.42,u:1})}));
+  cpath.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:650,delay:120,easing:'cubic-bezier(.3,.6,.3,1)',fill:'forwards'})});
+ /* 5. буквы прилетают по одной и бьют; с каждой слетает пара перьев */
+ at(880,()=>{const word=document.createElement('div');word.className='cword';word.style.top=(ey-175)+'px';word.innerHTML=[...'КРИТ'].map(c=>`<span style="opacity:0">${c}</span>`).join('');ov.appendChild(word);
+  const L=[...word.children],from=[[-W,-40],[0,-H*.6],[W,-30],[-W*.4,H*.5]];
+  L.forEach((sp,i)=>at(i*150,()=>{sp.style.opacity=1;const [dx,dy]=from[i%4];
+   sp.animate([{transform:`translate(${dx}px,${dy}px) rotate(${(i%2?1:-1)*120}deg) scale(.4)`,opacity:.2},{transform:'none',opacity:1}],{duration:300,easing:'cubic-bezier(.6,0,.9,.45)'}).onfinish=()=>{if(!run)return;
+    const r=sp.getBoundingClientRect();glint(r.left+r.width/2,r.top+r.height*.3,RN(10,14),{m:.5});for(let j=0;j<2;j++)feather(r.left+r.width/2+RN(-10,10),r.bottom-20,{fl:floor,v:RN(200,420),z:RN(.4,.6),u:0});
+    sp.animate([{transform:'scale(1.3,.7)'},{transform:'scale(.9,1.12)'},{transform:'none'}],{duration:240,easing:'ease-out'});
+    if(i===L.length-1){bigShake();ring(ex,ey-175,'#cfe3f7',460,4)}}}))});
+ at(1150,done);
+ /* 6. перья отрываются от крыльев снаружи внутрь и медленно осыпаются */
+ const order=WG.slice().sort((a,b)=>(a.cov||0)-(b.cov||0)||b.i-a.i||a.s-b.s);
+ order.forEach((f,j)=>at(1750+j*42,()=>{const t=performance.now()-T0,w=where(f,t);
+  f.free=1;left--;feather(w.x,w.y,{a:f.s>0?RN(-.9,-.2):RN(-Math.PI+.2,-Math.PI+.9),v:RN(40,140),ang:w.ang,av:f.s*RN(.5,2),fl:floor+RN(-6,10),z:w.z,spr:[f.sp],fl2:0,m:RN(3.2,4.2),u:Math.random()<.6?1:0})}));
+ /* 7. кубик тяжело ложится обратно на стол и так и остаётся светиться */
+ at(1750+order.length*42+250,()=>{svg.animate([{transform:'translateY(-30px)'},{transform:'translateY(0)',offset:.55},{transform:'translateY(-6px)',offset:.75},{transform:'none'}],{duration:520,easing:'cubic-bezier(.5,0,.6,1)',fill:'forwards'});
+  shd.animate([{transform:'scale(.7)',opacity:.45},{transform:'scale(1)',opacity:1}],{duration:300,fill:'forwards'});
+  at(290,()=>{bodyShake();dust(ex,ey+56,false)})});
+};
+
+/* ---------- Дикий облик: Арадия рассыпается перьями в тумане, зверь тяжело ступает на лист ---------- */
+const pgOn=()=>document.querySelector('.page.on');
+function wildFx(){if(RM)return;const W=innerWidth,H=innerHeight,x=W/2,y=H*.4,pg=pgOn();
+ if(pg)pg.animate([{filter:'none'},{filter:'brightness(.5) blur(1.5px)',offset:.25},{filter:'none'}],{duration:900,easing:'ease-out'});
+ spawn({k:'flash',x,y,s:Math.min(W,H)*.35,gr:.6,m:.35,c:'rgba(169,201,234,.35)',add:1});
+ for(let i=0;i<34;i++)feather(x+RN(-30,30),y+RN(-30,30),{a:RN(0,6.283),v:RN(500,1200),fl:H-RN(30,110),m:RN(2.4,3.4),z:RN(.65,1.05)});
+ for(let i=0;i<14;i++){const a=RN(0,6.283),v=RN(80,260);spawn({k:'puff',x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v*.6,dr:1.8,m:RN(1.2,1.9),s:RN(30,60),gr:1.2,c:'rgba(150,170,190,.2)',fin:.15,fp:1.3})}
+ setTimeout(()=>{const t=$('fTtl');if(t)t.animate([{transform:'translateY(-16px) scale(1.15)',opacity:.2},{transform:'translateY(2px) scale(1.04,.94)',opacity:1,offset:.6},{transform:'none'}],{duration:420,easing:'cubic-bezier(.3,1.3,.5,1)'});
+  bigShake();const fy=H*.72;spawn({k:'ring',x,y:fy,r0:20,r1:Math.min(W*.6,260),m:.6,c:'#a9c9ea',w:2,fp:1,fy:.3});
+  for(let i=0;i<8;i++){const s=i%2?1:-1;spawn({k:'puff',x:x+s*RN(10,40),y:fy,vx:s*RN(160,320),vy:-RN(0,20),dr:2.2,m:RN(.8,1.2),s:RN(14,24),gr:1.2,c:'rgba(185,205,225,.18)',fin:.1,fp:1.2})}},380)}
+/* обратно в свой облик: перья слетаются со всех сторон и собираются в неё */
+function gatherFx(){if(RM)return;const W=innerWidth,H=innerHeight,x=W/2,y=H*.4;
+ for(let i=0;i<24;i++){const a=RN(0,6.283),R=Math.max(W,H)*RN(.45,.7),dl=RN(0,.18),T=RN(.42,.55),w=RN(-1.6,1.6),z0=RN(.6,.95);
+  spawn({k:'fth',draw:fthDraw,x:x+Math.cos(a)*R,y:y+Math.sin(a)*R*.8,m:dl+T,fp:30,sp:SPR.F[i%4],z:z0,ang:a,sy:1,fl2:0,g:0,dr:0,
+   tick:(p,dt)=>{p.vx=p.vy=0;const q=Math.max(0,Math.min(1,(p.l-dl)/T)),e=q*q*(3-2*q),aa=a+w*e,r=R*(1-e);p.x=x+Math.cos(aa)*r;p.y=y+Math.sin(aa)*r*.8;p.ang=aa+1.571+e*2;p.fl2+=dt*6;p.z=z0*(1-.6*e)}})}
+ setTimeout(()=>{spawn({k:'flash',x,y,s:90,gr:.6,m:.35,c:'rgba(207,227,247,.6)',add:1});spawn({k:'ring',x,y,r0:10,r1:Math.min(W,H)*.45,m:.5,c:'#cfe3f7',w:2,fp:1});glint(x,y,22,{m:.6});bigShake()},560)}
+/* ---------- Звёздный облик: созвездие вбивается в экран звезда за звездой и стягивается в Арадию ---------- */
+function starFx(c){if(RM)return;const W=innerWidth,H=innerHeight,C=CST[c];if(!C)return;
+ const CW=Math.min(W*.86,420),CH=CW*34/60,cy=H*.36,d=document.createElement('div');d.className='stfx';d.style.cssText=`left:${W/2-CW/2}px;top:${cy-CH/2}px;width:${CW}px;height:${CH}px`;d.innerHTML=C.svg;document.body.appendChild(d);
+ const sv=d.querySelector('svg'),path=sv.querySelector('path'),cs=[...sv.querySelectorAll('circle')],pg=pgOn();
+ path.setAttribute('vector-effect','non-scaling-stroke');path.setAttribute('stroke-width','1.4');path.setAttribute('pathLength','1');path.style.strokeDasharray='1';path.style.strokeDashoffset='1';
+ if(pg)pg.animate([{filter:'none'},{filter:'brightness(.6)',offset:.2},{filter:'brightness(.6)',offset:.8},{filter:'none'}],{duration:cs.length*110+1100});
+ cs.forEach((e,i)=>{e.setAttribute('r',(+e.getAttribute('r')*.7).toFixed(2));e.style.opacity=0;e.style.transformBox='fill-box';e.style.transformOrigin='50% 50%';
+  setTimeout(()=>{e.style.opacity=1;e.animate([{transform:'scale(2.8)',opacity:0},{transform:'scale(.8)',opacity:1,offset:.6},{transform:'none'}],{duration:260,easing:'cubic-bezier(.3,1.4,.5,1)'});
+   const r=e.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;glint(x,y,RN(10,15),{m:.7});spawn({k:'ring',x,y,r0:2,r1:24,m:.35,c:'#cfe3f7',w:1.5,fp:1})},i*110)});
+ path.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:650,delay:160,easing:'cubic-bezier(.3,.6,.3,1)',fill:'forwards'});
+ setTimeout(()=>{const b=document.querySelector(`#fForm [data-info="st_${c}"]`)||$('fTtl'),R=b?b.getBoundingClientRect():{left:W/2,top:H*.7,width:0,height:0},bx=R.left+R.width/2,by=R.top+R.height/2;
+  d.animate([{transform:'none',opacity:1,filter:'brightness(1)'},{transform:'scale(1.06)',filter:'brightness(2.2)',offset:.25},{transform:`translate(${bx-W/2}px,${by-cy}px) scale(.06)`,opacity:.2,filter:'brightness(2.2)'}],{duration:520,easing:'cubic-bezier(.6,0,.4,1)',fill:'forwards'}).onfinish=()=>d.remove();
+  setTimeout(()=>{burst('star',bx,by,1.4,by+30);if(b)b.animate([{transform:'scale(.92)'},{transform:'scale(1.04)',offset:.5},{transform:'none'}],{duration:320,easing:'cubic-bezier(.3,1.4,.5,1)'});
+   const p2=pgOn();if(p2)p2.animate([{filter:'brightness(1.3) saturate(.85)'},{filter:'none'}],{duration:700,easing:'ease-out'})},480)},cs.length*110+650)}
+/* звёздный облик закончился: свет осыпается искрами */
+function starOffFx(){if(RM)return;const b=document.querySelector('#fForm .on,#fForm [data-info^="st_"]'),W=innerWidth,H=innerHeight,R=b?b.getBoundingClientRect():{left:W/2,top:H*.6,width:0,height:0},x=R.left+R.width/2,y=R.top+R.height/2;
+ for(let i=0;i<26;i++)spawn({x:x+RN(-R.width/2,R.width/2),y:y+RN(-10,10),vx:RN(-60,60),vy:RN(-160,-40),g:700,dr:.8,m:RN(.8,1.4),s:RN(1.6,2.8),c:EL.star.c,add:1,fl:H-20,bo:.3,sh:1});
+ for(let i=0;i<4;i++)glint(x+RN(-R.width/2,R.width/2),y+RN(-8,8),RN(5,8),{m:RN(.4,.7)})}
+/* ---------- Благословение Королевы воронов: тело рассыпается в стаю перьев, стая перелетает и снова собирается ---------- */
+function ravenFx(){if(RM)return;const W=innerWidth,H=innerHeight,pg=pgOn(),x0=lastPt?lastPt.x:W/2,y0=lastPt?lastPt.y:H*.6,x1=x0<W/2?W*RN(.68,.82):W*RN(.18,.32),y1=H*RN(.28,.4);
+ if(pg)pg.animate([{opacity:1,filter:'none'},{opacity:.12,filter:'blur(3px) brightness(.6)',offset:.3},{opacity:.12,filter:'blur(3px) brightness(.6)',offset:.6},{opacity:1,filter:'none'}],{duration:1000,easing:'ease-in-out'});
+ spawn({k:'flash',x:x0,y:y0,s:60,gr:.6,m:.3,c:'rgba(10,14,20,.6)'});for(let i=0;i<8;i++){const a=RN(0,6.283);spawn({k:'puff',x:x0,y:y0,vx:Math.cos(a)*RN(60,160),vy:Math.sin(a)*RN(40,120),dr:2,m:RN(.7,1.1),s:RN(18,30),gr:1.2,c:'rgba(10,14,20,.45)',fin:.1,fp:1.2})}
+ const mx=(x0+x1)/2+RN(-60,60),my=Math.min(y0,y1)-H*.18;
+ for(let i=0;i<20;i++){const dl=RN(0,.12),T=RN(.38,.5),ox=RN(-26,26),oy=RN(-20,20),z0=RN(.6,.95);let done=0;
+  const p=feather(x0+ox,y0+oy,{v:0,z:z0,fl:H-RN(30,90)});const ft=p.tick;
+  p.tick=(p,dt)=>{if(done)return ft(p,dt);const q=Math.max(0,Math.min(1,(p.l-dl)/T)),e=q*q*(3-2*q),u=1-e;
+   const nx=u*u*(x0+ox)+2*u*e*(mx+ox*1.6)+e*e*(x1+ox*.5),ny=u*u*(y0+oy)+2*u*e*(my+oy*1.6)+e*e*(y1+oy*.5);p.vx=(nx-p.x)/Math.max(dt,.001);p.vy=(ny-p.y)/Math.max(dt,.001);p.ang=Math.atan2(p.vy,p.vx)+1.571;p.base=p.ang;p.fl2+=dt*9;
+   if(q>=1){done=1;p.vx=RN(-140,140);p.vy=RN(-220,-60);p.av=RN(-6,6);p.m=p.l+RN(1.6,2.4)}}}
+ setTimeout(()=>{spawn({k:'flash',x:x1,y:y1,s:80,gr:.6,m:.3,c:'rgba(169,201,234,.4)',add:1});spawn({k:'ring',x:x1,y:y1,r0:6,r1:90,m:.45,c:'#a9c9ea',w:2,fp:1});
+  for(let i=0;i<8;i++){const a=RN(0,6.283);spawn({k:'puff',x:x1,y:y1,vx:Math.cos(a)*RN(60,160),vy:Math.sin(a)*RN(40,120),dr:2,m:RN(.7,1.1),s:RN(16,26),gr:1.2,c:'rgba(10,14,20,.4)',fin:.1,fp:1.2})}bigShake()},520)}
+
+/* ---------- волна сотворения заклинаний друида ---------- */
+const CWF={entangle:'vine',snare:'vine',goodberry:'vine',fog_cloud:'mist',faerie_fire:'fae',speak_with_animals:'beast',animal_friendship:'beast',beast_bond:'beast'};
+const PHIL_CW=['hypnotic_pattern','hold_person','misty_step','counterspell','greater_invisibility','dominate_person','charm_person','friends','suggestion','minor_illusion','disguise_self','message','comprehend_languages','prestidigitation','mage_hand'];
+function fxBox(){const d=document.createElement('div');d.className='cwv';document.body.appendChild(d);return d}
+const RAVEN={up:'M0 0 C-6 -10 -16 -15 -26 -12 M0 0 C6 -10 16 -15 26 -12',dn:'M0 0 C-7 4 -16 10 -26 15 M0 0 C7 4 16 10 26 15',
+ body:'M-12 2 C-6 -4 6 -5 12 -1 L19 -4 L14 1 C11 5 -4 7 -12 2Z M10 -2 L13 -6 L15 -2Z'};
+function ravenPass(y,dur){const W=innerWidth,d=fxBox(),fromR=Math.random()<.5;d.innerHTML=`<svg class="rvn" viewBox="-30 -30 60 60" style="left:0;top:0"><path class="b" d="${RAVEN.body}"/><path class="w" d="${RAVEN.up}"/></svg>`;
+ const s=d.firstChild,w=s.querySelector('.w');if(!fromR)s.style.scale='-1 1';let n=0;const flap=()=>{if(!d.isConnected)return;w.setAttribute('d',n++%2?RAVEN.dn:RAVEN.up);if(n<Math.round(dur/130))setTimeout(flap,130)};flap();
+ const x0=fromR?W+50:-50,x1=fromR?-60:W+60;s.animate([{transform:`translate(${x0}px,${y}px)`},{transform:`translate(${(x0+x1)/2}px,${y-30}px)`,offset:.5},{transform:`translate(${x1}px,${y-10}px)`}],{duration:dur,easing:'cubic-bezier(.4,.1,.6,.9)',fill:'forwards'}).onfinish=()=>d.remove();
+ setTimeout(()=>feather(W/2,y,{v:RN(40,90),a:-1.57,fl:innerHeight-RN(40,100),z:.8,m:3.4}),dur*.5)}
+{const _cw=castWave;castWave=function(k){if(RM)return;const f=CWF[k];if(!f&&PHIL_CW.includes(k))return _cw(k);
+ const W=innerWidth,H=innerHeight,cx=W/2,cy=H*.45,pg=pgOn();
+ if(f==='vine'){/* лозы прорастают снизу экрана, закручиваются, стягиваются и опадают листьями */
+  const d=fxBox(),N=5,vs=Array.from({length:N},(_,i)=>{const x=W*(.08+i*.21)+RN(-12,12),h=H*RN(.32,.48),s=i%2?1:-1;
+   return `<path data-d="${i*70}" d="M${x} ${H+4} C${x+s*40} ${H-h*.35} ${x-s*50} ${H-h*.7} ${x+s*10} ${H-h} C${x+s*28} ${H-h-16} ${x+s*30} ${H-h+10} ${x+s*16} ${H-h+6}"/>`+[.3,.55,.8].map((t,j)=>`<g class="lf"><path d="${LEAF}" transform="translate(${x+s*(j%2?-14:14)} ${H-h*t}) rotate(${s*(j%2?200:-20)}) scale(1.8)" fill="rgba(143,232,170,.22)" stroke="#b8dc8a" stroke-width=".7"/></g>`).join('')}).join('');
+  d.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="stroke:#7fae55;stroke-width:2.4;fill:none;stroke-linecap:round;filter:drop-shadow(0 0 4px rgba(127,174,85,.5))">${vs}</svg>`;
+  sDraw(d,0,700);d.querySelectorAll('.lf').forEach((e,i)=>{e.style.opacity=0;e.animate([{opacity:0},{opacity:1}],{duration:200,delay:300+i*45,fill:'forwards'})});
+  setTimeout(()=>{d.firstChild.animate([{transform:'none'},{transform:'scale(.97,1.02)',offset:.4},{transform:'none'}],{duration:260,easing:'cubic-bezier(.3,1.4,.5,1)'});bodyShake();
+   for(let i=0;i<10;i++)feather(RN(.05,.95)*W,H*RN(.55,.8),{spr:SPR.L,v:RN(60,200),fl:H-RN(10,60),z:RN(.8,1.1)})},900);
+  setTimeout(()=>d.animate([{opacity:1},{opacity:0,filter:'blur(2px)'}],{duration:600,fill:'forwards'}).onfinish=()=>d.remove(),1500);return}
+ if(f==='mist'){/* с двух сторон наползает плотный туман и медленно редеет */
+  if(pg)pg.animate([{filter:'none'},{filter:'brightness(.75) blur(1px)',offset:.4},{filter:'none'}],{duration:2200,easing:'ease-in-out'});
+  for(let i=0;i<22;i++){const s=i%2?1:-1,y=RN(.15,.9)*H;spawn({k:'puff',x:s<0?-RN(20,80):W+RN(20,80),y,vx:-s*RN(260,420),vy:RN(-12,12),dr:1.6,m:RN(1.8,2.6),s:RN(60,110),gr:.6,c:'rgba(150,168,186,.2)',fin:.12,fp:1.5})}return}
+ if(f==='fae'){/* сверху опускается светящаяся пыль трёх цветов и оседает */
+  const cols=['#9fd0ff','#c9a8ff','#a8f0b0'];for(let i=0;i<46;i++){const c=cols[i%3];spawn({x:RN(0,W),y:-RN(0,H*.2),vx:RN(-15,15),vy:RN(60,160),g:40,dr:.6,m:RN(1.6,2.4),s:RN(1.8,3.2),c,add:1,fl:RN(.4,.95)*H,stick:1,fp:3});
+   if(i%5===0)setTimeout(()=>glint(RN(.1,.9)*W,RN(.2,.8)*H,RN(5,9),{m:.5,c}),RN(200,1200))}return}
+ if(f==='beast'){ravenPass(H*RN(.24,.34),1300);return}
+ /* остальные: звёздный свет поднимается снизу, сверху медленно опускаются три пера */
+ spawn({k:'flash',x:cx,y:H+40,s:H*.45,gr:.6,m:.9,c:'rgba(169,201,234,.22)',fp:1.4,fin:.2});
+ for(let i=0;i<28;i++)spawn({x:RN(0,W),y:H+RN(0,40),vx:RN(-15,15),vy:-RN(240,480),dr:1.3,m:RN(.8,1.4),s:RN(1.8,3.2),c:EL.star.c,add:1});
+ for(let i=0;i<4;i++)setTimeout(()=>glint(RN(.15,.85)*W,RN(.25,.6)*H,RN(7,11),{m:.6}),180+i*120);
+ for(let i=0;i<3;i++)feather(RN(.2,.8)*W,-20,{v:RN(20,60),a:1.57,fl:H-RN(40,110),z:RN(.7,.95),m:RN(3.4,4.2)})}}
+
+/* подключаем к действиям: превращение, возврат, звёздный облик, перенос */
+{const _act=act;act=function(a){const w0=S.wild.used,r0=S.raven.used,wf0=!!S.wf,st0=!!S.star,r=_act(a);
+ if(a.startsWith('wfGo:')&&S.wf&&S.wild.used>w0)setTimeout(wildFx,40);
+ if(a==='wfEnd'&&wf0)setTimeout(gatherFx,40);
+ if(a.startsWith('starGo:')&&S.star&&S.wild.used>w0)setTimeout(()=>starFx(S.star.c),40);
+ if(a==='starEnd'&&st0)starOffFx();
+ if(a==='ravenUse'&&S.raven.used>r0)ravenFx();
+ return r}}
+/* надевание: нить света серебряная, у места на теле — звёздный блик и пара сбитых пёрышек */
+{const _e=eqFx;eqFx=function(s,k){_e(s,k);if(RM)return;setTimeout(()=>{const fw=$('efw'),p=ESLOT[s]&&ESLOT[s].p;if(!fw||!p)return;const F=fw.getBoundingClientRect(),x=F.left+F.width*p[0],y=F.top+F.height*p[1];
+ glint(x,y,13,{m:.6});for(let i=0;i<3;i++)feather(x,y,{v:RN(160,320),fl:Math.min(innerHeight-30,y+RN(50,100)),z:RN(.35,.5),m:RN(1.4,2)})},430)}}
+/* Уход за животными: прилетает ворон, садится на кубик, взлетая, роняет перо */
+{const f0=SKFX['Уход за животными'];SKFX['Уход за животными']=(ex,ey,fl,die,used)=>{f0(ex,ey,fl,die,used);const d=[...$('roll').querySelectorAll('.sfx')].pop();
+ if(d){const b=d.querySelector('.bd');if(b){b.setAttribute('fill','#0d1218');b.setAttribute('stroke','#cfe3f7')}const sv=d.querySelector('svg');if(sv)sv.style.stroke='#cfe3f7'}
+ wspT.push(setTimeout(()=>feather(ex+8,ey-74,{v:RN(30,70),a:-1.2,fl:fl,z:.7,m:3.2,u:0}),2150))}}
+/* Восприятие и Проницательность: в зрачке вспыхивает звезда */
+{const f0=eyeFx;eyeFx=function(x,y){f0(x,y);if(!RM)wspT.push(setTimeout(()=>glint(x,y,12,{m:.7}),520))}}
+/* Выживание: по следам тянется низкий туман */
+{const f0=SKFX['Выживание'];SKFX['Выживание']=(ex,ey,fl,die,used)=>{f0(ex,ey,fl,die,used);for(let i=0;i<6;i++)wspT.push(setTimeout(()=>spawn({k:'puff',x:ex-180+i*34,y:fl+12,vx:RN(10,40),vy:-RN(2,10),dr:1,m:RN(1.2,1.8),s:RN(10,16),gr:1.2,c:'rgba(185,205,225,.16)',fin:.2,fp:1.4,u:1,roll:1}),i*170))}}
+/* Природа: с выросших лоз падает пара листьев */
+{const f0=SKFX['Природа'];SKFX['Природа']=(ex,ey,fl,die,used)=>{f0(ex,ey,fl,die,used);wspT.push(setTimeout(()=>{for(let i=0;i<4;i++)feather(ex+RN(-110,110),fl-RN(40,70),{spr:SPR.L,v:RN(30,90),fl,z:RN(.8,1)})},1100))}}
+
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-27-7';
+const BUILD='aradia-2026-11-27-8';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
