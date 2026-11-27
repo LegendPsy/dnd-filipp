@@ -1300,6 +1300,22 @@ body.beast .lvup{display:none}
 .fxl .emb.dr svg{height:min(24px,62%);width:auto;fill:none;stroke:currentColor;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;shape-rendering:auto;overflow:visible}
 .atk.cmp .fxl .emb.dr{align-items:flex-start;top:6px;height:auto;right:6px}.atk.cmp .fxl .emb.dr svg{height:18px}
 .mbeam{position:fixed;top:0;width:90px;z-index:126;pointer-events:none;transform-origin:50% 0;background:linear-gradient(180deg,rgba(244,248,255,.05),rgba(232,242,255,.38) 70%,rgba(255,255,255,.6));filter:blur(3px);mix-blend-mode:screen;border-radius:0 0 50% 50%/0 0 12px 12px}
+
+/* крупные заметные галочки в списках выбора (тап пальцем) */
+.box{width:28px!important;height:28px!important;border:2px solid #b8a688!important;border-radius:8px!important;background:rgba(255,255,255,.07);font-size:19px!important;font-weight:700;line-height:1}
+.brow .bx,.brow .lockx{align-self:stretch;display:flex!important;align-items:center;justify-content:center;min-width:54px;padding:0 8px 0 4px!important}
+.brow .bx .box,.brow .lockx .box{margin:0!important}
+.crow .box{margin-right:12px!important;vertical-align:-8px!important}
+.crow.ck{padding-top:14px;padding-bottom:14px}
+.lvrow{padding-top:12px;padding-bottom:12px}
+.brow.on .box,.crow.ck.on .box,.lvrow.on .box{background:var(--gold)!important;border-color:var(--gold)!important;box-shadow:0 0 8px rgba(240,196,122,.45)}
+
+.fold{display:flex;align-items:center;gap:10px;width:100%;padding:13px 6px;margin-top:4px;border-top:1px solid var(--line);text-align:left;min-height:48px}
+.fold .fa{display:inline-block;width:18px;color:var(--gold);font-size:17px;transition:transform .15s}
+.fold.open .fa{transform:rotate(90deg)}
+.fold .ft{flex:1;font:600 16.5px/1.2 "Playfair Display",serif;color:var(--ink)}
+.fold em{font:400 12.5px/1 Spectral,serif;color:var(--mute);font-style:normal}
+.fbody[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -2963,6 +2979,7 @@ document.addEventListener('click',e=>{
   return rollFromDrawer(t.dataset.roll);
  }
  if(t.dataset.cnd)return toggleCnd(t.dataset.cnd);
+ if(t.dataset.fold){const id=t.dataset.fold;BKOPEN[id]=!BKOPEN[id];t.classList.toggle('open',!!BKOPEN[id]);const fb=t.nextElementSibling;if(fb)fb.hidden=!BKOPEN[id];vib(6);return}
  if(t.dataset.learn){const k=t.dataset.learn,p=SPELLS[k];if(!S.known)S.known=[...KNOWN];const i=S.known.indexOf(k);
   if(i>=0){S.known.splice(i,1);S.fSpellShow=S.fSpellShow.filter(x=>x!==k);S.smagShow=S.smagShow.filter(x=>x!==k);if(S.conc===k)S.conc=null}
   else{const n=bkCount();if(p.lv?n.s>=n.Sx:n.c>=n.C){const r=document.querySelector(`.brow[data-row="${k}"]`),c=document.querySelector(`.bkh [data-cnt="${p.lv?'s':'c'}"]`);[r,c].forEach(x=>{if(x){x.classList.remove('nope');void x.offsetWidth;x.classList.add('nope')}});vib([25,40,25]);return}
@@ -3089,13 +3106,16 @@ Object.keys(COND).forEach(k=>INFO['c_'+k]=()=>{const on=S.cond[k];return{t:COND[
 /* окно «Все заклинания» друида: заговоры и подготовка. Галочка = выучить/забыть, название = описание */
 function bkCount(){const kn=picked();return{c:kn.filter(k=>!SPELLS[k].lv).length,s:kn.filter(k=>SPELLS[k].lv).length,C:cantKnown(S.level),Sx:prepMax()}}
 /* окно «Заклинания друида»: заговоры (знает насовсем) и подготовленные на сегодня */
+let BKOPEN={};
 INFO.book=()=>{const kn=known(),n=bkCount(),mc=maxCircle(S.level);
  const row=k=>{const p=SPELLS[k],on=kn.includes(k),bonus=isBonus(k),full=p.lv?n.s>=n.Sx:n.c>=n.C;
   return `<div class="brow ${on?'on':''} ${full&&!on?'bkoff':''} ${bonus?'lock':''}" data-row="${k}">${bonus?`<span class="bx lockx" aria-label="от Звёздной карты"><i class="box">✦</i></span>`:`<button class="bx" data-learn="${k}" aria-label="${on?'убрать':'взять'}"><i class="box">${on?'✓':''}</i></button>`}<button class="bn" data-info="${on?'spb_':'bk_'}${k}"><b>${rn(p)}${p.n}</b><small>${bonus?'от Звёздной карты, не занимает место':p.short}${p.ritual?' · ритуал':''}</small></button>${costTag(p)}</div>`};
  const grp=lv=>Object.keys(SPELLS).filter(k=>SPELLS[k].lv===lv).sort((a,b)=>(isBonus(b)-isBonus(a))||SPELLS[a].n.localeCompare(SPELLS[b].n,'ru'));
- let body=`<div class="bkh"><span>Заговоры</span><em class="${n.c>=n.C?'full':''}" data-cnt="c">${n.c} из ${n.C}</em></div>`+grp(0).map(row).join('');
+ const fold=(id,title,cnt,list)=>{const o=BKOPEN[id];return `<button class="fold ${o?'open':''}" data-fold="${id}"><span class="fa">▸</span><span class="ft">${title}</span><em>${cnt}</em></button><div class="fbody" ${o?'':'hidden'}>${list.map(row).join('')}</div>`};
+ const cntOf=g=>{const x=g.filter(k=>kn.includes(k)&&!isBonus(k)).length;return x?`выбрано ${x}`:`${g.length} шт.`};
+ let body=`<div class="bkh"><span>Заговоры</span><em class="${n.c>=n.C?'full':''}" data-cnt="c">${n.c} из ${n.C}</em></div>`+fold('c0','Все заговоры',cntOf(grp(0)),grp(0));
  body+=`<div class="bkh"><span>Подготовлено</span><em class="${n.s>=n.Sx?'full':''}" data-cnt="s">${n.s} из ${n.Sx}</em></div><div class="mu sm" style="margin:0 2px 2px">Мудрость ${sg(mod(S.ab.wis))} + уровень ${S.level}${mc>1?', любые круги до '+ROM[mc]:''}</div>`;
- for(let c=1;c<=mc;c++){const g=grp(c);if(g.length)body+=(mc>1?`<div class="lvgh">${ROM[c]} круг</div>`:'')+g.map(row).join('')}
+ for(let c=1;c<=mc;c++){const g=grp(c);if(g.length)body+=fold('c'+c,ROM[c]+' круг',cntOf(g),g)}
  body+=`<div class="how" style="margin-top:10px">Галочка у заговора: Арадия его знает. Галочка у заклинания: оно <b>подготовлено</b> на сегодня, только такие можно творить. Нажми на название, чтобы прочитать и сотворить.<br>По правилам подготовленные меняют после <b>долгого отдыха</b> (минута на каждый круг каждого заклинания), а заговоры друид знает насовсем. Лист не запрещает менять в любой момент: следи сама или согласуй с мастером.<br>✦ даёт Звёздная карта сверх обычного числа.</div>`;
  return{t:'Заклинания друида',sub:`${S.level} уровень · сложность ${spellDC()} · атака ${sg(spellAtk())} · ячеек ${slotsLeft()} из ${slotsTot()}`,body,acts:`<button data-act="closeD">Готово</button>`}};
 Object.keys(SPELLS).forEach(k=>INFO['bk_'+k]=()=>{const p=SPELLS[k],on=known().includes(k);
@@ -3784,9 +3804,10 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-eqput]');i
 function itemPick(kind){const all=itemList(kind),show=kind==='soc'?S.sItemShow:S.fItemShow;
  return{t:kind==='soc'?'Предметы для разговора':'Предметы для боя',sub:`галочка = показать на экране · ${show.filter(k=>all.includes(k)).length} из ${ITMAX}`,
   body:(all.length?all.map(k=>{const sh=show.includes(k);return `<button class="crow ck ${sh?'on':''}" data-ishow="${kind}:${k}"><span><i class="box">${sh?'✓':''}</i>${ITEMS[k].n}</span><small>${ITEMS[k].short||''}</small></button>`}).join(''):`<p>Пока пусто.</p>`)+`<div class="how" style="margin-top:10px">Здесь появятся вещи из инвентаря, которые ${kind==='soc'?'помогают в разговоре: подарок, письмо, знак, монеты для взятки':'пригодятся в бою: зелье, масло, факел, свиток'}. Отметь до ${ITMAX}, чтобы держать их под рукой.</div>`,acts:`<button data-act="closeD">Готово</button>`}}
-function openInfo(k,re){if(!INFO[k]&&k.startsWith('it_')){const it=ITEMS[k.slice(3)];if(!it)return;INFO[k]=()=>({t:it.n,sub:it.meta||'предмет',body:it.d?it.d():`<p>${it.short||''}</p>`,acts:it.acts?it.acts():''})}const d=INFO[k]();openAb=null;openInfoKey=k;
+function openInfo(k,re){if(!INFO[k]&&k.startsWith('it_')){const it=ITEMS[k.slice(3)];if(!it)return;INFO[k]=()=>({t:it.n,sub:it.meta||'предмет',body:it.d?it.d():`<p>${it.short||''}</p>`,acts:it.acts?it.acts():''})}const d=INFO[k]();const keepTop=(re&&openInfoKey===k)?(()=>{const o=document.querySelector('#dbody .drows');return o?o.scrollTop:0})():0;openAb=null;openInfoKey=k;
  const fk=/^(sp|bk|spb)_/.test(k)&&SPFULL[k.replace(/^(sp|bk|spb)_/,'')]?k.replace(/^(sp|bk|spb)_/,''):null;const qk=!fk&&QMAP[k]?k:null;
  $('dbody').innerHTML=`<div class="dh ${String(d.sub).length>34?'col':''}"><h2>${d.t}${fk||qk||d.bang?`<button class="bang" data-info="${d.bang||(fk?'full_'+fk:'qt_'+qk)}" aria-label="Точная цитата правил">!</button>`:''}</h2><div class="sc">${d.sub}</div></div><div class="drows" style="border:0;background:none"><div class="info">${d.body}</div></div><div class="dacts">${d.acts}</div>`;
+ if(keepTop){const o=document.querySelector('#dbody .drows');if(o)o.scrollTop=keepTop}
  if(!re){$('drawer').style.transform='';$('drawer').classList.add('on');$('dim').classList.add('on');vib(10)}}
 let tapPt={x:innerWidth/2,y:innerHeight*.7};document.addEventListener('pointerdown',e=>{tapPt={x:e.clientX,y:e.clientY}},true);
 function act(a){
@@ -5417,7 +5438,7 @@ Object.assign(CWF,{call_lightning:'bolt',conjure_animals:'summon',daylight:'sun'
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-27-15';
+const BUILD='aradia-2026-11-27-16';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
