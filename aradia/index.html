@@ -5505,8 +5505,13 @@ INFO.prep=()=>{const b=INFO.book(),i=b.body.indexOf('<div class="bkh"><span>По
  const body=`<div class="mu sm" style="margin:0 2px 6px">Отметь заклинания на сегодня: творить можно только подготовленные. Заговоры Арадия знает всегда. Нажми на подготовленное сверху, чтобы убрать его.</div>`+chips+(i>=0?b.body.slice(i,j>i?j:undefined):'');
  return{t:'Подготовка заклинаний',sub:`после долгого отдыха · ${n.s} из ${n.Sx}${min?` · займёт ${min} мин.`:''}`,body,
   acts:`<button data-act="closeD">Готово: заклинания подготовлены</button><button class="ghost" data-info="myspells">Все заклинания ›</button>`}};
+/* утро после долгого отдыха: спросить, оставить подготовленные или выбрать заново */
+INFO.morn=()=>{const now=picked().filter(k=>SPELLS[k]&&SPELLS[k].lv),n=bkCount();
+ return{t:'Утро',sub:`после долгого отдыха · подготовлено ${n.s} из ${n.Sx}`,body:`<p>Отдых закончен. После него друид может подготовить другие заклинания на день.</p>`+(now.length?`<div class="prepn">${now.map(k=>`<span class="pchip">${rn(SPELLS[k])}${SPELLS[k].n}</span>`).join('')}</div>`:`<p class="mu">Сейчас ничего не подготовлено.</p>`),
+  acts:`<button data-act="closeD">Оставить как есть</button><button class="ghost" data-info="prep">Подготовить заклинания ›</button>`}};
+QMAP.morn=['cast'];addQ('morn',['cast']);
 QMAP.prep=['cast'];QMAP.myspells=['cast'];addQ('prep',['cast']);addQ('myspells',['cast']);
-{const _a=act;act=function(a){const r=_a(a);if(a==='longRest'){for(let c=1;c<=9;c++)BKOPEN['c'+c]=true;setTimeout(()=>{if(!openInfoKey)openInfo('prep')},RM?200:1900)}return r}}
+{const _a=act;act=function(a){const r=_a(a);if(a==='longRest'){for(let c=1;c<=9;c++)BKOPEN['c'+c]=true;setTimeout(()=>{if(!openInfoKey)openInfo('morn')},RM?200:1900)}return r}}
 
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
