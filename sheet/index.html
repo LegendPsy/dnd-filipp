@@ -816,6 +816,13 @@ body:has(#p-equip.on) .bgart{opacity:.18;transition:opacity .3s}
 .brow .box{color:#1a1310}.brow.on .box{background:var(--gold);border-color:var(--gold)}
 .brow.bkoff{opacity:.45}
 .brow .gpc{margin:0 4px 0 6px}
+.brow .msgo{flex:none;color:var(--mute);font-style:normal;padding:0 4px 0 8px;font-size:18px}
+.fold{display:flex;align-items:center;gap:10px;width:100%;padding:13px 6px;margin-top:4px;border-top:1px solid var(--line);text-align:left;min-height:48px}
+.fold .fa{display:inline-block;width:18px;color:var(--gold);font-size:17px;transition:transform .15s}
+.fold.open .fa{transform:rotate(90deg)}
+.fold .ft{flex:1;font:600 17px/1.2 "Cormorant Garamond",serif;color:var(--ink)}
+.fold em{font:400 12.5px/1 Alegreya,serif;color:var(--mute);font-style:normal}
+.fbody[hidden]{display:none}
 .nope{animation:nope .32s cubic-bezier(.3,.7,.4,1)}
 @keyframes nope{0%,100%{transform:none}20%{transform:translateX(-6px)}45%{transform:translateX(5px)}70%{transform:translateX(-3px)}}
 .box.stamp{animation:bstamp .28s cubic-bezier(.3,1.8,.5,1)}
@@ -994,7 +1001,7 @@ span.need{display:inline-flex;width:auto;margin:3px 0 0;padding:3px 9px;font-siz
     <button data-m="adv">Преимущество</button>
     <button data-m="dis">Помеха</button>
   </div>
-  <div class="smh">Действие<i></i><button class="pick" data-info="fspellpick">заклинания ›</button></div>
+  <div class="smh">Действие<i></i><button class="pick" data-info="myspells">все заклинания ›</button></div>
   <div class="fgrid" id="fAct"></div>
   <div class="smh">Реакция и бонусное действие<i></i></div>
   <div class="fgrid c3" id="fRe"></div>
@@ -1306,8 +1313,8 @@ const MWHY={twinned:'у этого заклинания не одна цель �
 const MDO={subtle:'без слов и жестов, никто не заметит',quickened:'бонусным действием',twinned:'две цели',careful:'свои проходят спасбросок сами',distant:'дистанция вдвое дальше',empowered:'перебрось слабые кубики урона',extended:'длится вдвое дольше',heightened:'одна цель с помехой на спасбросок'};
 const CAP={scorching_ray:'3 луча по 2к6',shatter:'спасбросок Телосложения',web:'опутывает',blur:'помеха по тебе',mirror_image:'3 копии',invisibility:'невидимость',cloud_of_daggers:'4к4 каждый ход',blindness_deafness:'слепота или глухота',crown_of_madness:'гуманоид',fireball:'спасбросок Ловкости',misty_step:'телепорт 9 м',hold_person:'гуманоид',dominate_person:'гуманоид',hypnotic_pattern:'',counterspell:'сорвать заклинание',greater_invisibility:'невидим и в атаке',shield:'к классу доспеха'};
 const KNOWN=['fire_bolt','friends','minor_illusion','message','shield','chromatic_orb','charm_person'];
-function renderSmag(){const list=known().filter(k=>SPELLS[k]&&SPELLS[k].soc&&S.smagShow.includes(k)),sl=S.slots;
- $('smag').innerHTML=`<div class="smh">Магия<span class="lg"> в разговоре</span><i></i><button class="dc" data-info="spelldc">сложность заклинаний ${spellDC()}</button><span class="sl" title="ячейки 1 круга">${Array.from({length:slotsTot()},(_,i)=>`<span class="charge v ${i<sl.used?'used':''}"></span>`).join('')}</span></div><div class="spl">${list.map(k=>{const p=SPELLS[k],on=S.conc===k;return `<button class="sp ${p.lv?'lv':''} ${on?'on':''} ${metaArm?(metaOk(metaArm,k,p.lv)?'mglow':'mno'):''}" data-info="sp_${k}"><b>${rn(p)}${p.n}</b><small>${on?'действует · концентрация':p.short}</small></button>`}).join('')}<button class="sp more" data-info="smagpick">${list.length?'выбрать заклинания ›':'+ выбрать заклинания для этого экрана'}</button></div>`}
+function renderSmag(){const list=spAuto('soc',8),sl=S.slots;
+ $('smag').innerHTML=`<div class="smh">Магия<span class="lg"> в разговоре</span><i></i><button class="dc" data-info="spelldc">сложность заклинаний ${spellDC()}</button><span class="sl" title="ячейки 1 круга">${Array.from({length:slotsTot()},(_,i)=>`<span class="charge v ${i<sl.used?'used':''}"></span>`).join('')}</span></div><div class="spl">${list.map(k=>{const p=SPELLS[k],on=S.conc===k;return `<button class="sp ${p.lv?'lv':''} ${on?'on':''} ${metaArm?(metaOk(metaArm,k,p.lv)?'mglow':'mno'):''}" data-info="sp_${k}"><b>${rn(p)}${p.n}</b><small>${on?'действует · концентрация':p.short}</small></button>`}).join('')}<button class="sp more" data-info="${list.length?'myspells':'book'}">${list.length?'все заклинания ›':'+ выучить заклинания для разговора'}</button></div>`}
 
 
 /* ---------- бой ---------- */
@@ -1332,7 +1339,7 @@ function renderFight(){
  <button class="tok" data-finit="1"><div class="k">Инициатива</div><div class="v">${sg(initB())}</div></button>
  <button class="tok" data-info="move"><div class="k">Скорость</div><div class="v ${sp!==S.speed?'warn':''}">${String(sp).replace('.',',')}<small>м</small></div></button>`;
  const left=slotsLeft();
- const fs=known().filter(k=>SPELLS[k]&&SPELLS[k].fight&&S.fSpellShow.includes(k));
+ const fs=spAuto('fight',9);
  const nAct=fs.filter(k=>!SPELLS[k].react).length+2,cmpA=nAct>4;let cmp=cmpA;
  const scard=k=>{const p=SPELLS[k],off=(p.lv&&!firstC(p.lv)&&!(k==='shield'&&S.shieldOn))||(metaArm&&!metaOk(metaArm,k,p.lv))||!canPay(p)||!!noAct();
   if(k==='shield')return `<button class="atk ${cmp?'cmp':''} ${S.shieldOn?'on':''} ${off?'off':''} ${metaArm&&!off?'mglow':''}" data-info="sp_shield"><b>${rn(SPELLS.shield)}Щит</b><div class="hit"><span class="d" style="color:#e3d4ff">+5</span><span class="dm">к классу доспеха</span></div><small>${S.shieldOn?'действует до твоего хода':'реакция'}</small></button>`;
@@ -2743,6 +2750,7 @@ function act(a){
  if(a.startsWith('cast:')){const [,k,cs]=a.split(':'),p=SPELLS[k];let c=0;
   if(noAct()||(p.cost&&!canPay(p)))return;
   if(p.lv){c=cs?+cs:firstC(p.lv);if(!c||!useSlotC(c))return}
+  useBump('cast',k);
   let paid='';if(p.cost&&p.cost.cons){const ck=compKey(p);S.items[ck].q--;paid=`${p.cost.what} израсходован`}
   let mt='',mtw=false;if(metaArm){const m=metaArm;
    if(metaOk(m,k,c)&&S.spt.max-S.spt.used>=metaCost(m,k,c)){metaArm=null;S.spt.used+=metaCost(m,k,c);mt=META[m].n.split(' ')[0]+': '+MDO[m];mtw=m==='twinned';setTimeout(()=>flash('#fRes .flexp','#e9bd6c'),30)}}
@@ -3186,10 +3194,54 @@ function lvUndo(){const s=S.lvHist.pop();if(!s)return;const cur=S.hp.cur;LVKEYS.
 {const _act=act;act=function(a){if(a==='lvOpen'){closeDrawer();return setTimeout(lvOpen,260)}if(a==='lvUndo')return lvUndo();return _act(a)}}
 $('lvBtn').classList.toggle('max',S.level>=20);
 
+/* =====================================================================
+   ЗАКЛИНАНИЯ НА ЭКРАНЕ (перенесено из листа Арадии, PR #92/#96/#100)
+   «Бой» и «Общение» сами показывают самые часто используемые заклинания: счётчик localStorage 'filipp-use-v1' = {группа:{ключ:сколько раз}}.
+   Пока счёт равный, порядок запасной: прежний ручной выбор (S.fSpellShow / S.smagShow), потом заговоры, потом по кругу.
+   «все заклинания ›» = INFO.myspells: все известные, нажатие сразу открывает заклинание (sp_), в нём кнопка назад к списку.
+   Книга заклинаний: круги свёрнуты (BKOPEN), после заговоров от старшего к младшему.
+   Здесь только объявления функций и var: их можно звать из любого места файла (без ловушки TDZ).
+   ===================================================================== */
+function useKey(){return TEST?'filipp-use-test10':'filipp-use-v1'}
+function useGet(){try{const o=JSON.parse(localStorage.getItem(useKey()));return o&&typeof o==='object'?o:{}}catch(e){return{}}}
+function useBump(g,k){try{const o=useGet();(o[g]=o[g]||{})[k]=(o[g][k]||0)+1;localStorage.setItem(useKey(),JSON.stringify(o))}catch(e){}}
+function useTop(g,keys){const c=useGet()[g]||{};return keys.filter(k=>(c[k]||0)>=2).sort((a,b)=>c[b]-c[a]||keys.indexOf(a)-keys.indexOf(b)).slice(0,2)}
+function useOrder(g,keys){const t=useTop(g,keys);return t.concat(keys.filter(k=>!t.includes(k)))}
+function spAuto(kind,max){const c=useGet().cast||{},pref=(kind==='fight'?S.fSpellShow:S.smagShow)||[],keys=known().filter(k=>SPELLS[k]&&SPELLS[k][kind]);
+ const rank=k=>{const i=pref.indexOf(k);return i>=0?i:100+SPELLS[k].lv*10};
+ return keys.sort((a,b)=>(c[b]||0)-(c[a]||0)||rank(a)-rank(b)||SPELLS[a].n.localeCompare(SPELLS[b].n,'ru')).slice(0,max)}
+var MSB=0,BKOPEN={};/* MSB=1: заклинание открыто из списка «все заклинания»; BKOPEN: какие круги раскрыты в книге */
+document.addEventListener('click',e=>{const t=e.target.closest('[data-info]');if(!t)return;const k=t.dataset.info;
+ if(t.hasAttribute('data-ms'))MSB=1;else if(!/^(sp_|full_)/.test(k))MSB=0},true);
+document.addEventListener('click',e=>{const t=e.target.closest('[data-fold]');if(!t)return;e.stopPropagation();
+ const id=t.dataset.fold;BKOPEN[id]=!BKOPEN[id];t.classList.toggle('open',!!BKOPEN[id]);const fb=t.nextElementSibling;if(fb)fb.hidden=!BKOPEN[id];vib(6)},true);
+INFO.myspells=()=>{const kn=known().filter(k=>SPELLS[k]),c=useGet().cast||{},top=kn.filter(k=>(c[k]||0)>=2).sort((a,b)=>c[b]-c[a]).slice(0,3);
+ const row=k=>{const p=SPELLS[k],on=S.conc===k,off=(p.lv&&!firstC(p.lv))||!canPay(p);
+  const tag=[on?'действует':'',p.conc&&!on?'концентрация':'',p.react?'реакция':'',top.includes(k)?'часто':''].filter(Boolean).join(' · ');
+  return `<div class="brow on ${off?'bkoff':''}"><button class="bn" data-info="sp_${k}" data-ms><b>${rn(p)}${p.n}</b><small>${p.short}${tag?' · '+tag:''}</small></button>${costTag(p)}<i class="msgo">›</i></div>`};
+ let body='';
+ for(const lv of [0,9,8,7,6,5,4,3,2,1]){const g=kn.filter(k=>SPELLS[k].lv===lv).sort((a,b)=>SPELLS[a].n.localeCompare(SPELLS[b].n,'ru'));
+  if(g.length)body+=`<div class="bkh"><span>${lv?ROM[lv]+' круг':'Заговоры'}</span><em>${lv?`ячеек ${cLeft(lv)} из ${cTot(lv)}`:'без ячеек'}</em></div>`+g.map(row).join('')}
+ if(!kn.length)body+=needB('Выучить заклинания в книге','info:book');
+ const n=bkCount();
+ return{t:'Все заклинания',sub:`заговоров ${n.c} · заклинаний ${n.s} из ${n.Sx} · сложность ${spellDC()} · атака ${sg(spellAtk())}`,body:body+`<div class="how" style="margin-top:10px">Нажми на заклинание, чтобы прочитать и сотворить. На экранах «Бой» и «Общение» сами встают те, что ты творишь чаще.</div>`,
+  acts:`<button class="ghost" data-info="book">Книга заклинаний: выучить другие ›</button><button data-act="closeD">Закрыть</button>`}};
+Object.keys(SPELLS).forEach(k=>{const f=INFO['sp_'+k];if(!f)return;INFO['sp_'+k]=()=>{const d=f();if(MSB)d.acts+=`<button class="ghost" data-info="myspells" data-ms>← Все заклинания</button>`;return d}});
+INFO.book=()=>{const kn=known(),n=bkCount(),mc=maxCircle(S.level);
+ const row=k=>{const p=SPELLS[k],on=kn.includes(k),full=p.lv?n.s>=n.Sx:n.c>=n.C;return `<div class="brow ${on?'on':''} ${full&&!on?'bkoff':''}" data-row="${k}"><button class="bx" data-learn="${k}" aria-label="${on?'забыть':'выучить'}"><i class="box">${on?'✓':''}</i></button><button class="bn" data-info="bk_${k}"><b>${rn(p)}${p.n}</b><small>${p.short}</small></button>${costTag(p)}</div>`};
+ const grp=lv=>Object.keys(SPELLS).filter(k=>SPELLS[k].lv===lv).sort((a,b)=>SPELLS[a].n.localeCompare(SPELLS[b].n,'ru'));
+ const fold=(id,title,cnt,list)=>{const o=BKOPEN[id];return `<button class="fold ${o?'open':''}" data-fold="${id}"><span class="fa">▸</span><span class="ft">${title}</span><em>${cnt}</em></button><div class="fbody" ${o?'':'hidden'}>${list.map(row).join('')}</div>`};
+ const cntOf=g=>{const x=g.filter(k=>kn.includes(k)).length;return x?`выбрано ${x} из ${g.length}`:`${g.length} шт.`};
+ let body=`<div class="bkh"><span>Заговоры</span><em class="${n.c>=n.C?'full':''}" data-cnt="c">${n.c} из ${n.C}</em></div>`+fold('c0','Все заговоры',cntOf(grp(0)),grp(0));
+ body+=`<div class="bkh"><span>Заклинания</span><em class="${n.s>=n.Sx?'full':''}" data-cnt="s">${n.s} из ${n.Sx}${mc>1?' (всех кругов)':''}</em></div>`;
+ for(let c=mc;c>=1;c--){const g=grp(c);if(g.length)body+=fold('c'+c,ROM[c]+' круг',cntOf(g),g)}
+ body+=`<div class="how" style="margin-top:10px">Нажми на круг, чтобы раскрыть его. Галочка: Филипп знает это заклинание. Нажми на название, чтобы прочитать, что оно делает.<br><span class="gpc">${coinSvg(['#f3cf7a','#a8761e'])}50 зм</span> заклинанию нужен дорогой компонент: его надо купить один раз и держать в инвентаре.<br>Когда всё набрано, сними галочку с одного, чтобы взять другое. По правилам чародей меняет одно известное заклинание при новом уровне, перебор больше этого согласуй с мастером.${mc>1?'<br>Заклинаний 2 круга и выше в листе пока не все.':''}</div>`;
+ return{t:'Книга заклинаний',sub:`чародей ${S.level} уровня · заговоров ${n.C}, заклинаний ${n.Sx}, круги до ${ROM[mc]}`,body,acts:`<button data-act="closeD">Готово</button><button class="ghost" data-info="myspells">Все известные заклинания ›</button>`}};
+
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-27-59';
+const BUILD='2026-11-28-60';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
