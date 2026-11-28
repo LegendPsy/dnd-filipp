@@ -3341,8 +3341,7 @@ function editSheet(){
  <div class="three"><label>Уровень<input name="level" type="number" inputmode="numeric" value="${S.level}"></label><label>Макс. хитов<input name="hp" type="number" inputmode="numeric" value="${S.hp.max}"></label><label>КД<input name="ac" type="number" inputmode="numeric" value="${S.ac}"></label></div>
  <div class="three">${AB.map(([k,n])=>`<label>${n}<input name="${k}" type="number" inputmode="numeric" value="${S.ab[k]}"></label>`).join('')}</div>
  <button class="go gold" type="submit">Сохранить</button>
- <button class="go" type="button" id="profBtn" style="border:1px solid var(--line);font-weight:500">${editing?'Выключить':'Включить'} правку владений</button>
- <p style="color:var(--mute);font-size:13px;margin:0;text-align:center">Правка владений: в шторке характеристики нажатие на навык включает или выключает владение, а не бросает кубик.</p>`;
+ <button class="go" type="button" id="profBtn" style="border:1px solid var(--line);font-weight:500">${editing?'Выключить':'Включить'} правку владений</button>`;
  $('sheet').classList.add('on');
  $('profBtn').onclick=()=>{editing=!editing;$('editBtn').classList.toggle('on',editing);$('sheet').classList.remove('on');toast(editing?'Правка владений включена: открой характеристику и нажимай на навыки':'Правка владений выключена')};
  f.onsubmit=e=>{e.preventDefault();const g=n=>+f[n].value;
@@ -5680,27 +5679,19 @@ function cStatus(){if(TEST)return'';
  if(m.markPend)t=(off?'Версия запомнена. Нет сети: на сервер она уйдёт сама, когда сеть появится.':'Сохраняю эту версию на сервере…');
  else if(m.mark)t+=' Сохранённая версия: '+cWhen(m.mark)+'.';
  return t}
-function cShow(){const e=document.getElementById('cloudSt');if(e)e.textContent=cStatus()}
+/* после нажатия «Сохранить изменения» сама кнопка говорит, что получилось (без отдельных подписей) */
+var cPressed=false;
+function cShow(){const e=document.getElementById('cloudSave');if(!e||!cPressed)return;const m=cMeta();
+ e.textContent=m.markPend?(navigator.onLine===false?'Сохранено на телефоне, уйдёт на сервер при сети':'Сохраняю…'):'Изменения сохранены'}
 /* «Сохранить изменения»: применить правки из окна, отправить сразу и отметить версию в истории сервера */
 function cloudCheckpoint(){const f=$('form');try{if(f.onsubmit)f.onsubmit({preventDefault(){}})}catch(e){}save();
  const m=cMeta();m.markPend=Date.now();cSetMeta(m);clearTimeout(cT);cloudPush();
- editSheet();const b=document.querySelector('.cloudbox');if(b)b.scrollIntoView({block:'center'});cShow();vib([15,30,15])}
+ cPressed=true;editSheet();const b=document.querySelector('.cloudbox');if(b)b.scrollIntoView({block:'center'});cShow();vib([15,30,15])}
 function cLink(){return location.origin+location.pathname+'#hero='+cMeta().id}
 {const _es=editSheet;editSheet=function(){_es();const f=$('form');
- f.insertAdjacentHTML('beforeend',TEST?'':`<div class="rst cloudbox"><button class="go gold" type="button" id="cloudSave">Сохранить изменения</button>
-  <p>Запомнит лист таким, какой он сейчас: с этой версии герой начнёт следующую игру. Всё и так сохраняется само, а эта кнопка ставит отметку.</p>
-  <p style="font-weight:600;margin-top:6px">Сохранение на сервере</p><p id="cloudSt">${esc(cStatus())}</p>
-  ${`<button class="go" type="button" id="cloudLink">Открыть героя на другом устройстве</button>
-  <div id="cloudOut" hidden><p>Открой эту ссылку на другом телефоне или компьютере: там появится этот же герой, и дальше он будет сохраняться на обоих. Ссылку никому не давай: по ней можно менять героя.</p>
-  <input id="cloudUrl" type="text" readonly style="width:100%;font-size:13px;text-align:left" value="">
-  <button class="go" type="button" id="cloudCopy" style="width:100%">Скопировать ссылку</button></div>`}</div>`);
+ f.insertAdjacentHTML('beforeend',TEST?'':`<div class="rst cloudbox"><button class="go gold" type="button" id="cloudSave">Сохранить изменения</button></div>`);
  if(TEST)return;
  $('cloudSave').onclick=cloudCheckpoint;
- $('cloudLink').onclick=()=>{if(!cMeta().id)cloudPush();const m=cMeta();if(!m.id){m.id=cNewId();cSetMeta(m)}
-  $('cloudUrl').value=cLink();$('cloudOut').hidden=false;$('cloudLink').hidden=true;vib(10)};
- $('cloudCopy').onclick=()=>{const v=$('cloudUrl').value,ok=()=>{$('cloudCopy').textContent='Ссылка скопирована'};
-  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(v).then(ok,()=>{$('cloudUrl').select();document.execCommand('copy');ok()});
-  else{$('cloudUrl').select();document.execCommand('copy');ok()}};
  cloudPush()}}
 /* ссылка #hero=код с другого устройства: спросить и загрузить этого героя */
 function cFromLink(){const mt=location.hash.match(/hero=([0-9a-f]{32})/);if(!mt)return false;
@@ -6017,7 +6008,7 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 
 actDecorSafe();
 /* ===== /ДЕЙСТВУЮЩИЕ ЗАКЛИНАНИЯ */
-const BUILD='2026-11-28-89';
+const BUILD='2026-11-28-90';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
