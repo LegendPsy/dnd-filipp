@@ -823,6 +823,9 @@ body:has(#p-equip.on) .bgart{opacity:.18;transition:opacity .3s}
 .fold .ft{flex:1;font:600 17px/1.2 "Cormorant Garamond",serif;color:var(--ink)}
 .fold em{font:400 12.5px/1 Alegreya,serif;color:var(--mute);font-style:normal}
 .fbody[hidden]{display:none}
+.rst{display:flex;flex-direction:column;gap:8px;margin-top:6px;padding-top:10px;border-top:1px solid var(--line)}
+.rst .go{border:1px solid var(--line);font-weight:500}.rst p{margin:0;color:var(--mute);font-size:13.5px;line-height:1.35;text-align:center}
+.rstq{display:flex;flex-direction:column;gap:8px}.rstq[hidden]{display:none}.rst .go.rsty{border-color:#d0656f;color:#f6dfe1;background:linear-gradient(160deg,rgba(120,20,38,.55),rgba(50,10,20,.6))}
 .nope{animation:nope .32s cubic-bezier(.3,.7,.4,1)}
 @keyframes nope{0%,100%{transform:none}20%{transform:translateX(-6px)}45%{transform:translateX(5px)}70%{transform:translateX(-3px)}}
 .box.stamp{animation:bstamp .28s cubic-bezier(.3,1.8,.5,1)}
@@ -3238,10 +3241,38 @@ INFO.book=()=>{const kn=known(),n=bkCount(),mc=maxCircle(S.level);
  body+=`<div class="how" style="margin-top:10px">Нажми на круг, чтобы раскрыть его. Галочка: Филипп знает это заклинание. Нажми на название, чтобы прочитать, что оно делает.<br><span class="gpc">${coinSvg(['#f3cf7a','#a8761e'])}50 зм</span> заклинанию нужен дорогой компонент: его надо купить один раз и держать в инвентаре.<br>Когда всё набрано, сними галочку с одного, чтобы взять другое. По правилам чародей меняет одно известное заклинание при новом уровне, перебор больше этого согласуй с мастером.${mc>1?'<br>Заклинаний 2 круга и выше в листе пока не все.':''}</div>`;
  return{t:'Книга заклинаний',sub:`чародей ${S.level} уровня · заговоров ${n.C}, заклинаний ${n.Sx}, круги до ${ROM[mc]}`,body,acts:`<button data-act="closeD">Готово</button><button class="ghost" data-info="myspells">Все известные заклинания ›</button>`}};
 
+/* =====================================================================
+   СБРОС ДО БАЗОВОГО 2 УРОВНЯ (перенесено из листа Арадии, PR #107): кнопка внизу «Правки листа» (карандаш), с подтверждением.
+   Возвращает уровень, характеристики, хиты, навыки, черты, метамагию, заклинания, ячейки и единицы чародейства как при создании Филиппа.
+   Снимает концентрацию, Щит, Доспехи мага, истощение, спасброски от смерти, историю повышений.
+   НЕ трогает: инвентарь, экипировку, деньги, состояния, класс доспеха, выбор предметов, счётчик частых заклинаний.
+   Перед сбросом весь лист кладётся в localStorage SKEY+'-bak': кнопка «Вернуть лист как был до сброса».
+   ===================================================================== */
+function rBak(){return SKEY+'-bak'}
+function hasBak(){try{return !!localStorage.getItem(rBak())}catch(e){return false}}
+function resetBase(){try{localStorage.setItem(rBak(),JSON.stringify(S))}catch(e){}
+ const D=structuredClone(DEFAULT);
+ ['level','ab','saves','skills','hp','speed','luck','chaos'].forEach(k=>S[k]=D[k]);
+ S.hd={die:D.hd.die,used:0};S.known=[...KNOWN];S.slots={max:3,used:0,extra:0};S.hi={};S.spt={max:2,used:0};delete S.meta;
+ S.feats=[{k:'lucky'}];S.lvHist=[];S.conc=null;S.shieldOn=0;S.mArm=0;S.exh=0;S.death={s:0,f:0};metaArm=null;
+ save();$('sheet').classList.remove('on');closeDrawer();renderAll();fit();$('lvBtn').classList.remove('max');vib([30,20,10]);
+ if(!RM)$('cl').animate([{transform:'translateY(-4px)',opacity:.3},{transform:'none',opacity:1}],{duration:400,easing:'ease-out'})}
+function resetUndo(){let b=null;try{b=localStorage.getItem(rBak())}catch(e){}if(!b)return;
+ try{localStorage.setItem(SKEY,b);localStorage.removeItem(rBak())}catch(e){}location.reload()}
+{const _es=editSheet;editSheet=function(){_es();const f=$('form');
+ f.insertAdjacentHTML('beforeend',`<div class="rst"><button class="go" type="button" id="rstBtn">Сбросить до базового 2 уровня</button>
+  <div class="rstq" hidden><p>Уровень, характеристики, хиты, навыки, черты, метамагия, заклинания и ячейки станут как при создании Филиппа (2 уровень). Инвентарь, экипировка и деньги останутся.</p>
+  <button class="go rsty" type="button" id="rstYes">Да, сбросить до 2 уровня</button><button class="go" type="button" id="rstNo">Не сбрасывать</button></div>
+  ${hasBak()?'<button class="go" type="button" id="rstBack">Вернуть лист как был до сброса</button>':''}</div>`);
+ $('rstBtn').onclick=()=>{$('rstBtn').hidden=true;f.querySelector('.rstq').hidden=false;vib(10)};
+ $('rstNo').onclick=()=>{$('rstBtn').hidden=false;f.querySelector('.rstq').hidden=true};
+ $('rstYes').onclick=resetBase;
+ if($('rstBack'))$('rstBack').onclick=resetUndo}}
+
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-28-60';
+const BUILD='2026-11-28-61';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
