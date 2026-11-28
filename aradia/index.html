@@ -2273,7 +2273,46 @@ S.fSpellShow=S.fSpellShow.filter(k=>SPELLS[k]);S.smagShow=S.smagShow.filter(k=>S
 if(!S.inv2){S.inv2=1;const mine={};Object.keys(S.items||{}).filter(k=>/^u/.test(k)).forEach(k=>mine[k]=S.items[k]);S.items=Object.assign(structuredClone(KIT),mine);S.eq=Object.assign({},EQ0);S.sItemShow=[];S.fItemShow=[];if(S.chartLost)S.items.starmap.q=0;delete S.chartLost}
 if(!S.items)S.items=structuredClone(KIT);
 syncItems();
-const save=()=>{try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}};
+/* =====================================================================
+   СЕРВЕР (Supabase): копия листа хранится ещё и в интернете.
+   Телефон остаётся главным: всё пишется в localStorage как раньше, а сюда уходит копия
+   через 2,5 секунды после изменения, при сворачивании приложения и при появлении сети.
+   Без сети ничего не ломается: изменения помечаются «не отправлено» и уходят позже.
+   Герой узнаётся по длинному случайному коду (C_META.id), который создаётся на телефоне
+   при первом открытии. На другое устройство герой переносится ссылкой …/#hero=код
+   (кнопка в «Правке листа»). Сервер хранит и историю версий (таблица hero_history).
+   Пишется только настоящий лист: тестовый 10 уровень на сервер не уходит.
+   Здесь только function и var: save() зовётся при загрузке раньше, чем объявлено остальное (TDZ).
+   ===================================================================== */
+var CLOUD={url:'https://obqaaghorowolxgangnb.supabase.co',key:'sb_publishable_kdD3LuvbtDCukPPh-CaUQw_Xyj0sCFr',hero:'aradia',mk:'aradia-cloud',use:'aradia-use-v1'};
+var cT=null,cBusy=false;
+function cMeta(){try{const m=JSON.parse(localStorage.getItem(CLOUD.mk));return m&&typeof m==='object'?m:{}}catch(e){return{}}}
+function cSetMeta(m){try{localStorage.setItem(CLOUD.mk,JSON.stringify(m))}catch(e){}}
+function cHash(s){let h=5381;s=String(s||'');for(let i=0;i<s.length;i++)h=(h*33^s.charCodeAt(i))|0;return (h>>>0).toString(36)+'.'+s.length}
+function cNewId(){const a=new Uint8Array(16);crypto.getRandomValues(a);return Array.from(a,b=>b.toString(16).padStart(2,'0')).join('')}
+function cRpc(fn,body,keep){const b=JSON.stringify(body);return fetch(CLOUD.url+'/rest/v1/rpc/'+fn,{method:'POST',keepalive:!!keep&&b.length<60000,cache:'no-store',
+  headers:{apikey:CLOUD.key,Authorization:'Bearer '+CLOUD.key,'Content-Type':'application/json'},body:b})
+  .then(r=>r.ok?r.json():Promise.reject(new Error('http '+r.status)))}
+function cLocal(){let s=null,u=null;try{s=localStorage.getItem(SKEY);u=localStorage.getItem(CLOUD.use)}catch(e){}return{s,u}}
+/* пометить: есть что отправить */
+function cloudMark(){if(TEST)return;const m=cMeta();m.n=(m.n||0)+1;cSetMeta(m);clearTimeout(cT);cT=setTimeout(()=>cloudPush(),2500)}
+function cloudPush(keep){if(TEST||cBusy)return;const m=cMeta();if(!m.id){m.id=cNewId();cSetMeta(m)}
+ const {s,u}=cLocal();if(!s)return;const h=cHash(s+'|'+u);if(h===m.h)return;
+ if(navigator.onLine===false)return;cBusy=true;const n=m.n||0;let data;try{data={s:JSON.parse(s),use:u?JSON.parse(u):null}}catch(e){cBusy=false;return}
+ cRpc('hero_save',{p_id:m.id,p_hero:CLOUD.hero,p_data:data,p_base:m.rev||0},keep).then(rev=>{const m2=cMeta();
+   if(m2.id===m.id){m2.rev=+rev||m2.rev;m2.h=h;m2.at=Date.now();delete m2.err;cSetMeta(m2)}cBusy=false;
+   if((m2.n||0)!==n){clearTimeout(cT);cT=setTimeout(()=>cloudPush(),1500)}})
+  .catch(()=>{cBusy=false;const m2=cMeta();m2.err=Date.now();cSetMeta(m2)})}
+/* забрать с сервера, если там новее (герой менялся на другом устройстве) */
+function cloudPull(){if(TEST)return Promise.resolve(false);const m=cMeta();if(!m.id)return Promise.resolve(false);
+ const {s,u}=cLocal();if(s&&cHash(s+'|'+u)!==m.h)return Promise.resolve(false);/* здесь есть неотправленное: оно главнее */
+ return cRpc('hero_load',{p_id:m.id}).then(r=>{if(!r||!r.data||!(+r.rev>(m.rev||0)))return false;return cApply(m.id,r)}).catch(()=>false)}
+function cApply(id,r){const d=r.data;if(!d||!d.s||d.s.v!==2)return false;
+ try{const old=localStorage.getItem(SKEY);if(old)localStorage.setItem(SKEY+'-before-cloud',old);
+  const s=JSON.stringify(d.s),u=d.use?JSON.stringify(d.use):null;localStorage.setItem(SKEY,s);if(u)localStorage.setItem(CLOUD.use,u);
+  const m=cMeta();m.id=id;m.rev=+r.rev||0;m.h=cHash(s+'|'+u);m.at=Date.now();cSetMeta(m)}catch(e){return false}
+ location.reload();return true}
+const save=()=>{try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}cloudMark()};
 const $=id=>document.getElementById(id);
 const mod=s=>Math.floor((s-10)/2);
 const sg=n=>(n>=0?'+':'−')+Math.abs(n);
@@ -6542,9 +6581,50 @@ const AF_DEER=new Path2D("m139.3 20.25l-16.1 4.5c9.4 33.5 22.3 51.1 37 60.3c14.9
  requestAnimationFrame(fitFight)}}
 
 renderAll();fit();setTimeout(fit,300);wideFix();
+/* СЕРВЕР: запуск и блок «Сохранение на сервере» внизу «Правки листа». Устройство описано у cloudMark(). */
+function cWhen(t){if(!t)return'';const d=new Date(t),now=new Date(),hm=d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+ return d.toDateString()===now.toDateString()?'сегодня в '+hm:d.toLocaleDateString('ru-RU',{day:'numeric',month:'long'})+' в '+hm}
+function cStatus(){if(TEST)return'Сейчас открыт тестовый 10 уровень: он на сервер не отправляется. Настоящий лист сохраняется как обычно.';
+ const m=cMeta(),{s,u}=cLocal(),wait=s&&cHash(s+'|'+u)!==m.h;
+ if(wait)return navigator.onLine===false?'Есть новые изменения. Нет сети: они хранятся на этом устройстве и уйдут на сервер сами, когда сеть появится.':'Есть новые изменения, отправляю на сервер.';
+ return m.at?'Всё сохранено на сервере, '+cWhen(m.at)+'.':'Пока не сохранялось.'}
+function cLink(){return location.origin+location.pathname+'#hero='+cMeta().id}
+{const _es=editSheet;editSheet=function(){_es();const f=$('form');
+ f.insertAdjacentHTML('beforeend',`<div class="rst cloudbox"><p style="font-weight:600;color:var(--ink,inherit)">Сохранение на сервере</p><p id="cloudSt">${esc(cStatus())}</p>
+  ${TEST?'':`<button class="go" type="button" id="cloudLink">Открыть героя на другом устройстве</button>
+  <div id="cloudOut" hidden><p>Открой эту ссылку на другом телефоне или компьютере: там появится этот же герой, и дальше он будет сохраняться на обоих. Ссылку никому не давай: по ней можно менять героя.</p>
+  <input id="cloudUrl" type="text" readonly style="width:100%;font-size:13px;text-align:left" value="">
+  <button class="go" type="button" id="cloudCopy" style="width:100%">Скопировать ссылку</button></div>`}</div>`);
+ if(TEST)return;
+ $('cloudLink').onclick=()=>{if(!cMeta().id)cloudPush();const m=cMeta();if(!m.id){m.id=cNewId();cSetMeta(m)}
+  $('cloudUrl').value=cLink();$('cloudOut').hidden=false;$('cloudLink').hidden=true;vib(10)};
+ $('cloudCopy').onclick=()=>{const v=$('cloudUrl').value,ok=()=>{$('cloudCopy').textContent='Ссылка скопирована'};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(v).then(ok,()=>{$('cloudUrl').select();document.execCommand('copy');ok()});
+  else{$('cloudUrl').select();document.execCommand('copy');ok()}};
+ cloudPush()}}
+/* ссылка #hero=код с другого устройства: спросить и загрузить этого героя */
+function cFromLink(){const mt=location.hash.match(/hero=([0-9a-f]{32})/);if(!mt)return false;
+ try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+ if(TEST||mt[1]===cMeta().id)return false;const id=mt[1],f=$('form');
+ f.innerHTML=`<h2>Герой с другого устройства</h2><div class="rst"><p id="cfP">Загрузить сюда героя по этой ссылке? То, что сейчас в листе на этом устройстве, заменится им (старое останется запасной копией на этом устройстве).</p>
+  <button class="go gold" type="button" id="cfYes">Да, загрузить героя</button><button class="go" type="button" id="cfNo">Не загружать</button></div>`;
+ f.onsubmit=e=>e.preventDefault();$('sheet').classList.add('on');
+ $('cfNo').onclick=()=>$('sheet').classList.remove('on');
+ $('cfYes').onclick=()=>{$('cfYes').disabled=true;$('cfP').textContent='Загружаю…';
+  cRpc('hero_load',{p_id:id}).then(r=>{if(r&&r.data&&r.hero===CLOUD.hero&&cApply(id,r))return;
+    $('cfP').textContent=r&&r.hero&&r.hero!==CLOUD.hero?'Эта ссылка от другого героя. Открой её на его листе.':'Такого героя на сервере нет. Проверь, что ссылка скопирована целиком.';$('cfYes').hidden=true})
+   .catch(()=>{$('cfP').textContent='Не получилось связаться с сервером. Проверь интернет и нажми ещё раз.';$('cfYes').disabled=false})};
+ return true}
+function cloudStart(){if(TEST)return;if(cFromLink())return;
+ const m=cMeta();if(!m.id){m.id=cNewId();cSetMeta(m)}
+ cloudPull().then(done=>{if(!done)cloudPush()})}
+setTimeout(cloudStart,600);
+addEventListener('online',()=>cloudPush());
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){clearTimeout(cT);cloudPush(true)}else cloudPull().then(d=>{if(!d)cloudPush()})});
+addEventListener('pagehide',()=>cloudPush(true));
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-28-39';
+const BUILD='aradia-2026-11-28-40';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
