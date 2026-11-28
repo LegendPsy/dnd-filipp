@@ -1443,6 +1443,13 @@ body.beast .lvup{display:none}
 .rst{display:flex;flex-direction:column;gap:8px;margin-top:6px;padding-top:10px;border-top:1px solid var(--line)}
 .rst .go{border:1px solid var(--line);font-weight:500}.rst p{margin:0;color:var(--mute);font-size:13.5px;line-height:1.35;text-align:center}
 .rstq{display:flex;flex-direction:column;gap:8px}.rstq[hidden]{display:none}.rst .go.rsty{border-color:var(--red2,#d0656f);color:#f6dfe1;background:linear-gradient(160deg,rgba(120,20,38,.55),rgba(50,10,20,.6))}
+.fnar.wrap{flex-wrap:wrap}.fnar.wrap>*{flex:1 1 calc(50% - 3px)}
+.fnar .fc.nr .t b,.fnar .fc .t .rn{font-weight:inherit}.fnar .fc.on{border-color:rgba(169,201,234,.6);box-shadow:0 0 12px rgba(169,201,234,.25)}
+.fnar .fc .bkf{flex:none;width:28px;height:28px;border-radius:50%;box-shadow:0 0 0 1.5px rgba(240,196,122,.8)}
+.fnar .fc.steel{background:linear-gradient(160deg,rgba(45,37,31,.92),rgba(34,28,24,.92));border-color:rgba(240,196,122,.28)}
+.fnar .fc.plain{border-style:dashed}
+#p-fight .fvit .tok{padding:3px 4px 4px;border-radius:11px;min-height:0!important;justify-content:center!important;gap:2px}#p-fight .fvit .tok .k{min-height:0;line-height:1.05;margin-bottom:1px}
+#p-fight .fvit .tok .v{font-size:21px;line-height:1}#p-fight .fvit .tok .v small{font-size:12px}#p-fight .fvit .hpbar{margin-top:3px}
 </style>
 </head>
 <body>
@@ -6252,10 +6259,31 @@ document.head.insertAdjacentHTML('beforeend',`<style>
   if(t<T1+T2+T3+T4)requestAnimationFrame(fr);else cv.remove()};
  requestAnimationFrame(fr)}}
 
+/* ---- «Бой»: все бонусные действия и реакции узкими строками (просьба Алексея 2026-11-28).
+   Последняя обёртка renderFight: любые плитки .atk в #fRe (заклинания, Лучник, знамение, облик зверя, призыв…)
+   превращаются в узкие строки .fc, все строки идут парами в одном .fnar. ---- */
+{const _rfN=renderFight;renderFight=function(){_rfN();const re=$('fRe');if(!re)return;
+ const rows=[];
+ [...re.children].forEach(el=>{
+  if(el.classList.contains('fnar')){rows.push(...el.children);return}
+  if(!el.matches('button.atk,.atk')){rows.push(el);return}
+  const b=document.createElement('button');
+  [...el.attributes].forEach(a=>{if(a.name!=='class')b.setAttribute(a.name,a.value)});
+  const keep=['off','on','steel','plain','armed'].filter(c=>el.classList.contains(c));
+  b.className='fc nr '+keep.join(' ');
+  const t=el.querySelector('b'),d=el.querySelector('.hit .d'),dm=el.querySelector('.hit .dm'),sm=el.querySelector('small'),img=el.querySelector('img.bkf');
+  const sub=[dm&&dm.textContent.trim(),sm&&sm.textContent.trim()].filter(Boolean).join(' · ');
+  b.innerHTML=(img?`<img class="bkf" src="${img.getAttribute('src')}" alt="">`:'')+(d?`<span class="d">${d.textContent}</span>`:'')+`<div class="t">${t?t.innerHTML:el.textContent.trim()}${sub?`<small>${esc(sub)}</small>`:''}</div>`;
+  if(el.dataset.info==='wfnow'&&typeof AFACE!=='undefined'&&!img)b.insertAdjacentHTML('afterbegin',`<img class="bkf" src="${AFACE}" alt="">`);
+  rows.push(b)});
+ const box=document.createElement('div');box.className='fnar wrap';rows.forEach(r=>box.appendChild(r));
+ re.className='fgrid';re.innerHTML='';re.appendChild(box);
+ requestAnimationFrame(fitFight)}}
+
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-27-32';
+const BUILD='aradia-2026-11-27-33';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
