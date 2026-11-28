@@ -1618,11 +1618,16 @@ const ORB=['звук','кислота','огонь','холод','электри
 const ORBDMG={'звук':'звуком','кислота':'кислотой','огонь':'огнём','холод':'холодом','электричество':'электричеством','яд':'ядом'};
 const WEAP={dagger:{n:'Кинжал',meta:'простое оружие · фехтовальное, лёгкое, метательное',
  d:()=>`<p><b>Рукопашная атака: к20 ${sg(daggerHit())}</b> (Ловкость ${sg(mod(S.ab.dex))} + мастерство ${prof()}). Цель в пределах 5 футов.</p><p>Можно <b>метнуть</b>: дальность 20 футов, до 60 футов с помехой. Брошенный кинжал надо потом поднять.</p><p>При попадании <b>1к4 ${sg(mod(S.ab.dex))} колющего урона</b>.</p><p class="mu">У чародея по стартовому снаряжению всегда два кинжала. Второй можно держать в другой руке: тогда бонусным действием атакуешь и им, но без прибавки Ловкости к урону.</p>`}};
+WEAP.crossbow={n:'Лёгкий арбалет',meta:'простое дальнобойное оружие · боеприпас, двуручное, перезарядка',
+ d:()=>`<p><b>Дальнобойная атака: к20 ${sg(daggerHit())}</b> (Ловкость ${sg(mod(S.ab.dex))} + мастерство ${prof()}). Дальность <b>80 футов</b>, до <b>320 футов</b> с помехой.</p><p>При попадании <b>1к8 ${sg(mod(S.ab.dex))} колющего урона</b>.</p><p>Каждый выстрел тратит <b>один болт</b>. После боя можно потратить минуту и собрать половину выпущенных болтов.</p><p class="mu">Двуручное: стрелять можно, только держа арбалет обеими руками. Перезарядка: за действие, бонусное действие или реакцию выпускаешь только один болт. Если враг стоит вплотную (в пределах 5 футов), бросок атаки с помехой.</p>`};
 const daggerHit=()=>mod(S.ab.dex)+prof();
+const xbowOn=()=>!!(S.eq&&Object.values(S.eq).includes('crossbow'));
+const bolts=()=>S.items.bolts?S.items.bolts.q:0;
 function atkSpec(k,c){
  const ch=[{l:'Харизма',v:mod(S.ab.cha)},{l:'мастерство',v:prof()}];
  const p=SPELLS[k];if(p&&p.dmg){const g=p.dmg(c);return{label:p.n+': атака',bonus:ch,kind:'atk',dmg:Object.assign({n:p.n,k:0,sk:k,sc:c},g)}}
- const dx=mod(S.ab.dex);return{label:'Кинжал: атака',bonus:[{l:'Ловкость',v:dx},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:'Кинжал',dn:1,ds:4,k:dx,kl:'Ловкость',t:'колющий',fx:'steel'}};
+ const dx=mod(S.ab.dex);if(k==='crossbow')return{label:'Арбалет: выстрел',bonus:[{l:'Ловкость',v:dx},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:'Болт',dn:1,ds:8,k:dx,kl:'Ловкость',t:'колющий',fx:'steel'}};
+ return{label:'Кинжал: атака',bonus:[{l:'Ловкость',v:dx},{l:'мастерство',v:prof()}],kind:'atk',dmg:{n:'Кинжал',dn:1,ds:4,k:dx,kl:'Ловкость',t:'колющий',fx:'steel'}};
 }
 function fitFight(){const pg=$('p-fight');if(!pg||!pg.classList.contains('on'))return;const sc=pg.querySelector('.screen');
  pg.classList.remove('d1','d2','d3','d4','d5','d6','d7','d8');for(const c of ['d1','d2','d3','d4','d5','d6','d7','d8']){if(sc.scrollHeight<=sc.clientHeight+1)break;pg.classList.add(c)}}
@@ -1636,12 +1641,13 @@ function renderFight(){
  <button class="tok" data-info="move"><div class="k">Скорость</div><div class="v ${sp!==S.speed?'warn':''}">${String(sp).replace('.',',')}<small style="margin-left:4px">футов</small></div></button>`;
  const left=slotsLeft();
  const fs=spAuto('fight',9);
- const nAct=fs.filter(k=>!SPELLS[k].react).length+2,cmpA=nAct>4;let cmp=cmpA;
+ const nAct=fs.filter(k=>!SPELLS[k].react).length+2+(xbowOn()?1:0),cmpA=nAct>4;let cmp=cmpA;
  const scard=k=>{const p=SPELLS[k],off=(p.lv&&!firstC(p.lv)&&!(k==='shield'&&S.shieldOn))||(metaArm&&!metaOk(metaArm,k,p.lv))||!canPay(p)||!!noAct();
   if(k==='shield')return `<button class="atk ${cmp?'cmp':''} ${S.shieldOn?'on':''} ${off?'off':''} ${metaArm&&!off?'mglow':''}" data-info="sp_shield"><b>${rn(SPELLS.shield)}Щит</b><div class="hit"><span class="d" style="color:#e3d4ff">+5</span><span class="dm">к классу доспеха</span></div><small>${S.shieldOn?'действует до твоего хода':'реакция'}</small></button>`;
   return `<button class="atk ${cmp?'cmp':''} ${off?'off':''} ${metaArm&&!off?'mglow':''}" data-info="sp_${k}"><b${!p.n.includes(' ')&&p.n.length>12?' class="lw"':''}>${rn(p)}${p.n}</b>${p.atk?`<div class="hit"><span class="d">${sg(spellAtk())}</span><span class="dm">${p.hit()}</span></div>`:(cmp?(CAP[k]?`<div class="hit"><span class="dm">${CAP[k]}</span></div>`:''):`<div class="hit"><span class="dm">${p.short}</span></div>`)}<small>${k==='mage_armor'&&S.mArm?'действует, 8 часов':p.lv?(p.where||'')+' · тратит ячейку':'заговор · '+(p.where||'')}${costTag(p)}</small></button>`};
  const acts=fs.filter(k=>!SPELLS[k].react).map(scard);cmp=cmpA;
  acts.push(`<button class="atk steel ${cmp?'cmp':''} ${noAct()?'off':''}" data-info="w_dagger"><b>Кинжал</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">урон 1к4${sg(mod(S.ab.dex))}</span></div><small>5 футов или бросок 20 футов</small></button>`);
+ if(xbowOn())acts.push(`<button class="atk steel ${cmp?'cmp':''} ${noAct()||!bolts()?'off':''}" data-info="w_crossbow"><b>Арбалет</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">урон 1к8${sg(mod(S.ab.dex))}</span></div><small>80 футов · болтов ${bolts()}</small></button>`);
  acts.push(`<button class="atk plain ${cmp?'cmp':''}" data-info="actions"><b>Другие действия</b><small style="white-space:normal">Рывок, Отход, Уклонение, Помощь, Засада, Поиск</small></button>`);
  $('fAct').className='fgrid'+(acts.length>4?' c3x':'');$('fAct').innerHTML=acts.join('');
  $('fRe').innerHTML=fs.filter(k=>SPELLS[k].react).map(scard).join('')+`<button class="atk steel ${cmp?'cmp':''} ${noAct()?'off':''}" data-info="opp"><b>Удар вслед</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">кинжалом</span></div><small>реакция, враг уходит</small></button>`;
@@ -1755,6 +1761,9 @@ const ICAT={
   d:()=>WEAP.dagger.d(),use:'weapon'},
  diamond:{n:'Бриллиант',short:'для Цветного шарика',comp:1,meta:'компонент заклинания · стоит 50 зм · не тратится',
   d:()=>`<p>Чистый бриллиант стоимостью не меньше <b>50 зм</b>. Нужен для заклинания <b>Цветной шарик</b>: без него шарик не сотворить. При сотворении бриллиант <b>не тратится</b>.</p><p class="mu">Если его отнимут или он потеряется, шарик снова станет недоступен, пока не добудешь новый. Мешочек с компонентами его не заменяет.</p>`},
+ crossbow:{n:'Лёгкий арбалет',short:'1к8, 80 футов',fight:1,meta:'простое дальнобойное оружие · двуручное',d:()=>WEAP.crossbow.d(),use:'xbow'},
+ bolts:{n:'Арбалетные болты',short:'для арбалета',fight:1,cons:1,meta:'боеприпас · тратится при выстреле',
+  d:()=>`<p>Болты для лёгкого арбалета. Каждый выстрел тратит один болт. После боя можно потратить минуту и собрать <b>половину</b> выпущенных: добавь их кнопкой «+».</p>`},
  pouch:{n:'Мешочек с компонентами',short:'для заклинаний',comp:1,meta:'снаряжение · компоненты заклинаний',
   d:()=>`<p>Поясная сумка с отделениями: травы, пыль, перья, кусочки воска. Заменяет все <b>материальные компоненты</b> заклинаний, у которых не указана цена и которые не расходуются.</p><p class="mu">Нужен для Дружбы (немного косметики) и Малой иллюзии (клок шерсти). Если сумку отнимут, такие заклинания творить нельзя.</p>`},
  explorer:{n:'Набор путешественника',short:'рюкзак, верёвка, еда',meta:'снаряжение · набор',
@@ -1833,6 +1842,7 @@ function itemBody(k){const o=S.items[k],c=icat(k);
  return h}
 function itemActs(k){const o=S.items[k],c=icat(k),u=c.use;let a='';
  if(u==='weapon')a+=`<button data-act="atk:dagger">Атаковать: к20 ${sg(daggerHit())}</button>`;
+ else if(u==='xbow')a+=xbowOn()?(bolts()?`<button data-act="atk:crossbow">Выстрелить: к20 ${sg(daggerHit())} (болтов ${bolts()})</button>`:needB('Нет болтов: добавь их кнопкой «+» у болтов','tab:p-inv')):needB('Надень арбалет в «Экипировке», тогда он появится в «Бою»','tab:p-equip');
  else if(u&&u.k==='atk')a+=`<button data-act="iuse:${k}" ${o.q>0?'':'disabled'}>${c.cons?'Бросить':'Ударить'}: к20 ${sg(IMP())}${c.cons?` (останется ${Math.max(0,o.q-1)})`:''}</button>`;
  else if(u&&u.k==='heal')a+=`<button data-act="iuse:${k}" ${o.q>0?'':'disabled'}>Выпить: ${u.n}к${u.s} + ${u.b} хитов</button>`;
  else if(u&&(u.k==='dice'||u.k==='charge')){const ok=c.ch?chLeft(k)>0:o.q>0;a+=`<button data-act="iuse:${k}" ${ok?'':'disabled'}>${c.ch?'Потратить заряд':'Использовать'}${u.k==='dice'?`: ${u.n}к${u.s}${u.b?' + '+u.b:''}`:''}</button>`}
@@ -1919,10 +1929,11 @@ const DEFAULT={v:2,name:'Филипп',race:'Человек',cls:'Чародей
  skills:{medicine:1,deception:1,insight:1,arcana:1,investigation:1},
  hp:{max:14,cur:14,temp:0},ac:12,speed:30,hd:{die:6,used:0},
  luck:{max:3,used:0},chaos:{max:1,used:0},insp:0,
- money:{pp:0,gp:10,sp:1,cp:0},log:[]};
-/* стартовое снаряжение Филиппа (допущение, пока не выбрано с мастером): чародей + набор охотника на монстров (Преследуемый).
+ money:{pp:0,gp:0,sp:1,cp:0},log:[]};
+/* стартовое снаряжение Филиппа по книге: чародей (лёгкий арбалет и 20 болтов, мешочек с компонентами, набор путешественника, 2 кинжала)
+   + Преследуемый (набор охотника на монстров, безделушка, обычная одежда, 1 см).
    q сколько, soc/fight где пригодится (игрок меняет в шторке предмета) */
-const KIT={dagger:{q:2,fight:1},pouch:{q:1},explorer:{q:1},clothes:{q:1},trinket:{q:1,soc:1},symbol:{q:1,soc:1},
+const KIT={dagger:{q:2,fight:1},crossbow:{q:1,fight:1},bolts:{q:20,fight:1},pouch:{q:1},explorer:{q:1},clothes:{q:1},trinket:{q:1,soc:1},symbol:{q:1,soc:1},
  holy:{q:1,fight:1},oil:{q:1,fight:1},stake:{q:3,fight:1},hammer:{q:1},manacles:{q:1,fight:1},mirror:{q:1},crowbar:{q:1},tinder:{q:1},torch:{q:3,fight:1},chest:{q:1}};
 /* тестовый 10 уровень: чтобы посмотреть, как лист выглядит, когда всего много */
 const TEST10={v:2,test:1,name:'Филипп',race:'Человек',cls:'Чародей',sub:'Дикая магия',bg:'Преследуемый',level:10,
@@ -1949,6 +1960,7 @@ let S;try{S=JSON.parse(localStorage.getItem(SKEY))}catch(e){}
 if(!S||S.v!==2)S=structuredClone(TEST?TEST10:DEFAULT);
 if(!S.cond)S.cond={};if(!S.condShow)S.condShow=COND_MAIN.slice();if(S.exh==null)S.exh=0;if(!S.slots)S.slots={max:3,used:0};if(S.conc===undefined)S.conc=null;if(!S.spt)S.spt={max:2,used:0};if(S.slots.extra==null)S.slots.extra=0;if(!S.death)S.death={s:0,f:0};if(!S.orbT)S.orbT='огонь';if(S.shieldOn==null)S.shieldOn=0;if(!S.fSpellShow)S.fSpellShow=['fire_bolt','chromatic_orb','shield'];if(S.test&&!S.fs9){S.fs9=1;if(!S.fSpellShow.includes('greater_invisibility')&&S.fSpellShow.length<9)S.fSpellShow.push('greater_invisibility')}if(!S.inv)S.inv=[];if(!S.sItemShow)S.sItemShow=[];if(!S.fItemShow)S.fItemShow=[];if(!S.smagShow)S.smagShow=['friends','minor_illusion','message','charm_person'];S.smagShow=S.smagShow.filter(k=>SPELLS[k]&&SPELLS[k].soc).slice(0,8);
 if(!S.items){S.items=structuredClone(KIT);if(!S.fItemShow.length)S.fItemShow=['holy','oil'];if(!S.sItemShow.length)S.sItemShow=['symbol','trinket']}
+if(!S.kitXbow){S.kitXbow=1;if(!S.items.crossbow)S.items.crossbow={q:1,fight:1};if(!S.items.bolts)S.items.bolts={q:20,fight:1}}
 syncItems();
 /* =====================================================================
    СЕРВЕР (Supabase): копия листа хранится ещё и в интернете.
@@ -3068,6 +3080,8 @@ const INFO={
   <p><b>Засада</b> (подготовка): «когда случится X, сделаю Y». Тратишь реакцию, когда X случится. Заклинание при этом держишь концентрацией.</p>
   <p><b>Поиск</b>: проверка Восприятия или Анализа. <b>Засесть</b> (Скрытность), <b>Использовать предмет</b> (зелье, масло).</p>`,acts:''}),
  w_dagger:()=>({t:'Кинжал',sub:WEAP.dagger.meta,body:WEAP.dagger.d(),acts:noAct()?noActBtn():`<button data-act="atk:dagger">Атаковать: к20 ${sg(daggerHit())}</button>`}),
+ w_crossbow:()=>{const need=[];if(!xbowOn())need.push(needB('Надень арбалет в «Экипировке» (в руку)','tab:p-equip'));if(!bolts())need.push(needB('Нет болтов: добавь их в «Инвентаре» (+ у болтов)','tab:p-inv'));
+  return{t:'Лёгкий арбалет',sub:WEAP.crossbow.meta+` · болтов ${bolts()}`,body:WEAP.crossbow.d()+todoBox(need),acts:noAct()?noActBtn():(need.length?'':`<button data-act="atk:crossbow">Выстрелить: к20 ${sg(daggerHit())}</button>`)}},
  opp:()=>({t:'Удар вслед',sub:'атака по возможности · реакция',body:`<p>Когда враг, которого ты видишь, <b>уходит</b> из досягаемости твоего оружия (5 футов), можешь реакцией один раз ударить его в рукопашную.</p><p>Кинжалом: <b>к20 ${sg(daggerHit())}</b>, урон 1к4 ${sg(mod(S.ab.dex))} колющий.</p><p class="mu">Не срабатывает, если враг использовал Отход, телепортировался или его двигают силой. Реакция одна на раунд: потратил на удар, Щит до твоего хода уже нельзя.</p>`,acts:noAct()?noActBtn():`<button data-act="atk:dagger">Ударить вслед: к20 ${sg(daggerHit())}</button>`}),
  slots:()=>({t:'Ячейки 1 круга',sub:`осталось ${slotsLeft()} из ${slotsTot()}`,body:`<p>Ячейка это «заряд» для заклинания 1 круга: Щит, Цветной шарик, Очарование личности. Сотворил, и одна ячейка погасла.</p><p><b>Заговоры</b> (Огненный снаряд, Дружба и другие) ячеек не тратят, их можно творить без конца.</p><p>Ячейки возвращает <b>долгий отдых</b>. В бою ячейку можно создать из 2 единиц чародейства (Гибкое колдовство).</p>${S.slots.extra?`<p class="mu">Из них созданных из единиц: ${S.slots.extra}. Они пропадут после долгого отдыха.</p>`:''}`,
   acts:`<button data-info="flex">Гибкое колдовство ›</button><button class="ghost" data-act="slotBack" ${S.slots.used?'':'disabled'}>Вернуть одну ячейку (ошибся)</button>`}),
@@ -3159,7 +3173,7 @@ Object.keys(SPFULL).forEach(k=>INFO['full_'+k]=()=>{const f=SPFULL[k],p=SPELLS[k
 const ESLOT={head:{n:'Голова',p:[.485,.06]},eyes:{n:'Глаза',p:[.485,.11]},neck:{n:'Шея',p:[.485,.19]},cloak:{n:'Плечи',p:[.485,.245]},body:{n:'Тело',p:[.485,.35]},
  hands:{n:'Кисти рук',p:[.15,.56]},belt:{n:'Пояс',p:[.485,.483]},ring1:{n:'Кольцо',p:[.14,.58]},ring2:{n:'Кольцо',p:[.86,.58]},feet:{n:'Обувь',p:[.485,.94]},
  main:{n:'Правая рука',p:[.14,.56]},back:{n:'Спина',p:[.485,.3]},off:{n:'Левая рука',p:[.86,.56]}};
-const EQK={hat:['head'],eyes:['eyes'],amulet:['neck'],symbol:['neck','hand'],cloak:['cloak'],fine:['body'],clothes:['body'],pouch:['belt'],explorer:['back'],dagger:['hand'],wand:['hand']};
+const EQK={hat:['head'],eyes:['eyes'],amulet:['neck'],symbol:['neck','hand'],cloak:['cloak'],fine:['body'],clothes:['body'],pouch:['belt'],explorer:['back'],dagger:['hand'],crossbow:['hand'],wand:['hand']};
 const EQTN={head:'Голова (шляпа, шлем)',eyes:'Глаза (линзы, очки)',neck:'Шея (амулет)',cloak:'Плечи (плащ)',body:'Тело (одежда, доспех)',hands:'Кисти рук (перчатки)',belt:'Пояс',ring:'Палец (кольцо)',feet:'Ноги (обувь)',hand:'Рука (оружие, щит, посох)',back:'Спина (рюкзак)'};
 const EQI={
  head:'<path d="M4 21c4 2.5 20 2.5 24 0M8 20.5c0-6 2.5-11 8-11s8 5 8 11M8.6 16.5h14.8"/>',
@@ -3175,6 +3189,7 @@ const EQI={
  off:'<path d="M10.5 28V15.5L8 10a1.5 1.5 0 0 1 2.7-1.3l2 3.8V5.5a1.5 1.5 0 0 1 3 0v6.5-8a1.5 1.5 0 0 1 3 0v8-6a1.5 1.5 0 0 1 3 0v10l1.2-2.6a1.5 1.5 0 0 1 2.7 1.2L23.5 22c-1 3.8-2.8 6-5.5 6Z"/>',
  back:'<path d="M11 8.5c0-3.5 2-5.5 5-5.5s5 2 5 5.5"/><path d="M7 12c0-2 1.8-3.5 4-3.5h10c2.2 0 4 1.5 4 3.5v14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2Z"/><path d="M7 16.5h18M14 16.5v4h4v-4"/>'};
 const EQII={dagger:EQI.main,
+ crossbow:'<path d="M16 4v24M6 10c3 3 7 4 10 4s7-1 10-4"/><path d="M6 10 16 21 26 10" stroke-width="1"/><path d="M14 5l2-2 2 2"/><path d="M14 25h4"/>',
  wand:'<path d="M6.5 26.5 22 11"/><path d="M5 25l2.5 2.5"/><path d="M25 3v8M21 7h8M22.2 4.2l5.6 5.6M27.8 4.2l-5.6 5.6" stroke-width="1"/>',
  symbol:'<circle cx="16" cy="16" r="5.5"/><path d="M16 3v5M16 24v5M3 16h5M24 16h5M6.8 6.8l3.5 3.5M21.7 21.7l3.5 3.5M25.2 6.8l-3.5 3.5M10.3 21.7l-3.5 3.5"/>',
  pouch:'<path d="M10.5 10.5c-3 3-4.5 8-3.5 12 1 4 5 6 9 6s8-2 9-6c1-4-.5-9-3.5-12Z"/><path d="M11 10.5h10M13 6l3 4.5 3-4.5"/>',
@@ -3279,7 +3294,7 @@ function act(a){
  if(a.startsWith('condOn:')){const k=a.slice(7);S.cond[k]=1;save();renderAll();closeDrawer();vib([20,40,30]);setTimeout(()=>{const c=document.querySelector(`.cnd[data-info="c_${k}"]`);if(c){c.classList.remove('stamp');void c.offsetWidth;c.classList.add('stamp')}},30);return}
  if(a.startsWith('condOff:')){delete S.cond[a.slice(8)];save();renderAll();closeDrawer();vib(10);return}
  if(a==='closeD'){closeDrawer();return}
- if(a.startsWith('atk:')){if(noAct())return;closeDrawer();return d20(atkSpec(a.slice(4)))}
+ if(a.startsWith('atk:')){if(noAct())return;const wk=a.slice(4);if(wk==='crossbow'){if(!xbowOn()||!bolts())return;S.items.bolts.q--;save();renderAll()}closeDrawer();return d20(atkSpec(wk))}
  if(a==='shieldOff'){S.shieldOn=0;re();closeDrawer();vib(10);return}
  if(a==='slotBack'){if(S.slots.used>0)S.slots.used--;re();openInfo('slots',true);vib(10);return}
  if(a==='pt2slot'){if(S.spt.max-S.spt.used<2)return;S.spt.used+=2;if(S.slots.used>0)S.slots.used--;else S.slots.extra++;re();openInfo('flex',true);vib([15,30,40]);toast('Две единицы сплавлены в ячейку 1 круга');return}
@@ -5993,7 +6008,7 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 
 actDecorSafe();
 /* ===== /ДЕЙСТВУЮЩИЕ ЗАКЛИНАНИЯ */
-const BUILD='2026-11-28-85';
+const BUILD='2026-11-28-86';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
