@@ -6456,6 +6456,10 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 .bstat.bart div{background:rgba(20,27,36,.5)}
 /* «Правка листа»: окно прокручивается, когда выше экрана (2026-11-28) */
 .sheetbg form{max-height:calc(100vh - 14px);max-height:calc(100dvh - 14px - env(safe-area-inset-top));overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+/* «Правка листа» шторкой: ручка сверху, «Свернуть», стягивается пальцем вниз (2026-11-28) */
+.sheetbg form .sgrab{position:sticky;top:0;z-index:3;flex:none;display:flex;align-items:center;justify-content:center;margin:-16px -16px 0;padding:9px 16px 7px;background:#1f2832;cursor:pointer;touch-action:none}
+.sheetbg form .sgrab i{width:44px;height:5px;border-radius:3px;background:rgba(236,228,216,.3)}
+.sheetbg form .sgrab .sfold{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--mute);font:600 13px Alegreya,serif;padding:8px 6px;cursor:pointer}
 </style>`);
 
 /* ---------- РАЗГОВОР С ЖИВОТНЫМИ: звериный зов приходит слева рваной, спутанной волной, ударяет в Арадию
@@ -7875,9 +7879,29 @@ setTimeout(cloudStart,600);
 addEventListener('online',()=>cloudPush());
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){clearTimeout(cT);cloudPush(true)}else cloudPull().then(d=>{if(!d)cloudPush()})});
 addEventListener('pagehide',()=>cloudPush(true));
+/* «Правка листа» шторкой: свернуть кнопкой, ручкой, тапом по фону или стянуть пальцем вниз */
+let sheetFoldT=0;
+function sheetFold(){const bg=$('sheet'),f=$('form');if(!bg.classList.contains('on')||sheetFoldT)return;
+ f.style.transition='transform .26s cubic-bezier(.45,0,.9,.6)';f.style.transform='translateY(105%)';bg.style.transition='background .26s';bg.style.background='rgba(6,4,8,0)';vib(8);
+ sheetFoldT=setTimeout(()=>{sheetFoldT=0;bg.classList.remove('on');f.style.transition='';f.style.transform='';bg.style.transition='';bg.style.background=''},270)}
+{const _es=editSheet;editSheet=function(){if(sheetFoldT){clearTimeout(sheetFoldT);sheetFoldT=0;const f0=$('form'),b0=$('sheet');f0.style.transition=f0.style.transform=b0.style.transition=b0.style.background=''}
+ _es();$('form').insertAdjacentHTML('afterbegin','<div class="sgrab"><i></i><button type="button" class="sfold">Свернуть</button></div>');$('form').scrollTop=0}}
+(function(){const f=$('form'),bg=$('sheet');let y0=0,dy=0,mode=0,t0=0,grab=false;
+ f.addEventListener('click',e=>{if(e.target.closest('.sgrab'))sheetFold()});
+ bg.addEventListener('click',e=>{if(e.target===bg&&f.querySelector('.sgrab')){e.stopImmediatePropagation();sheetFold()}},true);
+ f.addEventListener('touchstart',e=>{if(sheetFoldT||!f.querySelector('.sgrab'))return;y0=e.touches[0].clientY;dy=0;mode=0;t0=Date.now();grab=!!e.target.closest('.sgrab')},{passive:true});
+ f.addEventListener('touchmove',e=>{if(sheetFoldT)return;const d=e.touches[0].clientY-y0;
+  if(mode===0){if(Math.abs(d)<6)return;mode=(d>0&&(f.scrollTop<=0||grab))?1:2;if(mode===1){f.style.transition='none';f.style.overflowY='hidden'}}
+  if(mode!==1)return;e.preventDefault();dy=d>0?d*.9:d*.12;f.style.transform=`translateY(${dy}px)`;
+  bg.style.background=`rgba(6,4,8,${(.7*(1-Math.min(1,Math.max(0,dy)/f.offsetHeight))).toFixed(3)})`},{passive:false});
+ const end=()=>{if(mode!==1){mode=0;return}mode=0;f.style.overflowY='';
+  if(dy>90||(dy>30&&dy/Math.max(1,Date.now()-t0)>.5)){sheetFold();return}
+  f.style.transition='transform .34s cubic-bezier(.2,1.25,.4,1)';f.style.transform='';bg.style.background='';setTimeout(()=>{f.style.transition=''},360)};
+ f.addEventListener('touchend',end);f.addEventListener('touchcancel',end);
+})();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-28-43';
+const BUILD='aradia-2026-11-28-44';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
