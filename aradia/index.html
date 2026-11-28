@@ -7907,7 +7907,8 @@ function sheetFold(){const bg=$('sheet'),f=$('form');if(!bg.classList.contains('
    Концентрация по-прежнему в S.conc, Доспехи мага в S.mArm: actNorm() держит S.act в согласии с ними.
    Пометки статичные; эффект только в момент включения и выключения. */
 const ACT_UNI={'минут':1,'минута':1,'минуты':1,'час':60,'часа':60,'часов':60,'день':1440,'дня':1440,'дней':1440};
-function actDur(k){const p=SPELLS[k];if(!p||!p.meta||k==='shield')return 0;
+const ACT_ROUND={blade_ward:'до конца твоего следующего хода',absorb_elements:'до начала твоего следующего хода'};
+function actDur(k){const p=SPELLS[k];if(!p||!p.meta||k==='shield')return 0;if(ACT_ROUND[k])return 1;
  for(const seg of String(p.meta).split(' · ')){const s=seg.trim();
   if(/^пока не рассеян/.test(s))return 1e9;
   const m=s.match(/^(?:концентрация\s+)?(?:до\s+)?(\d+)\s+(минут[аы]?|час(?:а|ов)?|д(?:ень|ня|ней))$/);
@@ -7927,7 +7928,7 @@ function actNorm(){if(typeof S!=='object'||!S)return {};if(!S.act||typeof S.act!
  return A}
 const actKeys=()=>{const A=actNorm();return Object.keys(A).sort((a,b)=>(SPELLS[b].conc?1:0)-(SPELLS[a].conc?1:0))};
 const actLeft=k=>{const d=actDur(k),A=S.act||{};return d>=1e8?1e9:Math.max(0,d-((A[k]&&A[k].m)||0))};
-const actLeftTx=k=>{const l=actLeft(k);return l>=1e8?'пока не рассеешь':'ещё '+actFmt(l)};
+const actLeftTx=k=>{if(ACT_ROUND[k])return ACT_ROUND[k];const l=actLeft(k);return l>=1e8?'пока не рассеешь':'ещё '+actFmt(l)};
 function actStop(k){if(k===S.conc){S.conc=null}if(k==='mage_armor')S.mArm=0;if(S.act)delete S.act[k]}
 function actEnd(k){const wasArm=k==='mage_armor'&&S.mArm;
  if(k===S.conc&&typeof _actA==='function'){actFade(k);_actA('concEnd');if(wasArm)armFx(false);return}
@@ -7940,7 +7941,7 @@ function actPass(min){const {gone,arm}=actPassRaw(min);save();renderAll();vib(go
  if(openInfoKey&&/^act_/.test(openInfoKey)&&!(S.act||{})[openInfoKey.slice(4)]){if(actKeys().length)openInfo('actlist',true);else closeDrawer()}
  else if(openInfoKey==='actlist'&&!actKeys().length)closeDrawer()}
 /* кнопка «время прошло» под длительность */
-function actStepBtn(k){const l=actLeft(k);if(l>=1e8)return '';
+function actStepBtn(k){const l=actLeft(k);if(l>=1e8||ACT_ROUND[k])return '';
  const st=l<=1?1:l<=10?1:l<=60?10:60,lb=st===1?'Прошла минута':st===10?'Прошло 10 минут':'Прошёл час';
  return `<button class="ghost" data-act="actPass:${st}">${lb}${l<=st?': закончится':''}</button>`}
 /* шторки */
@@ -7951,7 +7952,7 @@ INFO.actlist=()=>{const ks=actKeys();return{t:'Действующие закли
 function actInfo(k){const p=SPELLS[k],on=!!(S.act||{})[k],d=actDur(k);
  return{t:p.n,sub:on?`действует · ${actLeftTx(k)}`:'сейчас не действует',bang:INFO['full_'+k]?'full_'+k:null,
   body:`<p>${p.short?p.short.charAt(0).toUpperCase()+p.short.slice(1)+'.':''}</p>`
-   +(on?`<div class="how actst"><b>Действует.</b> Длится ${actFmt(d)}${d<1e8?`, осталось <b>${actLeftTx(k).replace('ещё ','')}</b>`:''}.${p.conc?' Держится на концентрации: ранение (спасбросок Телосложения), новое заклинание с концентрацией или потеря сознания обрывают его.':''}</div>`:'')
+   +(on?`<div class="how actst"><b>Действует.</b> Длится ${ACT_ROUND[k]||actFmt(d)}${d<1e8&&!ACT_ROUND[k]?`, осталось <b>${actLeftTx(k).replace('ещё ','')}</b>`:''}.${p.conc?' Держится на концентрации: ранение (спасбросок Телосложения), новое заклинание с концентрацией или потеря сознания обрывают его.':''}</div>`:'')
    +`<div class="how">Когда в игре проходит время, нажми кнопку ниже. Долгий отдых заканчивает всё, что длится до 8 часов.</div>`,
   acts:on?`${actStepBtn(k)}<button class="ghost" data-act="actEnd:${k}">Закончить «${p.n}»</button><button class="ghost" data-info="sp_${k}">Описание заклинания ›</button>`:`<button class="ghost" data-info="sp_${k}">Описание заклинания ›</button>`}}
 const _actOI=openInfo;
@@ -7967,13 +7968,13 @@ if(INFO.ac){const _acI=INFO.ac;INFO.ac=()=>{const d=_acI();if(!S.mArm)return d;c
   body:`<div class="how actst"><b>Доспехи мага действуют</b> · ${actLeftTx('mage_armor')}. Класс доспеха 13 + Ловкость, пока на тебе нет доспехов.${typeof S.ac==='number'&&S.ac>=ma?' Сейчас твой обычный класс доспеха не ниже, поэтому он и считается.':''}</div>`+d.body,
   acts:`<button class="ghost" data-info="act_mage_armor">Доспехи мага ›</button>`+(d.acts||'')})}}
 /* пометки на экране */
-function actDecor(){const ks=actKeys(),A=S.act||{};
+function actDecor(){const ks=actKeys(),A=S.act||{};try{auDecor()}catch(e){}
  /* кнопки заклинаний в Бою и в Общении */
  document.querySelectorAll('.atk[data-info^="sp_"],.sp[data-info^="sp_"]').forEach(b=>{const k=b.dataset.info.slice(3);if(!A[k]||k==='shield')return;
   b.classList.add('on','acton');const sm=b.querySelector(':scope > small');const tx=(SPELLS[k].conc?'концентрация · ':'действует · ')+actLeftTx(k);if(sm)sm.textContent=tx;else b.insertAdjacentHTML('beforeend',`<small>${tx}</small>`)});
  /* «Состояния» на главной: значки действующих заклинаний первыми */
  const cn=document.querySelector('#spare .cnds');if(cn){cn.querySelectorAll('.spa').forEach(x=>x.remove());
-  cn.insertAdjacentHTML('afterbegin',ks.map(k=>`<button class="cnd spa" data-info="act_${k}"><i class="sg">✦</i>${SPELLS[k].n}<small>${actLeft(k)>=1e8?'':' · '+actFmt(actLeft(k))}</small></button>`).join(''))}
+  cn.insertAdjacentHTML('afterbegin',ks.map(k=>`<button class="cnd spa" data-info="act_${k}"><i class="sg">✦</i>${SPELLS[k].n}<small>${actLeft(k)>=1e8||ACT_ROUND[k]?'':' · '+actFmt(actLeft(k))}</small></button>`).join(''))}
  /* Бой: карточка рядом с концентрацией */
  const fr=document.getElementById('fRes');if(fr){fr.querySelectorAll('.actc').forEach(x=>x.remove());const nc=ks.filter(k=>!SPELLS[k].conc),cb=fr.querySelector('[data-info="conc"]');
   if(nc.length){const h=nc.length===1?`<button class="fc armed actc" data-info="act_${nc[0]}"><span class="t">${SPELLS[nc[0]].n}</span><small class="cc">действует · ${actLeftTx(nc[0]).replace('ещё ','')}</small></button>`:`<button class="fc armed actc" data-info="actlist"><span class="t">Действуют: ${nc.length}</span><small class="cc">${nc.map(k=>SPELLS[k].n).join(', ')}</small></button>`;
@@ -8027,7 +8028,7 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 .atk.acton small,.sp.acton small{color:#f1e8ff!important;opacity:1}
 .fc.actc .cc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .tok.buff{border-color:var(--violet);box-shadow:0 0 0 1px var(--violet),0 0 14px rgba(165,124,255,.35);position:relative}
-.tok .bmk{position:absolute;left:0;right:0;bottom:2px;text-align:center;font-size:9.5px;line-height:1;letter-spacing:.02em;color:#e9defc;opacity:.9;pointer-events:none;white-space:nowrap}
+.tok .bmk{position:absolute;left:0;right:0;bottom:1px;text-align:center;font-size:9.5px;line-height:1;letter-spacing:.02em;color:#e9defc;opacity:.9;pointer-events:none;white-space:nowrap}
 .acign{animation:acign 1.2s cubic-bezier(.2,.9,.3,1)}
 @keyframes acign{0%{transform:scale(.82);filter:brightness(2.2)}35%{transform:scale(1.07);filter:brightness(1.7)}100%{transform:none;filter:none}}
 .acsp{position:fixed;width:5px;height:5px;border-radius:50%;pointer-events:none;z-index:9998;mix-blend-mode:screen}
@@ -8041,9 +8042,132 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 .acx{flex:none;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.2);color:inherit;font:inherit;font-size:13.5px}
 @media (prefers-reduced-motion:reduce){.acign{animation:none}}
 </style>`);
+/* --- ОЖИВАЮЩИЕ КНОПКИ: у каждого включаемого заклинания на кнопке своя картинка эффекта.
+   Не включено: картинка бледная и едва мерцает. Включено: та же картинка яркая и движется.
+   Семья (AUF) даёт рисунок и движение, свой оттенок и раскладка у каждого заклинания из его ключа. */
+const AUF={
+ mail:'mage_armor',
+ ward:'blade_ward',
+ hex:'stoneskin protection_from_energy protection_from_evil_and_good protection_from_poison antilife_shell intellect_fortress freedom_of_movement absorb_elements resistance',
+ bark:'barkskin shillelagh guardian_of_nature tree_stride',
+ vine:'entangle spike_growth grasping_vine speak_with_plants pass_without_trace snare wrath_of_nature hallucinatory_terrain',
+ rune:'detect_magic comprehend_languages tongues detect_thoughts detect_poison_and_disease locate_object locate_creature scrying clairvoyance geas planar_binding skill_empowerment enhance_ability guidance contagion creation teleportation_circle',
+ eye:'darkvision see_invisibility beast_sense true_strike',
+ mist:'fog_cloud darkness gaseous_form stinking_cloud cloudkill feign_death catnap sickening_radiance',
+ star:'faerie_fire dancing_lights light daylight moonbeam hypnotic_pattern skywrite wall_of_light minor_illusion',
+ flame:'produce_flame create_bonfire flame_blade flaming_sphere heat_metal flame_arrows fire_shield wall_of_fire immolation ashardalons_stride melfs_minute_meteors elemental_bane',
+ wave:'water_breathing water_walk wall_of_water watery_sphere control_water maelstrom',
+ wind:'gust_of_wind warding_wind wind_wall fly levitate feather_fall control_winds jump longstrider expeditious_retreat haste far_step dust_devil',
+ ghost:'mirror_image blur blink invisibility greater_invisibility disguise_self alter_self seeming silent_image major_image phantasmal_force enlarge_reduce polymorph',
+ thread:'hold_person hold_monster charm_person charm_monster dominate_person dominate_beast suggestion crown_of_madness friends confusion enemies_abound banishment slow earthbind telekinesis animal_friendship',
+ bolt:'witch_bolt call_lightning storm_sphere',
+ frost:'sleet_storm',
+ stone:'meld_into_stone wall_of_stone transmute_rock',
+ paw:'speak_with_animals animal_messenger beast_bond summon_beast conjure_animals giant_insect conjure_woodland_beings summon_fey summon_elemental conjure_minor_elementals conjure_elemental summon_draconic_spirit animate_objects mage_hand bigbys_hand',
+ heal:'healing_spirit false_life',
+ bug:'insect_plague',
+ blade:'cloud_of_daggers vampiric_touch enervation'};
+const AUK={};Object.keys(AUF).forEach(f=>AUF[f].split(' ').forEach(k=>AUK[k]=f));
+const AUC={mail:'#e6dcff',ward:'#f1e6c8',hex:'#d9c6ff',bark:'#e2c79a',vine:'#b9e6a0',rune:'#f6d58e',eye:'#c9e2ff',mist:'#e4e0f2',star:'#fff1b8',flame:'#ffc27a',wave:'#a8ddff',wind:'#e2f3ff',ghost:'#f0d8ff',thread:'#ffb8d8',bolt:'#fff3a0',frost:'#e6f8ff',stone:'#e0d4c0',paw:'#f3dcb8',heal:'#c8f5d0',bug:'#e8e0a0',blade:'#e8e8f4'};
+const auFam=k=>AUK[k]||(actDur(k)?'rune':null);
+function auRng(k){let h=2166136261;for(const c of k)h=Math.imul(h^c.charCodeAt(0),16777619);return()=>{h=Math.imul(h^h>>>15,2246822507);h=Math.imul(h^h>>>13,3266489909);h^=h>>>16;return(h>>>0)/4294967296}}
+function auSvg(k){const f=auFam(k);if(!f)return '';const R=auRng(k),c=AUC[f],r=(a,b)=>a+R()*(b-a),F=n=>n.toFixed(1),n=(m,fn)=>Array.from({length:m},(_,i)=>fn(i)).join('');
+ const hue=Math.round(r(-22,22));let g='';
+ if(f==='hex'){const s=r(9,12);g=`<g class="m">`+n(Math.ceil(80/(s*1.5))+2,y=>n(Math.ceil(200/(s*1.732))+2,x=>{const cx=x*s*1.732+(y%2?s*.866:0),cy=y*s*1.5;let d='';for(let j=0;j<6;j++){const a=j/6*6.283+.5236;d+=(j?'L':'M')+F(cx+Math.cos(a)*s*.9)+' '+F(cy+Math.sin(a)*s*.9)}return `<path d="${d}Z"/>`}))+`</g>`}
+ else if(f==='mail'){const s=r(9,11);g=`<g class="m">`+n(Math.ceil(80/(s*.6))+2,y=>n(Math.ceil(200/s)+2,x=>{const cx=x*s+(y%2?s/2:0),cy=y*s*.6;return `<path d="M${F(cx-s/2)} ${F(cy)} A${F(s/2)} ${F(s/2)} 0 0 0 ${F(cx+s/2)} ${F(cy)}"/>`}))+`</g>`}
+ else if(f==='ward'){const cx=r(138,160);g=`<g class="m rings" style="transform-origin:${F(cx)}px 40px">${n(3,i=>`<circle cx="${F(cx)}" cy="40" r="${14+i*11}" stroke-dasharray="${i===1?'3 3':'none'}"/>`)}</g><g class="m spin" style="transform-origin:${F(cx)}px 40px">${n(4,i=>{const a=i/4*6.283+.785,x=cx+Math.cos(a)*44,y=40+Math.sin(a)*44;return `<path d="M${F(x-5)} ${F(y-5)} L${F(x+5)} ${F(y+5)} M${F(x+5)} ${F(y-5)} L${F(x-5)} ${F(y+5)}" stroke-width="1.4"/>`})}</g>`}
+ else if(f==='bark'){g=`<g class="m">`+n(9,i=>{let x=i*24+r(-6,6),d=`M${F(x)} -4`;for(let y=0;y<=84;y+=12)d+=` Q${F(x+r(-7,7))} ${y+6} ${F(x+r(-3,3))} ${y+12}`;return `<path d="${d}"/>`})+`</g>`}
+ else if(f==='vine'){g=n(3,i=>{const x0=r(10,190);let d=`M${F(x0)} 84 C${F(x0+r(-30,30))} 56 ${F(x0+r(-40,40))} 34 ${F(x0+r(-30,30))} ${F(r(4,20))}`;return `<g class="m v${i}" style="transform-origin:${F(x0)}px 84px"><path d="${d}"/>${n(4,j=>`<path d="M0 0 C3 -5 9 -6 13 -2 C9 3 3 3 0 0Z" transform="translate(${F(x0+r(-22,22))} ${F(70-j*16)}) rotate(${F(r(-160,20))}) scale(.9)" class="fl"/>`)}</g>`})}
+ else if(f==='rune'){const cx=r(120,170),cy=40,R0=r(26,32),ch='ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ';g=`<g class="m spin" style="transform-origin:${F(cx)}px ${cy}px"><circle cx="${F(cx)}" cy="${cy}" r="${F(R0)}"/><circle cx="${F(cx)}" cy="${cy}" r="${F(R0-7)}" stroke-dasharray="2 4"/>${n(8,i=>{const a=i/8*6.283;return `<text x="${F(cx+Math.cos(a)*(R0+8))}" y="${F(cy+Math.sin(a)*(R0+8)+3)}" text-anchor="middle" class="tx">${ch[(R()*ch.length)|0]}</text>`})}</g>`}
+ else if(f==='eye'){const cx=r(130,165);g=`<path d="M${F(cx-34)} 40 Q${F(cx)} 12 ${F(cx+34)} 40 Q${F(cx)} 68 ${F(cx-34)} 40Z"/><g class="m look"><circle cx="${F(cx)}" cy="40" r="10"/><circle cx="${F(cx)}" cy="40" r="4" class="fl"/></g>`+n(10,i=>{const a=i/10*6.283;return `<path d="M${F(cx+Math.cos(a)*40)} ${F(40+Math.sin(a)*30)} L${F(cx+Math.cos(a)*48)} ${F(40+Math.sin(a)*36)}"/>`})}
+ else if(f==='mist'){g=n(5,i=>`<ellipse class="m d${i%3}" cx="${F(r(0,200))}" cy="${F(r(20,72))}" rx="${F(r(30,55))}" ry="${F(r(8,14))}" />`)}
+ else if(f==='star'){g=n(11,i=>{const x=r(8,192),y=r(6,74),s=r(2,5);return `<path class="m tw fl" style="animation-delay:-${F(r(0,3))}s;transform-origin:${F(x)}px ${F(y)}px" d="M${F(x)} ${F(y-s)} L${F(x+s*.3)} ${F(y-s*.3)} L${F(x+s)} ${F(y)} L${F(x+s*.3)} ${F(y+s*.3)} L${F(x)} ${F(y+s)} L${F(x-s*.3)} ${F(y+s*.3)} L${F(x-s)} ${F(y)} L${F(x-s*.3)} ${F(y-s*.3)}Z"/>`})}
+ else if(f==='flame'){g=n(7,i=>{const x=i*30+r(-6,6),h=r(26,46);return `<path class="m fk" style="animation-delay:-${F(r(0,1.6))}s;transform-origin:${F(x)}px 84px" d="M${F(x-9)} 84 C${F(x-10)} ${F(84-h*.5)} ${F(x-2)} ${F(84-h*.7)} ${F(x)} ${F(84-h)} C${F(x+3)} ${F(84-h*.6)} ${F(x+10)} ${F(84-h*.45)} ${F(x+9)} 84Z"/>`})}
+ else if(f==='wave'){g=`<g class="m slide">`+n(3,i=>{const y=30+i*16,a=r(4,7);let d=`M-200 ${y}`;for(let x=-200;x<=400;x+=40)d+=` q10 ${-a} 20 0 t20 0`;return `<path d="${d}"/>`})+`</g>`}
+ else if(f==='wind'){g=`<g class="m slide">`+n(6,i=>{const y=r(10,72),x=r(-200,200),w=r(50,110);return `<path d="M${F(x)} ${F(y)} C${F(x+w*.3)} ${F(y-6)} ${F(x+w*.6)} ${F(y+6)} ${F(x+w)} ${F(y)} c8 -2 10 -10 4 -12"/><path d="M${F(x+200)} ${F(y)} C${F(x+200+w*.3)} ${F(y-6)} ${F(x+200+w*.6)} ${F(y+6)} ${F(x+200+w)} ${F(y)} c8 -2 10 -10 4 -12"/>`})+`</g>`}
+ else if(f==='ghost'){const x=r(130,160);const fig=`<circle cx="${F(x)}" cy="22" r="9"/><path d="M${F(x-16)} 84 C${F(x-16)} 50 ${F(x-10)} 34 ${F(x)} 34 C${F(x+10)} 34 ${F(x+16)} 50 ${F(x+16)} 84"/>`;g=`<g class="m g1">${fig}</g><g class="m g2">${fig}</g><g opacity=".9">${fig}</g>`}
+ else if(f==='thread'){g=n(5,i=>{const x=20+i*40+r(-8,8),l=r(30,60);return `<g class="m sw" style="transform-origin:${F(x)}px 0;animation-delay:-${F(r(0,3))}s"><path d="M${F(x)} 0 L${F(x)} ${F(l)}"/><circle cx="${F(x)}" cy="${F(l+4)}" r="3.5" class="fl"/></g>`})}
+ else if(f==='bolt'){g=n(2,i=>{let x=r(20,180),d=`M${F(x)} 0`;for(let y=12;y<=84;y+=12){x+=r(-14,14);d+=` L${F(x)} ${y}`}return `<path class="m zz z${i}" d="${d}"/>`})}
+ else if(f==='frost'){g=n(5,i=>{const x=r(10,190),y=r(10,70),s=r(6,11);return `<g class="m tw" style="animation-delay:-${F(r(0,3))}s;transform-origin:${F(x)}px ${F(y)}px">${n(3,j=>{const a=j/3*3.1416;return `<path d="M${F(x-Math.cos(a)*s)} ${F(y-Math.sin(a)*s)} L${F(x+Math.cos(a)*s)} ${F(y+Math.sin(a)*s)}"/>`})}</g>`})}
+ else if(f==='stone'){g=`<g class="m pul">`+n(6,i=>{const x=i*36+r(-6,6),y=r(40,70),w=r(20,30),h=r(12,20);return `<path d="M${F(x)} ${F(y)} l${F(w*.3)} ${F(-h)} l${F(w*.5)} ${F(r(-3,3))} l${F(w*.2)} ${F(h)}Z"/>`})+`</g>`}
+ else if(f==='paw'){g=n(5,i=>{const x=20+i*38,y=i%2?52:66;return `<g class="m st" style="animation-delay:${(i*.35).toFixed(2)}s"><ellipse cx="${x}" cy="${y}" rx="5" ry="4" class="fl"/>${n(3,j=>`<circle cx="${x-5+j*5}" cy="${y-7-(j===1?1.5:0)}" r="1.8" class="fl"/>`)}</g>`})}
+ else if(f==='heal'){g=n(7,i=>{const x=r(10,190),y=r(20,80),s=r(3,5);return `<path class="m up" style="animation-delay:-${F(r(0,3))}s" d="M${F(x-s)} ${F(y)} H${F(x+s)} M${F(x)} ${F(y-s)} V${F(y+s)}"/>`})}
+ else if(f==='bug'){g=n(12,i=>`<circle class="m jit fl" style="animation-delay:-${F(r(0,1))}s" cx="${F(r(5,195))}" cy="${F(r(5,75))}" r="1.6"/>`)}
+ else if(f==='blade'){const cx=r(130,165);g=`<g class="m spin" style="transform-origin:${F(cx)}px 40px">${n(6,i=>{const a=i/6*6.283,x=cx+Math.cos(a)*26,y=40+Math.sin(a)*26;return `<path d="M${F(x)} ${F(y)} l${F(Math.cos(a+1.6)*12)} ${F(Math.sin(a+1.6)*12)}" stroke-width="2"/>`})}</g>`}
+ return `<i class="aur au-${f}" style="--auc:${c};filter:hue-rotate(${hue}deg)"><svg viewBox="0 0 200 80" preserveAspectRatio="xMidYMid slice">${g}</svg></i>`}
+/* короткое описание жёлтым там, где на кнопке только название */
+const AUD={mage_armor:()=>({d:String(13+mod(S.ab.dex)),t:'класс доспеха'}),blade_ward:()=>({d:'½',t:'урона от оружия'}),absorb_elements:()=>({d:'½',t:'урона стихией'})};
+function auDecor(){const A=S.act||{};
+ document.querySelectorAll('.atk[data-info^="sp_"],.sp[data-info^="sp_"]').forEach(b=>{const k=b.dataset.info.slice(3);if(!SPELLS[k])return;
+  const isSh=k==='shield';if(!isSh&&!auFam(k))return;
+  if(!isSh&&!b.querySelector(':scope>.aur')){b.classList.add('aurb');b.insertAdjacentHTML('afterbegin',auSvg(k))}
+  if(b.classList.contains('atk')&&!b.querySelector('.hit')){const D=AUD[k]?AUD[k]():null,p=SPELLS[k];
+   const h=D?`<div class="hit"><span class="d">${D.d}</span><span class="dm aud">${D.t}</span></div>`:p.short?`<div class="hit"><span class="dm aud">${p.short}</span></div>`:'';
+   if(h){const t=b.querySelector(':scope>b');if(t)t.insertAdjacentHTML('afterend',h)}}
+  const on=isSh?!!S.shieldOn:!!A[k];b.classList.toggle('auon',on)})}
+document.head.insertAdjacentHTML('beforeend',`<style>
+.aurb{isolation:isolate}
+.aurb>.fxl{display:none!important}
+.aur{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden;border-radius:inherit;opacity:.2;animation:aurIdle 6s ease-in-out infinite}
+.aur svg{position:absolute;inset:0;width:100%;height:100%}
+.aur{-webkit-mask:linear-gradient(90deg,rgba(0,0,0,.3),rgba(0,0,0,.55) 45%,#000 85%);mask:linear-gradient(90deg,rgba(0,0,0,.3),rgba(0,0,0,.55) 45%,#000 85%)}
+.auon>.au-mail,.auon>.au-hex,.auon>.au-bark{opacity:.62}
+.aur svg *{fill:none;stroke:var(--auc);stroke-width:1;vector-effect:non-scaling-stroke}
+.aur svg .fl{fill:var(--auc);stroke:none}
+.aur svg .tx{fill:var(--auc);stroke:none;font:600 9px serif}
+.aur .m{animation-play-state:paused!important}
+.auon>.aur{opacity:.85;animation:none;filter:drop-shadow(0 0 3px var(--auc))}
+.auon>.aur .m{animation-play-state:running!important}
+@keyframes aurIdle{0%,100%{opacity:.17}50%{opacity:.27}}
+.au-hex .m{animation:auHex 3.2s linear infinite;-webkit-mask:linear-gradient(100deg,rgba(0,0,0,.35) 30%,#000 50%,rgba(0,0,0,.35) 70%) 0 0/300% 100%;mask:linear-gradient(100deg,rgba(0,0,0,.35) 30%,#000 50%,rgba(0,0,0,.35) 70%) 0 0/300% 100%}
+@keyframes auHex{from{-webkit-mask-position:100% 0;mask-position:100% 0}to{-webkit-mask-position:-50% 0;mask-position:-50% 0}}
+.au-bark .m{animation:auPul 3.4s ease-in-out infinite}
+.au-mail .m{animation:auMail 2.8s ease-in-out infinite}
+.au-ward .rings{animation:auRing 2.4s ease-in-out infinite}.au-ward .spin{animation:auSpin 12s linear infinite}
+@keyframes auMail{0%,100%{opacity:.55;transform:translateY(0)}50%{opacity:1;transform:translateY(-1.5px)}}
+@keyframes auRing{0%,100%{transform:scale(.94);opacity:.6}50%{transform:scale(1.06);opacity:1}}
+.au-vine .m{animation:auSway 4.2s ease-in-out infinite alternate}.au-vine .v1{animation-duration:5s}.au-vine .v2{animation-duration:3.6s}
+.au-rune .spin,.au-blade .spin{animation:auSpin 18s linear infinite}.au-blade .spin{animation-duration:6s}
+.au-eye .look{animation:auLook 5s ease-in-out infinite}
+.au-mist .m{animation:auDrift 7s ease-in-out infinite alternate}.au-mist .d1{animation-duration:9s;animation-direction:alternate-reverse}.au-mist .d2{animation-duration:11s}
+.au-star .tw,.au-frost .tw{animation:auTw 2.6s ease-in-out infinite}
+.au-flame .fk{animation:auFk 1.3s ease-in-out infinite alternate}
+.au-wave .slide{animation:auSlide 3s linear infinite}
+.au-wind .slide{animation:auSlideW 2.2s linear infinite}
+.au-ghost .g1{animation:auG1 3s ease-in-out infinite alternate}.au-ghost .g2{animation:auG2 3.6s ease-in-out infinite alternate}
+.au-thread .sw{animation:auSw 3.2s ease-in-out infinite alternate}
+.au-bolt .zz{animation:auZz 1.7s steps(1) infinite}.au-bolt .z1{animation-delay:-.8s}
+.au-stone .pul{animation:auPul 2.8s ease-in-out infinite}
+.au-paw .st{animation:auSt 2.4s ease-in-out infinite}
+.au-heal .up{animation:auUp 2.8s ease-out infinite}
+.au-bug .jit{animation:auJit .5s steps(2) infinite alternate}
+@keyframes auPul{50%{opacity:.55}}
+@keyframes auSway{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+@keyframes auSpin{to{transform:rotate(360deg)}}
+@keyframes auLook{0%,100%{transform:translateX(0)}30%{transform:translateX(-6px)}65%{transform:translateX(6px)}}
+@keyframes auDrift{from{transform:translateX(-18px)}to{transform:translateX(22px)}}
+@keyframes auTw{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
+@keyframes auFk{from{transform:scaleY(.82)}to{transform:scaleY(1.12) skewX(3deg)}}
+@keyframes auSlide{to{transform:translateX(40px)}}
+@keyframes auSlideW{to{transform:translateX(200px)}}
+@keyframes auG1{from{transform:translateX(0);opacity:.2}to{transform:translateX(-14px);opacity:.6}}
+@keyframes auG2{from{transform:translateX(0);opacity:.2}to{transform:translateX(14px);opacity:.5}}
+@keyframes auSw{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
+@keyframes auZz{0%{opacity:0}10%{opacity:1}22%{opacity:.2}30%{opacity:.9}45%,100%{opacity:0}}
+@keyframes auSt{0%,100%{opacity:.15}40%{opacity:1}}
+@keyframes auUp{from{transform:translateY(8px);opacity:0}40%{opacity:1}to{transform:translateY(-26px);opacity:0}}
+@keyframes auJit{from{transform:translate(-1.5px,1px)}to{transform:translate(1.5px,-1px)}}
+.au-paw .m,.au-heal .m,.au-star .tw,.au-frost .tw{transform-box:view-box}
+.hit .dm.aud{color:#ecd29a!important;font-style:italic}
+/* Щит: в покое едва мерцает, движется только когда поднят */
+.fx-shield:not(.on) .fxl svg{opacity:.22!important;-webkit-mask:none!important;mask:none!important;animation:aurIdle 6s ease-in-out infinite!important}
+.fx-shield.on .fxl svg{opacity:1!important;-webkit-mask:linear-gradient(100deg,rgba(0,0,0,.45) 30%,#000 50%,rgba(0,0,0,.45) 70%) 0 0/300% 100%!important;mask:linear-gradient(100deg,rgba(0,0,0,.45) 30%,#000 50%,rgba(0,0,0,.45) 70%) 0 0/300% 100%!important;animation:fhexm 2.6s linear infinite!important}
+@media (prefers-reduced-motion:reduce){.aur{animation:none}.aur .m{animation:none!important}}
+</style>`);
+
 actDecorSafe();
 /* ===== /ДЕЙСТВУЮЩИЕ ЗАКЛИНАНИЯ */
-const BUILD='aradia-2026-11-28-45';
+const BUILD='aradia-2026-11-28-46';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
