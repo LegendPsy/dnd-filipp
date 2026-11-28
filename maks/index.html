@@ -6434,7 +6434,7 @@ function resetBase(){try{localStorage.setItem(RBAK,JSON.stringify(S))}catch(e){}
 function resetUndo(){let b=null;try{b=localStorage.getItem(RBAK)}catch(e){}if(!b)return;
  try{localStorage.setItem(SKEY,b);localStorage.removeItem(RBAK)}catch(e){}location.reload()}
 {const _es=editSheet;editSheet=function(){_es();const f=$('form');
- f.insertAdjacentHTML('beforeend',`<div class="rst"><button class="go" type="button" id="rstBtn">Сбросить до базового 2 уровня</button>
+ f.insertAdjacentHTML('beforeend',`<div class="rst"><button class="go" type="button" id="rstBtn">Сбросить до базового 4 уровня</button>
   <div class="rstq" hidden><p>Уровень, характеристики, хиты, навыки, черты, заклинания и ячейки станут как при создании Макс (4 уровень). Инвентарь, деньги, языки, характер и звери останутся.</p>
   <button class="go rsty" type="button" id="rstYes">Да, сбросить до 2 уровня</button><button class="go" type="button" id="rstNo">Не сбрасывать</button></div>
   ${hasBak()?'<button class="go" type="button" id="rstBack">Вернуть лист как был до сброса</button>':''}</div>`);
@@ -6469,6 +6469,8 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 .bstr.bart .t{position:relative;flex:1;min-width:0}
 .bstat.bart{background-repeat:no-repeat;background-position:right center;background-size:auto 130%;border-radius:10px}
 .bstat.bart div{background:rgba(20,27,36,.5)}
+/* «Правка листа»: окно прокручивается, когда выше экрана (2026-11-28) */
+.sheetbg form{max-height:calc(100vh - 14px);max-height:calc(100dvh - 14px - env(safe-area-inset-top));overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
 </style>`);
 
 /* ---------- РАЗГОВОР С ЖИВОТНЫМИ: звериный зов приходит слева рваной, спутанной волной, ударяет в Макс

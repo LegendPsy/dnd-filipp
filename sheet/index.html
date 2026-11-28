@@ -1095,6 +1095,8 @@ span.need{display:inline-flex;width:auto;margin:3px 0 0;padding:3px 9px;font-siz
 /* следы эффекта призыва */
 .sring{position:fixed;z-index:120;pointer-events:none;border-radius:50%;border:2px solid currentColor;box-shadow:0 0 18px currentColor,inset 0 0 18px currentColor;opacity:0}
 
+/* «Правка листа»: окно прокручивается, когда выше экрана (2026-11-28) */
+.sheetbg form{max-height:calc(100vh - 14px);max-height:calc(100dvh - 14px - env(safe-area-inset-top));overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
 </style>
 </head>
 <body>
