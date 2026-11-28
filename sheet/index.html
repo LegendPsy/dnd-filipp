@@ -221,6 +221,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1;ma
 .tok.shield .v{color:#e3d4ff}
 .fgrid{flex:none;display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .fgrid.c3{grid-template-columns:repeat(3,1fr)}
+.atkpair{display:flex;flex-direction:column;gap:3px;min-width:0}.atkpair.wide{grid-column:1/-1;flex-direction:row}.atkpair.wide>.atk{width:auto;flex:1 1 0}.atkpair.wide>.atk.plain{flex:0 0 38%;display:flex;align-items:center;justify-content:center}.atkpair>.atk{width:100%}.atkpair>.atk.steel{flex:1 1 auto}.atkpair>.atk.plain{flex:0 0 auto;padding:5px 8px!important;min-height:0;text-align:center}.atkpair>.atk.plain b{font-size:14px!important;line-height:1.05;white-space:normal!important;display:block}
 .fgrid.c3 .atk b{white-space:normal;font-size:16px}
 .atk{position:relative;background:linear-gradient(160deg,rgba(40,26,52,.92),rgba(22,15,28,.92));border:1px solid rgba(165,124,255,.3);border-radius:12px;padding:7px 10px 8px;text-align:left;transition:transform .12s cubic-bezier(.3,1.6,.5,1);overflow:hidden}
 .atk.steel{background:linear-gradient(160deg,rgba(44,36,30,.92),rgba(22,17,15,.92));border-color:rgba(233,189,108,.28)}
@@ -1641,14 +1642,15 @@ function renderFight(){
  <button class="tok" data-info="move"><div class="k">Скорость</div><div class="v ${sp!==S.speed?'warn':''}">${String(sp).replace('.',',')}<small style="margin-left:4px">футов</small></div></button>`;
  const left=slotsLeft();
  const fs=spAuto('fight',9);
- const nAct=fs.filter(k=>!SPELLS[k].react).length+2+(xbowOn()?1:0),cmpA=nAct>4;let cmp=cmpA;
+ const nAct=fs.filter(k=>!SPELLS[k].react).length+1+(xbowOn()?1:0),cmpA=nAct>4;let cmp=cmpA;
  const scard=k=>{const p=SPELLS[k],off=(p.lv&&!firstC(p.lv)&&!(k==='shield'&&S.shieldOn))||(metaArm&&!metaOk(metaArm,k,p.lv))||!canPay(p)||!!noAct();
   if(k==='shield')return `<button class="atk ${cmp?'cmp':''} ${S.shieldOn?'on':''} ${off?'off':''} ${metaArm&&!off?'mglow':''}" data-info="sp_shield"><b>${rn(SPELLS.shield)}Щит</b><div class="hit"><span class="d" style="color:#e3d4ff">+5</span><span class="dm">к классу доспеха</span></div><small>${S.shieldOn?'действует до твоего хода':'реакция'}</small></button>`;
   return `<button class="atk ${cmp?'cmp':''} ${off?'off':''} ${metaArm&&!off?'mglow':''}" data-info="sp_${k}"><b${!p.n.includes(' ')&&p.n.length>12?' class="lw"':''}>${rn(p)}${p.n}</b>${p.atk?`<div class="hit"><span class="d">${sg(spellAtk())}</span><span class="dm">${p.hit()}</span></div>`:(cmp?(CAP[k]?`<div class="hit"><span class="dm">${CAP[k]}</span></div>`:''):`<div class="hit"><span class="dm">${p.short}</span></div>`)}<small>${k==='mage_armor'&&S.mArm?'действует, 8 часов':p.lv?(p.where||'')+' · тратит ячейку':'заговор · '+(p.where||'')}${costTag(p)}</small></button>`};
  const acts=fs.filter(k=>!SPELLS[k].react).map(scard);cmp=cmpA;
- acts.push(`<button class="atk steel ${cmp?'cmp':''} ${noAct()?'off':''}" data-info="w_dagger"><b>Кинжал</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">урон 1к4${sg(mod(S.ab.dex))}</span></div><small>5 футов или бросок 20 футов</small></button>`);
  if(xbowOn())acts.push(`<button class="atk steel ${cmp?'cmp':''} ${noAct()||!bolts()?'off':''}" data-info="w_crossbow"><b>Арбалет</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">урон 1к8${sg(mod(S.ab.dex))}</span></div><small>80 футов · болтов ${bolts()}</small></button>`);
- acts.push(`<button class="atk plain ${cmp?'cmp':''}" data-info="actions"><b>Другие действия</b><small style="white-space:normal">Рывок, Отход, Уклонение, Помощь, Засада, Поиск</small></button>`);
+ const dgB=`<button class="atk steel ${cmp?'cmp':''} ${noAct()?'off':''}" data-info="w_dagger"><b>Кинжал</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">урон 1к4${sg(mod(S.ab.dex))}</span></div><small>5 футов или бросок 20 футов</small></button>`;
+ const otB=`<button class="atk plain ${cmp?'cmp':''}" data-info="actions"><b>Другие действия</b></button>`;
+ acts.push(`<div class="atkpair${acts.length<=4&&acts.length%2===0?' wide':''}">${dgB}${otB}</div>`);
  $('fAct').className='fgrid'+(acts.length>4?' c3x':'');$('fAct').innerHTML=acts.join('');
  $('fRe').innerHTML=fs.filter(k=>SPELLS[k].react).map(scard).join('')+`<button class="atk steel ${cmp?'cmp':''} ${noAct()?'off':''}" data-info="opp"><b>Удар вслед</b><div class="hit"><span class="d">${sg(daggerHit())}</span><span class="dm">кинжалом</span></div><small>реакция, враг уходит</small></button>`;
  renderItems('fight');
@@ -6015,7 +6017,7 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 
 actDecorSafe();
 /* ===== /ДЕЙСТВУЮЩИЕ ЗАКЛИНАНИЯ */
-const BUILD='2026-11-28-88';
+const BUILD='2026-11-28-89';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
