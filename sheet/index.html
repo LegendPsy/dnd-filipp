@@ -3811,7 +3811,7 @@ function sShard(o){o.k='d';o.rot=o.rot??RN(0,6.28);o.vr=o.vr??RN(-12,12);const n
 function sBeam(o){o.k='d';o.draw=(g,p)=>{const q=p.l/p.m,f=p.f?p.f(q,p):1;if(f<=0)return;const x1=p.x0+(p.x1-p.x0)*Math.min(1,f),y1=p.y0+(p.y1-p.y0)*Math.min(1,f),w=(p.w||8)*(p.thin?1-q*q:1);
  g.lineCap='round';g.strokeStyle=hexA(p.c,.28);g.lineWidth=w*2.6;g.beginPath();g.moveTo(p.x0,p.y0);g.lineTo(x1,y1);g.stroke();g.strokeStyle=hexA(p.c,.8);g.lineWidth=w;g.stroke();g.strokeStyle='#fff';g.lineWidth=Math.max(1,w*.32);g.stroke()};o.x=o.x0;o.y=o.y0;spawn(o)}
 function sZap(o){o.k='d';o.draw=(g,p)=>{g.lineJoin='round';g.lineCap='round';g.strokeStyle=hexA(p.c,.35);g.lineWidth=(p.w||2)*3.2;g.beginPath();p.pts.forEach((t,j)=>j?g.lineTo(t[0],t[1]):g.moveTo(t[0],t[1]));g.stroke();g.strokeStyle=p.core||'#fff';g.lineWidth=p.w||2;g.stroke()};o.x=o.pts[0][0];o.y=o.pts[0][1];spawn(o)}
-function sMark(o){/* отметина на столе под кубиком: эллипс, медленно гаснет */o.k='d';o.u=1;o.fp=o.fp||3;o.draw=(g,p)=>{const q=p.l/p.m,e=Math.min(1,p.l/(p.grow||.15)),rx=p.s*(.6+.4*e);g.fillStyle=spCol(p,q);g.beginPath();g.ellipse(p.x,p.y,rx,rx*(p.fy||.28),0,0,6.283);g.fill()};spawn(o)}
+function sMark(o){{const m=/rgba\((\d+),(\d+),(\d+)/.exec(typeof o.c==='string'?o.c:'');if(m&&Math.max(+m[1],+m[2],+m[3])<100)return}/* тёмные круги под кубиком не рисуем: Алексей просил убрать *//* отметина на столе под кубиком: эллипс, медленно гаснет */o.k='d';o.u=1;o.fp=o.fp||3;o.draw=(g,p)=>{const q=p.l/p.m,e=Math.min(1,p.l/(p.grow||.15)),rx=p.s*(.6+.4*e);g.fillStyle=spCol(p,q);g.beginPath();g.ellipse(p.x,p.y,rx,rx*(p.fy||.28),0,0,6.283);g.fill()};spawn(o)}
 function sRing(o){o.k='ring';o.fp=o.fp||1;spawn(o)}
 /* поток кадров на время T: fn(q) каждый кадр, end() в конце */
 function spRun(T,fn,end){const t0=performance.now();(function f(now){const q=Math.min(1,(now-t0)/T);fn(q,now-t0);if(q<1)requestAnimationFrame(f);else end&&end()})(t0)}
@@ -4169,7 +4169,7 @@ SPX.vampiric_touch=(c,done)=>{const P=c.P,T=1300;spHand(c,{x:c.cx,y0:c.fl+c.sz*.
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-28-72';
+const BUILD='2026-11-28-73';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
