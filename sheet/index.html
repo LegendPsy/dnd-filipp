@@ -3986,10 +3986,190 @@ SPX.sleep=(c,done)=>{const P=c.P,T=1000;let a0=RN(0,6.28);
    d.animate([{filter:'none'},{filter:'brightness(.7) saturate(.6)',offset:.5},{filter:'none'}],{duration:1500})});
   sMark({x:c.cx,y:c.fl,s:c.sz*.9,m:2.4,c:'rgba(246,213,142,.18)',grow:.8});vib([10,60,10]);setTimeout(done,600)},T*.45)};
 
+/* --- 2 и 3 круг: крупнее, дольше, богаче --- */
+var EARTHC=['#e8d2a8','#c9a77a','#8a6a4a','#5a4030'],WATC=['#ffffff','#dff4ff','#8fd0f0','#3d8cc4','#1d4f80'],BLOODC=['#ffd0d6','#ff6a7a','#c0304a','#5a0c1c'],PSYC=['#ffffff','#f0d8ff','#d29cff','#9a5cff','#5a2c9a'];
+/* вспышка на весь экран (мягко, на долю секунды) */
+function spFlash(col,m,a,x,y){x=x??innerWidth/2;y=y??innerHeight/2;spawn({k:'d',x,y,m,a:a||.5,fp:1.6,add:1,draw:(g,p)=>{const R=Math.max(innerWidth,innerHeight)*.75,gr=g.createRadialGradient(x,y,0,x,y,R);gr.addColorStop(0,hexA(col,.9));gr.addColorStop(.25,hexA(col,.35));gr.addColorStop(1,hexA(col,0));g.fillStyle=gr;g.fillRect(0,0,innerWidth,innerHeight)}})}
+/* трещины по столу от точки: ломаные лучи, растут, потом гаснут */
+function spCracks(x,y,n,R,life,col,w){const L=[];for(let i=0;i<n;i++){const a=i/n*6.283+RN(-.3,.3),pts=[[0,0]];let px=0,py=0,ang=a;const k=Math.round(RN(4,6));for(let j=1;j<=k;j++){ang+=RN(-.45,.45);const l=R/k*RN(.7,1.3);px+=Math.cos(ang)*l;py+=Math.sin(ang)*l*.32;pts.push([px,py])}
+ L.push({pts,br:Math.random()<.6?Math.floor(RN(1,k)):0,ba:ang+RN(-1,1)})}
+ spawn({k:'d',u:1,x,y,m:life,fp:3,draw:(g,p)=>{const e=Math.min(1,p.l/.18);g.lineCap='round';g.lineJoin='round';for(const [lw,cc] of [[(w||2)*2.6,'rgba(0,0,0,.45)'],[w||2,col]]){g.strokeStyle=cc;g.lineWidth=lw;g.beginPath();
+  for(const c of L){const m=Math.max(1,Math.round(c.pts.length*e));c.pts.slice(0,m).forEach((t,j)=>j?g.lineTo(x+t[0],y+t[1]):g.moveTo(x+t[0],y+t[1]));if(c.br&&c.br<m){const b=c.pts[c.br];g.moveTo(x+b[0],y+b[1]);g.lineTo(x+b[0]+Math.cos(c.ba)*R*.22,y+b[1]+Math.sin(c.ba)*R*.07)}}g.stroke()}}})}
+/* призрачные двойники кубика: копии отплывают и тают */
+function spGhosts(c,n,col,dur){c.dies.forEach(d=>{for(let i=0;i<n;i++){const gh=d.cloneNode(true),b=dB(d),a=i/n*6.283+RN(-.4,.4),r=d._sz*RN(.35,.6);gh.className='';gh.style.cssText=d.style.cssText+';position:absolute;left:0;top:0;pointer-events:none;z-index:1;mix-blend-mode:screen';
+ d.parentNode.insertBefore(gh,d);const an=gh.animate([{transform:b,opacity:0,filter:`drop-shadow(0 0 8px ${col}) hue-rotate(40deg)`},{transform:b+` translate(${Math.cos(a)*r*.5}px,${Math.sin(a)*r*.5}px) rotate(${RN(-14,14)}deg)`,opacity:.55,offset:.3},{transform:b+` translate(${Math.cos(a)*r}px,${Math.sin(a)*r}px) scale(1.12) rotate(${RN(-25,25)}deg)`,opacity:0,filter:`drop-shadow(0 0 14px ${col}) blur(2px)`}],{duration:dur,delay:i*90,easing:'ease-out',fill:'forwards'});an.onfinish=()=>gh.remove();setTimeout(()=>gh.remove(),dur+i*90+200)}})}
+/* стальной клинок (кинжал) в стиле кубика: лезвие, гарда, рукоять */
+function spBlade(g,x,y,a,L,al){g.save();g.translate(x,y);g.rotate(a);g.globalAlpha*=al;g.fillStyle='rgba(220,232,255,.18)';g.beginPath();g.ellipse(L*.15,0,L*.7,L*.16,0,0,6.283);g.fill();
+ g.fillStyle='#eef3ff';g.strokeStyle='#8f9bb5';g.lineWidth=.8;g.beginPath();g.moveTo(L*.62,0);g.lineTo(-L*.05,-L*.07);g.lineTo(-L*.05,L*.07);g.closePath();g.fill();g.stroke();
+ g.strokeStyle='#e9bd6c';g.lineWidth=2;g.beginPath();g.moveTo(-L*.07,-L*.13);g.lineTo(-L*.07,L*.13);g.stroke();g.strokeStyle='#6a4a2a';g.lineWidth=2.6;g.beginPath();g.moveTo(-L*.08,0);g.lineTo(-L*.3,0);g.stroke();g.restore()}
+
+/* Палящий луч: толстый луч пламени с закрученными языками держится и прожигает кубик, по столу тянется горелая полоса */
+SPX.scorching_ray=(c,done)=>{const P=c.P,s=Math.random()<.5?-1:1,x0=c.cx+s*c.W*RN(.25,.4),y0=c.H+20,T=620+120*P,dx=c.cx-x0,dy=c.cy-y0,L=Math.hypot(dx,dy),nx=-dy/L,ny=dx/L,t0=performance.now();
+ sBeam({x0,y0,x1:c.cx,y1:c.cy,w:7*Math.sqrt(P),m:T/1000,c:'#ff8a2a',f:q=>Math.min(1,q/.18),thin:1});
+ spRun(T,q=>{if(q<.15)return;const ph=(performance.now()-t0)/70;for(let j=0;j<Math.round(2*P);j++){const t=RN(0,1),o=Math.sin(t*18-ph+j*3.1)*10*Math.sqrt(P);sGlow({x:x0+dx*t+nx*o,y:y0+dy*t+ny*o,vx:nx*o*3,vy:ny*o*3-RN(20,60),g:-90,dr:3,m:RN(.25,.45),s:RN(4,8),c:FIREC,add:1,fp:1.4})}
+  sGlow({x:c.cx+RN(-6,6),y:c.cy+RN(-6,6),s:RN(26,40),m:.12,c:'#ffb347',add:1});if(Math.random()<.5)spEmbers(c,c.cx,c.cy,1,240);if(Math.random()<.15)spSmoke(c,c.cx,c.cy-c.sz*.3,1,'#2a1a14',{a:.35})},
+  ()=>{spImpact(c,c.cx,c.cy,FIREC,{n:10,fs:50});spEmbers(c,c.cx,c.cy,Math.round(10*P),240);spSmoke(c,c.cx,c.cy-10,5,'#2a1a14',{a:.4,life:1.2});vib([30,20,40]);setTimeout(done,360)});
+ setTimeout(()=>{c.dies.forEach(d=>{dieCoat(d,'fire');d.animate([{filter:'none'},{filter:'brightness(1.5) sepia(.6) saturate(2)',offset:.4},{filter:'none'}],{duration:T*1.3})});dKnock(c,{dx:-s*10,h:6,rt:6,dur:T*.9,sq:.6});
+  for(let i=0;i<5;i++)sMark({x:c.cx-s*i*c.sz*.22,y:c.fl+i*2,s:c.sz*(.38-i*.04),m:2.6,c:'rgba(26,10,4,.45)',grow:.25+i*.08});vib([20,20,20,20,20,20])},T*.18)};
+
+/* Дребезги: пронзительный звон — сфера звука схлопывается и взрывается, по столу бегут трещины, летят кристаллы, кубик дрожит на высокой ноте */
+SPX.shatter=(c,done)=>{const P=c.P,R=c.sz*1.4*Math.sqrt(P);
+ spawn({k:'d',x:c.cx,y:c.cy,m:.38,fp:1,draw:(g,p)=>{const q=p.l/p.m,r=R*(1-q*.75);g.strokeStyle='rgba(239,230,255,.8)';g.lineWidth=1.5+q*3;g.beginPath();g.arc(c.cx,c.cy,r,0,6.283);g.stroke();g.strokeStyle='rgba(201,182,255,.35)';g.lineWidth=8;g.stroke()}});
+ for(let i=0;i<14;i++){const a=RN(0,6.283);sGlow({x:c.cx+Math.cos(a)*R,y:c.cy+Math.sin(a)*R,vx:-Math.cos(a)*R*2.4,vy:-Math.sin(a)*R*2.4,m:.38,s:RN(3,5),c:SNDC,add:1})}
+ dJit(c,1.5,380,14);
+ setTimeout(()=>{spFlash('#efe6ff',.25,.45,c.cx,c.cy);sGlow({x:c.cx,y:c.cy,s:90*Math.sqrt(P),m:.35,c:'#ffffff',add:1});
+  for(let k=0;k<4;k++)setTimeout(()=>{sRing({x:c.cx,y:c.cy,r0:10,r1:(120+k*50)*Math.sqrt(P),m:.55+k*.08,c:k%2?'#c9b6ff':'#ffffff',w:4-k*.7});sRing({x:c.cx,y:c.fl,r0:8,r1:(90+k*40)*Math.sqrt(P),m:.6,c:'#c9b6ff',w:2.5,fy:.3})},k*70);
+  spCracks(c.cx,c.fl,Math.round(5+2*P),c.sz*1.6*Math.sqrt(P),2.8,'#e6dcff',1.6);
+  for(let i=0;i<Math.round(14*P);i++)sShard({x:c.cx+RN(-c.sz*.4,c.sz*.4),y:c.cy+RN(-c.sz*.3,c.sz*.3),vx:RN(-320,320),vy:-RN(120,420),g:1000,m:RN(.8,1.3),s:RN(3,6.5),n:3,c:['#ffffff','#f0eaff','#d8ccff'],edge:'#a58cff',fl:c.fl+RN(-6,10),bo:.35});
+  for(let i=0;i<10;i++){const a=RN(0,6.283),v=RN(200,420);sSpark({x:c.cx,y:c.cy,vx:Math.cos(a)*v,vy:Math.sin(a)*v,dr:2.5,m:.35,w:1.6,c:SNDC,add:1})}
+  dJit(c,4.5,520,16);c.dies.forEach(d=>{dieCoat(d,'snd');d.animate([{filter:'none'},{filter:'brightness(1.8) saturate(.3)',offset:.15},{filter:'none'}],{duration:700})});
+  spShake(true);vib([70,20,15,15,15,15,15]);setTimeout(done,620)},380)};
+
+/* Облако кинжалов: вихрь стальных клинков кружит вокруг кубика и сечёт его со всех сторон, потом клинки разлетаются */
+SPX.cloud_of_daggers=(c,done)=>{const P=c.P,N=Math.round(7*P),T=1100+150*P,t0=performance.now(),R=c.sz*.75,bl=[];for(let i=0;i<N;i++)bl.push({a:i/N*6.283,r:R*RN(.8,1.25),sp:RN(5,8),y:RN(-.5,.4),L:c.sz*RN(.5,.62)});
+ spawn({k:'d',x:c.cx,y:c.cy,m:T/1000+.45,fp:1,draw:(g,p)=>{const t=(performance.now()-t0)/1000,q=t/(T/1000),fin=q>1?Math.min(1,(q-1)*(T/1000)/.45):0,inn=Math.min(1,t/.25);
+  /* вихрь: бледное кольцо ветра */
+  g.globalCompositeOperation='lighter';g.strokeStyle=`rgba(200,214,240,${.12*(1-fin)})`;g.lineWidth=10;g.beginPath();g.ellipse(c.cx,c.cy,R*1.1,R*.5,0,0,6.283);g.stroke();
+  for(const b of bl){const a=b.a+t*b.sp,rr=b.r*(1+fin*3)*(.4+.6*inn),x=c.cx+Math.cos(a)*rr,y=c.cy+b.y*c.sz+Math.sin(a)*rr*.45,ta=a+Math.PI/2;
+   g.globalCompositeOperation='lighter';g.strokeStyle=`rgba(230,238,255,${.35*(1-fin)})`;g.lineWidth=2;g.beginPath();g.ellipse(c.cx,c.cy+b.y*c.sz,rr,rr*.45,0,a-.7,a);g.stroke();
+   g.globalCompositeOperation='source-over';spBlade(g,x,y,ta,b.L,(Math.sin(a)>-.2?1:.55)*(1-fin))}}});
+ const cuts=Math.round(5*P);for(let k=0;k<cuts;k++)setTimeout(()=>{const d=c.dies[k%c.dies.length],a=RN(0,6.283),l=d._sz*.5;
+  sBeam({x0:d._x-Math.cos(a)*l,y0:d._y-Math.sin(a)*l,x1:d._x+Math.cos(a)*l,y1:d._y+Math.sin(a)*l,w:2.2,m:.16,c:'#dfe8ff',f:q=>Math.min(1,q/.4),thin:1});
+  for(let i=0;i<4;i++){const b=a+RN(-.5,.5)+Math.PI/2*(i%2?1:-1),v=RN(150,300);sSpark({x:d._x,y:d._y,vx:Math.cos(b)*v,vy:Math.sin(b)*v,g:700,m:RN(.2,.35),w:1.2,c:['#ffffff','#ffe9b0','#e9bd6c'],add:1,fl:c.fl})}
+  dKnock(c,{only:[d],dx:Math.cos(a)*6,h:4,rt:RN(-8,8),dur:180,sq:.4});vib(12)},200+k*(T-300)/cuts);
+ setTimeout(()=>{for(let i=0;i<4;i++)sMark({x:c.cx+RN(-c.sz*.6,c.sz*.6),y:c.fl+RN(-2,4),s:c.sz*RN(.25,.4),m:2.2,c:'rgba(10,10,16,.35)',fy:.08});setTimeout(done,420)},T)};
+
+/* Воображаемая сила: воздух дрожит фиолетовым маревом, у кубика появляются призрачные двойники, он вздрагивает от того, чего нет */
+SPX.phantasmal_force=(c,done)=>{const P=c.P,T=1100,t0=performance.now();
+ spawn({k:'d',x:c.cx,y:c.cy,m:T/1000,fp:1.5,draw:(g,p)=>{const t=(performance.now()-t0)/1000,q=p.l/p.m;g.globalCompositeOperation='lighter';for(let k=0;k<3;k++){const r=c.sz*(.6+((t*.9+k/3)%1)*1.4);g.strokeStyle=hexA('#d29cff',.35*(1-((t*.9+k/3)%1))*Math.min(1,q*5));g.lineWidth=2;g.beginPath();
+  for(let i=0;i<=40;i++){const a=i/40*6.283,w=1+Math.sin(a*6+t*8+k)*.06;const x=c.cx+Math.cos(a)*r*w,y=c.cy+Math.sin(a)*r*w*.8;i?g.lineTo(x,y):g.moveTo(x,y)}g.stroke()}}});
+ for(let i=0;i<Math.round(10*P);i++)sGlow({x:c.cx+RN(-c.sz,c.sz),y:c.cy+RN(-c.sz*.8,c.sz*.6),vx:RN(-15,15),vy:-RN(5,25),m:RN(.8,1.2),s:RN(14,24),gr:.8,c:'#9a5cff',a:.22,fin:.3});
+ spGhosts(c,3,'#d29cff',900);
+ setTimeout(()=>{c.dies.forEach(d=>{const b=dB(d);d.animate([{transform:b},{transform:b+' translate(-5px,-2px) rotate(-6deg) scale(.95)'},{transform:b+' translate(4px,0) rotate(4deg)'},{transform:b+' scale(.97)'},{transform:b}],{duration:600,easing:'ease-out'});
+  d.animate([{filter:'none'},{filter:'hue-rotate(60deg) saturate(1.6) brightness(1.2) blur(.6px)',offset:.3},{filter:'none'}],{duration:900})});
+  sGlow({x:c.cx,y:c.cy,s:60,m:.35,c:'#d29cff',add:1});for(let i=0;i<12;i++){const a=RN(0,6.283),v=RN(60,160);sGlow({x:c.cx,y:c.cy,vx:Math.cos(a)*v,vy:Math.sin(a)*v,dr:2,m:RN(.5,.9),s:RN(2.5,4),c:PSYC,add:1})}vib([15,50,25])},380);
+ setTimeout(done,T)};
+
+/* --- 3 круг --- */
+/* Огненный шар: огненная бусина летит по дуге, вспыхивает, раскрывается в огромную сферу пламени, ударная волна, кубики подбрасывает, дождь углей и столб дыма */
+SPX.fireball=(c,done)=>{const P=c.P,sp=Math.sqrt(P),x0=c.cx+RN(-.3,.3)*c.W,y0=c.H+20;
+ spFly(c,{x0,y0,T:520,arc:c.H*.22,ease:q=>q,head:(x,y,q)=>{sGlow({x,y,s:9,m:.08,c:'#ffb347',add:1});sGlow({x,y,s:3.5,m:.05,c:'#fff4c8',add:1});sGlow({x,y,vx:RN(-10,10),vy:RN(-10,10),m:.35,s:RN(3,5),c:FIREC.slice(1),add:1,fp:1.3})},
+  hit:()=>{/* миг тишины: бусина набухает */
+   sGlow({x:c.cx,y:c.cy,s:20,m:.16,c:'#fff4c8',add:1,gr:1.5});
+   setTimeout(()=>{const R=c.sz*1.6*sp;spFlash('#ffb060',.35,.5,c.cx,c.cy);
+    spawn({k:'d',x:c.cx,y:c.cy,m:.9,fp:1.2,add:1,draw:(g,p)=>{const q=p.l/p.m,e=1-Math.pow(1-Math.min(1,q/.35),3),r=R*e,gr=g.createRadialGradient(c.cx,c.cy,0,c.cx,c.cy,r+1);gr.addColorStop(0,'rgba(255,250,220,.95)');gr.addColorStop(.35,'rgba(255,190,80,.85)');gr.addColorStop(.75,'rgba(230,80,30,.55)');gr.addColorStop(1,'rgba(120,30,10,0)');g.fillStyle=gr;g.beginPath();g.arc(c.cx,c.cy,r+1,0,6.283);g.fill()}});
+    for(let i=0;i<Math.round(28*P);i++){const a=RN(0,6.283),v=RN(.6,1.1)*R*2.6;sGlow({x:c.cx,y:c.cy,vx:Math.cos(a)*v,vy:Math.sin(a)*v*.8,dr:3.2,g:-120,m:RN(.7,1.2),s:RN(10,20)*sp*.8,gr:1.2,c:FIREC,add:1,fp:1.4,a:.75})}
+    for(let k=0;k<3;k++)setTimeout(()=>{sRing({x:c.cx,y:c.fl,r0:R*.4,r1:R*(2.4+k*.6),m:.6+k*.1,c:k?'#ff9a3a':'#fff4c8',w:5-k,fy:.3});sRing({x:c.cx,y:c.cy,r0:R*.6,r1:R*(1.8+k*.5),m:.45,c:'#ffd05a',w:3-k*.8})},k*80);
+    spEmbers(c,c.cx,c.cy,Math.round(26*P),380,{life:1.6,sz:1.2});
+    for(let i=0;i<Math.round(12*P);i++){const a=RN(-Math.PI*.95,-Math.PI*.05),v=RN(260,520);sSpark({x:c.cx,y:c.cy,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:800,m:RN(.6,1),w:2,c:FIREC,add:1,fl:c.fl+RN(-4,10),bo:.3})}
+    setTimeout(()=>spSmoke(c,c.cx,c.cy-c.sz*.2,Math.round(10*P),'#2a1a14',{a:.5,up:1.6,sz:1.5,life:1.6}),250);
+    sMark({x:c.cx,y:c.fl,s:R*1.2,m:3.2,c:'rgba(26,10,4,.55)',grow:.35});sMark({x:c.cx,y:c.fl,s:R*.7,m:1.4,c:'rgba(255,120,40,.35)',fp:1.5});
+    c.dies.forEach(d=>{dieCoat(d,'fire');const ox=d._x-c.cx;dKnock(c,{only:[d],dx:c.dies.length>1?Math.sign(ox)*22:RN(-8,8),h:40*sp,rt:Math.sign(ox||1)*22,dur:780})});
+    spShake(true);vib([90,30,50,30,30]);setTimeout(done,900)},140)}})};
+
+/* Молния: ослепительный разряд проходит через весь экран линией, мерцает, бьёт ответвлениями, на столе остаётся обугленная полоса */
+SPX.lightning_bolt=(c,done)=>{const P=c.P,s=Math.random()<.5?-1:1,xa=s<0?-20:c.W+20,ya=c.cy+RN(-30,30),xb=s<0?c.W+20:-20,yb=c.cy+RN(-30,30),T=700+100*P;
+ /* искра-предвестник */
+ for(let i=0;i<6;i++)sGlow({x:xa,y:ya,vx:-s*RN(40,120),vy:RN(-60,60),m:.3,s:RN(3,6),c:ELECC,add:1});
+ setTimeout(()=>{spFlash('#cfe0ff',.25,.5,c.cx,c.cy);
+  for(let t=0;t<T;t+=55)setTimeout(()=>{const w=3.2*Math.sqrt(P)*(1-t/T*.6);sZap({pts:zapPts(xa,ya,xb,yb,28,46),m:.07,c:'#9fc4ff',core:'#ffffff',w});if(Math.random()<.7)sZap({pts:zapPts(xa,ya,xb,yb,22,70),m:.05,c:'#c9a8ff',w:w*.4});
+   for(let j=0;j<2;j++){const tt=RN(.1,.9),bx=xa+(xb-xa)*tt,by=ya+(yb-ya)*tt;sZap({pts:zapPts(bx,by,bx+RN(-80,80),by+RN(30,110)*(Math.random()<.5?-1:1),6,18),m:.06,c:'#ffe14a',w:1.3})}
+   sGlow({x:c.cx,y:c.cy,s:RN(40,70),m:.08,c:'#cfe0ff',add:1})},t);
+  for(let x=Math.min(xa,xb);x<Math.max(xa,xb);x+=c.W/14)sGlow({x,y:ya+(yb-ya)*((x-xa)/(xb-xa)),s:40,m:T/1000*.8,c:'#7fb4ff',add:1,a:.5});
+  c.dies.forEach(d=>{dieCoat(d,'elec');d.animate([{filter:'none'},{filter:'brightness(2.4) saturate(.2)',offset:.1},{filter:'brightness(1.4)',offset:.5},{filter:'none'}],{duration:T+300})});dJit(c,6,T,22);
+  for(let i=0;i<14;i++){const x=RN(0,c.W);sMark({x,y:c.fl+RN(-3,3),s:RN(10,24),m:2.4,c:'rgba(16,14,24,.45)',fy:.2})}
+  for(let i=0;i<Math.round(10*P);i++){const a=RN(-Math.PI,0),v=RN(200,420);sSpark({x:c.cx+RN(-c.sz,c.sz),y:c.cy,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:800,m:RN(.4,.8),w:1.5,c:ELECC,add:1,fl:c.fl,bo:.3})}
+  spShake(true);vib([30,15,30,15,30,15,30,15,80]);
+  setTimeout(()=>{spSmoke(c,c.cx,c.cy,6,'#3a3a4a',{a:.35});for(let i=0;i<8;i++)setTimeout(()=>{const x=c.cx+RN(-c.sz,c.sz);sZap({pts:zapPts(x,c.cy+RN(-20,10),x+RN(-25,25),c.fl,4,8),m:.05,c:'#9fc4ff',w:1})},i*70);setTimeout(done,560)},T)},140)};
+
+/* Ашардалонова поступь: по столу шагают горящие следы, каждый вспыхивает языком пламени; проходя мимо кубика, обжигают его */
+SPX.ashardalons_stride=(c,done)=>{const P=c.P,s=Math.random()<.5?-1:1,N=7,gap=150,x0=c.cx-s*c.sz*2.4,x1=c.cx+s*c.sz*2.4;
+ for(let i=0;i<N;i++)setTimeout(()=>{const t=i/(N-1),x=x0+(x1-x0)*t,y=c.fl+(i%2?6:-4)+8,side=i%2?1:-1;
+  /* след: стопа из двух эллипсов */
+  spawn({k:'d',u:1,x,y,m:2.6,fp:2.5,draw:(g,p)=>{const q=p.l/p.m,hot=Math.max(0,1-p.l/.9);g.save();g.translate(x,y);g.rotate(s*.08*side);
+   g.fillStyle=`rgba(${40+200*hot|0},${12+90*hot|0},6,.7)`;g.beginPath();g.ellipse(0,0,c.sz*.16,c.sz*.06,0,0,6.283);g.fill();g.beginPath();g.ellipse(s*c.sz*.17,0,c.sz*.07,c.sz*.045,0,0,6.283);g.fill();
+   if(hot>0){g.globalCompositeOperation='lighter';g.fillStyle=`rgba(255,180,70,${.5*hot})`;g.beginPath();g.ellipse(0,0,c.sz*.1,c.sz*.035,0,0,6.283);g.fill()}g.restore()}});
+  for(let j=0;j<Math.round(6*P);j++)sGlow({x:x+RN(-10,10),y:y-4,vx:RN(-20,20),vy:-RN(120,260),g:-60,dr:2,m:RN(.4,.7),s:RN(6,11),gr:.6,c:FIREC,add:1,fp:1.5,a:.75});
+  spEmbers(c,x,y-6,3,120);vib(14);
+  if(Math.abs(x-c.cx)<c.sz*.5){c.dies.forEach(d=>dieCoat(d,'fire'));dLift(c,18*Math.sqrt(P),520);spImpact(c,c.cx,c.cy+c.sz*.2,FIREC,{n:6,fs:40,ring:false});vib([30,20,30])}},i*gap);
+ setTimeout(()=>{spSmoke(c,c.cx,c.fl-8,5,'#2a1a14',{a:.35});setTimeout(done,300)},N*gap+200)};
+
+/* Извержение земли: стол трескается, из-под кубика рвутся камни и пыль, кубики подбрасывает, обломки падают и отскакивают */
+SPX.erupting_earth=(c,done)=>{const P=c.P,sp=Math.sqrt(P);
+ dJit(c,2.5,420,10);spCracks(c.cx,c.fl,Math.round(6+P),c.sz*1.5*sp,3.2,'#c9a77a',2.2);spShake();vib([20,20,20,20,20]);
+ for(let i=0;i<8;i++)sGlow({x:c.cx+RN(-c.sz,c.sz),y:c.fl,vx:RN(-30,30),vy:-RN(10,40),m:.6,s:RN(6,10),c:'#a08460',a:.3,u:1});
+ setTimeout(()=>{spShake(true);vib([90,30,60]);sGlow({x:c.cx,y:c.fl,s:80*sp,m:.3,c:'#ffcf8a',add:1,a:.5});
+  for(let i=0;i<Math.round(16*P);i++)sShard({x:c.cx+RN(-c.sz*.7,c.sz*.7),y:c.fl,vx:RN(-260,260),vy:-RN(380,760),g:1500,m:RN(1.2,1.8),s:RN(5,12)*(i%4?1:1.5),n:Math.round(RN(4,6)),vr:RN(-8,8),c:['#9a7a56','#7d5f42','#5e4632'],edge:'#c9a77a',fl:c.fl+RN(-2,14),bo:.3});
+  for(let i=0;i<Math.round(14*P);i++)sGlow({x:c.cx+RN(-c.sz*.8,c.sz*.8),y:c.fl-RN(0,20),vx:RN(-120,120),vy:-RN(40,200),dr:2.2,m:RN(1,1.7),s:RN(14,26),gr:1.6,c:'#8a7050',a:.35,fin:.08});
+  for(let i=0;i<5;i++){const x=c.cx+(i-2)*c.sz*.42;spawn({k:'d',x,y:c.fl,m:.7,fp:1,draw:(g,p)=>{const q=p.l/p.m,h=c.sz*(.7+.3*Math.sin(i))*sp*Math.sin(Math.PI*Math.min(1,q*1.6));g.fillStyle='#6b5038';g.strokeStyle='#c9a77a';g.lineWidth=1;g.beginPath();g.moveTo(x-c.sz*.18,c.fl);g.lineTo(x-c.sz*.05,c.fl-h);g.lineTo(x+c.sz*.08,c.fl-h*.8);g.lineTo(x+c.sz*.2,c.fl);g.closePath();g.fill();g.stroke()}})}
+  c.dies.forEach(d=>{const b=dB(d),ox=d._x-c.cx;d.animate([{transform:b},{transform:b+` translate(${Math.sign(ox)*8}px,${-70*sp}px) rotate(${RN(-40,40)}deg)`,offset:.4},{transform:b+' translate(0,0) scale(1.14,.82)',offset:.78},{transform:b+' translate(0,-6px)',offset:.88},{transform:b}],{duration:1000,easing:'cubic-bezier(.25,.6,.45,1)'})});
+  setTimeout(()=>{sMark({x:c.cx,y:c.fl,s:c.sz*1.5*sp,m:2.6,c:'rgba(70,50,32,.5)',grow:.3});vib(40);spShake()},780);setTimeout(done,1150)},440)};
+
+/* Пылающая стрела: горящая стрела со свистом влетает и вонзается в кубик, древко горит, кубик отбрасывает */
+SPX.flame_arrows=(c,done)=>{const s=Math.random()<.5?-1:1,x0=s<0?-30:c.W+30,y0=c.cy-c.H*RN(.08,.18),ang=Math.atan2(c.cy-y0,c.cx-x0),La=c.sz*1.35;
+ const arrow=(g,x,y,a,al)=>{g.save();g.translate(x,y);g.rotate(a);g.globalAlpha*=al;g.globalCompositeOperation='lighter';g.strokeStyle='rgba(255,140,40,.35)';g.lineWidth=9;g.lineCap='round';g.beginPath();g.moveTo(-La,0);g.lineTo(0,0);g.stroke();g.globalCompositeOperation='source-over';g.strokeStyle='#8a6440';g.lineWidth=3.4;g.lineCap='round';g.beginPath();g.moveTo(-La,0);g.lineTo(0,0);g.stroke();
+  g.fillStyle='#e8ecf6';g.beginPath();g.moveTo(10,0);g.lineTo(-8,-6);g.lineTo(-8,6);g.closePath();g.fill();g.fillStyle='#e9bd6c';for(const sy of [-1,1]){g.beginPath();g.moveTo(-La,0);g.lineTo(-La-8,sy*6);g.lineTo(-La+10,sy*1);g.closePath();g.fill()}g.restore()};
+ const tx=c.cx-Math.cos(ang)*c.sz*.3,ty=c.cy-Math.sin(ang)*c.sz*.3;
+ spFly(c,{x0,y0,x1:tx,y1:ty,T:300,ease:q=>q,head:(x,y,q)=>{spawn({k:'d',x,y,m:.03,draw:g=>arrow(g,x,y,ang,1)});for(let j=0;j<3;j++)sGlow({x:x-Math.cos(ang)*RN(0,La*.6),y:y-Math.sin(ang)*RN(0,La*.6),vy:-RN(20,60),m:RN(.2,.4),s:RN(4,8),c:FIREC,add:1,fp:1.4})},
+  hit:()=>{const T=1.2;spawn({k:'d',x:tx,y:ty,m:T,fp:3,draw:(g,p)=>{const q=p.l/p.m,w=Math.sin(Math.PI*Math.min(1,p.l/.12))*(1-Math.min(1,p.l/.12))*.2;arrow(g,tx,ty,ang+w*Math.sin(p.l*60),1)}});
+   spRun(T*800,q=>{if(Math.random()<.7){const t=RN(.2,.9);sGlow({x:tx-Math.cos(ang)*La*t,y:ty-Math.sin(ang)*La*t,vy:-RN(40,90),vx:RN(-10,10),g:-60,m:RN(.25,.5),s:RN(4,8),c:FIREC,add:1,fp:1.4})}});
+   spImpact(c,tx,ty,FIREC,{n:8,fs:42});spEmbers(c,tx,ty,10,200);dKnock(c,{dx:Math.cos(ang)*14,h:8,rt:Math.sign(Math.cos(ang))*10,dur:380});c.dies.forEach(d=>dieCoat(d,'fire'));
+   sMark({x:c.cx,y:c.fl,s:c.sz*.45,m:2,c:'rgba(26,10,4,.45)'});vib([50,20,20]);setTimeout(done,700)}})};
+
+/* Мельфовы маленькие метеоры: шесть огоньков кружат над кубиком, один срывается, падает по дуге с хвостом и взрывается */
+SPX.melfs_minute_meteors=(c,done)=>{const P=c.P,t0=performance.now(),N=6,R=c.sz*.95,oy=c.cy-c.sz*1.1,T=700;let fired=-1;
+ spawn({k:'d',x:c.cx,y:oy,m:T/1000+.5,fp:1,draw:(g,p)=>{const t=(performance.now()-t0)/1000,inn=Math.min(1,t/.25),out=t>T/1000?Math.min(1,(t-T/1000)/.5):0;
+  for(let i=0;i<N;i++){if(i===fired)continue;const a=i/N*6.283+t*3,x=c.cx+Math.cos(a)*R*inn,y=oy+Math.sin(a)*R*.35*inn;g.globalAlpha=1-out;g.globalCompositeOperation='lighter';const r=14;g.drawImage(spG('#ff9a3a'),x-r*1.75,y-r*1.75,r*3.5,r*3.5);g.drawImage(spG('#fff4c8'),x-9,y-9,18,18);
+   if(Math.random()<.3)sGlow({x,y,vy:RN(10,40),m:.3,s:2.5,c:FIREC.slice(1),add:1})}}});
+ setTimeout(()=>{fired=Math.floor(RN(0,N));const t=(performance.now()-t0)/1000,a=fired/N*6.283+t*3,x0=c.cx+Math.cos(a)*R,y0=oy+Math.sin(a)*R*.35;
+  spFly(c,{x0,y0,T:300,arc:c.sz*.7,ease:q=>q*q,head:(x,y,q,an,vx,vy)=>{sGlow({x,y,s:12,m:.08,c:'#ff9a3a',add:1});sGlow({x,y,s:5,m:.05,c:'#fff4c8',add:1});for(let j=0;j<3;j++)sGlow({x:x-vx*RN(0,2),y:y-vy*RN(0,2),m:RN(.25,.45),s:RN(3,6),c:FIREC.slice(1),add:1,fp:1.3})},
+   hit:()=>{sGlow({x:c.cx,y:c.cy,s:70,m:.3,c:'#ffd05a',add:1});spImpact(c,c.cx,c.cy,FIREC,{n:14,fs:56});spEmbers(c,c.cx,c.cy,Math.round(12*P),280);spSmoke(c,c.cx,c.cy,5,'#2a1a14',{a:.4});
+    sRing({x:c.cx,y:c.fl,r0:10,r1:c.sz*1.6,m:.5,c:'#ff9a3a',w:3,fy:.3});sMark({x:c.cx,y:c.fl,s:c.sz*.6,m:2.4,c:'rgba(26,10,4,.5)'});
+    dKnock(c,{h:22,rt:14,dur:520});c.dies.forEach(d=>dieCoat(d,'fire'));spShake();vib([60,20,30]);setTimeout(done,520)}})},T*.6)};
+
+/* Громовой шаг: под кубиком загорается знак, воздух втягивается в точку, ты исчезаешь — и раскат грома разносит всё вокруг */
+SPX.thunder_step=(c,done)=>{const P=c.P,sp=Math.sqrt(P),T1=520;
+ spawn({k:'d',u:1,x:c.cx,y:c.fl,m:T1/1000+.4,fp:2,draw:(g,p)=>{const e=Math.min(1,p.l/.3),r=c.sz*1.1*e;g.strokeStyle='rgba(201,182,255,.75)';g.lineWidth=1.6;g.beginPath();g.ellipse(c.cx,c.fl,r,r*.3,0,0,6.283);g.stroke();g.beginPath();g.ellipse(c.cx,c.fl,r*.72,r*.22,0,0,6.283);g.stroke();
+  for(let i=0;i<8;i++){const a=i/8*6.283+p.l*2;g.beginPath();g.moveTo(c.cx+Math.cos(a)*r*.72,c.fl+Math.sin(a)*r*.22);g.lineTo(c.cx+Math.cos(a)*r,c.fl+Math.sin(a)*r*.3);g.stroke()}}});
+ spRun(T1,q=>{for(let j=0;j<3;j++){const a=RN(0,6.283),r=c.sz*RN(1.2,2.2);sGlow({x:c.cx+Math.cos(a)*r,y:c.cy+Math.sin(a)*r*.8,vx:-Math.cos(a)*r*2.6,vy:-Math.sin(a)*r*2.1,m:.38,s:RN(2.5,4.5),c:SNDC,add:1,fin:.3})}});
+ dJit(c,1.5,T1,10);c.dies.forEach(d=>d.animate([{filter:'none'},{filter:'brightness(.6)'}],{duration:T1,fill:'none'}));
+ setTimeout(()=>{spFlash('#efe6ff',.3,.5,c.cx,c.cy);sGlow({x:c.cx,y:c.cy,s:120*sp,m:.4,c:'#ffffff',add:1});
+  for(let k=0;k<5;k++)setTimeout(()=>{sRing({x:c.cx,y:c.cy,r0:12,r1:(140+k*60)*sp,m:.6+k*.07,c:k%2?'#c9b6ff':'#ffffff',w:6-k});sRing({x:c.cx,y:c.fl,r0:12,r1:(120+k*50)*sp,m:.7,c:'#8a6cff',w:3,fy:.3})},k*60);
+  for(let i=0;i<Math.round(14*P);i++){const a=RN(0,6.283),v=RN(260,520);sSpark({x:c.cx,y:c.cy,vx:Math.cos(a)*v,vy:Math.sin(a)*v,dr:2.6,m:RN(.3,.55),w:2,c:SNDC,add:1})}
+  for(let i=0;i<Math.round(10*P);i++){const sd=i%2?1:-1;sGlow({x:c.cx,y:c.fl,vx:sd*RN(200,460),vy:-RN(0,40),dr:2.6,m:RN(.7,1.1),s:RN(10,18),gr:1.3,c:'#8a7a6a',a:.35,u:1})}
+  for(let k=0;k<3;k++)setTimeout(()=>sZap({pts:zapPts(c.cx,c.cy,c.cx+RN(-c.sz*1.8,c.sz*1.8),c.cy+RN(-c.sz*1.4,c.sz*.4),7,16),m:.07,c:'#c9a8ff',w:1.6}),k*50);
+  const one=c.dies.length===1;c.dies.forEach(d=>{const ox=d._x-c.cx;dieCoat(d,'snd');dKnock(c,{only:[d],dx:one?RN(-8,8):Math.sign(ox)*26,h:one?36:22,rt:(Math.sign(ox)||1)*20,dur:700})});
+  spShake(true);vib([110,30,50,30,30]);setTimeout(done,800)},T1)};
+
+/* Приливная волна: с края поднимается стена воды с белым гребнем, обрушивается на кубик, брызги, лужи, кубик сбивает с ног */
+SPX.tidal_wave=(c,done)=>{const P=c.P,sp=Math.sqrt(P),s=Math.random()<.5?-1:1,T=900,Hh=c.sz*1.5*sp,xs=s<0?-c.sz*2:c.W+c.sz*2,xe=c.cx+s*c.sz*.1,t0=performance.now();
+ spawn({k:'d',x:c.cx,y:c.fl,m:T/1000+.35,fp:1.2,draw:(g,p)=>{const t=(performance.now()-t0)/T,q=Math.min(1,t),e=q<1?1-Math.pow(1-q,2):1,fx=xs+(xe-xs)*e,crash=Math.max(0,(t-.85)/.4),h=Hh*(q<.85?.5+.5*q/.85:Math.max(0,1-crash*1.2)),back=fx-s*c.W*.9,b=c.fl+6;
+  if(h<=1)return;const gr=g.createLinearGradient(0,b-h,0,b);gr.addColorStop(0,'rgba(170,225,250,.92)');gr.addColorStop(.5,'rgba(61,140,196,.85)');gr.addColorStop(1,'rgba(29,79,128,.9)');g.fillStyle=gr;
+  g.beginPath();g.moveTo(back,b);g.lineTo(back,b-h*.35);g.bezierCurveTo(back+(fx-back)*.5,b-h*.45,fx-s*h*.9,b-h*1.05,fx-s*h*.2,b-h);g.quadraticCurveTo(fx+s*h*.35,b-h*.95,fx+s*h*.25,b-h*.55);g.quadraticCurveTo(fx,b-h*.7,fx-s*h*.05,b-h*.4);g.quadraticCurveTo(fx+s*h*.1,b-h*.15,fx+s*h*.2,b);g.closePath();g.fill();
+  g.strokeStyle='rgba(255,255,255,.9)';g.lineWidth=3;g.lineCap='round';g.beginPath();g.moveTo(fx-s*h*.9,b-h*.98);g.quadraticCurveTo(fx-s*h*.2,b-h*1.05,fx+s*h*.25,b-h*.55);g.stroke();
+  if(Math.random()<.8)sGlow({x:fx+s*h*.2+RN(-8,8),y:b-h*RN(.5,1),vx:s*RN(40,140),vy:-RN(40,160),g:700,m:RN(.3,.6),s:RN(3,6),c:WATC,add:1})}});
+ setTimeout(()=>{spShake(true);vib([80,30,40,20,20]);sGlow({x:c.cx,y:c.cy,s:80*sp,m:.35,c:'#dff4ff',add:1});
+  spDrops(c,c.cx,c.cy-c.sz*.3,Math.round(20*P),'rgba(150,210,245,.85)',{v:1.4});
+  for(let i=0;i<Math.round(16*P);i++){const a=RN(-Math.PI,0),v=RN(160,420);sGlow({x:c.cx+RN(-c.sz*.5,c.sz*.5),y:c.cy,vx:Math.cos(a)*v+s*100,vy:Math.sin(a)*v,g:900,m:RN(.5,.9),s:RN(4,9),c:WATC,add:1,fl:c.fl,bo:.2})}
+  for(let i=0;i<6;i++)sMark({x:c.cx+RN(-c.sz*1.4,c.sz*1.4),y:c.fl+RN(-3,6),s:c.sz*RN(.25,.55),m:3,c:'rgba(90,170,220,.28)',grow:.4});
+  c.dies.forEach((d,i)=>{const b=dB(d);d.animate([{transform:b},{transform:b+` translate(${s*30}px,-18px) rotate(${s*70}deg)`,offset:.35},{transform:b+` translate(${s*14}px,0) rotate(${s*90}deg) scale(1.06,.9)`,offset:.65},{transform:b+` translate(${s*4}px,0) rotate(${s*12}deg)`,offset:.85},{transform:b}],{duration:1100,delay:i*30,easing:'cubic-bezier(.25,.7,.4,1)'});
+   d.animate([{filter:'none'},{filter:'brightness(.9) saturate(1.3) hue-rotate(170deg)',offset:.3},{filter:'none'}],{duration:1500})});
+  setTimeout(done,1000)},T*.85)};
+
+/* Прикосновение вампира: из тени встаёт тёмная рука и сжимает кубик, из него тянутся алые искры жизни и улетают к тебе */
+SPX.vampiric_touch=(c,done)=>{const P=c.P,T=1300;spHand(c,{x:c.cx,y0:c.fl+c.sz*.9,y1:c.cy+c.sz*.25,size:c.sz*1.35,col:'#ff6a7a',T,grip:.45,glow:'#5a0c1c'});
+ sMark({x:c.cx,y:c.fl,s:c.sz*.9,m:2.6,c:'rgba(30,4,10,.6)',grow:.3});spSmoke(c,c.cx,c.fl,6,'#1a0408',{a:.5,up:.8});
+ setTimeout(()=>{dJit(c,2.5,500,10);vib([40,30,60,30]);c.dies.forEach(d=>{dieCoat(d,'poi');d.animate([{filter:'none'},{filter:'brightness(.45) saturate(.2) sepia(.4) hue-rotate(-30deg)',offset:.35},{filter:'brightness(.7)',offset:.8},{filter:'none'}],{duration:1700})});
+  const n=Math.round(14*P);for(let i=0;i<n;i++)setTimeout(()=>{const x0=c.cx+RN(-c.sz*.35,c.sz*.35),y0=c.cy+RN(-c.sz*.3,c.sz*.2),x1=c.W/2+RN(-40,40),y1=c.H+20,mx=(x0+x1)/2+RN(-120,120),my=y0+RN(-60,60);
+   spRun(700,q=>{const e=q*q,u=1-e,x=u*u*x0+2*u*e*mx+e*e*x1,y=u*u*y0+2*u*e*my+e*e*y1;sGlow({x,y,s:5,m:.12,c:'#ff4a62',add:1});sGlow({x,y,s:2,m:.08,c:'#ffd0d6',add:1})})},i*45);
+  sGlow({x:c.cx,y:c.cy,s:70,m:.5,c:'#c0304a',add:1})},T*.4);
+ setTimeout(()=>{sGlow({x:c.W/2,y:c.H-10,s:120,m:.6,c:'#ff6a7a',add:1,a:.6});vib(30)},T*.4+700);
+ setTimeout(done,T+200)};
+
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-28-71';
+const BUILD='2026-11-28-72';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
