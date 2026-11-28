@@ -2670,6 +2670,134 @@ SKFX['Ловкость рук']=(ex,ey,fl,die,used)=>{const win=used>=10,W=inner
   if(tt<3200)requestAnimationFrame(step)};
  draw();requestAnimationFrame(step)};
 {const _sf=skillFx;skillFx=function(spec,used){if(RM)return;const f=SKFX[spec.label];if(f){const W=innerWidth,H=innerHeight,ex=W/2,ey=H/2-80;return f(ex,ey,ey+62,$('die'),used)}return _sf(spec,used)}}
+/* ---------- проверки и спасброски характеристик: у каждой свой эффект (12 штук) ----------
+   Проверка = характеристика действует сама, спасбросок = выдерживает удар извне. Всё однократное, без повторов. */
+{const C={a:'#e9bd6c',b:'#a57cff',l:'#f6d58e'},FR='#cfe3f7';
+ const dieA=(die,ex,ey,fr,o)=>die.animate(fr.map(f=>Object.assign({transform:`translate(${ex+(f.x||0)}px,${ey+(f.y||0)}px) rotate(${f.r||0}deg) scale(${f.sx||1},${f.sy||1})`},f.o!=null?{offset:f.o}:{})),Object.assign({duration:600,easing:'cubic-bezier(.3,.7,.4,1)'},o||{}));
+ const T=(f,ms)=>wspT.push(setTimeout(f,ms));
+ const chips=(x,y,n,fl,c,o)=>{for(let i=0;i<n;i++)spawn(Object.assign({x:x+RN(-6,6),y:y+RN(-4,4),vx:RN(-160,160),vy:RN(-320,-90),g:1300,m:RN(1,1.6),s:RN(2,4),c:c||'#8a6a4a',fl:fl+RN(0,14),bo:.3,fp:3},o||{}))};
+  const glintAt=(x,y)=>{for(let i=0;i<4;i++){const a=i*1.571;spawn({k:'zap',pts:[[x,y],[x+Math.cos(a)*14,y+Math.sin(a)*14]],m:.35,c:'#ffffff',sc:C.l,w:1,fp:2})}};
+ /* лепесток на холсте: падает, кувыркается, ложится на стол */
+ const petalDraw=(g,p)=>{g.save();g.translate(p.x,p.y);p.rot=(p.rot||0)+(p.vy?p.spin*.016:0);g.rotate(p.rot);g.scale(1,p.vy?Math.abs(Math.cos(p.l*6+p.ph))*.8+.2:.35);
+  g.fillStyle=p.c;g.strokeStyle=C.l;g.lineWidth=.6;g.beginPath();g.moveTo(0,-p.s);g.bezierCurveTo(p.s*.9,-p.s*.6,p.s*.7,p.s*.7,0,p.s);g.bezierCurveTo(-p.s*.7,p.s*.7,-p.s*.9,-p.s*.6,0,-p.s);g.fill();g.stroke();g.restore()};
+ Object.assign(SKFX,{
+ 'Проверка: Сила':(ex,ey,fl,die,used)=>{/* кубик с размаху бьёт в доску: на высоком броске доска ломается пополам, на низком только трескается */
+  const brk=used>=8,y0=fl+12;
+  const half=s=>`<g class="h${s<0?'l':'r'}"><path d="M${s*112} -7 L${s*4} -7 L${s*-2} -2 L${s*5} 2 L${s*1} 7 L${s*112} 7 Z" fill="rgba(120,86,52,.55)" stroke="#c79a62"/><path d="M${s*100} -2 C${s*70} -4 ${s*40} 0 ${s*14} -3 M${s*96} 3 C${s*60} 1 ${s*36} 4 ${s*12} 2" stroke="rgba(199,154,98,.5)" stroke-width=".8"/></g>`;
+  const d=sfx(`<svg viewBox="-130 -30 260 60">${half(-1)}${half(1)}</svg>`,ex,y0,260,60,{u:1,life:2300});
+  const hl=d.querySelector('.hl'),hr=d.querySelector('.hr');[hl,hr].forEach(e=>{e.style.transformBox='fill-box'});hl.style.transformOrigin='0% 50%';hr.style.transformOrigin='100% 50%';
+  dieA(die,ex,ey,[{},{y:-46,sy:1.05,sx:.96,o:.45},{y:10,sx:1.14,sy:.84,o:.62},{y:brk?16:4,o:.8},{y:0}],{duration:760,easing:'cubic-bezier(.5,0,.3,1)'});
+  T(()=>{bigShake();vib(brk?[80,30,120]:[50,20,40]);dust(ex,fl-4,false);spawn({k:'ring',x:ex,y:y0,r0:20,r1:120,m:.6,c:C.a,w:2,fp:1,fy:.3});
+   spawn({k:'zap',pts:[[ex-4,y0-8],[ex+3,y0-2],[ex-3,y0+3],[ex+2,y0+9]],m:1.4,c:'#1a0e06',sc:C.a,w:1.6,fp:3,u:1});
+   if(brk){const o={duration:900,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'};
+    hl.animate([{transform:'rotate(0)'},{transform:'rotate(16deg) translate(-6px,4px)',offset:.35},{transform:'rotate(22deg) translate(-14px,40px)'}],o);
+    hr.animate([{transform:'rotate(0)'},{transform:'rotate(-16deg) translate(6px,4px)',offset:.35},{transform:'rotate(-22deg) translate(14px,40px)'}],o);
+    chips(ex,y0,used>=15?18:12,fl+26,'#a77d4f');T(()=>chips(ex,y0,6,fl+26,C.a,{s:RN(1.5,2.5)}),60)}
+   else{hl.animate([{transform:'rotate(0)'},{transform:'rotate(4deg)'},{transform:'rotate(2deg)'}],{duration:300,fill:'forwards'});hr.animate([{transform:'rotate(0)'},{transform:'rotate(-4deg)'},{transform:'rotate(-2deg)'}],{duration:300,fill:'forwards'});chips(ex,y0,5,fl+20,'#a77d4f')}},470)},
+ 'Спасбросок: Сила':(ex,ey,fl,die)=>{/* слева бьёт волна силы, кубик отъезжает, скребёт по столу и упирается обратно */
+  const arc=(i)=>`<path data-d="${i*60}" d="M${-20-i*16} -46 C${4-i*16} -20 ${4-i*16} 20 ${-20-i*16} 46" stroke-width="${2.4-i*.5}"/>`;
+  const w=sfx(`<svg viewBox="-80 -60 100 120">${arc(0)}${arc(1)}${arc(2)}</svg>`,0,ey,100,120,{life:900});sDraw(w,0,200);
+  w.animate([{transform:'translateX(0)'},{transform:`translateX(${ex-80}px)`}],{duration:330,easing:'cubic-bezier(.6,0,1,1)',fill:'forwards'});
+  T(()=>{vib([60,20,30]);spawn({k:'flash',x:ex-60,y:ey,s:40,m:.3,c:'rgba(240,196,122,.5)',add:1});
+   dieA(die,ex,ey,[{},{x:30,r:9,sx:.96,o:.22},{x:34,r:6,o:.45},{x:26,r:-2,sx:1.04,sy:.97,o:.68},{x:6,r:-3,o:.85},{x:0,r:0}],{duration:1100,easing:'ease-out'});
+   const s=sfx(`<svg viewBox="-10 -10 60 20"><path data-d="0" d="M0 -3 L40 -2" stroke="rgba(30,18,10,.75)" stroke-width="2"/><path data-d="40" d="M2 3 L38 4" stroke="rgba(30,18,10,.6)" stroke-width="1.5"/><path data-d="80" d="M4 0 L36 1" stroke="${C.a}" stroke-width=".6"/></svg>`,ex+25,fl+4,60,20,{u:1,life:1800});sDraw(s,0,240);
+   for(let i=0;i<10;i++)T(()=>spawn({k:'puff',x:ex+50+RN(0,14),y:fl+2,vx:RN(30,90),vy:-RN(10,40),dr:2,m:RN(.8,1.2),s:RN(6,11),gr:1.3,c:'rgba(150,130,110,.3)',fin:.2,fp:1.4,u:1}),i*35);
+   T(()=>{vib(40);dust(ex,fl-4,false)},720)},320)},
+ 'Проверка: Ловкость':(ex,ey,fl,die)=>{/* у кубика встаёт игла, нить одним броском проходит точно в ушко и натягивается, игла вздрагивает */
+  const nx=96,top=-92,eye=top+8;
+  const nd=sfx(`<svg viewBox="-20 -100 40 130"><path d="M0 ${top} L0 26" stroke-width="2"/><ellipse cx="0" cy="${eye}" rx="2.2" ry="5.5" stroke-width="1.2" fill="rgba(0,0,0,.6)"/></svg>`,ex+nx,fl-35,40,130,{u:1,life:2500});
+  nd.style.transformOrigin='50% 97%';nd.animate([{transform:'translateY(-30px)',opacity:0},{transform:'translateY(0)',opacity:1}],{duration:220,easing:'cubic-bezier(.5,0,.8,1)',fill:'forwards'});
+  T(()=>{vib(12);spawn({k:'spot',x:ex+nx,y:fl+26,s:4,m:1.6,c:'rgba(20,10,6,.8)'})},220);
+  const W=innerWidth,ER=fl-ey+eye,sx=-ex-20;/* координаты нити от центра кубика */
+  const slack=`M${sx} ${-40} C${-120} ${-160} ${40} ${ER-60} ${nx} ${ER} C${nx+40} ${ER+15} ${nx+60} ${ER+75} ${nx+90} ${ER+105}`;
+  const taut=`M${sx} ${ER-30} L${nx} ${ER} L${W-ex+20} ${ER+18}`;
+  const th=sfx(`<svg viewBox="${-W} -200 ${2*W} 400"><path class="sl" data-d="0" d="${slack}" stroke="${C.b}" stroke-width="1.3"/><path class="tt" d="${taut}" stroke="${C.b}" stroke-width="1.3" opacity="0"/></svg>`,ex,ey,2*W,400,{u:1,life:2100});
+  T(()=>{sDraw(th,0,520,'.sl')},300);
+  T(()=>{spawn({k:'flash',x:ex+nx,y:ey+ER,s:16,m:.35,c:'rgba(255,240,200,.95)',add:1});glintAt(ex+nx,ey+ER)},300+330);
+  T(()=>{vib([20,30,40]);th.querySelector('.sl').animate([{opacity:1},{opacity:0}],{duration:90,fill:'forwards'});th.querySelector('.tt').animate([{opacity:0},{opacity:1}],{duration:90,fill:'forwards'});
+   nd.animate([0,-9,6,-3.5,1.5,0].map(r=>({transform:`rotate(${r}deg)`})),{duration:700,easing:'ease-out',fill:'forwards'});
+   dieA(die,ex,ey,[{},{x:3,r:2,o:.3},{}],{duration:300})},300+620)},
+ 'Спасбросок: Ловкость':(ex,ey,fl,die,used)=>{/* сверху падают три дротика, кубик в последний миг уворачивается, дротики втыкаются в стол */
+  const X=[0,-96,92],graze=used<6;
+  const dart=`<svg viewBox="-10 -60 20 70"><path d="M0 -56 L0 6" stroke-width="1.6"/><path d="M0 6 L-3 -2 M0 6 L3 -2" stroke-width="1.6"/><path d="M0 -56 L-6 -64 M0 -50 L-6 -58 M0 -56 L6 -64 M0 -50 L6 -58" stroke="${C.b}" stroke-width="1.2"/></svg>`;
+  /* один проход кубика: [мс, сдвиг, высота, наклон, сплющивание] */
+  const hop=(t,a,b)=>[[t,a,0,0,1],[t+120,a+(b-a)*.6,-30,(b-a)*.08,1],[t+200,b,4,0,.94],[t+240,b,0,0,1]];
+  let K=[[0,0,0,0,1],...hop(0,0,-96),...hop(400,-96,92)];
+  if(graze)K.push([1090,92,0,0,1],[1130,104,-2,7,1],[1260,92,0,0,1],[1500,92,0,0,1],...hop(1500,92,0),[1900,0,0,0,1]);
+  else K.push(...hop(820,92,0),[1900,0,0,0,1]);
+  die.animate(K.map(([t,x,y,r,q])=>({offset:t/1900,transform:`translate(${ex+x}px,${ey+y}px) rotate(${r}deg) scale(${(2-q).toFixed(2)},${q})`})),{duration:1900});
+  X.forEach((dx,i)=>T(()=>{const x=ex+dx,dd=sfx(dart,x,0,20,70,{life:2500-i*420});dd.style.transformOrigin='50% 92%';
+   dd.animate([{transform:`translateY(${-80}px)`},{transform:`translateY(${fl-4}px)`}],{duration:170,easing:'cubic-bezier(.6,0,1,1)',fill:'forwards'});
+   T(()=>{vib(18);spawn({k:'spot',x,y:fl+30,s:6,m:1.6,c:'rgba(20,10,6,.7)'});chips(x,fl+30,4,fl+34,'#8a7a6a',{vy:RN(-120,-40)});
+    dd.animate([0,8,-5,3,-1,0].map(r=>({transform:`translateY(${fl-4}px) rotate(${r}deg)`})),{duration:520,fill:'forwards'});
+    if(graze&&i===2)spawn({k:'flash',x:ex+60,y:ey,s:22,m:.3,c:'rgba(255,230,200,.9)',add:1})},170)},i*420+70))},
+ 'Проверка: Телосложение':(ex,ey,fl,die,used)=>{/* три тяжёлых удара сердца: кубик набухает, стол вздрагивает, по нему бежит линия пульса */
+  const beats=used>=15?4:3;
+  const p=sfx(`<svg viewBox="-160 -30 320 60"><path data-d="0" d="M-160 0 L-90 0 L-80 -6 L-70 0 L-58 0 L-50 -26 L-40 22 L-32 0 L20 0 L30 -6 L40 0 L52 0 L60 -26 L70 22 L78 0 L160 0" stroke="${C.b}"/></svg>`,ex,fl+14,320,60,{u:1,life:2300});sDraw(p,0,1500);
+  for(let i=0;i<beats;i++){T(()=>{dieA(die,ex,ey,[{},{sx:1.09,sy:1.09,o:.18},{sx:.98,sy:.98,o:.4},{sx:1.05,sy:1.05,o:.55},{}],{duration:520});vib([30,90,20]);
+   spawn({k:'ring',x:ex,y:fl+4,r0:30,r1:110,m:.7,c:C.a,w:2.2,fp:1,fy:.3});T(()=>spawn({k:'ring',x:ex,y:fl+4,r0:30,r1:80,m:.5,c:C.b,w:1.4,fp:1,fy:.3}),180);
+   spawn({k:'flash',x:ex,y:ey,s:70,m:.35,c:'rgba(179,35,58,.28)'})},i*560)}},
+ 'Спасбросок: Телосложение':(ex,ey,fl,die)=>{/* кубик обрастает инеем, дрожит, встряхивается, и лёд осыпается осколками на стол */
+  const sp=(x,y,a)=>`<path data-d="${RN(0,500)|0}" d="M${x} ${y} l${(Math.cos(a)*22).toFixed(1)} ${(Math.sin(a)*22).toFixed(1)} M${x+Math.cos(a)*10} ${y+Math.sin(a)*10} l${(Math.cos(a+.7)*8).toFixed(1)} ${(Math.sin(a+.7)*8).toFixed(1)} M${x+Math.cos(a)*10} ${y+Math.sin(a)*10} l${(Math.cos(a-.7)*8).toFixed(1)} ${(Math.sin(a-.7)*8).toFixed(1)}"/>`;
+  let s='';[[-60,-60,.8],[60,-60,2.36],[-60,60,-.8],[60,60,-2.36],[0,-66,1.57],[-66,0,0],[66,0,3.14],[0,66,-1.57]].forEach(([x,y,a])=>s+=sp(x,y,a));
+  const d=sfx(`<svg viewBox="-80 -80 160 160" style="stroke:${FR};filter:drop-shadow(0 0 4px rgba(207,227,247,.7))">${s}</svg>`,ex,ey,160,160,{life:1150});sDraw(d,0,600);
+  spawn({k:'puff',x:ex,y:ey,s:80,m:1.1,gr:.2,c:'rgba(207,227,247,.14)',fin:.4,fp:2});
+  T(()=>dieA(die,ex,ey,[{},{x:-2,o:.2},{x:2,o:.4},{x:-2,o:.6},{x:2,o:.8},{}],{duration:400,easing:'linear'}),500);
+  T(()=>{vib([50,20,70]);dieA(die,ex,ey,[{},{y:-14,sx:.94,sy:1.08,r:-4,o:.3},{y:4,sx:1.08,sy:.92,r:3,o:.65},{}],{duration:440});d.remove();
+   for(let i=0;i<22;i++){const a=RN(0,6.283),r=RN(40,66);spawn({x:ex+Math.cos(a)*r,y:ey+Math.sin(a)*r,vx:Math.cos(a)*RN(60,200),vy:Math.sin(a)*RN(60,160)-RN(120,240),g:1400,m:RN(1.1,1.7),s:RN(2,4),c:i%3?FR:'#ffffff',fl:fl+RN(4,18),bo:.35,fp:3,add:1})}
+   spawn({k:'flash',x:ex,y:ey,s:60,m:.25,c:'rgba(207,227,247,.6)',add:1})},950)},
+ 'Проверка: Интеллект':(ex,ey,fl,die)=>{/* циркуль втыкает иглу в стол и чертит вокруг кубика окружность, внутри проступает треугольник и деления */
+  const R=94,cx=ex,cy=fl+6;
+  const d=sfx(`<svg viewBox="-120 -60 240 120"><ellipse class="cc" cx="0" cy="0" rx="${R}" ry="${R*.3}" fill="none"/><path data-d="900" d="M0 ${-R*.3} L${R*.82} ${R*.15} L${-R*.82} ${R*.15} Z" stroke="${C.b}" stroke-width="1"/>${Array.from({length:9},(_,i)=>`<path data-d="${1000+i*50}" d="M${-80+i*20} 30 L${-80+i*20} ${i%2?34:38}" stroke-width="1"/>`).join('')}<path data-d="1000" d="M-80 30 L80 30" stroke-width="1"/></svg>`,cx,cy,240,120,{u:1,life:2500});
+  const e=d.querySelector('.cc');e.setAttribute('pathLength','1');e.style.strokeDasharray='1';e.style.strokeDashoffset='1';sDraw(d,0,380);
+  const cp=sfx(`<svg viewBox="-100 -130 200 140"><circle cx="0" cy="-120" r="5"/><path d="M0 -115 L0 0" stroke-width="2"/><path d="M0 -115 L${R-4} -8" stroke-width="2"/><path d="M${R-4} -8 L${R} 0" stroke="${C.b}" stroke-width="2"/></svg>`,cx,cy-62,200,140,{life:1700});
+  cp.style.transformOrigin='50% 92%';cp.animate([{transform:'translateY(-40px)',opacity:0},{transform:'translateY(0)',opacity:1}],{duration:260,easing:'cubic-bezier(.5,0,.8,1)',fill:'forwards'});
+  T(()=>{vib(15);spawn({k:'spot',x:cx,y:cy,s:4,m:1.6,c:'rgba(20,10,6,.8)'});spawn({k:'flash',x:cx,y:cy,s:10,m:.2,c:'rgba(255,240,200,.9)',add:1});
+   e.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:850,easing:'ease-in-out',fill:'forwards'});
+   cp.animate([{transform:'perspective(500px) rotateY(0deg)'},{transform:'perspective(500px) rotateY(360deg)'}],{duration:850,easing:'ease-in-out',fill:'forwards'})},260);
+  T(()=>cp.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(-30px)'}],{duration:300,fill:'forwards'}),1200)},
+ 'Спасбросок: Интеллект':(ex,ey,fl,die)=>{/* в разум бьёт ломаный шип, перед кубиком встаёт грань-щит из шестиугольников, шип ломается */
+  const hx=(x,y,r)=>{let s='';for(let i=0;i<6;i++){const a=i/6*6.283+.52;s+=(i?'L':'M')+(x+Math.cos(a)*r).toFixed(1)+' '+(y+Math.sin(a)*r).toFixed(1)}return s+'Z'};
+  const H=[[0,0],[0,-28],[0,28],[-24,-14],[-24,14],[24,-14],[24,14]].map(([x,y],i)=>`<path data-d="${i*30}" d="${hx(x,y,15)}" stroke="${C.b}" fill="rgba(169,201,234,.08)"/>`).join('');
+  const sh=sfx(`<svg viewBox="-50 -50 100 100">${H}</svg>`,ex-86,ey-6,100,100,{life:1300});sDraw(sh,0,260);sh.style.transform='perspective(200px) rotateY(48deg)';
+  const x0=-10,y0=ey-200,tx=ex-86,ty=ey-6,pts=zapPts(x0,y0,tx,ty,7,22);
+  T(()=>{spawn({k:'zap',pts,m:.35,c:'#e0b0ff',sc:'#7b3fd6',w:2.4,fp:2})},180);
+  T(()=>{vib([40,20,40]);spawn({k:'flash',x:tx,y:ty,s:46,m:.3,c:'rgba(200,170,255,.8)',add:1});dieA(die,ex,ey,[{},{x:7,r:3,o:.3},{}],{duration:360});
+   for(let i=0;i<4;i++)spawn({k:'zap',pts:zapPts(tx,ty,tx+RN(-30,30),ty+RN(-34,34),3,5),m:.6,c:'#ffffff',sc:C.b,w:1,fp:3});
+   for(let i=0;i<12;i++)spawn({x:tx+RN(-6,6),y:ty+RN(-6,6),vx:RN(-200,-40),vy:RN(-220,20),g:1200,m:RN(.8,1.3),s:RN(2,3.5),c:i%2?'#c9a8ff':'#ffffff',fl:fl+RN(6,18),bo:.3,add:1,fp:3})},430);
+  T(()=>sh.animate([{opacity:1,transform:'perspective(200px) rotateY(48deg)'},{opacity:0,transform:'perspective(200px) rotateY(48deg) scale(1.15)'}],{duration:350,fill:'forwards'}),900)},
+ 'Проверка: Мудрость':(ex,ey,fl,die)=>{/* с высоты падает капля, стол оказывается гладью воды: брызги и тихие круги */
+  const x=ex+70,y=fl+18;
+  spawn({x,y:ey-220,vy:520,g:1600,m:.5,s:4,c:'#cfeeff',add:1,fl:y,stick:1,fp:6});
+  T(()=>{vib(14);for(let i=0;i<4;i++)T(()=>spawn({k:'ring',x,y,r0:4,r1:70+i*26,m:1.4+i*.3,c:i%2?C.b:'#cfeeff',w:1.6-i*.25,fp:1,fy:.28}),i*230);
+   for(let i=0;i<9;i++)spawn({x:x+RN(-3,3),y,vx:RN(-70,70),vy:RN(-260,-140),g:1500,m:.9,s:RN(1.5,2.5),c:'#cfeeff',add:1,fl:y+RN(-2,4),stick:1,fp:3});
+   spawn({k:'flash',x,y,s:16,m:.3,c:'rgba(207,238,255,.8)',add:1,u:1});dieA(die,ex,ey,[{},{y:2,r:-1.5,o:.4},{y:0,r:1,o:.7},{}],{duration:900,easing:'ease-in-out'})},380);
+  T(()=>spawn({k:'ring',x:ex,y:fl+6,r0:60,r1:100,m:1,c:'rgba(207,238,255,.5)',w:1,fp:1,fy:.28}),900)},
+ 'Спасбросок: Мудрость':(ex,ey,fl,die)=>{/* к кубику ползут тёмные шепчущие нити, он твёрдо бьёт в стол, и нити отдёргивает */
+  const W=innerWidth,tn=[[-1,-70],[-1,40],[1,-40],[1,60]];
+  const ds=tn.map(([s,dy],i)=>{const x0=s<0?-ex-20:W-ex+20,mx=s*90,cy=dy;const d=sfx(`<svg viewBox="${-W} -200 ${2*W} 400" style="stroke:#6b5a8a;stroke-width:2.4;filter:drop-shadow(0 0 6px rgba(40,20,70,.9))"><path data-d="${i*90}" d="M${x0} ${cy+RN(-40,40)} C${x0*.6} ${cy-60} ${mx*1.6} ${cy+50} ${s*74} ${cy*.5}"/></svg>`,ex,ey,2*W,400,{life:1500});sDraw(d,0,700);return d});
+  for(let i=0;i<10;i++)T(()=>spawn({k:'puff',x:ex+(i%2?1:-1)*RN(100,180),y:ey+RN(-60,60),vx:(i%2?-1:1)*RN(20,50),m:1,s:RN(10,16),gr:.8,c:'rgba(40,24,60,.35)',fin:.3,fp:1.5}),i*60);
+  T(()=>{dieA(die,ex,ey,[{},{y:-16,sx:.96,sy:1.05,o:.35},{y:8,sx:1.12,sy:.86,o:.6},{}],{duration:420,easing:'cubic-bezier(.5,0,.3,1)'})},800);
+  T(()=>{bigShake();vib([60,30,40]);dust(ex,fl-4,false);spawn({k:'ring',x:ex,y:fl,r0:20,r1:200,m:.7,c:C.a,w:2.6,fp:1,fy:.3});spawn({k:'flash',x:ex,y:ey,s:90,m:.3,c:'rgba(255,236,200,.35)',add:1});
+   ds.forEach((d,i)=>d.animate([{transform:'translateX(0)',opacity:1},{transform:`translateX(${tn[i][0]*160}px)`,opacity:0}],{duration:380,easing:'cubic-bezier(.2,.8,.4,1)',fill:'forwards'}))},1020)},
+ 'Проверка: Харизма':(ex,ey,fl,die,used)=>{/* сверху падает луч света, кубик выпрямляется в нём, к его ногам летят лепестки */
+  const b=document.createElement('div');b.className='sfx u beam';b.style.cssText=`left:${ex-80}px;top:0;width:160px;height:${fl+20}px`;$('roll').insertBefore(b,$('die'));
+  b.animate([{opacity:0},{opacity:1,offset:.2},{opacity:.8,offset:.7},{opacity:0}],{duration:2600,fill:'forwards'}).onfinish=()=>b.remove();
+  spawn({k:'ring',x:ex,y:fl+6,r0:40,r1:84,m:1.6,c:'rgba(246,220,168,.6)',w:2,fp:3,fy:.3});
+  dieA(die,ex,ey,[{},{y:-12,sx:.97,sy:1.04,o:.4},{y:-6,o:.7},{}],{duration:900,easing:'ease-out'});
+  const n=used>=15?14:9,cols=['rgba(214,96,120,.85)','rgba(240,170,180,.85)','rgba(246,220,168,.9)'];
+  for(let i=0;i<n;i++)T(()=>{const s=i%2?1:-1,x0=s<0?-10:innerWidth+10;spawn({k:'pt',draw:petalDraw,x:x0,y:ey-RN(40,160),vx:-s*RN(180,(ex+60)*1.2),vy:RN(-300,-120),g:900,dr:.8,m:2.4,s:RN(5,8),spin:RN(-12,12),ph:RN(0,6),rot:RN(0,6),c:cols[i%3],fl:fl+RN(2,26),bo:.2,fp:4})},300+i*90)},
+ 'Спасбросок: Харизма':(ex,ey,fl,die,used)=>{/* под кубиком зажигается круг изгнания и тянет его вниз; кубик вырывается, круг трескается */
+  const ru=[...'ᚦᛉᛟᚱᛞᚨᛊᚷ'].map((t,i)=>{const a=i/8*6.283;return `<text x="${(Math.cos(a)*84).toFixed(1)}" y="${(Math.sin(a)*84+4).toFixed(1)}" font-size="13" text-anchor="middle" fill="${C.b}" stroke="none" class="rn">${t}</text>`}).join('');
+  const d=sfx(`<svg viewBox="-120 -120 240 240" style="stroke:${C.b}"><g transform="scale(1 .3)"><circle data-d="0" r="100"/><circle data-d="150" r="68"/>${ru}</g></svg>`,ex,fl+8,240,240,{u:1,life:2000});sDraw(d,0,520);sPop(d,'.rn',300,50);
+  const deep=used<8?26:16;
+  dieA(die,ex,ey,[{},{o:.29},{y:deep*.6,sy:.94,o:.42},{x:-2,y:deep,sy:.9,o:.52},{x:2,y:deep,sy:.9,o:.62},{x:-1,y:deep,sy:.9,o:.7},{y:-34,sx:.92,sy:1.1,o:.82},{y:4,sx:1.08,sy:.93,o:.92},{}],{duration:1760,easing:'linear'});
+  T(()=>{vib([20,20,20,20,20]);for(let i=0;i<8;i++)T(()=>spawn({x:ex+RN(-90,90),y:fl+RN(-6,16),vx:0,vy:RN(20,50),m:.7,s:2,c:C.b,add:1,u:1}),i*70)},520);
+  T(()=>{vib([90,30,60]);bigShake();
+   for(let i=0;i<5;i++){const a=RN(0,6.283);spawn({k:'zap',pts:zapPts(ex,fl+8,ex+Math.cos(a)*100,fl+8+Math.sin(a)*30,4,6),m:.7,c:'#ffffff',sc:C.b,w:1.2,fp:3,u:1})}
+   for(let i=0;i<18;i++){const a=RN(0,6.283);spawn({x:ex+Math.cos(a)*RN(60,100),y:fl+8+Math.sin(a)*RN(18,30),vx:Math.cos(a)*RN(60,180),vy:-RN(150,320),g:1300,m:RN(1,1.5),s:RN(2,3.5),c:i%2?C.b:'#ffffff',fl:fl+RN(10,26),bo:.3,add:1,fp:3})}
+   d.animate([{opacity:1,filter:'blur(0)'},{opacity:0,filter:'blur(3px)'}],{duration:380,fill:'forwards'})},1240)}
+ })}
 /* три огненных кнопки различаются: снаряд — огонёк, шар — шар пламени, цветной шарик — шар из шести стихий */
 EL.fball=EL.fire;EL.chroma=EL.fire;
 {const _b=burst;burst=function(el,...r){if(el==='fball')el='fireball';else if(el==='chroma')el=ELK[S.orbT]||'fire';return _b(el,...r)}}
@@ -3668,7 +3796,7 @@ ZAPPLY({control_winds:'z_wind|wind',far_step:'z_portal|portal',bigbys_hand:'hand
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-28-69';
+const BUILD='2026-11-28-70';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
