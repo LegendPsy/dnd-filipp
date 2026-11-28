@@ -2238,11 +2238,16 @@ const DEFAULT={v:2,name:'Арадия',race:'Шадар-кай',cls:'Друид'
 const KIT={leather:{q:1,fight:1},shield:{q:1,fight:1},scimitar:{q:1,fight:1},staff:{q:1,fight:1},focus:{q:1},starmap:{q:1,soc:1,fight:1},travel:{q:1},explorer:{q:1},trap:{q:1,fight:1},trophy:{q:1,soc:1}};
 /* что надето сначала: ключ предмета -> место */
 const EQ0={body:'leather',off:'shield',main:'scimitar',neck:'starmap',cloak:'travel',back:'explorer',belt:'focus'};
-/* тестового профиля у Арадии нет */
-let TEST=false;
-const SKEY='aradia-sheet-v1';
+/* тестовый 10 уровень (как у Филиппа): нажатие на портрет на «Персонаже». Свои данные под ключом aradia-sheet-test10,
+   настоящий лист (aradia-sheet-v1) не трогается. Выход: снова нажать на портрет или на значок «тест · выйти» у имени. */
+const TEST10=Object.assign(structuredClone(DEFAULT),{test:1,level:10,
+ ab:{str:8,dex:14,con:15,int:10,wis:20,cha:12},hp:{max:73,cur:73,temp:0},hd:{die:8,used:0},money:{pp:2,gp:340,sp:15,cp:8},
+ slots:{max:4,used:0,extra:0},hi:{2:{max:3,used:0,extra:0},3:{max:3,used:0,extra:0},4:{max:3,used:0,extra:0},5:{max:2,used:0,extra:0}},
+ known:['produce_flame','thorn_whip','shillelagh','frostbite','healing_word','entangle','faerie_fire','fog_cloud','speak_with_animals','moonbeam','pass_without_trace','healing_spirit','call_lightning','conjure_animals','dispel_magic','polymorph','wall_of_fire','wall_of_stone','mass_cure_wounds']});
+let TEST=false;try{TEST=localStorage.getItem('aradia-test10')==='1'}catch(e){}
+const SKEY=TEST?'aradia-sheet-test10':'aradia-sheet-v1';
 let S;try{S=JSON.parse(localStorage.getItem(SKEY))}catch(e){}
-if(!S||S.v!==2)S=structuredClone(DEFAULT);
+if(!S||S.v!==2)S=structuredClone(TEST?TEST10:DEFAULT);
 if(!S.wild)S.wild={max:2,used:0};if(!S.raven)S.raven={max:1,used:0};if(!S.luck)S.luck={max:0,used:0};if(!S.chaos)S.chaos={max:0,used:0};if(!S.feats)S.feats=[];if(!S.langs)S.langs=['Общий','Друидический','Бездны'];if(S.charTxt==null)S.charTxt='';
 if(!S.cond)S.cond={};if(!S.condShow)S.condShow=COND_MAIN.slice();if(S.exh==null)S.exh=0;if(!S.slots)S.slots={max:3,used:0};if(S.conc===undefined)S.conc=null;if(!S.spt)S.spt={max:2,used:0};if(S.slots.extra==null)S.slots.extra=0;if(!S.death)S.death={s:0,f:0};if(!S.orbT)S.orbT='огонь';if(S.shieldOn==null)S.shieldOn=0;if(!S.fSpellShow)S.fSpellShow=['fire_bolt','chromatic_orb','shield'];if(S.test&&!S.fs9){S.fs9=1;if(!S.fSpellShow.includes('greater_invisibility')&&S.fSpellShow.length<9)S.fSpellShow.push('greater_invisibility')}if(!S.inv)S.inv=[];if(!S.sItemShow)S.sItemShow=[];if(!S.fItemShow)S.fItemShow=[];if(!S.smagShow)S.smagShow=['friends','minor_illusion','message','charm_person'];S.smagShow=S.smagShow.filter(k=>SPELLS[k]&&SPELLS[k].soc).slice(0,8);
 /* магия друида (тред 2): наборы заклинаний вместо чародейских, запас Звёздной карты */
@@ -2269,7 +2274,7 @@ const d20i='<svg class="d20" viewBox="0 0 24 24" fill="none" stroke="currentColo
 
 /* ---------- отрисовка ---------- */
 function renderHead(){
- $('nm').innerHTML=esc(S.name)+` <span class="lv2">${S.level} уровень</span>`;
+ $('nm').innerHTML=esc(S.name)+` <span class="lv2">${S.level} уровень</span>`+(TEST?' <span class="tbadge" id="tExit" role="button">тест · выйти</span>':'');document.body.classList.toggle('test',TEST);
  $('cl').innerHTML=`${esc(S.race)} · ${esc(S.cls)} ${S.sub==='Круг Звёзд'?'Круга Звёзд':esc(S.sub)}`;
  const em=effMax(),B=wfB();$('hpTok').querySelector('.k').textContent=B?'Хиты зверя':'Хиты';$('hpTok').classList.toggle('bst',!!B);if(B){$('hpCur').textContent=S.wf.hp;$('hpMax').textContent=B.hp;$('hpMax').classList.remove('warn');$('hpTemp').textContent=S.hp.temp?'+'+S.hp.temp:'';$('hpBar').style.width=Math.max(0,Math.min(100,S.wf.hp/B.hp*100))+'%'}else{$('hpCur').textContent=Math.min(S.hp.cur,em);$('hpMax').textContent=em;$('hpMax').classList.toggle('warn',em<S.hp.max);$('hpTemp').textContent=S.hp.temp?'+'+S.hp.temp:'';
  $('hpBar').style.width=Math.max(0,Math.min(100,Math.min(S.hp.cur,em)/em*100))+'%'}
@@ -4137,7 +4142,7 @@ function hiAct(a){const [w,x,y]=a.split(':'),c=+x,L=S.spt.max-S.spt.used,re=k=>{
 COINS.forEach(([k,n])=>INFO['coin_'+k]=()=>({t:n[0].toUpperCase()+n.slice(1),sub:`${S.money[k]} монет`,body:`<p class="mu">1 платиновая = 10 золотых = 100 серебряных = 1000 медных.</p><div class="cpm">${[-10,-1,1,10].map(d=>`<button data-coin="${k}" data-d="${d}">${d>0?'+':'−'}${Math.abs(d)}</button>`).join('')}</div>`,acts:`<button data-act="closeD">Готово</button>`}));
 document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
  if(t.dataset.coin){const k=t.dataset.coin;S.money[k]=Math.max(0,S.money[k]+ +t.dataset.d);save();renderInv();if(openInfoKey==='coin_'+k)openInfo(openInfoKey,true);vib(8);e.stopImmediatePropagation();return}
- if(t.id==='faceBtn'){e.stopImmediatePropagation();if(S.wf&&typeof wfB==='function'&&wfB())openInfo('wfnow')}
+ if(t.id==='faceBtn'){e.stopImmediatePropagation();if(S.wf&&typeof wfB==='function'&&wfB())openInfo('wfnow');else toggleTest()}
 },true);
 function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip');
  try{localStorage.setItem('aradia-test10',TEST?'0':'1');sessionStorage.setItem('aradia-tmsg',TEST?'real':'test')}catch(e){}
@@ -4556,7 +4561,7 @@ function syncForms(){if(S.wf&&(S.cond&&S.cond.unconscious))S.wf=null;if(S.star&&
 /* ЧАСТО ИСПОЛЬЗУЕМОЕ: общий счётчик. localStorage 'aradia-use-v1' = {группа:{ключ:сколько раз}}.
    Группы: 'wild' (звери Дикого облика, ключ B.k), 'cast' (заклинания, ключ SPELLS), для призыва позже 'summon'.
    useBump(группа,ключ) — записать использование; useOrder(группа,массив ключей) — вернуть тот же список, но 2 самых частых (не меньше 2 раз) первыми. */
-const USEKEY='aradia-use-v1';
+const USEKEY=TEST?'aradia-use-test10':'aradia-use-v1';
 function useGet(){try{const o=JSON.parse(localStorage.getItem(USEKEY));return o&&typeof o==='object'?o:{}}catch(e){return{}}}
 function useBump(g,k){try{const o=useGet();(o[g]=o[g]||{})[k]=(o[g][k]||0)+1;localStorage.setItem(USEKEY,JSON.stringify(o))}catch(e){}}
 function useTop(g,keys){const c=useGet()[g]||{};return keys.filter(k=>(c[k]||0)>=2).sort((a,b)=>c[b]-c[a]||keys.indexOf(a)-keys.indexOf(b)).slice(0,2)}
@@ -6102,10 +6107,12 @@ function resetUndo(){let b=null;try{b=localStorage.getItem(RBAK)}catch(e){}if(!b
  $('rstYes').onclick=resetBase;
  if($('rstBack'))$('rstBack').onclick=resetUndo}}
 
+/* выход из тестового 10 уровня значком у имени */
+document.addEventListener('click',e=>{if(e.target.closest('#tExit')){e.preventDefault();e.stopImmediatePropagation();toggleTest()}},true);
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-27-28';
+const BUILD='aradia-2026-11-27-29';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
