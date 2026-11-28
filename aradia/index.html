@@ -2291,7 +2291,7 @@ function cSetMeta(m){try{localStorage.setItem(CLOUD.mk,JSON.stringify(m))}catch(
 function cHash(s){let h=5381;s=String(s||'');for(let i=0;i<s.length;i++)h=(h*33^s.charCodeAt(i))|0;return (h>>>0).toString(36)+'.'+s.length}
 function cNewId(){const a=new Uint8Array(16);crypto.getRandomValues(a);return Array.from(a,b=>b.toString(16).padStart(2,'0')).join('')}
 function cRpc(fn,body,keep){const b=JSON.stringify(body);return fetch(CLOUD.url+'/rest/v1/rpc/'+fn,{method:'POST',keepalive:!!keep&&b.length<60000,cache:'no-store',
-  headers:{apikey:CLOUD.key,Authorization:'Bearer '+CLOUD.key,'Content-Type':'application/json'},body:b})
+  headers:{apikey:CLOUD.key,'Content-Type':'application/json'},body:b})
   .then(r=>r.ok?r.json():Promise.reject(new Error('http '+r.status)))}
 function cLocal(){let s=null,u=null;try{s=localStorage.getItem(SKEY);u=localStorage.getItem(CLOUD.use)}catch(e){}return{s,u}}
 /* пометить: есть что отправить */
