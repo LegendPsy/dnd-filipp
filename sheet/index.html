@@ -957,6 +957,144 @@ span.need{display:inline-flex;width:auto;margin:3px 0 0;padding:3px 9px;font-siz
 .smsl{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;background:rgba(30,26,40,.8);border:1px solid rgba(185,163,232,.3);border-radius:12px;padding:7px 10px;margin-top:6px}
 .smsl .t{font:italic 500 14px/1 "Playfair Display",serif}.smsl .ch{display:flex;gap:7px;align-items:center;flex-wrap:nowrap}
 @media (max-width:340px){.smsl{padding:7px 8px;gap:5px}.smsl .t{font-size:12.5px}.smsl .ch{gap:3px}.sgp{gap:2px}.sgp .charge{width:8px;height:8px}}
+/* ===== призванные существа: шестая вкладка, окно выбора, броски стаей ===== */
+.tabs.six{grid-template-columns:repeat(6,1fr)}
+.tabs.six .ti{width:34px;height:34px}.tabs.six .fc2{width:34px;height:34px}
+.tabs .sumtab .ti{border-radius:50%;-webkit-mask:radial-gradient(circle,#000 56%,transparent 71%);mask:radial-gradient(circle,#000 56%,transparent 71%)}
+.tabs .sumtab.hos .ti{filter:sepia(.7) hue-rotate(-38deg) saturate(2.4) brightness(.92)!important}
+.tabs .sumtab.pre .ti{opacity:0!important;transform:scale(.4)!important}
+@media (min-width:740px){.tabs.six{grid-template-columns:repeat(5,1fr);gap:2px}.tabs.six button{font-size:13px;gap:3px;padding:0 2px;white-space:nowrap;overflow:hidden}.tabs.six .ti{width:22px;height:22px;flex:none}}
+#p-sum .shead{position:relative}
+#p-sum .shead img{width:44px;height:44px;border-radius:50%;box-shadow:0 0 0 1px rgba(233,189,108,.35)}
+#p-sum.hos .shead img{box-shadow:0 0 0 1.5px var(--blood),0 0 16px rgba(168,79,88,.45)}
+.smvit{flex:none;display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;gap:6px}
+.smvit .tok{padding:5px 3px}.smvit .tok .k{font-size:9px;letter-spacing:.04em;line-height:1.1;min-height:20px;display:flex;align-items:center;justify-content:center}
+.smvit .tok .v{font-size:21px}.smvit .tok .v small{font-size:12px}.smvit .tok .v.t{font:600 14px/1.15 "Cormorant Garamond",serif;padding:3px 0}
+.smvit .tok.cc{border-color:rgba(165,124,255,.45)}.smvit .tok.cc .v{color:#e4d6ff}
+.smvit .tok.no{border-color:rgba(208,101,111,.55)}.smvit .tok.no .v{color:#e8b4ba}
+.smgrid{flex:none;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.smgrid.n1{grid-template-columns:1fr}.smgrid.n3{grid-template-columns:repeat(3,1fr)}.smgrid.n4{grid-template-columns:repeat(4,1fr)}.smgrid.n5{grid-template-columns:repeat(5,1fr)}
+.smc{position:relative;display:flex;align-items:center;gap:8px;min-width:0;background:linear-gradient(160deg,rgba(42,28,46,.92),rgba(24,16,27,.92));border:1px solid rgba(165,124,255,.3);border-radius:12px;padding:6px 8px;text-align:left;transition:transform .12s cubic-bezier(.3,1.6,.5,1);overflow:hidden}
+.smc img{flex:none;width:42px;height:42px;border-radius:50%;box-shadow:0 0 0 1px rgba(233,189,108,.35)}
+.smc .t{flex:1;min-width:0}
+.smc b{display:block;font:600 15.5px/1.05 "Cormorant Garamond",serif;color:#f3ebdf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.smc small{display:block;font-size:11px;line-height:1.2;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.smc .hv{font:700 17px/1 "Cormorant Garamond",serif;color:#fff}.smc .hv small{display:inline;font:600 11px Alegreya,serif;color:var(--mute)}
+.smc .hpbar{margin-top:3px}
+.smgrid.n1 .smc{padding:8px 10px;gap:12px}.smgrid.n1 .smc img{width:64px;height:64px}.smgrid.n1 .smc b{font-size:19px}.smgrid.n1 .smc .hv{font-size:22px}
+.smc .st{display:flex;gap:10px;margin-top:3px;font-size:11.5px;color:#d6cbbb;white-space:nowrap;overflow:hidden}
+.smgrid.n3 .smc,.smgrid.n4 .smc,.smgrid.n5 .smc{flex-direction:column;gap:2px;padding:5px 3px 6px;text-align:center}
+.smgrid.n3 .smc img,.smgrid.n4 .smc img,.smgrid.n5 .smc img{width:32px;height:32px}
+.smgrid.n4 .smc .t,.smgrid.n5 .smc .t,.smgrid.n3 .smc .t{width:100%}
+.smgrid.n4 .smc b,.smgrid.n5 .smc b,.smgrid.n3 .smc b{font-size:13px}.smgrid.n4 .smc .hv,.smgrid.n5 .smc .hv,.smgrid.n3 .smc .hv{font-size:14px}
+.smgrid.n5 .smc small,.smgrid.n4 .smc small{display:none}
+.smgrid.n5 .smc img,.smgrid.n6 .smc img{display:none}.smgrid.n6{grid-template-columns:repeat(8,1fr);gap:4px}.smgrid.n6 .smc{flex-direction:column;padding:4px 2px;text-align:center}.smgrid.n6 .smc .t{width:100%}.smgrid.n6 .smc small{display:none}.smgrid.n6 .smc b{font-size:12px}.smgrid.n6 .smc .hv{font-size:13px}.smgrid.n6 .smc .ok{display:none}
+.smc.hos{border-color:var(--blood);box-shadow:0 0 0 1px var(--blood),0 0 16px rgba(168,79,88,.35)}
+.smc.low .hpbar i{background:linear-gradient(90deg,#7e3640,#e0485e)}
+.smc .ok{position:absolute;right:6px;top:5px;font-size:10px;color:var(--violet)}
+.smgrid.n4 .smc .ok,.smgrid.n5 .smc .ok,.smgrid.n3 .smc .ok{right:4px;top:3px;font-size:9px}
+#p-sum .smh .dc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.smcmd{flex:none;display:flex;flex-wrap:wrap;gap:5px}
+.smcmd button{flex:1 1 auto;min-width:0;border:1px solid var(--line);border-radius:10px;background:var(--bg2);padding:6px 8px 5px;font:600 13.5px/1.1 "Cormorant Garamond",serif;color:var(--ink);transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
+.smcmd button small{display:block;font:400 10px/1.15 Alegreya,serif;color:var(--mute)}
+.smcmd button.sp{border-color:rgba(246,213,142,.42);color:var(--gold2);background:rgba(246,213,142,.07)}
+.smcmd button.off{opacity:.45}
+.smcmd button:active,.smbot button:active,.smc:active{transform:scale(.95)}
+.smbot{flex:none;display:grid;grid-template-columns:1.3fr 1fr;gap:6px;margin-top:auto}
+.smbot button{border:1px solid rgba(246,213,142,.45);border-radius:12px;padding:9px 6px;font:600 15px/1.1 "Cormorant Garamond",serif;color:var(--gold2);background:rgba(246,213,142,.08)}
+.smbot button.ghost{border-color:var(--line);color:var(--ink);background:none;font-weight:500}
+.smbot button small{display:block;font:400 10.5px Alegreya,serif;color:var(--mute)}
+#p-sum .atk .hit .dm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#p-sum .fgrid .atk b{font-size:16px}
+@media (max-height:760px){#p-sum .screen{gap:6px}.smgrid.n3 .smc img,.smgrid.n4 .smc img{width:26px;height:26px}.smgrid.n3 .smc,.smgrid.n4 .smc{padding-top:3px;padding-bottom:4px}#p-sum .shead .cls{font-size:13px}#p-sum .shead h1{font-size:24px}#p-sum .atk small{display:none}.smgrid.n1 .smc img{width:52px;height:52px}}
+@media (max-height:640px){#p-sum .turnq{display:none}#p-sum .smh{display:none}.smvit .tok .k{min-height:14px}}
+/* окно выбора: строки, плашки цифр (перенесено из листа Арадии) */
+.bstr{text-align:left;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.bstr b{display:block;font:600 17px/1.1 "Cormorant Garamond",serif;color:var(--ink)}
+.bstr small{display:block;font-size:12.5px;line-height:1.25;color:var(--mute);margin-top:2px}
+.bstat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 6px}
+.bstat div{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:5px 8px;text-align:center}
+.bstat span{display:block;font-size:11px;color:var(--mute)}
+.bstat b{font:600 19px/1.1 "Cormorant Garamond",serif}.bstat small{font-size:12px;color:var(--mute)}
+.spenv.wrap{flex-wrap:wrap;overflow:visible}
+.smh2{font:italic 500 14px/1.2 "Cormorant Garamond",serif;color:var(--gold);margin:2px 0 6px}
+/* оживление вещей: счётчики по размерам */
+.obud{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 6px;margin:0 0 8px;font:600 15px "Cormorant Garamond",serif;color:var(--mute)}
+.obud b{font:700 26px/1 "Cormorant Garamond",serif;color:var(--gold2)}
+.obud small{flex-basis:100%;font:400 12px/1.25 Alegreya,serif;color:var(--mute)}
+.smrow.obr{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:12px;background:var(--bg2);padding:5px 8px}
+.smrow.obr.on{border-color:rgba(246,213,142,.5);background:rgba(246,213,142,.06)}
+.smrow.obr .iq2{flex:none;padding:0;border-radius:50%;line-height:0}
+.smrow.obr .iq2 img{width:42px;height:42px;border-radius:50%;box-shadow:0 0 0 1px rgba(233,189,108,.35)}
+.smrow.obr .t{flex:1;min-width:0}.smrow.obr .t b{display:block;font:600 16px/1.1 "Cormorant Garamond",serif;color:var(--ink)}
+.smrow.obr .t small{display:block;font-size:11.5px;line-height:1.25;color:var(--mute)}
+.smrow.obr.on .t b{color:var(--gold2)}
+.ocnt{flex:none;display:flex;align-items:center;gap:6px}
+.ocnt button{width:36px;height:34px;border-radius:10px;border:1px solid var(--line);background:#1c1420;font:700 20px/1 "Cormorant Garamond",serif;color:var(--ink)}
+.ocnt button:disabled{opacity:.3}
+.ocnt b{min-width:2ch;text-align:center;font:700 22px/1 "Cormorant Garamond",serif;color:var(--ink)}
+.smgrid.obj .smc img{display:block!important}
+.smgrid.n5.obj .smc img{width:26px;height:26px}
+/* контур призванного в эффектах */
+.bfx{position:fixed;z-index:127;pointer-events:none;transform-origin:50% 50%;filter:drop-shadow(0 0 5px currentColor) drop-shadow(0 0 14px rgba(165,124,255,.35))}
+.bfx svg{width:100%;height:100%;overflow:visible;display:block}
+.bfx .ln{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1}
+.bfx .fl{fill:currentColor;fill-opacity:.13;opacity:0}
+/* окно выбора перед призывом */
+.spopt{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 10px}.spopt.c4{grid-template-columns:repeat(4,1fr)}.spopt.c2{grid-template-columns:1fr 1fr}
+.spopt button{position:relative;border:1px solid var(--line);border-radius:12px;background:var(--bg2);padding:8px 4px 7px;text-align:center;transition:transform .12s cubic-bezier(.3,1.6,.5,1)}
+.spopt button img{width:54px;height:54px;border-radius:50%;display:block;margin:0 auto 4px;box-shadow:0 0 0 1px rgba(233,189,108,.3)}
+.spopt.c4 button img{width:44px;height:44px}
+.spopt button b{display:block;font:600 15.5px/1.1 "Cormorant Garamond",serif;color:var(--ink)}
+.spopt button small{display:block;font-size:11px;line-height:1.2;color:var(--mute);margin-top:3px}
+.spopt button.on{border-color:var(--gold2);box-shadow:0 0 0 1px var(--gold2),0 0 14px rgba(246,213,142,.3);background:rgba(246,213,142,.08)}
+.spopt button.on b{color:var(--gold2)}
+.spopt button i.oft,.bstr i.oft2{position:absolute;right:5px;top:4px;font:italic 500 10.5px/1 Alegreya,serif;color:var(--mute)}
+.sptier{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:0 0 8px}
+.sptier button{border:1px solid var(--line);border-radius:11px;background:var(--bg2);padding:6px 2px 5px;text-align:center}
+.sptier button b{display:block;font:700 21px/1 "Cormorant Garamond",serif;color:var(--ink)}
+.sptier button small{display:block;font-size:10.5px;line-height:1.15;color:var(--mute);margin-top:2px}
+.sptier button.on{border-color:var(--gold2);box-shadow:0 0 0 1px var(--gold2);background:rgba(246,213,142,.08)}.sptier button.on b{color:var(--gold2)}
+.spenv{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;margin:0 0 8px;padding-bottom:1px}.spenv::-webkit-scrollbar{display:none}
+.spenv button{flex:none;border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:13px;color:var(--mute);background:none}
+.spenv button.on{border-color:var(--violet);color:#e4d6ff;background:rgba(165,124,255,.1)}
+.sml{display:flex;flex-direction:column;gap:5px}
+.sml .bstr{position:relative;display:flex;align-items:center;gap:10px;padding:6px 10px}
+.sml .bstr img{flex:none;width:40px;height:40px;border-radius:50%;box-shadow:0 0 0 1px rgba(233,189,108,.3)}
+.sml .bstr .t{flex:1;min-width:0}
+.sml .bstr b{font-size:16px}.sml .bstr small{font-size:11.5px}
+.sml .bstr.on{border-color:var(--gold2);box-shadow:0 0 0 1px var(--gold2),0 0 12px rgba(246,213,142,.25);background:rgba(246,213,142,.07)}
+.sml .bstr.on b{color:var(--gold2)}
+.sml .bstr .iq{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);color:var(--gold);font:italic 600 15px/28px "Cormorant Garamond",serif;text-align:center}
+.spcnt{display:flex;align-items:center;justify-content:center;gap:14px;margin:2px 0 8px}
+.spcnt button{width:44px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);font:700 22px/1 "Cormorant Garamond",serif;color:var(--ink)}
+.spcnt b{font:700 30px/1 "Cormorant Garamond",serif;min-width:2ch;text-align:center}
+.spcnt small{color:var(--mute);font-size:12.5px}
+.smab{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin:2px 0 10px}
+.smab button{border:1px solid var(--line);border-radius:9px;background:var(--bg2);padding:4px 1px;text-align:center;font-size:10.5px;color:var(--mute)}
+.smab button b{display:block;font:700 15px/1.1 "Cormorant Garamond",serif;color:var(--ink)}
+.smab button.pv b{color:var(--gold2)}
+.smtr{margin:0 0 7px}.smtr b{color:#f3ebdf}
+/* результат бросков призванных */
+.res .srows{display:flex;flex-direction:column;gap:4px;margin:8px auto 0;max-width:360px;max-height:38vh;overflow:auto;overscroll-behavior:contain}
+.res .srow{display:grid;grid-template-columns:1fr 30px 44px 78px;align-items:center;gap:6px;border:1px solid var(--line);border-radius:10px;padding:5px 9px;background:rgba(24,16,27,.9);font-size:14px;text-align:left;color:#e0d6c8}
+.res .srow .w{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.res .srow .n{font-size:12px;color:var(--mute);text-align:center}
+.res .srow .tt{font:700 22px/1 "Cormorant Garamond",serif;color:#fff;text-align:right}
+.res .srow .s{font-size:12.5px;text-align:right;color:var(--mute)}
+.res .srow.hit{border-color:rgba(246,213,142,.55)}.res .srow.hit .s{color:var(--gold2)}
+.res .srow.crit{border-color:var(--gold2);box-shadow:0 0 0 1px var(--gold2),0 0 14px rgba(246,213,142,.35)}.res .srow.crit .s,.res .srow.crit .tt{color:var(--gold2)}
+.res .srow.miss{opacity:.5}
+.res .srow.dm{grid-template-columns:1fr auto}
+.res .srow.rc{grid-template-columns:1fr 30px auto}
+.res .srow.rc.ok{border-color:rgba(143,199,164,.6)}.res .srow.rc.ok .s{color:var(--green)}
+.res .sk{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:6px}
+.res .sk span{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:2px 9px;color:#e0d6c8}
+.res .acts button.on{border-color:var(--gold2);background:rgba(246,213,142,.2);color:#fff}
+.res .smx{max-width:36ch;margin:8px auto 0;font-size:13.5px;line-height:1.35;color:#d6cbbb}
+/* следы эффекта призыва */
+.sring{position:fixed;z-index:120;pointer-events:none;border-radius:50%;border:2px solid currentColor;box-shadow:0 0 18px currentColor,inset 0 0 18px currentColor;opacity:0}
+
 </style>
 </head>
 <body>
@@ -1378,9 +1516,9 @@ Object.assign(SPELLS,{
  cloudkill:{n:'Облако смерти',lv:5,fight:1,conc:1,where:'120 футов',short:'облако яда: 5к8 каждому внутри',fx:'poi',roll:{n:5,s:8,up:1,half:1,t:'ядом, спасбросок Телосложения, в момент появления облака и в начале каждого хода внутри. Облако сдвигается на 10 футов в ход'},meta:'5 круг · 1 действие · 120 футов · сфера радиусом 20 футов · концентрация до 10 минут · В, С',
   d:()=>`<p>В точке в пределах <b>120 футов</b> возникает сфера ядовитого жёлто-зелёного тумана радиусом <b>20 футов</b>. Он огибает углы, внутри <b>сильно заслонённая</b> местность. Держится до <b>10 минут</b> (концентрация).</p><p>Когда облако появляется и в начале каждого хода внутри делают <b>спасбросок Телосложения, сложность ${spellDC()}</b>: <b>5к8 урона ядом</b> при провале, половина при успехе. Туман тяжелее воздуха, он <b>стелется вниз</b> и каждый свой ход сдвигается на 10 футов от тебя. Сильный ветер рассеивает его.</p><p class="mu">Ячейкой выше: ещё +1к8 за каждый круг выше пятого.</p>`},
  animate_objects:{n:'Оживление вещей',lv:5,fight:1,conc:1,where:'120 футов',short:'оживляет до десяти предметов, они бьют за тебя',meta:'5 круг · 1 действие · 120 футов · концентрация до 1 минуты · В, С',
-  d:()=>`<p>Оживляешь до <b>десяти</b> немагических предметов в пределах <b>120 футов</b>, которые никто не несёт. Держится до <b>1 минуты</b> (концентрация). Каждый ход <b>бонусным действием</b> командуешь им (до 60 футов от тебя); без приказа он защищается.</p><p>Показатели по размеру. <b>Крошечный:</b> хитов 20, КД 18, атака +8, 1к4+4. <b>Маленький:</b> 25, КД 16, +6, 1к8+2. <b>Средний:</b> 40, КД 13, +5, 2к6+1. <b>Большой:</b> 50, КД 10, +6, 2к10+2. <b>Огромный:</b> 80, КД 10, +8, 2к12+4. Средний считается за два Маленьких, Большой за четыре.</p><p class="mu">Ячейкой выше: ещё один предмет за каждый круг выше пятого.</p>`},
+  d:()=>`<p>Оживляешь до <b>десяти</b> немагических предметов в пределах <b>120 футов</b>, которые никто не несёт и не носит. Средний считается за два предмета, Большой за четыре, Огромный за восемь. Держится до <b>1 минуты</b> (концентрация).</p><p>Каждый ход <b>бонусным действием</b> мысленно командуешь ими (если они в пределах 500 футов), один приказ сразу любому числу. Без приказа они только защищаются.</p><p>Размеры выбираешь в окне перед заклинанием, а все цифры, удары и хиты появятся на шестой вкладке «Призванные».</p><p class="mu">Ячейкой выше: ещё два предмета за каждый круг выше пятого.</p>`},
  summon_draconic_spirit:{n:'Призыв духа дракона',lv:5,fight:1,conc:1,where:'60 футов',short:'призывает духа дракона по твоему выбору',cost:{gp:500,what:'предмет с драконом',key:'dragon_idol'},meta:'5 круг · 1 действие · 60 футов · концентрация до 1 часа · В, С, М (предмет с выгравированным на нём изображением дракона стоимостью не менее 500 зм)',
-  d:()=>`<p>В пределах <b>60 футов</b> появляется <b>дух дракона</b>: ты выбираешь род (цветной, самоцветный или металлический), от этого зависят его дыхание и сопротивление. Держится до <b>1 часа</b> (концентрация), пока его хиты не упадут до 0.</p><p>Дух <b>дружелюбен</b> к тебе и спутникам, ходит в твою инициативу сразу после тебя и слушается голоса без траты действия. Без приказа уклоняется и бережётся. Показатели духа читай по значку «!» и в книге, их знает и мастер.</p><p class="mu">Нужен предмет с изображением дракона стоимостью 500 зм. Он не тратится.</p>`},
+  d:()=>`<p>В пределах <b>60 футов</b> появляется <b>дух дракона</b>: ты выбираешь род (цветной, самоцветный или металлический), от этого зависят его дыхание и сопротивление. Держится до <b>1 часа</b> (концентрация), пока его хиты не упадут до 0.</p><p>Дух <b>дружелюбен</b> к тебе и спутникам, ходит в твою инициативу сразу после тебя и слушается голоса без траты действия. Без приказа уклоняется и бережётся.</p><p>Род и своё сопротивление (одно из сопротивлений духа достаётся тебе, пока длится заклинание) выбираешь в окне перед призывом. Все цифры духа, раздирание, дыхание и хиты появятся на шестой вкладке «Призванные».</p><p class="mu">Нужен предмет с изображением дракона стоимостью 500 зм. Он не тратится.</p>`},
  seeming:{n:'Притворство',lv:5,soc:1,fight:1,where:'30 футов',short:'меняешь облик до 8 часов любому числу существ',meta:'5 круг · 1 действие · 30 футов · 8 часов · В, С',
   d:()=>`<p>Меняешь облик любого числа существ, которых видишь в пределах <b>30 футов</b>, на <b>8 часов</b>. Несогласное делает <b>спасбросок Харизмы, сложность ${spellDC()}</b>. Меняется и одежда с вещами: каждому свой облик, рост в пределах 1 фута от настоящего.</p><p>Это <b>иллюзия</b>, не тело: ощупывающий её раскусит, а внимательный наблюдатель делает <b>проверку Анализа, сложность ${spellDC()}</b>.</p>`},
  synaptic_static:{n:'Синаптический разряд',lv:5,fight:1,where:'120 футов',short:'взрыв разума: 8к6 психикой, путаница',fx:'snd',roll:{n:8,s:6,half:1,t:'психической энергией, спасбросок Интеллекта, всем в сфере 20 футов. Провалившие путаются 1 минуту'},rolls:[{l:'Путаница: к6',s:6,t:'вычти из каждого броска атаки, проверки и спасброска Телосложения на концентрацию у цели, пока длится путаница'}],meta:'5 круг · 1 действие · 120 футов · сфера радиусом 20 футов · мгновенно · В, С',
@@ -1947,7 +2085,7 @@ function dieSvgS(sides,n){const p=SHAPE[sides]||SHAPE[20];return `<svg viewBox="
 function throwMany(faces,done,fx){
  busy=true;const ov=$('roll'),res=$('res');critClear();ov.classList.add('on');res.classList.remove('on');res.innerHTML='';
  ov.querySelectorAll('.dust,.die2,.dieM,.shdM').forEach(e=>e.remove());$('die').innerHTML='';$('shd').style.opacity=0;
- const N=faces.length,W=innerWidth,H=innerHeight,sz=N<=1?124:N<=2?108:N<=4?86:N<=6?72:60,per=N<=4?N:Math.ceil(N/2),rows=Math.ceil(N/per),gap=10;
+ const N=faces.length,W=innerWidth,H=innerHeight,sz=N<=1?124:N<=2?108:N<=4?86:N<=6?72:N<=10?60:48,per=Math.min(N<=4?N:Math.ceil(N/2),Math.max(1,Math.floor((W-16)/(sz+10)))),rows=Math.ceil(N/per),gap=10;
  const sx=lastPt?lastPt.x:W/2,sy=lastPt?lastPt.y:H*.8,cy=H/2-80;let left=N,first=1;
  faces.forEach((f,i)=>{const row=Math.floor(i/per),inRow=row<rows-1?per:N-per*(rows-1),col=i-row*per;
   const tx=W/2+(col-(inRow-1)/2)*(sz+gap)+(Math.random()-.5)*8,ty=cy+(row-(rows-1)/2)*(sz+gap)+(Math.random()-.5)*8;
@@ -4570,10 +4708,442 @@ CW2.web=o=>{const{W,H,cx,cy}=o,R=Math.min(W,H)*.48;let s='';for(let i=0;i<10;i++
 CW2.phantasmal_force=o=>{const{W,H,cx,cy}=o;for(let i=0;i<14;i++)sGlow({x:RN(.1,.9)*W,y:RN(.15,.8)*H,vx:RN(-15,15),vy:-RN(5,25),m:RN(1,1.4),s:RN(20,34),gr:.8,c:'#9a5cff',a:.18,fin:.3});
  if(o.pg)o.pg.animate([{filter:'none'},{filter:'hue-rotate(50deg) drop-shadow(10px 0 0 rgba(210,156,255,.3))',offset:.4},{filter:'none'}],{duration:1100});o.wob([{transform:'none'},{transform:'translate(-4px,-2px) rotate(-.6deg)'},{transform:'translate(3px,0) rotate(.4deg)'},{transform:'none'}],700);vib([15,50,25])};
 
+/* силуэты: game-icons.net (Lorc, Delapouite и др.), CC BY 3.0 */
+const BICO={"dragon-head":"M200.947 18.686c-6.98.087-14.64.774-22.85 1.9c27.57 20.468 51.098 45.25 67.594 70.527c1.66 0 3.312.012 4.958.047c18.066.39 35.487 2.906 53.217 7.2c-15.695-28.457-29.935-50.19-47.45-63.22c-13.817-10.278-30.063-16.168-52.52-16.454q-1.45-.02-2.948 0zm-91.66 22.96q-1.094-.002-2.195.022c-14.045.31-29.36 3.92-46.86 11.13c56.18 18.807 106.985 50.468 133.907 83.585c18.377-5.13 29.44-14.72 36.454-28.817C195.84 78.18 168.118 56.19 140.65 46.96c-10.168-3.418-20.433-5.306-31.363-5.315zm-.203 52.786c-39.42 6.758-74.73 31.854-87.822 74.19v322.345h212.73C100.352 442.58 61.19 206.49 187.115 230.104c5.838-14.164 9.92-28.027 11.018-41.465l18.627 1.522c-1.684 20.592-8.828 40.49-18.033 59.943c-.732 2.035-1.472 4.12-2.186 6.063c32.842 85.24 113.77 160.69 169.495 168.197c.915.033 1.905-.002 2.953-.09c17.016 1.035 35.86-4.222 52.21-22.304l7.984-8.83l-10.473-5.658c-6.507-3.515-14.29-7.094-18.167-10.925c-1.938-1.916-2.793-3.47-3.074-5.194c-.282-1.725-.13-4.227 2.23-8.578l10.673-19.656l-21.484 6.222c-6.304 1.825-17.305-3.032-23.224-10.71c-2.96-3.84-4.408-7.907-4.387-10.843c.02-2.938.72-5.125 4.747-8.05l19.453-14.125l-23.884-2.72c-9.974-1.137-16.37-6.658-19.17-12.294c-2.802-5.634-2.312-10.084 1.375-13.31l12.204-10.677l-15.358-5.205c-6.717-2.276-10.296-7.555-10.357-10.633c-.028-1.373.238-2.666 1.843-4.476c10.93-2.39 21.258-.45 28.088 6.374c6.154 6.146 8.35 15.128 6.977 24.832c8.55-2.254 16.985-1.616 24.112 2.494c9.34 5.387 14.647 15.692 15.67 27.965c15.212-10.132 32.152-12.725 45.262-5.164c15.467 8.92 21.36 29.513 16.805 51.75c23.992-33.355 34.588-75.717 5.617-120.43c-46.726-4.442-81.693-30.676-93.293-67.64c-5.026-16.016-21.284-28.67-42-37.904l-.08.217c-29.74-10.823-55.575-17.35-82.604-18.733l.08.155c-2.294-.093-4.56-.16-6.762-.172c-9.537 22.874-28.662 39.9-57.436 46.054l-5.906 1.262l-3.576-4.864c-14.216-19.33-41.23-40.452-74.002-58.074zm156.215 65.26c27.927-.073 44.874 11.617 42.09 44.45c-35.844 3.39-51.933-16.683-63.074-42.632c7.507-1.155 14.538-1.8 20.983-1.817zm48.407 66.363c3.708.07 7.14.994 10.014 2.812a35 35 0 0 0-4.16 3.543c-5.246 5.24-8.087 12.122-7.956 18.742c.183 9.322 5.27 17.184 12.68 22.56c-3.14 8.103-2.452 17.455 1.407 25.22c3.813 7.668 10.54 14.273 19.302 18.398c-1.445 3.366-2.375 6.862-2.4 10.33c-.062 8.407 3.38 16.042 8.273 22.39c6.792 8.81 16.862 15.936 28.026 17.91c-.183 2.18-.204 4.333.133 6.407c1.05 6.444 4.515 11.66 8.38 15.48c3.41 3.37 7.19 5.892 10.798 7.993c-6.345 4.792-12.414 7.056-18.618 7.79c-6.515-7.937-9.71-19.084-9.41-31.454c-11.767 6.177-24.21 7.156-34.12 1.44c-14.668-8.46-19.393-29.036-13.187-50.33c-11.336 2.77-22.13.92-29.187-6.132c-8.875-8.865-9.535-23.626-3.094-37.95c-3.676-.615-6.963-2.166-9.525-4.725c-8.808-8.798-5.773-26.09 6.776-38.626c7.843-7.835 17.546-11.957 25.87-11.8z","spiked-dragon-head":"M188.8 20.38c-5.3 26.85 4.6 55.74 34.1 86.52c11.2-7.29 31.6-10.94 50-8.16c-46-22.31-66.5-47.13-84.1-78.36M29.19 26.62C43.56 73.08 81.09 128.8 129.6 168.3C93.51 166 49.93 153.1 18.76 143c24.96 35.2 64.17 52.9 103.34 66.3C97.13 227 66.99 245 18.66 248c54.64 19.2 107.54 8.9 131.34.7c-17.9 34.9-100.72 66.2-122.31 77c53.26 4.2 121.71-11 167.01-32.9c10 24.6-1.6 53.2-10.1 77.8c-1.9 4.5-3.8 8.9-5.7 13.3c5.1-3.5 10.1-7 14.9-10.6c23.6-16.2 47.8-31.9 59.5-58.8c26.1 31.2 62.7 62.1 107 85.4c17.4 22.1 28.3 49 34.2 73.8c8.3-19.1 13.8-40.2 9.7-60.3c24.5-3.6 35.6-29.7 35.5-54.4c-12.6 6.2-15.1 6.3-31.2 8.2c0-10.1.6-12.5-3-28.7c-10.3 8.4-21 11.2-30.8 11.8c2.1-7.6 3-19.5 3.7-27.3c-13 7.1-19.2 9.7-30.1 10.8c-.4-10.9-.1-20-4.1-30.4c-29.6 19-48.6 1.5-68-21.3c19.8-17 96.4-21.8 95.1 7.1c14-7.3 18.8-11.2 23.6-15.9c9.1 8.5 13.4 20.9 15.1 31.4c9.3-9.4 10.3-10.5 17.1-23.8c5.7 10.1 8.8 17 10.7 30.6c8.5-6.2 15.4-13.1 19.8-21.4c7.5 15.5 8.3 16 12.4 33c17.8-13.1 21.8-31.2 22.8-47.6c2-33-.3-108.2-31-142.9c1.7 36.3-13.1 70-33.8 80.7c-12.6 4.9-96.5-74.6-137.6-93.3c-23.5-10.2-48.1 7.1-67.8 9.3C147 106.2 83.57 70.94 29.19 26.62M296.1 152.8c13.3 20.9 32.2 36.9 60.1 55c-19.4 2.9-65.8-6.7-77.7-24c-5.5-7.9 7.1-21.3 17.6-31M180.6 319.1c-14.4 6.2-29.2 10.9-43.8 14.3c-2.4 3.6-4.6 7.1-6.7 10.5c14.8 5.3 31.5 7 44.1 2.8c3.3-9.8 5.5-19.3 6.4-27.6m-68 19.1l-10.2 1.5c-31.81 36.6-61.9 103.2-48.24 151.9h36.13c-11.12-37.7-16.53-87.1 22.31-153.4m8.5 21.5c-5.9 11.4-10.4 22.1-13.8 32.1c12.9 6.7 29.1 8.9 44.8 8.2c4.6-10.5 9.8-21.8 14.6-33.3c-15.4 1.8-31.4-1.4-45.6-7m111.4 6.6c-12 10.5-25.2 20.3-38.9 29.6c7 34 33.4 63.4 73.9 95.7h83.3c-57.2-31.8-94.6-73.3-118.3-125.3m-130 43.2c-2.5 11.8-3.3 22.7-3 32.9c37.3 14.2 62.5 13.5 97.5 4.1c-7.2-10.3-13-21-16.9-32.3c-32.7 9.4-55.4 5.7-77.6-4.7m106.6 52.4c-38.1 10.9-68.8 13.2-107.5.3c1.8 10.4 4.5 20.1 7.5 29.4h130.1c-11.3-9.8-21.4-19.6-30.1-29.7","wyvern":"m324.97 17.54l.087.106l-34.924 32.428l36.904-3.752l-15.396 30.12l38.048-16.075c26.147 69.965.623 154.277-52.555 166.262c-6.554-25.37-34.13-37.945-36.055-57.382c.303.093.604.187.912.27a27.1 27.1 0 0 0 14.274-.07l25.138 22.89l20.653-16.377c-7.363 2.836-28.588-1.402-33.25-13.923a27.1 27.1 0 0 0 6.793-11.922c.485-1.813.757-3.635.86-5.445l11.524 22.777l5.22-16.94c7.625 5.575 12.474 13.605 11.49 21.136l16.673-29.4l-72.14-29.56l-58.057-48.03l17.1 31.25l-48.206-19.753l35.14 31.237c-40.602 28.158-22.085 85.04-1.796 119.29c-57.5-9.685-103.128-77.435-95.763-145.03l49.21-21.366l-31.08-5.14l29.207-33.417l-32.015 11.54c.037-.067.07-.135.107-.202c-168.36 66.33-116.413 367-63.728 417.99c-.19-1.317-.364-2.58-.54-3.855c-14.922-56.244-20.375-125.624-17.5-190.53c3.02-68.237 14.834-131.16 36.794-169.522l16.22 9.283c-18.894 33.008-31.4 94.563-34.345 161.064c-1.942 43.86.106 90.022 6.275 132.082c6.124 1.892 15.046 9.615 27.295 23.24c-4.818-13.35-6.78-26.5-6.482-38.28c20.286 41.665 67.34 69.234 104.633 62.308c22.444-4.17 41.803-12.73 57.81-24.475l7.31 15.418c-20.068 5.036-22.807 32.635-14.737 55.112c1.748-19.882 11.36-29.794 21.73-32.303c-6.598 15.867-4.698 30.623-3.117 44.158c10.15-12.147 21.47-23.793 23.628-39.354c8.738 7.332 12.317 21.49 1.194 39.057c26.32-15.473 31.565-41.994 7.978-57.685l-32.07-34.297c5.918-5.55 11.24-11.6 15.947-18.066l39.28 15.776c-3.942 13.69 5.833 31.512 19.77 43.31c-8.055-17.288-4.826-30.08 2.562-37.103c1.63 17.39 10.64 29.193 18.733 40.064c2.73-15.665 6.79-31.493-.213-45.987c11.016 1.56 21.2 11.568 20.338 31.877c14.362-25.313 6.11-49.702-20.742-51.52l-71.135-9.892c12.757-22.982 18.676-49.823 17.015-77.475c14.188-34.708 50.058-11.816 54.523 49.16C394.924 262.27 434.58 304 426.324 367.13c11.808-23.38 21.835-35.013 29.862-36.247c-10.772-91.925-40.458-191.57-77.637-250.748l15.823-9.942c50.328 80.106 85.112 220.65 84.88 331.547c42.403-115.912-2.347-356.61-154.282-384.2m-29.458 476.913l-.026.016l-.015.05q.021-.031.042-.067zm26.543-318.492h.01v-.007l-.01.008zm-53.348-41.716a9.1 9.1 0 0 1 2.652.313c4.774 1.28 7.467 5.945 6.187 10.72s-5.943 7.47-10.72 6.19c-4.775-1.28-7.468-5.943-6.188-10.72c.96-3.584 3.823-5.993 7.21-6.435a9 9 0 0 1 .857-.068zM204.904 297.13c11.878-.2 22.637 6.756 26.172 22.487c-.008 35.88-9.557 68.823-42.137 77.412c-27.624 7.283-69.725-11.398-84.12-53.663c12.28-21.078 37.362-21.986 62.838 22.592c-12.583-41.596 14.386-68.444 37.246-68.83z","pointy-sword":"M45.95 14.553c-19.38.81-30.594 11.357-30.282 30.283l19.768 30.78c4.43-1.213 9.36-3.838 14.248-7.335l42.474 59.935c-17.018 20.83-31.258 44.44-42.71 70.836l26.55 26.552c11.275-23.6 24.634-44.826 39.918-63.864l210.82 297.475l166.807 33.213L460.33 325.62L162.78 114.745c19.907-16.108 41.842-29.91 65.652-41.578l-26.553-26.55c-27.206 11.803-51.442 26.576-72.735 44.292L69.39 48.56c3.443-4.823 6.062-9.735 7.342-14.242l-30.78-19.765zm400.84 86.933v.008l.003-.008zm0 .008l-28.028 124.97l-25.116-80.593l-18.105 70.667l-26.862-49.64l-.584 57.818l128.484 91.69l15.184 87.017l-1.168-186.885l-34.457 39.713l-9.346-154.756zm-300.95 27.98l222.224 196.368l25.645 66.75l-66.75-25.645L130.6 144.734a309 309 0 0 1 15.238-15.26zm32.305 196.274v.004h.005zm.005.004l28.028 22.775l-36.21 4.088l57.82 19.272l-105.706 4.09l115.05 27.45L136.1 422.114l127.316 25.696l-67.164 43.803l208.494 1.752l-87.017-15.185l-104.54-150.676l-35.037-1.752z","magic-broom":"M445.1 22.93c-3.8.11-7.9 1.81-11.5 5.98C379.2 107.6 318.8 184.7 257.3 261.4c2.3.9 4.5 1.9 6.5 3.1c4.5 2.5 8.4 5.6 11.7 9C339 197.6 401.3 121.1 455.6 40.87c4.3-9.84 1.1-13.83-3.8-16.4c-1.2-.65-2.6-1.13-4.1-1.37c-.8-.13-1.7-.19-2.6-.17M63.14 46.41c7.69 13.5 16.6 26.49 2.25 47.15c10.45-10.72 22.95-21.51 42.41-1.4c-4.2-10.17-17.26-17.99-6.1-33.71c-17.06 8.58-25.86 0-38.56-12.04M267.2 94.02c-7.4 11.08-18.3 14.68-32.6 10.28c14.3 4.9 21.5 14.5 17.7 31.7c8.3-15.5 18.1-21.4 29.5-17.1c-6.4-6.3-17.3-7-14.6-24.88m181.5 46.78c-4 22.5-6 45.9-43.2 50.9c22.9.8 48.1 3.7 51.7 46.2c5-15-3-37.8 25.6-41.3c-28.6-10.4-30.7-29.2-34.1-55.8m-358.92 96c2.1 24.8-8.1 41.4-37.08 45.6c29.38 3.7 44.88 15.4 45.88 35.5c5.62-13.5-.7-30.8 28.72-36.8c-22.1-5.2-34.82-19.7-37.52-44.3m155.42 39.7l-13.4 16.6c1.5.8 3 1.7 4.5 2.6c4.4 2.8 8.7 6.1 12.3 9.8l15.2-18c-2.3-2.7-5.4-5.4-8.9-7.4c-3-1.7-6.3-3-9.7-3.6M208 304.1c-.8 0-1.5 0-2 .1c-1 .2-1.5.5-1.7.7l-.5.6l-.6.4c-46.9 36-117.06 70.7-173.97 104.3c14.77 4.4 29.83 9.7 44.58 15.6l36.39-30.5L88.37 432c17.03 7.6 33.43 16.2 48.03 25.6l27.3-43.8l-12.2 54.2c9 6.7 17 13.8 23.8 21.1c27.2-59.1 63-100.2 67.7-154.8l.1-.6l.1-.6c.6-2.3-.2-5.7-3.1-10c-3-4.2-7.9-8.7-13.4-12.2c-5.4-3.4-11.5-5.8-15.9-6.5c-1.1-.2-2-.3-2.8-.3m111.2.2c9.7 13.1 9.9 25.8-4.7 38.3c17.6-8.2 30.3-7.2 37.8 3.6c-1.7-9.4-11.1-16.8 3-30.4c-14 4.8-26.1 1.2-36.1-11.5m56.7 90.8c11.7 17.4 20 29.5 4.1 47.8c23.4-10 29.5 7 41.2 13.8c-19.9-26.8-2.6-39.3 14.1-49.5c-30.5 12.8-44.4-.3-59.4-12.1","wooden-chair":"M256 27.12c-44.3 0-88.4 3.36-119 9.99v63.79h238V37.11c-30.6-6.63-74.7-9.99-119-9.99m-91.6 91.78l15.8 132q8.7-.45 18-.9l-15.7-131.1zm82.5 0l-1.6 130h18l1.6-130zm82.6 0L313.8 250q9.3.45 18 .9l15.8-132zm-73.5 148c-31.8 0-63.6 1-89.3 3c-12.8 1-24.1 2.2-33 3.6c-5.4.9-9.5 1.9-12.7 2.8v32.6h270v-32.6c-3.2-.9-7.3-1.9-12.7-2.8c-8.9-1.4-20.2-2.6-33-3.6c-25.7-2-57.5-3-89.3-3m-103 60v158h30v-158zm176 0v158h30v-158zm-128 64v16h110v-16z","mimic-chest":"M165.3 45.79c4.5 9.27 23.4 21.66 44.6 30.54c11.9 5.01 23.8 9 34.6 12.32c-16.7-25.45-35.8-49.69-57.3-65.16c-12.3-8.9-24.6 15.79-21.9 22.3M444.7 25.6c-19.6 17.71-41.1 39.17-58.1 64.42c10.8-3.19 22.8-7.03 34.8-11.89c21.3-8.62 40.3-20.76 44.9-29.98c4.8-10.51-12.7-30.59-21.6-22.55M263.5 84.68c6.6 11 11.5 21.12 17.5 32.92l-19.5-5.3c-4.9-1.3-11.5-3.2-19.1-5.5c-.8 4.5-2.6 8.6-5.2 12.1c47.7-1.5 100.3-1.6 157.3 2.3c-3.1-3.7-5.3-8.1-6.4-12.9c-7.5 2.1-14 3.9-18.8 5.1l-19.6 5c5.6-10.7 11.7-22.65 17.6-32c-36.4-2.41-68.7-2.78-103.8-1.72m-73.7 4.06c-25.7 2-52.2 4.62-79.5 7.82C153 111 157.1 111.6 193.6 120.6c-4.4-5.1-7-11.7-7-18.8c0-4.65 1.2-9.11 3.2-13.06m17.4 5.92c-1.6 1.85-2.6 4.39-2.6 7.14c0 6.1 4.6 10.6 10.1 10.6c6.9-1.7 10-6 10.1-11.3c-5.8-1.95-11.7-4.07-17.6-6.44m235.8 1.5c.5 1.99.7 4.04.7 6.24c0 8.8-4 16.8-10.3 22.1c15.6 1.6 31.6 3.5 47.9 5.8L459 99.65c-5.2-1.2-10.5-2.41-16-3.49m-19 .28c-6.3 2.41-12.5 4.56-18.5 6.46c.3 5.9 4.8 10.1 10.1 10.1c5.5 0 10.1-4.5 10.1-10.6c0-2.3-.6-4.25-1.7-5.96M30.62 235.6c26.49-42 57.67-79.7 87.78-117.8C37.98 85.89-4.308 156.6 30.62 235.6M136.7 124c-34.8 43.6-70.14 86-98.33 133.4c2.71 7.2 5.54 14.5 8.35 21.9c34.39-49.8 67.78-100.9 113.68-146.8c-8.2-3-16.2-5.9-23.7-8.5m150.1 11.9c7.1 18.9 14.6 37.7 28.5 54.9c6.1-18.8 13.1-37.4 24.8-54.4c-19.2-.3-36-1-53.3-.5m-7.1 0q-26.1.3-50.4 1.2c4 30 8.5 60 26.8 87.3c3-29.5 10-58.9 23.6-88.5m71.5.9c11 16.2 15.7 34.2 20.2 52.3c15-16.7 20.8-33.3 24.2-50c-15.1-1.1-29.9-1.8-44.4-2.3m-128.2.5c-18.7.7-43.6 1.7-43.6 1.7c-2.3 2.1-4.5 4.3-6.7 6.4c3.6 17.5 11.1 34.4 21.2 50.9c6.9-19.6 16.1-39.3 29.1-59m181.2 2.4c10.2 21.2 12.1 64.5 14.2 84.4c19-15.2 25.4-57.2 29.8-80.2c-14.9-1.7-29.6-3.1-44-4.2m50.4 5c8.6 15.6 16.6 31.4 13.3 52.6c17.3-14.7 22.7-30.8 25.8-47.2c-13.2-2.1-26.2-3.9-39.1-5.4m-298.9 18.7c-8.1 8.8-15.8 17.9-23.2 27.2c11.4 15 30.8 17.9 48.4 19.4c-14-14.3-21.7-29.9-25.2-46.6m-28.5 33.9c-9.1 11.6-17.7 23.3-26.1 35.2c9.3 7.7 20.8 11.9 33.6 13.8c-4.8-15.8-7.8-32-7.5-49m283 46.1c-3 20.2-8.3 57.5-16.4 82.1c15.2-1 30.4-2.3 45.6-3.8c-6.1-23.6-17.6-59.9-29.2-78.3m-156.3.6c-13.2 19.5-30.2 57-33.8 80.6c17.4 1.4 34.7 2.4 52.1 3c-8.9-24.7-13.4-62.9-18.3-83.6M108 260.5c-17.86 10.2-25.35 23.9-33.41 37.4c11.97 3.5 24.21 6.9 36.71 10.1c-4.5-15.9-6.3-31.7-3.3-47.5m37.1 0c-12 16.2-25 32.3-29.7 48.5c14.5 4.1 24.6 5.7 38.2 7.8c-8.9-18.8-7.9-37.5-8.5-56.3m318.4 3.2c-3.3 19.5-7.6 38.7-16.1 57.2c12.5-1.3 25.1-2.7 37.6-4.3l1.8-.3c-3-19.4-13.1-36.1-23.3-52.6m-265.7 3.9c-16.8 17-25.5 33.8-34 50.7c16 2.2 32 4.1 47.9 5.5c-9.6-17.1-13.3-36.2-13.9-56.2m161.3 3.3c-5.9 19.2-14 38.3-23.6 57.1c16.7-.4 33.4-1 50.1-2c-7.4-18.7-16-37-26.5-55.1m-55 .8c-9.7 18.7-17.2 37.4-23.7 56.1c15 .4 30 .5 45 .4c-8.5-18.6-16-37.3-21.3-56.5M51.96 309.8c-3.76 16.6-6.09 34.7-6.86 52.6c14.38 31.4 29.54 64 44.46 90l7.81 3.2l36.83-43.1c.6-26.5 3.2-53 8.1-78.9c-32.1-6.9-61.94-14.9-90.34-23.8m426.14 25.7c-36.3 4.4-72.5 7.6-108.8 9.3v109.3c-35.6 8-74.8 4.3-105.8-.1V345.2c-34.4-1.5-68.8-4.5-103.2-9.4c-4.6 23.9-7.2 48.4-8 73.1l56.2 75.7c75.3 7.2 148.2 6.5 220 1.4l52-70.9c.8-26.7.6-53.3-2.4-79.6m-126.8 10c-23.3.7-46.5.9-69.8.3v92.5c23.3 3.3 45.9 5.5 69.8 1.3zm-34.2 15.7c7.7 0 13.9 6.9 13.9 15.4c0 6.3-3.4 11.9-8.6 14.3L331 423h-27.7l8.6-32.1c-5.2-2.4-8.6-8-8.6-14.3c0-8.5 6.2-15.4 13.8-15.4M46.78 407.9c.22 10.1-.82 19 2.15 28l14.29 5.8c-5.68-11-11.12-22.4-16.44-33.8m105.42 31c.3 13.2 1.1 26.3 2.3 39.3q14.85 2.1 29.7 3.9zm-18 1.1l-19.4 22.7l21 8.5c-.8-10.3-1.4-20.7-1.6-31.2m345 7.4l-27 36.8c8.5-.7 16.9-1.5 25.3-2.3c.5-11.5 1.1-23 1.7-34.5","colombian-statue":"M256 25c-62.125 0-111.195 19.114-145.31 57.02C77.922 118.427 58.765 173.19 57.286 247h53.91c.117-9.742.472-20.34 1.42-31.37c-.22-.238-.444-.467-.66-.714c-7.73-8.838-10.903-21.857-8.908-39.705c.84-10.634 6.332-19.899 14.892-23.652c3.153-1.383 6.422-2.13 9.801-2.399a154 154 0 0 1 4.21-9.185a127 127 0 0 1 3.048-5.707V103h25.105C181.958 83.704 213.081 71 256 71s74.042 12.704 95.895 32H377v31.268a127 127 0 0 1 3.049 5.707a154 154 0 0 1 4.209 9.185c3.379.27 6.648 1.016 9.8 2.399c8.56 3.753 14.054 13.018 14.893 23.652c1.995 17.848-1.178 30.867-8.908 39.705c-.216.247-.44.476-.66.715c.948 11.029 1.303 21.627 1.42 31.369h53.91c-1.479-73.81-20.636-128.573-53.402-164.98C367.195 44.114 318.125 25 256 25m-103 96v14h206v-14zm0 32v62h14v-24.896c-.358-1.28-.005-2.142 0-2.633V153zm32 0v7.38c3.425-3 7.44-5.664 12.074-7.38zm32.871 0c1.893.826 3.627 1.888 5.113 3.174c3.838 3.321 5.9 7.543 7.13 11.437c1.34 4.25 1.884 8.396 2.2 11.944l.223-.33l5.027-7.463l14.928 10.056l-5.03 7.463l-11.232 16.672C241.815 209.145 248.817 211 256 211s14.185-1.855 19.77-5.047l-11.233-16.672l-5.03-7.463l14.929-10.056l5.027 7.463l.223.33c.316-3.548.86-7.693 2.2-11.944c1.23-3.894 3.292-8.116 7.13-11.437c1.486-1.286 3.22-2.348 5.113-3.174H217.87zm97.055 0c4.634 1.716 8.649 4.38 12.074 7.38V153zM345 153v34.47c.005.492.358 1.353 0 2.634V215h14v-62zm-213.695 14.203c-2.818-.048-4.907.299-6.137.838c-2.46 1.078-3.699 2.077-4.195 8.639l-.012.17l-.02.17c-1.738 15.228.614 21.534 4.563 26.048c2.108 2.41 5.409 4.558 9.496 6.727v-42.287c-1.307-.15-2.601-.286-3.695-.305m249.39 0c-1.094.019-2.388.156-3.695.305v42.287c4.087-2.17 7.388-4.316 9.496-6.727c3.949-4.514 6.3-10.82 4.563-26.048l-.02-.17l-.012-.17c-.496-6.562-1.736-7.56-4.195-8.639c-1.23-.54-3.319-.886-6.137-.838m-172.658 1.795c-5.602.023-11.098 4.21-15.598 9.629l21.48.223c-.247-2.165-.49-4.3-.97-5.823c-.596-1.89-1.28-2.844-1.742-3.244s-.86-.794-3.17-.785m95.926 0c-2.31-.01-2.708.385-3.17.785s-1.146 1.354-1.742 3.244c-.48 1.522-.723 3.658-.97 5.823l21.48-.223c-4.5-5.42-9.996-9.606-15.598-9.629M185 196.548V233h-30l42.4 31.8c34.664 25.998 86.703 22.873 117.2 0L357 233h-30v-36.451l-35.617.369l8.222 12.203l-5.242 5.242C284.243 224.484 270 229 256 229s-28.242-4.516-38.363-14.637l-5.242-5.242l8.222-12.205l-35.617-.367zm7 40.454h128v17.996H192zm-57.977 2.766l-12.949 64.752l5.873 70.482h120.055v-35.275l-8.78-8.778l-28.097 14.049h-43.123v-60.725l11.297-11.298zm243.954 0L333.7 272.975l11.297 11.298v60.725h-43.123l-28.098-14.049l-8.779 8.778v35.275h120.055l5.873-70.482l-12.95-64.752zm-59.05 43.884c-35.576 22.626-86.937 25.006-125.874.022l-8.055 8.053v35.275h20.877l35.902-17.951L256 323.275l14.223-14.224l35.902 17.951h20.877v-35.275zm-190.48 109.346l7.834 94.004h78.72v-52.275l-27.817-41.729zm80.367 0l20.002 30.004h54.368l20.002-30.004zm116.002 0l-27.818 41.729v52.275h78.72l7.835-94.004zm-91.818 48v46.004h46.004v-46.004z"};
+const SUMC={"draconic-spirit":{"n":"Дух дракона","u":"5037-draconic-spirit","src":"Fizban's Treasury of Dragons","ic":"dragon-head","ty":"drag","cr":null,"sz":"Большой","ac":"14 + уровень ячейки (природный доспех)","acn":14,"hp":null,"hd":"50 + 10 за каждый уровень ячейки выше 5-го (количество костей хитов духа дракона [к10] равно уровню заклинания)","spd":"30 футов, плавая 30 футов, летая 60 футов","ab":[19,14,17,10,14,14],"ci":"отравление, очарование, испуг","sen":"слепое зрение 30 футов, тёмное зрение 60 футов, пассивное Восприятие 12","lng":"Драконий, понимает языки, на которых вы говорите","ln":"Большой Дракон, нейтральный","pb":"равен вашему бонусу","tr":[["Сопротивление урону (только цветной и металлический)","кислота, огонь, холод, электричество, яд."],["Сопротивление урону (только самоцветный)","звук, излучение, некротическая энергия, психическая энергия, силовое поле."],["Общее сопротивление","Когда вы призываете дракона, выберите одно из его сопротивлений урону. Вы получаете сопротивление урону выбранного вида, пока заклинание активно."]],"at":[{"nm":"Раздирание","n":"Раздирание","q":"Рукопашная атака оружием: ваш модификатор броска атаки заклинанием к попаданию, досягаемость 10 футов, одно существо. Попадание: 1к6 + 4 + уровень ячейки колющего урона.","b":null,"r":"досягаемость 10 футов","rng":0,"d":[]}],"mt":"Дракон совершает количество атак Раздиранием, равное половине уровня ячейки, использованной для призыва (с округлением в меньшую сторону), и использует Оружие дыхания.","sp":[{"nm":"Оружие дыхания","n":"Оружие дыхания","t":"Дракон выдыхает поток разрушительной энергии в 30-футовом конусе. Каждое существо в этой области должно совершить спасбросок Ловкости против Сл спасброска ваших заклинаний, при провале получая 2к6 урона того вида, который вы выберете из списка сопротивлений этого дракона, и половину этого урона при успехе."}],"ao":"m,a0,s0"},"ao-tiny":{"n":"Крошечный предмет","u":null,"sq":"animate_objects","ic":"pointy-sword","ty":"obj","cr":null,"sz":"Крошечный","ac":"18","acn":18,"hp":20,"hd":"","spd":"30 футов (без ног и других придатков: летая 30 футов, парит)","ab":[4,18,10,3,3,1],"sen":"слепое зрение 30 футов, за этими пределами ничего не воспринимает","ln":"Крошечный Конструкт","tr":[["Хиты на нуле","Когда хиты оживлённого предмета опускаются до 0, он возвращает себе свой обычный облик, а излишний урон переносится на оригинальный облик."],["Вид урона","Мастер может постановить, что этот предмет причиняет рубящий или колющий урон."]],"at":[{"nm":"Размашистая атака","n":"Удар","q":"","b":8,"r":"досягаемость 5 футов","rng":0,"d":[[1,4,4,"дробящий"]]}],"ao":"a0"},"ao-small":{"n":"Маленький предмет","u":null,"sq":"animate_objects","ic":"magic-broom","ty":"obj","cr":null,"sz":"Маленький","ac":"16","acn":16,"hp":25,"hd":"","spd":"30 футов (без ног и других придатков: летая 30 футов, парит)","ab":[6,14,10,3,3,1],"sen":"слепое зрение 30 футов, за этими пределами ничего не воспринимает","ln":"Маленький Конструкт","tr":[["Хиты на нуле","Когда хиты оживлённого предмета опускаются до 0, он возвращает себе свой обычный облик, а излишний урон переносится на оригинальный облик."],["Вид урона","Мастер может постановить, что этот предмет причиняет рубящий или колющий урон."]],"at":[{"nm":"Размашистая атака","n":"Удар","q":"","b":6,"r":"досягаемость 5 футов","rng":0,"d":[[1,8,2,"дробящий"]]}],"ao":"a0"},"ao-medium":{"n":"Средний предмет","u":null,"sq":"animate_objects","ic":"wooden-chair","ty":"obj","cr":null,"sz":"Средний","ac":"13","acn":13,"hp":40,"hd":"","spd":"30 футов (без ног и других придатков: летая 30 футов, парит)","ab":[10,12,10,3,3,1],"sen":"слепое зрение 30 футов, за этими пределами ничего не воспринимает","ln":"Средний Конструкт","tr":[["Хиты на нуле","Когда хиты оживлённого предмета опускаются до 0, он возвращает себе свой обычный облик, а излишний урон переносится на оригинальный облик."],["Вид урона","Мастер может постановить, что этот предмет причиняет рубящий или колющий урон."]],"at":[{"nm":"Размашистая атака","n":"Удар","q":"","b":5,"r":"досягаемость 5 футов","rng":0,"d":[[2,6,1,"дробящий"]]}],"ao":"a0"},"ao-large":{"n":"Большой предмет","u":null,"sq":"animate_objects","ic":"mimic-chest","ty":"obj","cr":null,"sz":"Большой","ac":"10","acn":10,"hp":50,"hd":"","spd":"30 футов (без ног и других придатков: летая 30 футов, парит)","ab":[14,10,10,3,3,1],"sen":"слепое зрение 30 футов, за этими пределами ничего не воспринимает","ln":"Большой Конструкт","tr":[["Хиты на нуле","Когда хиты оживлённого предмета опускаются до 0, он возвращает себе свой обычный облик, а излишний урон переносится на оригинальный облик."],["Вид урона","Мастер может постановить, что этот предмет причиняет рубящий или колющий урон."]],"at":[{"nm":"Размашистая атака","n":"Удар","q":"","b":6,"r":"досягаемость 5 футов","rng":0,"d":[[2,10,2,"дробящий"]]}],"ao":"a0"},"ao-huge":{"n":"Огромный предмет","u":null,"sq":"animate_objects","ic":"colombian-statue","ty":"obj","cr":null,"sz":"Огромный","ac":"10","acn":10,"hp":80,"hd":"","spd":"30 футов (без ног и других придатков: летая 30 футов, парит)","ab":[18,6,10,3,3,1],"sen":"слепое зрение 30 футов, за этими пределами ничего не воспринимает","ln":"Огромный Конструкт","tr":[["Хиты на нуле","Когда хиты оживлённого предмета опускаются до 0, он возвращает себе свой обычный облик, а излишний урон переносится на оригинальный облик."],["Вид урона","Мастер может постановить, что этот предмет причиняет рубящий или колющий урон."]],"at":[{"nm":"Размашистая атака","n":"Удар","q":"","b":8,"r":"досягаемость 5 футов","rng":0,"d":[[2,12,4,"дробящий"]]}],"ao":"a0"}};
+/* ---------- портреты призванных: силуэт из game-icons, в стиле листа Филиппа (тёмный бархат, золото, фиолетовые искры) ---------- */
+const BMOT={'dragon-head':'fly','spiked-dragon-head':'fly','wyvern':'fly','pointy-sword':'fly','magic-broom':'fly','wooden-chair':'hop','mimic-chest':'hop','colombian-statue':'charge'};
+const BCOL={'dragon-head':'#ffb08a','spiked-dragon-head':'#cdb0ff','wyvern':'#f6d58e','pointy-sword':'#e8e2f0','magic-broom':'#e9d6b0','wooden-chair':'#e9c99a','mimic-chest':'#f0c47a','colombian-statue':'#d9cdbd'};
+const bCol=ic=>BCOL[ic]||'#f6d58e';
+function bRnd(s){let h=1779033703;for(const c of s)h=Math.imul(h^c.charCodeAt(0),3432918353),h=h<<13|h>>>19;return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return((h^=h>>>16)>>>0)/4294967296}}
+const bArtC={},bBoxC={};
+function bBox(ic){if(bBoxC[ic])return bBoxC[ic];const n='http://www.w3.org/2000/svg',sv=document.createElementNS(n,'svg'),p=document.createElementNS(n,'path');sv.setAttribute('style','position:fixed;left:-9999px;width:10px;height:10px');p.setAttribute('d',BICO[ic]);sv.appendChild(p);document.body.appendChild(sv);
+ let b;try{const r=p.getBBox();b={x:r.x,y:r.y,w:r.width||512,h:r.height||512}}catch(e){b={x:0,y:0,w:512,h:512}}sv.remove();return bBoxC[ic]=b}
+function bFit(ic,N,fr,dy){const b=bBox(ic),sc=N*fr/Math.max(b.w,b.h);return{sc,ox:N/2-(b.x+b.w/2)*sc,oy:N/2-(b.y+b.h/2)*sc+(dy||0)*N}}
+/* портрет в круге: бархатная тьма, золотые искры, силуэт со свечением своего цвета */
+function bFace(ic){const key='f'+ic;if(bArtC[key])return bArtC[key];const N=200,c=document.createElement('canvas');c.width=c.height=N;const g=c.getContext('2d'),r=bRnd(ic),col=bCol(ic);
+ const bg=g.createRadialGradient(N*.5,N*.32,4,N*.5,N*.55,N*.75);bg.addColorStop(0,'#4a2c52');bg.addColorStop(.55,'#1d1220');bg.addColorStop(1,'#0b080c');g.fillStyle=bg;g.fillRect(0,0,N,N);
+ for(let i=0;i<22;i++){g.fillStyle=r()<.5?`rgba(246,213,142,${.25+r()*.5})`:`rgba(165,124,255,${.25+r()*.45})`;const s=r()<.15?1.8:1;g.fillRect(r()*N,r()*N,s,s)}
+ if(!BICO[ic])return bArtC[key]=c.toDataURL();
+ const P=new Path2D(BICO[ic]),{sc,ox,oy}=bFit(ic,N,.66,.02);
+ g.save();g.translate(ox,oy);g.scale(sc,sc);g.shadowColor=col;g.shadowBlur=18;
+ const bb=bBox(ic),fg=g.createLinearGradient(0,bb.y,0,bb.y+bb.h);fg.addColorStop(0,'#fff6e2');fg.addColorStop(.45,col);fg.addColorStop(1,'#5a3a68');g.fillStyle=fg;g.fill(P);g.restore();
+ const vg=g.createRadialGradient(N/2,N/2,N*.36,N/2,N/2,N*.72);vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,.5)');g.fillStyle=vg;g.fillRect(0,0,N,N);
+ return bArtC[key]=c.toDataURL()}
+/* контур для эффектов появления и исчезновения */
+function bContour(ic,size,x,y,cls){const d=document.createElement('div');d.className='bfx '+(cls||'');d.style.cssText=`left:${x-size/2}px;top:${y-size/2}px;width:${size}px;height:${size}px;color:${bCol(ic)}`;
+ d.innerHTML=`<svg viewBox="0 0 512 512"><path class="fl" d="${BICO[ic]}"/><path class="ln" d="${BICO[ic]}" pathLength="1"/></svg>`;document.body.appendChild(d);return d}
+function bPts(d,n,from,to){const p=d.querySelector('.ln'),L=p.getTotalLength(),R=d.getBoundingClientRect(),k=R.width/512,out=[];
+ for(let i=0;i<n;i++){const f=(from||0)+((to==null?1:to)-(from||0))*(n>1?i/(n-1):.5),q=p.getPointAtLength(L*f);out.push([R.left+q.x*k,R.top+q.y*k,f])}return out}
+/* прилёт в иконку вкладки: толчок, вспышка своего цвета, золотые искры осыпаются вниз */
+function bLand(t,ic,big){if(!t)return;const R=t.getBoundingClientRect(),x=R.left+R.width/2,y=R.top+R.height/2;t.style.opacity='';
+ t.animate([{transform:'scale(1.35)',filter:'brightness(2.2)'},{transform:'scale(.9)',filter:'brightness(1.3)',offset:.45},{transform:'none',filter:'none'}],{duration:480,easing:'cubic-bezier(.3,1.4,.5,1)'});
+ spawn({k:'flash',x,y,s:R.width*.9,gr:.5,m:.35,c:bCol(ic),add:1});spawn({k:'ring',x,y,r0:R.width*.4,r1:R.width*1.6,m:.45,c:bCol(ic),w:2,fp:1});glint(x+R.width*.3,y-R.height*.3,10,{m:.6,c:'#f6d58e'});
+ for(let i=0;i<10;i++)spawn({x,y:y-4,vx:RN(-150,150),vy:RN(-320,-120),g:1000,m:RN(.6,1.1),s:RN(1.4,2.4),c:[bCol(ic),'#f6d58e','#a57cff'],fl:y+RN(18,40),bo:.3});
+ if(big)bigShake();else bodyShake()}
+const bWait=(ms)=>new Promise(r=>setTimeout(r,ms));
+
+/* ===================== ПРИЗВАННЫЕ СУЩЕСТВА (Филипп) =====================
+   Перенесено из листа Арадии (там же устройство, см. память aradia-sheet-summons). У чародея до 5 круга два призыва:
+   «Призыв духа дракона» (дух из «Сокровищницы драконов Физбана», цифры от круга ячейки, род: цветной, самоцветный, металлический)
+   и «Оживление вещей» (до десяти предметов, Средний за два, Большой за четыре, Огромный за восемь; размеры можно смешивать).
+   Призванные живут в S.sum = {k, c, f: род дракона, res: твоё общее сопротивление, list: [{id, key, hp, mx, no, rc, dn}], rd, init, tAC}.
+   Пока S.sum есть, внизу шестая вкладка «Призванные» (p-sum). Концентрация кончилась: все исчезают.
+   Цифры: SUMC (дух дракона дословно с dnd.su, предметы по таблице заклинания), генератор в /mnt/project-files/character-sheet/призыв/. */
+const SUMSP={summon_draconic_spirit:{t:'sp',m:'draconic-spirit',f:'fam'},animate_objects:{t:'obj'}};
+const SFN={fam:{chromatic:'цветной',metallic:'металлический',gem:'самоцветный'}};
+const DRES={chromatic:['кислота','огонь','холод','электричество','яд'],metallic:['кислота','огонь','холод','электричество','яд'],gem:['звук','излучение','некротическая энергия','психическая энергия','силовое поле']};
+const SFORM={fam:[['chromatic','Цветной',()=>'кислота, огонь, холод, электричество, яд'],['metallic','Металлический',()=>'кислота, огонь, холод, электричество, яд'],['gem','Самоцветный',()=>'звук, излучение, некротика, психика, силовое поле']]};
+/* оживление вещей: размеры, «вес» каждого в счёте предметов */
+const OSZ=[['huge',8],['large',4],['medium',2],['small',1],['tiny',1]];
+const oBud=c=>10+2*Math.max(0,c-5);
+const oUsed=()=>OSZ.reduce((a,[k,w])=>a+(PK.cnt[k]||0)*w,0);
+const oNum=()=>OSZ.reduce((a,[k])=>a+(PK.cnt[k]||0),0);
+const DFX={огонь:'fire',холод:'cold',кислота:'acid',электричество:'elec',яд:'poi',звук:'snd'};
+const plA=n=>n%10===1&&n%100!==11?'атака':n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?'атаки':'атак';
+const crS=v=>v==null?'—':v===.125?'1/8':v===.25?'1/4':v===.5?'1/2':String(v);
+const dTx=d=>d.map(([n,s,k,t])=>`${n}к${s}${k?sg(k):''} ${t}`).join(' + ');
+const sumIs=k=>!!SUMSP[k];
+
+/* цифры существа: из каталога, а у духа дракона считаются от круга ячейки и рода */
+const SMC={};
+function sumMon(key,f,c){const ck=key+'|'+(f||'')+'|'+(c||0)+'|'+spellAtk()+'|'+spellDC();if(SMC[ck])return SMC[ck];const B=SUMC[key];if(!B)return null;const o=Object.assign({},B),sa=spellAtk(),half=Math.floor((c||0)/2);
+ if(key==='draconic-spirit'){f=f||'chromatic';o.fn=SFN.fam[f];o.ic={chromatic:'dragon-head',gem:'spiked-dragon-head',metallic:'wyvern'}[f];o.col=bCol(o.ic);o.acn=14+c;o.ac=`${14+c} (природный доспех)`;o.hp=50+10*(c-5);
+  o.res=DRES[f].join(', ');o.tr=B.tr.filter(t=>!/^Сопротивление урону/.test(t[0]));
+  o.at=[Object.assign({},B.at[0],{b:sa,d:[[1,6,4+c,'колющий']]})];o.ma=Array(half).fill(0);
+  o.sp=[Object.assign({},B.sp[0],{d:[2,6,0,''],sv:['Ловкости',spellDC()],half:1,types:DRES[f]})]}
+ o.col=o.col||bCol(o.ic);return SMC[ck]=o}
+const sM=e=>sumMon(e.key,S.sum.f,S.sum.c);
+const sNm=e=>{const m=sM(e);return m.n+(e.no?' '+e.no:'')};
+const sAlive=()=>S.sum?S.sum.list:[];
+const sSpell=()=>S.sum?SPELLS[S.sum.k]:null;
+const sDur=()=>S.sum&&S.sum.k==='animate_objects'?10:600;
+const isObj=()=>!!S.sum&&S.sum.k==='animate_objects';
+
+/* ---------- окно выбора перед призывом ---------- */
+let PK=null;
+function pkOpen(k,c){const T=SUMSP[k],L=(S.sumLast||{})[k]||{};PK={k,c,f:L.f||null,res:L.res||null,cnt:Object.assign({},L.cnt||{})};
+ if(T.t==='sp'){if(!PK.f)PK.f=pkForms()[0];if(!DRES[PK.f].includes(PK.res))PK.res=DRES[PK.f][0]}
+ if(T.t==='obj'){if(!oNum())PK.cnt={tiny:oBud(c)};while(oUsed()>oBud(c)){const z=OSZ.find(([x])=>PK.cnt[x]>0);PK.cnt[z[0]]--}}
+ openInfo('spk')}
+function pkForms(){const T=SUMSP[PK.k];return useOrder('summon',SFORM[T.f].map(x=>PK.k+':'+x[0])).map(x=>x.split(':')[1])}
+function pkCount(){const T=SUMSP[PK.k];return T.t==='obj'?oNum():1}
+function pkObjRow(k){const m=SUMC['ao-'+k],w=OSZ.find(x=>x[0]===k)[1],n=PK.cnt[k]||0,a=m.at[0],can=oUsed()+w<=oBud(PK.c);
+ return `<div class="smrow obr ${n?'on':''}"><button class="iq2" data-info="smcat_ao-${k}" aria-label="Все цифры"><img src="${bFace(m.ic)}" alt=""></button><span class="t"><b>${esc(m.sz)}</b><small>хиты ${m.hp} · класс доспеха ${m.acn} · удар ${sg(a.b)}, ${dTx(a.d)}</small><small>${w===1?'считается за один предмет':`считается за ${w} ${w<5?'предмета':'предметов'}`}</small></span><span class="ocnt"><button data-spk="o:${k}:-1" ${n?'':'disabled'} aria-label="меньше">−</button><b>${n}</b><button data-spk="o:${k}:1" ${can?'':'disabled'} aria-label="больше">+</button></span></div>`}
+INFO.spk=()=>{if(!PK)return{t:'Призыв',sub:'',body:'',acts:''};const k=PK.k,c=PK.c,T=SUMSP[k],p=SPELLS[k];let b='',go='',ok=true;
+ if(T.t==='sp'){const fs=pkForms(),top=useTop('summon',SFORM[T.f].map(x=>k+':'+x[0])).map(x=>x.split(':')[1]);
+  b=`<div class="spopt">${fs.map(f=>{const m=sumMon(T.m,f,c),o=SFORM[T.f].find(x=>x[0]===f);return `<button class="${PK.f===f?'on':''}" data-spk="f:${f}">${top.includes(f)?'<i class="oft">часто</i>':''}<img src="${bFace(m.ic)}" alt=""><b>${o[1]}</b><small>${o[2](m)}</small></button>`}).join('')}</div>`;
+  const m=sumMon(T.m,PK.f,c),a=m.at[0];
+  b+=`<div class="bstat"><div><span>Класс доспеха</span><b>${m.acn}</b></div><div><span>Хиты</span><b>${m.hp}</b></div><div><span>Раздираний за ход</span><b>${m.ma.length}</b></div></div>
+   <p class="mu" style="margin:2px 0 8px">${esc(a.n)}: к20 <b>${sg(a.b)}</b>, урон <b>${dTx(a.d)}</b>, досягаемость 10 футов. И каждый ход Оружие дыхания: конус 30 футов, <b>2к6</b>, спасбросок Ловкости ${spellDC()}.</p>
+   <div class="smh2">Общее сопротивление: какое получишь ты сам, пока длится заклинание</div>
+   <div class="spenv wrap">${DRES[PK.f].map(x=>`<button class="${PK.res===x?'on':''}" data-spk="r:${x}">${x}</button>`).join('')}</div>`;
+  go=`Призвать: ${m.fn} дух дракона`}
+ else{const bud=oBud(c),u=oUsed(),n=oNum();
+  b=`<div class="obud"><b>${u}</b> из <b>${bud}</b><small>Средний считается за два предмета, Большой за четыре, Огромный за восемь. Размеры можно смешивать.</small></div><div class="sml">${OSZ.slice().reverse().map(([x])=>pkObjRow(x)).join('')}</div>
+   <p class="mu" style="margin:8px 0 0;font-size:12.5px">Только немагические предметы в пределах 120 футов, которые никто не несёт и не носит.</p>`;
+  ok=n>0;go=ok?`Оживить: ${n} ${n%10===1&&n%100!==11?'предмет':n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?'предмета':'предметов'}`:'Выбери предметы'}
+ const brk=S.conc&&S.conc!==k?`<p class="mu" style="font-size:12.5px">Прервёт концентрацию на «${SPELLS[S.conc].n}»${S.sum?', прежние призванные исчезнут':''}.</p>`:S.sum?'<p class="mu" style="font-size:12.5px">Прежние призванные исчезнут.</p>':'';
+ return{t:p.n,sub:`${c} круг${c>p.lv?' (усиленное)':''} · ${T.t==='obj'?'что оживить':'какого призвать'}`,
+  body:b+brk,acts:`<button data-act="sumGo" ${ok?'':'disabled'}>${go}</button><button class="ghost" data-info="sp_${k}">← Назад к заклинанию</button>`,bang:'full_'+k}};
+document.addEventListener('click',e=>{const t=e.target.closest('[data-spk]');if(!t||!PK)return;const [w,v,z]=t.dataset.spk.split(':');
+ if(w==='f'){PK.f=v;if(!DRES[v].includes(PK.res))PK.res=DRES[v][0]}else if(w==='r')PK.res=v;
+ else if(w==='o'){const wt=OSZ.find(x=>x[0]===v)[1],n=PK.cnt[v]||0;if(+z<0)PK.cnt[v]=Math.max(0,n-1);else if(oUsed()+wt<=oBud(PK.c))PK.cnt[v]=n+1}
+ vib(6);openInfo('spk',true);
+ const on=document.querySelector('#dbody [data-spk="'+t.dataset.spk+'"]');if(on){on.animate([{transform:'scale(.94)'},{transform:'none'}],{duration:220,easing:'cubic-bezier(.3,1.6,.5,1)'})}});
+/* карточка существа из каталога (из окна выбора) и дословный блок бестиария */
+function sumStatBody(m,e){const ab=['Сила','Ловкость','Телосложение','Интеллект','Мудрость','Харизма'],sv=m.sv||'';
+ return `<div class="bstat"><div><span>Класс доспеха</span><b>${m.acn}</b></div><div><span>Хиты</span><b>${e?e.hp+' / ':''}${e?e.mx:m.hp}</b></div><div><span>${m.cr==null?'Размер':'Опасность'}</span><b>${m.cr==null?esc(m.sz):crS(m.cr)}</b></div></div>
+ <p class="mu" style="margin:2px 0 6px">${esc(m.ln)} · ${esc(m.spd)}${m.sen?' · '+esc(m.sen):''}</p>
+ <div class="smab">${ab.map((n,i)=>{const sh=['Сил','Лов','Тел','Инт','Мдр','Хар'][i],pv=new RegExp(sh+'\\s*([+−-]\\d+)').exec(sv),v=pv?+pv[1].replace('−','-'):mod(m.ab[i]);return `<button class="${pv?'pv':''}" data-smsv="${i}:${v}" ${e?'':'disabled'}>${n.slice(0,3)}<b>${sg(v)}</b></button>`}).join('')}</div>
+ ${m.sk?`<p class="mu" style="margin:-4px 0 6px;font-size:12.5px">Навыки: ${esc(m.sk)}</p>`:''}${m.res?`<p class="mu" style="margin:-2px 0 6px;font-size:12.5px">Сопротивление: ${esc(m.res)}${S.sum&&S.sum.res&&m.ty==='drag'?` · тебе дано: ${esc(S.sum.res)}`:''}</p>`:''}${m.imm?`<p class="mu" style="margin:-2px 0 6px;font-size:12.5px">Иммунитет: ${esc(m.imm)}${m.ci?'; к состояниям: '+esc(m.ci):''}</p>`:''}${m.vul?`<p class="mu" style="margin:-2px 0 6px;font-size:12.5px">Уязвимость: ${esc(m.vul)}</p>`:''}
+ ${m.ma&&m.ma.length?`<p class="smtr"><b>${m.cr==null?'Атак за ход':'Мультиатака'}:</b> ${m.ma.length} ${plA(m.ma.length)}${m.cr==null?' (половина круга ячейки)':` за ход (${m.ma.map(i=>esc(m.at[i].n.toLowerCase())).join(', ')})`}.</p>`:''}
+ ${m.at.map(a=>`<p class="smtr"><b>${esc(a.n)}</b>: ${a.rng?'дальнобойная':'рукопашная'} атака к20 <b>${sg(a.b)}</b>, ${esc(a.r)}. ${a.d.length?'Урон <b>'+dTx(a.d)+'</b>':a.flat?'Урон <b>'+a.flat+' '+esc(a.ft)+'</b>':''}${a.sv?`, и яд ${a.sv.n}к${a.sv.s} (спасбросок ${a.sv.ab} ${a.sv.dc}${a.sv.half?', при успехе половина':''})`:''}${a.ch?`; с разбега ещё ${a.ch[0]}к${a.ch[1]}`:''}${a.rch?' · перезарядка '+a.rch.join('–'):''}.</p>`).join('')}
+ ${(m.sp||[]).map(s=>`<p class="smtr"><b>${esc(s.n)}${s.rch?` (перезарядка ${s.rch==='rest'?'после отдыха':s.rch.join('–')})`:''}.</b> ${esc(s.t)}${s.sv&&m.ty==='drag'?` <b>Сложность ${s.sv[1]}.</b>`:''}</p>`).join('')}
+ ${(m.ba||[]).map(s=>`<p class="smtr"><b>${esc(s[0])} (бонусное действие).</b> ${esc(s[1])}</p>`).join('')}
+ ${(m.tr||[]).map(s=>`<p class="smtr"><b>${esc(s[0])}.</b> ${esc(s[1])}</p>`).join('')}`}
+function sumQuote(m,key){const ab=['Сил','Лов','Тел','Инт','Мдр','Хар'],B=SUMC[key],L=[];
+ L.push(`<p>${esc(B.ln)}</p>`);[['Класс Доспеха',B.ac],['Хиты',B.hp!=null?`${B.hp} (${B.hd})`:B.hd],['Скорость',B.spd]].forEach(([a,b])=>b&&L.push(`<p><b>${a}</b> ${esc(b)}</p>`));
+ L.push(`<p>${B.ab.map((v,i)=>`${ab[i]} ${v} (${sg(mod(v))})`).join(', ')}</p>`);
+ [['Спасброски','sv'],['Навыки','sk'],['Уязвимость к урону','vul'],['Сопротивление урону','res'],['Иммунитет к урону','imm'],['Иммунитет к состоянию','ci'],['Чувства','sen'],['Языки','lng'],['Опасность','po'],['Бонус мастерства','pb'],['Местность обитания','env']].forEach(([a,k])=>B[k]&&L.push(`<p><b>${a}</b> ${esc(B[k])}</p>`));
+ B.tr.forEach(t=>L.push(`<p><b><i>${esc(t[0])}.</i></b> ${esc(t[1])}</p>`));
+ let sec='';const H=h=>{if(sec!==h){sec=h;L.push(`<p><b>${h}</b></p>`)}};
+ (B.ao||'').split(',').filter(Boolean).forEach(x=>{const w=x[0],i=+x.slice(1);
+  if(w==='m'){H('Действия');L.push(`<p><b><i>Мультиатака.</i></b> ${esc(B.mt)}</p>`)}
+  else if(w==='a'){H('Действия');const a=B.at[i];L.push(`<p><b><i>${esc(a.nm)}.</i></b> ${esc(a.q)}</p>`)}
+  else if(w==='s'){H('Действия');const s=B.sp[i];L.push(`<p><b><i>${esc(s.nm)}.</i></b> ${esc(s.t)}</p>`)}
+  else if(w==='b'){H('Бонусные действия');const s=B.ba[i];L.push(`<p><b><i>${esc(s[0])}.</i></b> ${esc(s[1])}</p>`)}
+  else if(w==='r'){H('Реакции');const s=B.re[i];L.push(`<p><b><i>${esc(s[0])}.</i></b> ${esc(s[1])}</p>`)}});
+ return `<div class="qbox"><div class="qh">${esc(B.n)}</div>${L.join('')}<div class="qsrc">Источник: ${B.src||''}, перевод dnd.su. <a class="dsu" href="https://dnd.su/bestiary/${B.u}/" target="_blank" rel="noopener">Открыть на dnd.su ↗</a></div></div>`}
+Object.keys(SUMC).forEach(x=>{const TY={drag:'дракон',obj:'конструкт, оживлённый предмет'};
+ INFO['smcat_'+x]=()=>{const m=/spirit/.test(x)&&PK?sumMon(x,PK.f,PK.c):SUMC[x];return{t:m.n,sub:`${TY[m.ty]||''}${m.fn?' · '+m.fn:''}`,body:sumStatBody(m),acts:`<button class="ghost" data-info="spk">← К выбору</button>`,bang:SUMC[x].sq?'full_'+SUMC[x].sq:'smq_'+x}};
+ INFO['smq_'+x]=()=>({t:'Бестиарий дословно',sub:'точная цитата с dnd.su, можно показать мастеру',body:sumQuote(null,x),acts:`<button class="ghost" data-info="${S.sum&&S.sum.list.some(e=>e.key===x)?'smm_'+S.sum.list.find(e=>e.key===x).id:'spk'}">← Назад</button>`})});
+
+/* ---------- сам призыв ---------- */
+function sumMake(){const k=PK.k,c=PK.c,T=SUMSP[k];let keys=[];
+ if(T.t==='sp')keys=[T.m];else OSZ.forEach(([x])=>{for(let i=0;i<(PK.cnt[x]||0);i++)keys.push('ao-'+x)});
+ const s={k,c,f:T.t==='sp'?PK.f:'',res:T.t==='sp'?PK.res:null,list:[],rd:1,init:null,tAC:S.sum&&S.sum.tAC||null,hos:0,t0:Date.now()};S.sum=s;
+ s.list=keys.map((key,i)=>{const m=sumMon(key,s.f,c);return{id:i+1,key,hp:m.hp,mx:m.hp,no:keys.length>1?i+1:0,rc:{},dn:0}});
+ S.sumLast=S.sumLast||{};S.sumLast[k]={f:PK.f,res:PK.res,cnt:Object.assign({},PK.cnt)};
+ if(T.t==='sp')useBump('summon',k+':'+PK.f);else useBump('summon','animate_objects')}
+let sumFxNext=0,sumBusy=0,sumHold=0;
+/* у призыва своё появление (круг и контуры уходят в иконку вкладки), общая волна заклинания здесь не нужна */
+{const _cw=castWave;castWave=function(k){if(sumHold&&sumIs(k))return;return _cw.apply(this,arguments)}}
+{const _act=act;act=function(a){
+ if(a.startsWith('cast:')){const [,k,cs]=a.split(':');if(sumIs(k)&&!sumHold){const p=SPELLS[k];if(!p||noAct()||(p.cost&&!canPay(p)))return _act(a);const c=cs&&cs!=='r'&&cs!=='m'?+cs:firstC(p.lv);if(!c||!cLeft(c))return _act(a);vib(8);return pkOpen(k,c)}}
+ if(a==='sumGo'){if(!PK)return;const {k,c}=PK,p=SPELLS[k];if(noAct()||(p.cost&&!canPay(p))||!cLeft(c))return;
+  const old=S.sum?sumSnap():null,before=cLeft(c);
+  sumHold=1;try{_act(`cast:${k}:${c}`)}finally{sumHold=0}
+  if(cLeft(c)>=before)return;
+  sumMake();save();sumFxNext=1;if(old)sumOutFx(old,'recast');renderAll();sumGoFx();return}
+ if(a==='sumEnd'){if(!S.sum)return;if(S.sum.hos){const o=sumSnap();S.sum=null;save();closeDrawer();sumOutDelay=RM?0:420;renderAll();sumOutFx(o,'gone');return}
+  closeDrawer();return _act('concEnd')}
+ if(a==='sumRound')return sumRound();
+ if(a==='sumInit'){if(!S.sum)return;const m=sM(S.sum.list[0]),dx=mod(m.ab[1]);closeDrawer();return d20({label:`Инициатива: ${S.sum.list.length>1?sumGrpName():m.n.toLowerCase()}`,bonus:[{l:'Ловкость',v:dx}],noLuck:1,mode:'norm',after:d=>{if(S.sum){S.sum.init=d+dx;save();renderSum()}return '<div class="br">записано на вкладке «Призванные». Ходят своей группой, в свой ход</div>'}})}
+ if(a==='sumTac')return sumTacSheet();
+ if(a.startsWith('smhp:'))return sumHpSheet(+a.slice(5));
+ if(a.startsWith('smgo:')){const id=+a.slice(5);closeDrawer();return sumDrop(id,'hp')}
+ if(a.startsWith('sma:')){const [,ai,who,alt]=a.split(':');return sumAtk(+ai,who,alt==='1')}
+ if(a.startsWith('sms:')){const [,si,id,tj]=a.split(':');return sumSpecial(+si,+id,tj)}
+ if(a.startsWith('smchk:')){const [,id,sk]=a.split(':');return sumSkill(+id,sk)}
+ return _act(a)}}
+function sumGrpName(){const m=sM(S.sum.list[0]),n=S.sum.list.length;if(isObj())return n>1?`оживлённые предметы ×${n}`:m.n.toLowerCase();return n>1?`${m.n.toLowerCase()} ×${n}`:m.n.toLowerCase()}
+function sumSnap(){const s=S.sum;if(!s)return null;return s.list.map(e=>{const m=sM(e);return{ic:m.ic,col:m.col,id:e.id}})}
+
+/* ---------- концентрация: кончилась — исчезают (элементаль становится враждебным) ---------- */
+function sumSync(){const s=S.sum;if(!s||sumHold)return;
+ if(!s.hos&&S.conc!==s.k){if(s.k==='conjure_elemental'){s.hos=1;save();setTimeout(sumHosFx,60)}else{const o=sumSnap();S.sum=null;save();sumOutDelay=RM?0:Math.min(900,280+o.length*90);setTimeout(()=>sumOutFx(o,'conc'),10)}}}
+function sumDrop(id,why){const s=S.sum;if(!s)return;const i=s.list.findIndex(e=>e.id===id);if(i<0)return;const e=s.list[i],m=sM(e),card=document.querySelector(`#smList [data-info="smm_${id}"]`),R=card&&card.offsetParent?card.getBoundingClientRect():null;
+ lastGone={n:sNm(e),key:e.key,m};s.list.splice(i,1);
+ if(!s.list.length){S.sum=null;save();sumOutDelay=RM?0:420;renderAll();sumOutFx([{ic:m.ic,col:m.col,id,R}],'hp');setTimeout(()=>openInfo('smgone'),RM?60:1500);return}
+ save();renderAll();sumOutFx([{ic:m.ic,col:m.col,id,R}],'one');if(m.tr.some(t=>/Предсмертная вспышка/.test(t[0])))setTimeout(()=>openInfo('smburst'),RM?60:1300)}
+let lastGone=null;
+
+/* ---------- вкладка ---------- */
+function sumTab(){const T=$('tabs');let b=T.querySelector('[data-p="p-sum"]');const s=S.sum;
+ if(s&&!b){const R0=new Map([...T.children].map(x=>[x,x.getBoundingClientRect()]));T.insertAdjacentHTML('beforeend',`<button data-p="p-sum" aria-label="Призванные" class="sumtab${sumFxNext&&!RM?' pre':''}"><img class="ti" alt=""></button>`);b=T.lastElementChild;T.classList.add('six');
+  R0.forEach((r,x)=>{const n=x.getBoundingClientRect(),dx=r.left-n.left;if(dx)x.animate([{transform:`translateX(${dx}px)`},{transform:'none'}],{duration:520,easing:'cubic-bezier(.3,1.25,.5,1)'})});
+  b.animate([{transform:'scale(0)',opacity:0},{transform:'none',opacity:1}],{duration:420,easing:'cubic-bezier(.3,1.4,.5,1)'})}
+ if(!s&&b&&!b.dataset.go){b.dataset.go=1;if(b.classList.contains('on'))T.querySelector('[data-p="p-fight"]').click();
+  const R0=new Map([...T.children].filter(x=>x!==b).map(x=>[x,x.getBoundingClientRect()]));
+  const fin=()=>{b.remove();T.classList.remove('six');R0.forEach((r,x)=>{const n=x.getBoundingClientRect(),dx=r.left-n.left;if(dx)x.animate([{transform:`translateX(${dx}px)`},{transform:'none'}],{duration:480,easing:'cubic-bezier(.3,1.2,.5,1)'})});if(S.sum)sumTab()};
+  if(RM)fin();else b.animate([{transform:'none',opacity:1},{transform:'scale(1.15)',opacity:1,offset:.3},{transform:'scale(0)',opacity:0}],{duration:420,delay:sumOutDelay,easing:'cubic-bezier(.5,0,.7,.4)',fill:'forwards'}).onfinish=fin}
+ if(s&&b&&!b.dataset.go){const m=sM(s.list[0]),src=bFace(m.ic),img=b.querySelector('img');if(img.getAttribute('src')!==src){if(sumFxNext&&!RM)b.classList.add('pre');img.src=src}b.classList.toggle('hos',!!s.hos)}}
+let sumOutDelay=0;
+
+/* ---------- страница ---------- */
+$('p-equip').insertAdjacentHTML('afterend',`<section class="page" id="p-sum"><div class="screen">
+  <div class="shead"><img id="smIco" alt=""><div><h1 id="smTtl">Призванные</h1><div class="cls" id="smSub"></div></div><button class="turnq" data-info="smturn">как они ходят ›</button></div>
+  <div class="smvit" id="smVit"></div>
+  <div class="mode" id="mode4"><button data-m="norm" class="on">Обычный</button><button data-m="adv">Преимущество</button><button data-m="dis">Помеха</button></div>
+  <div class="smh">Кто здесь<i></i><span class="dc" id="smCnt"></span></div>
+  <div class="smgrid" id="smList"></div>
+  <div class="smh">Приказ<i></i><span class="dc" id="smDef"></span></div>
+  <div class="fgrid" id="smAct"></div>
+  <div class="smcmd" id="smCmd"></div>
+  <div class="smbot" id="smBot"></div>
+ </div></section>`);
+$('mode4').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;rollMode=b.dataset.m;document.querySelectorAll('.mode button').forEach(x=>x.classList.toggle('on',x.dataset.m===rollMode));vib(8)});
+document.querySelectorAll('.mode button').forEach(x=>x.classList.toggle('on',x.dataset.m===rollMode));
+function renderSum(){sumTab();const s=S.sum,pg=$('p-sum');if(!s||!pg)return;const m0=sM(s.list[0]),T=SUMSP[s.k],p=SPELLS[s.k],n=s.list.length;
+ pg.classList.toggle('hos',!!s.hos);
+ const ic=bFace(m0.ic);if($('smIco').getAttribute('src')!==ic)$('smIco').src=ic;
+ $('smTtl').textContent=T.t==='obj'?(n>1?`Предметы ×${n}`:m0.n):n>1?`${m0.n} ×${n}`:m0.n;
+ $('smSub').textContent=s.hos?'вышел из-под контроля':`${m0.fn?m0.fn+' · ':p.n+' · '}${s.c} круг${s.res?' · тебе сопротивление: '+s.res:''}`;
+ const turn=T.t==='sp'?['Ход','после тебя']:T.t==='ins'?['Ход','в твой ход']:['Инициатива',s.init!=null?String(s.init):'бросить'];
+ $('smVit').innerHTML=`<button class="tok ${s.hos?'no':'cc'}" data-info="${s.hos?'smhos':'conc'}"><div class="k">${s.hos?'Не слушается':'Концентрация'}</div><div class="v t">${s.hos?'враждебен':esc(p.n)}</div></button>
+  <button class="tok" data-info="smround"><div class="k">Раунд</div><div class="v">${s.rd} <small>/ ${sumDurTxt()}</small></div></button>
+  <button class="tok" data-${turn[0]==='Инициатива'&&s.init==null?'act="sumInit"':'info="smturn"'}><div class="k">${turn[0]}</div><div class="v ${/\D/.test(turn[1])?'t':''}">${turn[1]}</div></button>
+  <button class="tok" data-act="sumTac"><div class="k">Класс доспеха цели</div><div class="v">${s.tAC||'?'}</div></button>`;
+ $('smCnt').textContent=n>1?`${n} · нажми, чтобы открыть`:'нажми, чтобы открыть';
+ const L=$('smList');L.className='smgrid '+(n===1?'n1':n===2?'':n===3?'n3':n<=8?'n4':n<=15?'n5':'n6')+(T.t==='obj'?' obj':'');
+ L.innerHTML=s.list.map(e=>{const m=sM(e),q=Math.max(0,Math.min(100,e.hp/e.mx*100));
+  return `<button class="smc ${s.hos?'hos':''} ${q<=35?'low':''}" data-info="smm_${e.id}"><img src="${bFace(m.ic)}" alt="">${e.dn&&!s.hos?'<span class="ok">сходил</span>':''}<div class="t"><b>${n===1?esc(m.n):n===2&&T.t!=='obj'?esc(m.n)+' '+e.no:'№ '+e.no}</b>${n<=4?`<small>класс доспеха ${m.acn}${n===1?' · '+esc(m.spd):''}</small>`:''}<div class="hv">${e.hp}<small> / ${e.mx}</small></div><div class="hpbar"><i style="width:${q}%"></i></div>${n===1?`<div class="st"><span>${m.ab.map((v,i)=>['Сил','Лов','Тел','Инт','Мдр','Хар'][i]+' '+sg(mod(v))).slice(0,3).join(' · ')}</span></div>`:''}</div></button>`}).join('');
+ $('smDef').textContent=s.hos?'ходит сам, по воле мастера':T.t==='sp'?'без приказа уклоняется':T.t==='ins'?'слушаются голоса':'без приказа только защищаются';
+ const A=$('smAct');
+ if(s.hos){A.innerHTML='';$('smCmd').innerHTML=`<button data-info="smhos">Что теперь<small>правило заклинания</small></button><button data-info="smm_${s.list[0].id}">Его цифры<small>для мастера</small></button>`;
+  $('smBot').innerHTML=`<button data-act="sumEnd">Он исчез<small>прошёл час или погиб</small></button><button class="ghost" data-info="smturn">Правила ›</button>`;return}
+ const cards=[];
+ if(m0.ma&&m0.ma.length>1)cards.push(`<button class="atk" data-info="smma"><b>Мультиатака</b><div class="hit"><span class="d">×${m0.ma.length}</span><span class="dm">${m0.ma.map(i=>esc(m0.at[i].n.toLowerCase())).join(', ')}</span></div><small>${n>1?'у каждого · ':''}одно действие</small></button>`);
+ if(T.t==='obj'){const bs=[...new Set(s.list.map(e=>sM(e).at[0].b))].sort((a,b)=>a-b),ds=[...new Set(s.list.map(e=>dTx(sM(e).at[0].d)))];
+  cards.push(`<button class="atk" data-info="sma_0"><b>Удар</b><div class="hit"><span class="d">${bs.length>1?sg(bs[0])+'…'+sg(bs[bs.length-1]):sg(bs[0])}</span><span class="dm">${ds.length>1?'по размеру':ds[0]}</span></div><small>рукопашная · 5 футов${n>1?' · у каждого':''}</small></button>`)}
+ else m0.at.forEach((a,i)=>cards.push(`<button class="atk ${a.rch&&s.list.every(e=>e.rc['a'+i])?'off':''}" data-info="sma_${i}"><b>${esc(a.n)}</b><div class="hit"><span class="d">${sg(a.b)}</span><span class="dm">${a.d.length?dTx(a.d):a.flat?a.flat+' '+esc(a.ft):'без урона'}</span></div><small>${a.rng?'дальнобойная':'рукопашная'} · ${esc(a.r.replace('досягаемость ',''))}${n>1?' · у каждого':''}</small></button>`));
+ A.className='fgrid'+(cards.length>=3?' c3':'');A.innerHTML=cards.slice(0,6).join('');
+ const cmd=[];
+ (m0.sp||[]).forEach((x,i)=>{const ready=s.list.filter(e=>!e.rc['s'+i]).length;cmd.push(`<button class="sp ${x.rch&&!ready?'off':''}" data-info="sms_${i}">${esc(x.n)}<small>${x.rch?(ready?(n>1?`готово у ${ready}`:'готово'):'перезаряжается'):x.types?'в мультиатаке, каждый ход':'действие'}</small></button>`)});
+ (m0.ba||[]).forEach((x,i)=>cmd.push(`<button class="sp" data-info="smb_${i}">${esc(x[0])}<small>бонусное действие</small></button>`));
+ SCMD.forEach(([k,nm,sm])=>cmd.push(`<button data-info="smc_${k}">${nm}<small>${k==='dodge'&&T.t!=='sp'?'уйти в защиту':sm}</small></button>`));
+ $('smCmd').innerHTML=cmd.join('');
+ $('smBot').innerHTML=`<button data-act="sumRound">Следующий раунд<small>${s.list.some(e=>Object.keys(e.rc).length)?'перезарядка: бросок к6':'отметки «сходил» снимутся'}</small></button><button class="ghost" data-info="smend">Отпустить<small>закончить заклинание</small></button>`}
+const sumDurTxt=()=>sDur();
+const SCMD=[['dodge','Уклонение','по умолчанию'],['dash','Рывок','вдвое дальше'],['dis','Отход','без атак вслед'],['help','Помощь','союзнику'],['hide','Засада','спрятаться'],['search','Поиск','заметить']];
+{const _ra=renderAll;renderAll=function(){_ra();try{sumSync();renderSum()}catch(e){console.error(e)}}}
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-p="p-sum"]');if(b){renderSum();b.querySelector('img').animate([{transform:'scale(1.18)'},{transform:'none'}],{duration:300,easing:'cubic-bezier(.3,1.5,.5,1)'})}});
+
+/* ---------- окна ---------- */
+for(let id=1;id<=32;id++){
+ INFO['smm_'+id]=()=>{const s=S.sum,e=s&&s.list.find(x=>x.id===id);if(!e)return INFO.smturn();const m=sM(e);
+  return{t:sNm(e),sub:`${m.fn?m.fn+' · ':''}${esc(m.ln.split(',')[0].toLowerCase())}${s.hos?' · враждебен':''}`,body:sumStatBody(m,e)+(s.hos?'':`<div class="how">Нажми на <b>Сил, Лов…</b>, чтобы бросить его спасбросок. Атаки и приказы на вкладке.</div>`),
+   acts:`<button data-act="smhp:${id}">Хиты: урон или лечение</button>`+
+    (s.hos?'':m.at.map((a,i)=>`<button class="ghost" data-act="sma:${i}:${id}">${esc(a.n)}: к20 ${sg(a.b)}${a.d.length?', '+dTx(a.d):''}</button>`).join(''))+`<button class="ghost" data-act="smgo:${id}">${m.ty==='obj'?'Хиты упали до 0: снова обычный предмет':'Исчез: хиты упали до 0'}</button>`,bang:m.sq?'full_'+m.sq:'smq_'+e.key}}}
+INFO.smma=()=>{const s=S.sum;if(!s)return INFO.smturn();const m=sM(s.list[0]),n=s.list.length;
+ return{t:'Мультиатака',sub:`${m.n.toLowerCase()} · ${m.ma.length} ${m.sp&&m.sp[0].types?'раздирания и дыхание':'атаки'} одним действием`,body:`<p>${esc(m.mt)}</p>${m.sp&&m.sp[0].types?'<p class="mu">Раздирания здесь, а Оружие дыхания отдельной кнопкой «Оружие дыхания» на вкладке: там выберешь вид урона.</p>':''}<p class="mu">${m.ma.map(i=>{const a=m.at[i];return `${esc(a.n)}: к20 ${sg(a.b)}, ${a.d.length?dTx(a.d):a.flat}`}).join('<br>')}</p>${sumAtkHints(m)}<div class="how">Все кубики летят разом. Если знаешь класс доспеха цели (плашка сверху), попадания посчитаются сами; если нет, отметь попавших нажатием.</div>`,
+  acts:(n>1?`<button data-act="sma:m:all">Все ${n} атакуют: ${n*m.ma.length} бросков</button>`:'')+(n>1?s.list.map(e=>`<button class="ghost" data-act="sma:m:${e.id}">Только ${esc(sNm(e))}</button>`).slice(0,4).join(''):`<button data-act="sma:m:${s.list[0].id}">Атаковать: ${m.ma.length} броска</button>`),bang:'qt_smma'}};
+for(let i=0;i<6;i++){
+ INFO['sma_'+i]=()=>{const s=S.sum;if(!s)return INFO.smturn();const m=sM(s.list[0]),a=m.at[i],n=s.list.length;if(!a)return INFO.smturn();
+  if(s.k==='animate_objects'){const G={};s.list.forEach(e=>{(G[e.key]=G[e.key]||[]).push(e)});
+   return{t:'Удар',sub:`${sumGrpName()} · рукопашная атака · досягаемость 5 футов`,body:`<p>Если ты приказываешь предмету атаковать, он совершает <b>одну рукопашную атаку</b> по существу в пределах 5 футов. Бонус атаки и дробящий урон зависят от размера:</p><p class="mu">${Object.keys(G).map(x=>{const q=SUMC[x],z=q.at[0];return `${esc(q.sz)} (${G[x].length}): к20 ${sg(z.b)}, ${dTx(z.d)}`}).join('<br>')}</p><p class="mu" style="font-size:13px">Мастер может постановить, что предмет причиняет рубящий или колющий урон.</p><div class="how">Все кубики летят разом. Если знаешь класс доспеха цели (плашка сверху), попадания посчитаются сами; если нет, отметь попавших нажатием.</div>`,
+    acts:(n>1?`<button data-act="sma:0:all">Все ${n} атакуют: ${n} бросков</button>`:'')+s.list.slice(0,n>1?4:1).map(e=>`<button class="${n>1?'ghost':''}" data-act="sma:0:${e.id}">${n>1?'Только '+esc(sNm(e)):'Атаковать: к20 '+sg(sM(e).at[0].b)}</button>`).join(''),bang:'full_animate_objects'}}const rdy=s.list.filter(e=>!a.rch||!e.rc['a'+i]);
+  const hit=(a.q.split('Попадание:')[1]||'').trim();
+  return{t:a.n,sub:`${m.n.toLowerCase()} · ${a.rng?'дальнобойная':'рукопашная'} атака · ${a.r}`,body:`<p><b>Атака: к20 ${sg(a.b)}</b>. При попадании <b>${a.d.length?dTx(a.d):a.flat?a.flat+' '+a.ft:'без урона'}</b>${a.sv?` и <b>${a.sv.n}к${a.sv.s} ${a.sv.t}</b> (спасбросок ${a.sv.ab} ${a.sv.dc}${a.sv.half?', при успехе половина':', при успехе нет'})`:''}.</p>${hit?`<p class="mu">Дословно: «${esc(hit)}»</p>`:''}${a.ch?`<p>С разбега (20 футов по прямой) ещё <b>${a.ch[0]}к${a.ch[1]} ${a.ch[3]}</b>: кнопка будет в окне броска.</p>`:''}${a.rch?`<p>Перезарядка <b>${a.rch.join('–')}</b>: после использования в начале каждого его хода бросаешь к6.</p>`:''}${sumAtkHints(m)}`,
+   acts:(n>1&&rdy.length>1?`<button data-act="sma:${i}:all">${rdy.length===n?'Все '+n+' атакуют':'Атакуют '+rdy.length+' готовых'}: ${rdy.length} бросков</button>`:'')+rdy.slice(0,n>1?4:1).map(e=>`<button class="${n>1?'ghost':''}" data-act="sma:${i}:${e.id}">${n>1?'Только '+esc(sNm(e)):'Атаковать: к20 '+sg(a.b)}</button>`).join('')+(a.alt?`<button class="ghost" data-act="sma:${i}:${n>1?'all':s.list[0].id}:1">${esc(a.alt.l)}: к20 ${sg(a.alt.b)}, ${dTx(a.alt.d)}</button>`:'')+(!rdy.length?'<button disabled>Перезаряжается: жди нового раунда</button>':''),bang:'smq_'+s.list[0].key}};
+ INFO['sms_'+i]=()=>{const s=S.sum;if(!s)return INFO.smturn();const m=sM(s.list[0]),x=(m.sp||[])[i];if(!x)return INFO.smturn();const rdy=s.list.filter(e=>!e.rc['s'+i]);
+  if(x.types)return{t:x.n,sub:`${m.n.toLowerCase()} · ${m.fn} · часть мультиатаки`,body:`<p>${esc(x.t)}</p><p>Сложность спасброска: <b>${spellDC()}</b> (твоя сложность заклинаний). Вид урона выбираешь из сопротивлений этого дракона, каждый раз заново.</p><div class="how">Дыхание входит в мультиатаку: в каждый свой ход дух и раздирает, и дышит. Перезарядки нет.</div>`,
+   acts:x.types.map((t,j)=>`<button class="${j?'ghost':''}" data-act="sms:${i}:${s.list[0].id}:${j}">${t[0].toUpperCase()+t.slice(1)}: 2к6</button>`).join(''),bang:'smq_'+s.list[0].key};
+  return{t:x.n,sub:`${m.n.toLowerCase()} · действие${x.rch?' · перезарядка '+(x.rch==='rest'?'после отдыха':x.rch.join('–')):''}`,body:`<p>${esc(x.t)}</p>${x.rch&&x.rch!=='rest'?`<div class="how">После использования в начале каждого его хода бросаешь к6: на ${x.rch.join(' или ')} снова готово. Кнопка «Следующий раунд» бросает сама.</div>`:''}`,
+   acts:x.types?x.types.map((t,j)=>`<button class="${j?'ghost':''}" data-act="sms:${i}:${s.list[0].id}:${j}">${t[0].toUpperCase()+t.slice(1)}: 2к6</button>`).join(''):(rdy.length?rdy.slice(0,6).map(e=>`<button class="${rdy.length>1?'ghost':''}" data-act="sms:${i}:${e.id}">${s.list.length>1?esc(sNm(e))+': ':''}${x.d?`использовать, урон ${x.d[0]}к${x.d[1]}${x.d[2]?sg(x.d[2]):''}`:'использовать'}</button>`).join(''):'<button disabled>Перезаряжается: жди нового раунда</button>'),bang:x.types?'smq_'+s.list[0].key:'qt_smrch'}}}
+for(let i=0;i<3;i++)INFO['smb_'+i]=()=>{const s=S.sum;if(!s)return INFO.smturn();const m=sM(s.list[0]),x=(m.ba||[])[i];if(!x)return INFO.smturn();
+ return{t:x[0],sub:`${m.n.toLowerCase()} · бонусное действие${m.fn?' · '+m.fn:''}`,body:`<p>${esc(x[1])}</p>${s.k==='summon_fey'&&s.f==='mirthful'?`<p>Сложность спасброска: <b>${spellDC()}</b> (твоя сложность заклинаний).</p>`:''}`,acts:`<button class="ghost" data-act="closeD">Понятно</button>`,bang:'smq_'+s.list[0].key}};
+const SCD={dodge:['Уклонение','a_dodge',m=>`<p>До начала его следующего хода все атаки по нему <b>с помехой</b>, если он видит атакующего, а спасброски Ловкости он делает <b>с преимуществом</b>. Не работает, если он недееспособен или его скорость 0.</p>`],
+ dash:['Рывок','a_dash',m=>`<p>В этот ход у него <b>вдвое больше перемещения</b>: ещё столько же, сколько его скорость (${esc(m.spd)}).</p>`],
+ dis:['Отход','a_dis',()=>`<p>Его перемещение в этот ход <b>не провоцирует атак</b>.</p>`],
+ help:['Помощь','a_help',()=>`<p>Помогает союзнику: следующая проверка союзника в этом деле <b>с преимуществом</b>. Или отвлекает врага в 5 футах от себя: первая атака союзника по этому врагу до начала следующего хода помощника <b>с преимуществом</b>.</p>`],
+ hide:['Засада','a_hide',()=>`<p>Пытается спрятаться: проверка <b>Ловкости (Скрытность)</b>. Мастер сравнит с Восприятием врагов.</p>`],
+ search:['Поиск','a_search',()=>`<p>Ищет что-то: проверка <b>Мудрости (Восприятие)</b> или Интеллекта (Анализ), как скажет мастер.</p>`]};
+Object.keys(SCD).forEach(k=>{INFO['smc_'+k]=()=>{const s=S.sum;if(!s)return INFO.smturn();const m=sM(s.list[0]),[n,q,f]=SCD[k],T=SUMSP[s.k];
+ const sk=k==='hide'?'Скрытность':k==='search'?'Восприятие':null,ski=sk?((new RegExp(sk+'\\s*([+−-]\\d+)')).exec(m.sk||'')):null,bon=sk?(ski?+ski[1].replace('−','-'):mod(m.ab[k==='hide'?1:4])):0;
+ return{t:n,sub:`приказ · ${s.list.length>1?'всем или одному':'одно действие'}`,body:f(m)+(k==='dodge'?`<div class="how">${T.t==='sp'?'Если ты ничего не приказал, дух сам делает Уклонение и уходит от опасности.':'Если ты ничего не приказал, предметы только защищаются от врагов.'}</div>`:'')+(T.t==='obj'?`<p class="mu">Приказ отдаёшь мысленно <b>бонусным действием</b>, если предмет в пределах 500 футов. Один приказ можно дать сразу любому числу предметов. Получив приказ, предмет выполняет его, пока не сделает.</p>`:`<p class="mu">Приказ голосом, тебе он действия не стоит.</p>`),
+  acts:(sk?`<button data-act="smchk:${s.list[0].id}:${k}">Бросить ${sk}: к20 ${sg(bon)}</button>`:'')+`<button class="${sk?'ghost':''}" data-act="closeD">Понятно</button>`,bang:'qt_smc_'+k}};addQ('smc_'+k,[SCD[k][1]])});
+INFO.smturn=()=>{const s=S.sum,k=s?s.k:PK&&PK.k,T=k?SUMSP[k]:null,p=k?SPELLS[k]:null;
+ const body=!T?'<p>Сейчас никого нет.</p>':(s&&s.hos?`<p><b>Концентрация оборвалась.</b> Элементаль не исчез: он вышел из-под контроля и стал <b>враждебным</b> тебе и спутникам, может напасть. Отпустить его нельзя. Он исчезнет сам через <b>1 час</b> после призыва. Ходы теперь ведёт мастер.</p>`:
+  T.t==='sp'?`<p>В бою дух ходит <b>сразу после тебя</b>, в твою инициативу. Слушается твоего голоса, тебе это не стоит действия.</p><p>Если ты ничего не приказал, он делает <b>Уклонение</b> и отходит от опасности.</p><p>Мультиатака: раздираний за ход половина круга ячейки, сейчас <b>${Math.floor((s?s.c:PK.c)/2)}</b>, и каждый ход ещё Оружие дыхания.</p>`:
+  T.t==='obj'?`<p>Оживлённые предметы бросают <b>инициативу одной группой</b> и ходят в свой ход.</p><p>Приказ отдаёшь мысленно <b>бонусным действием</b>, если предмет в пределах 500 футов: что сделать и куда переместиться в следующий ход, или общий приказ, например охранять комнату. Один приказ сразу любому числу предметов. Без приказа они <b>только защищаются</b> от врагов.</p><p>Приказ атаковать: одна рукопашная атака по существу в пределах 5 футов.</p>`:
+  T.t==='ins'?`<p>Насекомые слушаются твоего голоса и в бою <b>ходят в твой ход</b>, каждый раунд.</p><p>Гигантскими остаются, пока хиты не упадут до 0 или ты действием не вернёшь кого-то из них обратно. Ходы и перемещение по правилам ведёт мастер, а броски здесь.</p>`:
+  `<p>Призванные бросают <b>инициативу одной группой</b> и ходят сами, в свой ход.</p><p>Слушаются твоего голоса, тебе это не стоит действия. Если ты ничего не приказала, они <b>только защищаются</b> от врагов.</p>`)+
+  (T?`<p>Раунд длится около <b>6 секунд</b>. Заклинание держится до <b>${k==='animate_objects'?'1 минуты (10 раундов)':'1 часа (600 раундов)'}</b>, пока ты держишь концентрацию.</p><p>${k==='animate_objects'?'Хиты предмета падают до 0: он <b>снова обычный предмет</b>, лишний урон переходит на сам предмет.':'Хиты падают до 0: дух <b>исчезает</b>.'} Концентрация обрывается: ${k==='conjure_elemental'?'элементаль <b>становится враждебным</b>':'исчезают <b>все</b>'}.</p>`:'');
+ return{t:'Как они ходят',sub:p?p.n:'призванные',body,acts:(k?`<button class="ghost" data-info="full_${k}">Текст заклинания дословно ›</button>`:'')+`<button class="ghost" data-act="closeD">Понятно</button>`,bang:'qt_smturn'}};
+INFO.smround=()=>{const s=S.sum;if(!s)return INFO.smturn();return{t:`Раунд ${s.rd}`,sub:`из ${sDur()} · раунд около 6 секунд`,body:`<p>Раунд: все в бою сделали по ходу. Новый раунд снимает отметки «сходил» и бросает к6 за перезарядку особых действий.</p><p class="mu">Заклинание держится до ${s.k==='animate_objects'?'1 минуты':'1 часа'}, пока держится концентрация.</p>`,
+ acts:`<button data-act="sumRound">Следующий раунд</button><button class="ghost" data-act="smr0">Начать счёт заново</button>`}};
+INFO.smend=()=>({t:'Отпустить призванных',sub:S.sum?SPELLS[S.sum.k].n:'',body:`<p>Закончишь заклинание: концентрация снимется, ${S.sum&&S.sum.k==='animate_objects'?'все предметы снова станут обычными':'дух исчезнет'}.</p><p class="mu">Концентрацию держать не нужно ни действием, ни бонусным действием. Закончить её можно в любой момент.</p>`,acts:`<button data-act="sumEnd">Закончить заклинание</button><button class="ghost" data-act="closeD">Оставить</button>`,bang:'qt_conc'});
+INFO.smgone=()=>{const g=lastGone;return{t:'Никого не осталось',sub:g?g.n+' исчез':'призванные исчезли',body:`<p>Хиты последнего призванного упали до 0, и он исчез. Вкладка «Призванные» закрылась.</p>${S.conc?`<p>Концентрация на «${SPELLS[S.conc].n}» всё ещё держится, но держать её больше незачем.</p>`:''}`,acts:(S.conc?`<button data-act="concEnd">Снять концентрацию</button>`:'')+`<button class="ghost" data-act="closeD">Понятно</button>`}};
+INFO.smburst=()=>{const g=lastGone,t=g&&g.m.tr.find(x=>/Предсмертная вспышка/.test(x[0]));if(!t)return INFO.smturn();const P=/(\d+)\s*\((\d+)к(\d+)\)/.exec(t[1]),sv=/спасброс\S* (\S+) Сл (\d+)/.exec(t[1]);
+ return{t:'Предсмертная вспышка',sub:g.n,body:`<p>${esc(t[1])}</p><p class="mu">Исчезновение на 0 хитов мастер может считать смертью. Тогда срабатывает вспышка.</p>`,acts:(P?`<button data-act="smbr:${P[2]}:${P[3]}">Бросить урон ${P[2]}к${P[3]}</button>`:'')+`<button class="ghost" data-act="closeD">Понятно</button>`,bang:'smq_'+g.key}};
+INFO.smhos=()=>INFO.smturn();
+QUOTE.sm_sa={h:'Мудрые советы: кто выбирает призываемых существ',s:'Sage Advice Compendium',u:'https://dnd.su/articles/mechanics/318-sage-advice-compendium/',t:`<p><b>Когда вы накладываете заклинание призыв лесных обитателей [conjure woodland beings], заклинатель или Мастер выбирают существ, которые призываются?</b></p><p>Многие заклинания в игре позволяют вам призывать существ. Призыв животных [conjure animals], призыв небожителя [conjure celestial], призыв малых элементалей [conjure minor elementals] и призыв лесных обитателей [conjure woodland beings] — вот несколько примеров.</p><p>Некоторые заклинания этого типа определяют, что заклинатель выбирает призванное существо.</p><p>Например, поиск фамильяра [find familiar] предоставляет заклинателю список животных, из которых можно выбрать.</p><p>Другие заклинания этого типа позволяют заклинателю выбрать из нескольких широких вариантов. Например, призыв малых элементалей [conjure minor elementals] предлагает четыре варианта. Вот первые два:</p><p>• Один элементаль с показателем опасности 2 или ниже<br>• Два элементаля с показателем опасности 1 или ниже</p><p>Замысел вариантов состоит в том, что заклинатель выбирает один из них, и затем Мастер решает, какие существа, соответствующие выбору, появятся. Например, если вы выбираете второй вариант, Мастер выбирает два элементаля с показателем опасности 1 или ниже.</p>`};
+QUOTE.sm_multi={h:'Бестиарий: Мультиатака',s:'Monster Manual',u:'https://dnd.su/articles/mechanics/485-bestiary/',t:`<p>Существо, способное атаковать несколько раз в свой ход, обладает действием «Мультиатака». Существо не может использовать «Мультиатаку», совершая провоцированную атаку, ведь это всегда одиночная рукопашная атака.</p>`};
+QUOTE.sm_rch={h:'Бестиарий: Ограниченное использование',s:'Monster Manual',u:'https://dnd.su/articles/mechanics/485-bestiary/',t:`<p>Некоторые особые умения имеют ограничение по количеству использований.</p><p><b><i>Х/день.</i></b> Примечание «Х/день» означает, что особое умение может быть использовано Х раз, после чего чудовище должно окончить продолжительный отдых для восстановления этого умения. Например «1/день» означает, что особое умение может быть использовано только один раз в день, после чего чудовище должно окончить продолжительный отдых, чтобы воспользоваться им снова.</p><p><b><i>Перезарядка X–Y.</i></b> Примечание «Перезарядка X–Y» означает, что чудовище может использовать особое умение один раз, и что это умение может с некоторым шансом перезарядиться в следующем раунде боя. В начале каждого хода чудовища бросайте к6. Если в результате броска выпало одно из указанных в примечании чисел, чудовище восстанавливает использованное особое умение. Способность также перезаряжается, когда чудовище завершает короткий или продолжительный отдых.</p><p>Например «Перезарядка 5–6» означает, что чудовище может использовать особое умение один раз. Затем, в начале своего хода, оно восстанавливает возможность использовать это умение, если выбросит «5» или «6» на к6.</p><p><b><i>Перезаряжается после короткого или продолжительного отдыха.</i></b> Эта запись означает, что чудовище может использовать особое умение один раз, а затем ему нужен короткий или продолжительный отдых, чтобы использовать его снова.</p>`};
+addQ('spk',['sm_sa']);addQ('smturn',['sm_sa','a_dodge','sm_multi','sm_rch']);addQ('smma',['sm_multi']);addQ('smrch',['sm_rch']);
+INFO.qt_spk=()=>({t:'Правила дословно',sub:'точная цитата с dnd.su, можно показать мастеру',body:qHtml('sm_sa')+(PK?`<button class="bookbtn" data-info="full_${PK.k}">Текст заклинания «${SPELLS[PK.k].n}» дословно ›</button>`:''),acts:`<button class="ghost" data-info="spk">← Назад к выбору</button>`});
+INFO.qt_smrch=()=>({t:'Правила дословно',sub:'точная цитата с dnd.su, можно показать мастеру',body:qHtml('sm_rch'),acts:`<button class="ghost" data-act="closeD">Понятно</button>`});
+function sumAtkHints(m){const t=[];(m.tr||[]).forEach(x=>{if(/Тактика стаи|Кровавое бешенство|Наскок|Атака в броске|Растаптывающий|Буйство/.test(x[0]))t.push(`<p class="mu" style="font-size:13px"><b>${esc(x[0])}.</b> ${esc(x[1])}</p>`)});
+ if(t.length)t.push('<p class="mu" style="font-size:12.5px">Преимущество или помеху выбери переключателем на вкладке перед броском.</p>');return t.join('')}
+
+/* ---------- хиты, КД цели, раунды ---------- */
+function sumHpSheet(id){const s=S.sum,e=s&&s.list.find(x=>x.id===id);if(!e)return;const f=$('form');closeDrawer();
+ f.innerHTML=`<h2>${esc(sNm(e))}: ${e.hp} из ${e.mx}</h2><input class="big" name="n" type="number" inputmode="numeric" placeholder="сколько?" required>
+ <div class="two"><button class="go red" type="submit" value="dmg">− Урон</button><button class="go grn" type="submit" value="heal">+ Лечение</button></div>`;
+ $('sheet').classList.add('on');setTimeout(()=>f.n.focus(),250);
+ f.onsubmit=ev=>{ev.preventDefault();const n=Math.abs(parseInt(f.n.value)),how=ev.submitter&&ev.submitter.value;$('sheet').classList.remove('on');if(isNaN(n)||!S.sum)return;const e2=S.sum.list.find(x=>x.id===id);if(!e2)return;
+  const card=()=>document.querySelector(`#smList [data-info="smm_${id}"]`);
+  if(how==='dmg'){const nk=/Неумолимый/.test((sM(e2).tr||[]).map(x=>x[0]).join())&&!e2.rc.relent&&e2.hp-n<=0&&n<=+((/урон (\d+) или меньше/.exec(sM(e2).tr.find(x=>/Неумолимый/.test(x[0]))[1])||[0,0])[1]);
+   if(nk){e2.hp=1;e2.rc.relent=1;save();renderAll();lastGone={n:sNm(e2),key:e2.key,m:sM(e2)};return openInfo('smrelent')}
+   e2.hp-=n;if(e2.hp<=0){e2.hp=0;return sumDrop(id,'hp')}save();renderAll();const c=card();if(c){c.animate([{transform:'translateX(-7px)',boxShadow:'0 0 0 2px #e0485e,0 0 24px #e0485e'},{transform:'translateX(5px)'},{transform:'translateX(-3px)'},{transform:'none',boxShadow:'0 0 0 0 transparent'}],{duration:420,easing:'ease-out'});const R=c.getBoundingClientRect();if(!RM)for(let i=0;i<8;i++)spawn({x:R.left+R.width*.3,y:R.top+R.height*.4,vx:RN(-160,160),vy:RN(-260,-60),g:900,m:RN(.5,.9),s:RN(1.6,2.6),c:['#e0485e','#a84f58','#ffd0d6'],fl:R.bottom+4,bo:.3})}bodyShake()}
+  else{e2.hp=Math.min(e2.mx,e2.hp+n);save();renderAll();const c=card();if(c)c.animate([{boxShadow:'0 0 0 2px #86c79c,0 0 22px #86c79c'},{boxShadow:'0 0 0 0 transparent'}],{duration:700,easing:'ease-out'})}}}
+INFO.smrelent=()=>{const g=lastGone,t=g&&g.m.tr.find(x=>/Неумолимый/.test(x[0]));return{t:'Неумолимый',sub:g?g.n:'',body:t?`<p>${esc(t[1])}</p><p>Хиты остались на <b>1</b>. Снова сработает после отдыха.</p>`:'',acts:`<button class="ghost" data-act="closeD">Понятно</button>`,bang:g?'smq_'+g.key:''}};
+function sumTacSheet(){if(!S.sum)return;const f=$('form');closeDrawer();
+ f.innerHTML=`<h2>Класс доспеха цели</h2><p class="mu" style="margin:-4px 0 8px;text-align:center">Если мастер его назвал, попадания посчитаются сами. Не знаешь, отметишь попавших вручную.</p><input class="big" name="n" type="number" inputmode="numeric" placeholder="например, 13" value="${S.sum.tAC||''}">
+ <div class="two"><button class="go" type="submit" value="clr" style="border:1px solid var(--line)">Не знаю</button><button class="go gold" type="submit" value="ok">Готово</button></div>`;
+ $('sheet').classList.add('on');setTimeout(()=>f.n.focus(),250);
+ f.onsubmit=ev=>{ev.preventDefault();const how=ev.submitter&&ev.submitter.value,n=parseInt(f.n.value);$('sheet').classList.remove('on');if(!S.sum)return;S.sum.tAC=how==='clr'||isNaN(n)?null:Math.max(1,Math.min(40,n));save();renderSum()}}
+{const _a=act;act=function(a){
+ if(a==='smr0'){if(S.sum){S.sum.rd=1;save();renderSum()}return openInfo('smround',true)}
+ if(a.startsWith('smbr:')){const [,n,sd]=a.split(':');closeDrawer();const g=lastGone,t=g&&g.m.tr.find(x=>/Предсмертная вспышка/.test(x[0]));return dice({label:'Предсмертная вспышка',n:+n,s:+sd,min:0,fx:/огн|пар/.test(t?t[1]:'')?'fire':/лёд|льда/.test(t?t[1]:'')?'cold':'earth',after:()=>`<div class="br">${t?esc((/(спасброс[^.]*\.)/.exec(t[1])||['',''])[1]):''}</div>`})}
+ return _a(a)}}
+function sumRound(){const s=S.sum;if(!s||busy)return;closeDrawer();s.rd=Math.min(s.rd+1,9999);s.list.forEach(e=>e.dn=0);
+ const R=[];s.list.forEach(e=>{const m=sM(e);Object.keys(e.rc).forEach(k=>{if(k==='relent')return;const x=k[0]==='s'?(m.sp||[])[+k.slice(1)]:m.at[+k.slice(1)];if(!x||!Array.isArray(x.rch))return;R.push({e,k,x,v:r(6)})})});
+ save();renderSum();
+ if(!R.length){const t=document.querySelector('#smVit .tok:nth-child(2)');if(t)t.animate([{transform:'rotateX(90deg)'},{transform:'none'}],{duration:340,easing:'cubic-bezier(.3,1.4,.5,1)'});vib(8);return}
+ lastPt=tapPt;cur={dice:true};throwMany(R.map(x=>({s:6,v:String(x.v)})),()=>{R.forEach(x=>{if(x.x.rch.includes(x.v))delete x.e.rc[x.k]});save();renderSum();
+  const res=$('res');res.innerHTML=`<div class="lbl">Раунд ${s.rd}: перезарядка</div><div class="srows">${R.map(x=>{const ok=x.x.rch.includes(x.v);return `<div class="srow rc ${ok?'ok':''}"><span class="w">${esc(sNm(x.e))}: ${esc(x.x.n)}</span><span class="tt" style="font-size:18px">${x.v}</span><span class="s">${ok?'снова готово':'нужно '+x.x.rch.join(' или ')}</span></div>`}).join('')}</div><div class="hint">нажми, чтобы закрыть</div>`;res.classList.add('on');pushLog('Перезарядка призванных',R.filter(x=>x.x.rch.includes(x.v)).length)},null)}
+
+/* ---------- броски: атаки стаей, урон по попавшим, особые действия ---------- */
+let SR=null;
+function sumAtk(ai,who,alt){const s=S.sum;if(!s||busy||s.hos)return;closeDrawer();
+ const ids=who==='all'?s.list.map(e=>e.id):[+who],rows=[];
+ ids.forEach(id=>{const e=s.list.find(x=>x.id===id);if(!e)return;const m=sM(e),seq=ai==='m'||isNaN(ai)?m.ma:[ai];
+  seq.forEach(i=>{let a=m.at[i];if(!a)return;if(a.rch&&e.rc['a'+i])return;if(alt&&a.alt)a=Object.assign({},a,{b:a.alt.b,d:a.alt.d,n:a.n+' ('+a.alt.l+')'});rows.push({id,i,a,who:sNm(e)})})});
+ if(!rows.length)return;const mode=rollMode;
+ rows.forEach(x=>{const p=r(20),q=mode!=='norm'?r(20):null;x.d=mode==='adv'?Math.max(p,q):mode==='dis'?Math.min(p,q):p;x.o=q==null?null:(x.d===p?q:p);x.t=x.d+x.a.b;
+  x.h=x.d===20?2:x.d===1?0:s.tAC?(x.t>=s.tAC?1:0):-1;const e=s.list.find(y=>y.id===x.id);e.dn=1;if(x.a.rch)e.rc['a'+x.i]=1});
+ SR={rows,mode,ch:0,lbl:(ids.length>1?sumGrpName():rows[0].who)+': '+(ai==='m'||isNaN(ai)?'мультиатака':rows[0].a.n.toLowerCase())};save();
+ lastPt=tapPt;cur={dice:true};throwMany(rows.map(x=>({s:20,v:String(x.d)})),()=>{sumAtkRes();renderSum()},null)}
+function sumAtkRes(){const R=SR,s=S.sum;if(!R)return;const hits=R.rows.filter(x=>x.h>0),unk=R.rows.some(x=>x.h<0),one=R.rows.length===1,x0=R.rows[0];
+ const hasCh=R.rows.some(x=>(x.h>0||one)&&x.a.ch&&x.d!==1),chB=hasCh?`<button class="${R.ch?'on':''}" data-sch>${R.ch?'✓ ':''}Был разбег 20 футов по прямой</button>`:'';
+ const dT=a=>(a.d.length?dTx(R.ch&&a.ch?a.d.concat([a.ch]):a.d):a.flat?a.flat+' '+a.ft:'');let body='',acts='';
+ if(one){const x=x0,a=x.a;
+  body=`<div class="tot ${x.d===20?'gold':''}">${x.t}</div><div class="br">к20 <b>${x.d}</b>${x.o!=null?` <span style="opacity:.6">(второй ${x.o}: ${R.mode==='adv'?'преимущество':'помеха'})</span>`:''} ${x.a.b>=0?'+':'−'} ${Math.abs(x.a.b)}${s&&s.tAC?` · класс доспеха цели ${s.tAC}`:''}</div>`+
+   (x.d===20?'<div class="crit" style="color:var(--gold2)">Природная двадцатка: критическое попадание!</div>':x.d===1?'<div class="crit" style="color:var(--red2)">Природная единица: промах</div>':x.h===0?'<div class="br" style="color:var(--red2)">меньше класса доспеха цели: промах</div>':x.h===1?'<div class="br" style="color:var(--gold2)">попал</div>':'');
+  if(x.d!==1&&(a.d.length||a.flat))acts=chB+(x.h===0?`<button class="ghost" data-sdmg>Мастер говорит «попал»: урон ${dT(a)}</button>`:`<button class="red" data-sdmg>${x.h===2?'Крит! ':'Попал: '}урон ${dT(a)}</button>`)}
+ else{body=`<div class="srows">${R.rows.map((x,i)=>`<button class="srow ${x.h===2?'crit':x.h===1?'hit':x.h===0?'miss':''}" data-shit="${i}"><span class="w">${esc(R.rows.some(y=>y.who!==x.who)?x.who:x.a.n)}</span><span class="n">${x.d}${x.o!=null?'<br><small style="opacity:.6">'+x.o+'</small>':''}</span><span class="tt">${x.t}</span><span class="s">${x.h===2?'крит!':x.h===1?'попал':x.h===0?(x.d===1?'единица':'промах'):'попал?'}</span></button>`).join('')}</div>`+
+   `<div class="br" style="font-size:13.5px">${unk?'Сравни с классом доспеха цели и нажми на тех, кто попал':`попали ${hits.length} из ${R.rows.length}`+(s&&s.tAC?` · класс доспеха ${s.tAC}`:'')+'. Нажми на строку, чтобы поправить'}</div>`;
+  acts=chB+(hits.length?`<button class="red" data-sdmg>${hits.some(x=>x.h===2)?'Крит! ':''}Урон по попавшим: ${hits.length}</button>`:'')}
+ $('res').innerHTML=`<div class="lbl">${esc(R.lbl)}${R.mode!=='norm'&&!one?' · '+(R.mode==='adv'?'преимущество':'помеха'):''}</div>`+body+(acts?`<div class="acts">${acts}</div>`:'')+`<div class="hint">нажми мимо, чтобы закрыть</div>`;
+ $('res').classList.add('on');if(!R.logged){R.logged=1;pushLog(R.lbl,one?x0.t:hits.length)}}
+function sumDmg(){const R=SR;if(!R||busy)return;const hits=R.rows.filter(x=>x.h>0);if(!hits.length)return;const faces=[],parts=[];let flat=0;
+ hits.forEach(x=>{const k=x.h===2?2:1,ds=x.a.d.slice();if(R.ch&&x.a.ch)ds.push(x.a.ch);
+  ds.forEach(([n,sd,kk,t])=>{const v=Array.from({length:n*k},()=>r(sd));v.forEach(y=>faces.push({s:sd,v:String(y)}));parts.push({who:x.who,t,sum:v.reduce((a,b)=>a+b,0)+kk})});
+  if(!ds.length&&x.a.flat){flat+=x.a.flat;parts.push({who:x.who,t:x.a.ft,sum:x.a.flat})}});
+ const fin=()=>{const tot=parts.reduce((a,b)=>a+Math.max(0,b.sum),0),byT={};parts.forEach(p=>byT[p.t]=(byT[p.t]||0)+Math.max(0,p.sum));const byW={};parts.forEach(p=>byW[p.who]=(byW[p.who]||0)+Math.max(0,p.sum));
+  const svs=hits.filter(x=>x.a.sv),a0=hits[0].a,eff=sumEff(a0);
+  $('res').innerHTML=`<div class="lbl">${esc(R.lbl)}: урон${hits.some(x=>x.h===2)?' · крит, кубиков вдвое':''}${R.ch?' · с разбега':''}</div><div class="tot">${tot}</div><div class="sk">${Object.entries(byT).map(([t,v])=>`<span>${v} ${esc(t)}</span>`).join('')}</div>${Object.keys(byW).length>1?`<div class="sk">${Object.entries(byW).map(([w,v])=>`<span>${esc(w)}: ${v}</span>`).join('')}</div>`:''}${eff?`<div class="smx">${esc(eff)}</div>`:''}${svs.length?`<div class="acts"><button class="red" data-ssv>${esc(svs[0].a.sv.t[0].toUpperCase()+svs[0].a.sv.t.slice(1))}: ${svs.length>1?svs.length+' × ':''}${svs[0].a.sv.n}к${svs[0].a.sv.s}</button></div>`:''}<div class="hint">нажми мимо, чтобы закрыть</div>`;
+  $('res').classList.add('on');pushLog(R.lbl+': урон',tot)};
+ lastPt=tapPt;cur={dice:true};if(!faces.length){fin();return}throwMany(faces.slice(0,24),fin,hits[0].a.fx||null)}
+/* что ещё делает попадание, дословно из бестиария: всё после строки урона (сбивает с ног, захват, яд…) */
+function sumEff(a){const h=((a.q||'').split('Попадание:')[1]||'').trim(),m=h.match(/^[^.]*?\d+\s*\(\d+к\d+[^)]*\)(?:\s+урона\s+[а-яё]+|\s+[а-яё]+\s+урона)?/i);if(!m)return '';
+ let t=h.slice(m[0].length),p;const R=[/^[\s.,;]+(и\s+)?/i,/^плюс[^.,]*?\(\d+к\d+[^)]*\)(?:\s+урона\s+[а-яё]+|\s+[а-яё]+\s+урона)?/i,/^или[^.]*\./i,/^цель должна совершить спасбросок[^.]*?при успехе\.?/i,/^цель должна преуспеть в спасброске[^.]*?урона [а-яё]+\./i];
+ do{p=t;R.forEach(r=>{if(r!==R[0]&&r.source.indexOf('спасброс')>0&&!a.sv)return;t=t.replace(r,'')});t=t.replace(R[0],'')}while(t!==p);
+ t=t.trim();return t?t[0].toUpperCase()+t.slice(1):''}
+function sumSv(){const R=SR;if(!R||busy)return;const svs=R.rows.filter(x=>x.h>0&&x.a.sv);if(!svs.length)return;const V=svs[0].a.sv,faces=[],per=[];
+ svs.forEach(x=>{const v=Array.from({length:V.n},()=>r(V.s));v.forEach(y=>faces.push({s:V.s,v:String(y)}));per.push({who:x.who,sum:v.reduce((a,b)=>a+b,0)+(V.k||0)})});
+ lastPt=tapPt;cur={dice:true};throwMany(faces.slice(0,24),()=>{const tot=per.reduce((a,b)=>a+b.sum,0);
+  $('res').innerHTML=`<div class="lbl">${esc(R.lbl)}: ${esc(V.t)}</div><div class="tot">${tot}</div>${per.length>1?`<div class="sk">${per.map(p=>`<span>${esc(p.who)}: ${p.sum}</span>`).join('')}</div>`:''}<div class="br">спасбросок ${esc(V.ab)}, сложность ${V.dc}: ${V.half?'при успехе половина':'при успехе урона нет'}</div><div class="hint">нажми, чтобы закрыть</div>`;$('res').classList.add('on');pushLog(R.lbl+': '+V.t,tot)},V.t==='яд'?'poi':null)}
+$('roll').addEventListener('click',e=>{if(busy)return;
+ const h=e.target.closest('[data-shit]');if(h&&SR){const x=SR.rows[+h.dataset.shit];if(!x||x.d===20||x.d===1)return;x.h=x.h===1?0:1;vib(8);sumAtkRes();return}
+ if(e.target.closest('[data-sch]')&&SR){SR.ch=SR.ch?0:1;vib(8);sumAtkRes();return}
+ if(e.target.closest('[data-sdmg]')&&SR){if(SR.rows.length===1&&SR.rows[0].h<1&&SR.rows[0].d!==1)SR.rows[0].h=1;lastPt={x:e.clientX,y:e.clientY};vib([20,30,40]);return sumDmg()}
+ if(e.target.closest('[data-ssv]')&&SR){lastPt={x:e.clientX,y:e.clientY};return sumSv()}});
+function sumSpecial(si,id,tj){const s=S.sum;if(!s||busy)return;const e=s.list.find(x=>x.id===id);if(!e)return;const m=sM(e),x=(m.sp||[])[si];if(!x||e.rc['s'+si])return;closeDrawer();
+ if(x.rch)e.rc['s'+si]=1;e.dn=1;save();renderSum();
+ if(!x.d){const c=document.querySelector(`#smCmd [data-info="sms_${si}"]`);if(c&&!RM){const R=c.getBoundingClientRect();spawn({k:'ring',x:R.left+R.width/2,y:R.top+R.height/2,r0:6,r1:R.width*.8,m:.5,c:m.col,w:2,fp:1});glint(R.left+R.width/2,R.top,10,{m:.6})}vib(10);return}
+ let [n,sd,k,t]=x.d,fx=x.fx||null;if(x.types){t=x.types[+tj||0];fx=DFX[t]||null}dice({label:`${sNm(e)}: ${x.n}${x.types?', '+t:''}`,n,s:sd,k,min:0,fx,after:()=>`<div class="br">${t}${x.sv?`, спасбросок ${x.sv[0]} ${x.sv[1]}: ${x.half?'при успехе половина':'при успехе без урона'}`:''}</div>`})}
+function sumSkill(id,k){const s=S.sum,e=s&&s.list.find(x=>x.id===id);if(!e)return;const m=sM(e),sk=k==='hide'?'Скрытность':'Восприятие',ski=(new RegExp(sk+'\\s*([+−-]\\d+)')).exec(m.sk||''),bon=ski?+ski[1].replace('−','-'):mod(m.ab[k==='hide'?1:4]);closeDrawer();
+ return d20({label:`${sNm(e)}: ${sk}`,bonus:[{l:sk,v:bon}],noLuck:1})}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-smsv]');if(!t||!S.sum)return;const [i,v]=t.dataset.smsv.split(':'),e2=S.sum.list.find(x=>openInfoKey==='smm_'+x.id);closeDrawer();
+ d20({label:`${e2?sNm(e2):'Призванный'}: спасбросок ${['Силы','Ловкости','Телосложения','Интеллекта','Мудрости','Харизмы'][+i]}`,bonus:[{l:'спасбросок',v:+v}],noLuck:1})},true);
+
+/* ---------- эффекты: появление, переход в иконку вкладки, исчезновение ---------- */
+function sumTabImg(){return document.querySelector('.tabs [data-p="p-sum"] img')}
+function sumMove(d,mo,dx,dy,k){const T=(x,y,s,r,sx,sy)=>({transform:`translate(${x}px,${y}px) rotate(${r||0}deg) scale(${(s||1)*(sx||1)},${(s||1)*(sy||1)})`});let kf,dur=560,ez='cubic-bezier(.45,0,.6,1)',big=0;
+ if(mo==='fly'){kf=[];for(let i=0;i<=8;i++){const f=i/8;kf.push(T(dx*f+Math.sin(f*Math.PI)*36,dy*f-Math.sin(f*Math.PI)*60,1+(k-1)*f,0,1,i%2?.72:1.05))}dur=700;ez='linear'}
+ else if(mo==='leap'){kf=[T(0,0),{...T(dx*.45,Math.min(dy,0)-innerHeight*.12,(1+k)/2,-16,.92,1.12),offset:.5},T(dx,dy,k,-4)];dur=520;ez='cubic-bezier(.3,.1,.5,1)';big=1}
+ else if(mo==='charge'){kf=[T(0,0),T(dx,dy,k)];dur=460;ez='cubic-bezier(.6,0,.9,.6)';big=1}
+ else if(mo==='swim'||mo==='slither'){kf=[];for(let i=0;i<=10;i++){const f=i/10;kf.push(T(dx*f+Math.sin(f*Math.PI*3)*30*(1-f),dy*f,1+(k-1)*f,Math.sin(f*Math.PI*3)*10))}dur=700;ez='linear'}
+ else if(mo==='hop'){kf=[];for(let i=0;i<=3;i++){const f=i/3;kf.push({...T(dx*f,dy*f,1+(k-1)*f,0,1.08,.9),offset:f*.999});if(i<3)kf.push({...T(dx*(f+1/6),dy*(f+1/6)-50*(1-f),1+(k-1)*(f+1/6)),offset:f+1/6})}kf[kf.length-1].offset=1;dur=720;ez='linear'}
+ else if(mo==='scurry'){kf=[T(0,0),{...T(dx*.2,60,.7),offset:.3},{...T(dx*.7,dy*.4+40,(.7+k)/2,-10),offset:.7},T(dx,dy,k,-20)];dur=560}
+ else if(mo==='lunge'){kf=[T(0,0),{...T(-dx*.08,8,1,0,1.06,.92),offset:.3},T(dx,dy,k)];dur=560;ez='cubic-bezier(.5,0,.75,.4)';big=1}
+ else if(mo==='thread'){kf=[T(0,0),{...T(0,-60,.9),offset:.35},{...T(dx*.55,dy*.5-30,(.9+k)/2,-20),offset:.7},T(dx,dy,k,-8)];dur=640}
+ else{kf=[T(0,0),{...T(0,-14,1.04),offset:.25},T(dx,dy,k)];dur=600;ez='cubic-bezier(.4,0,.5,1)'}
+ return{kf,dur,ez,big}}
+/* круг призыва: созвездие по кругу на «земле», туман и толчок */
+function sumCircle(x,y,R,col){if(RM)return;spawn({k:'ring',x,y,r0:R*.2,r1:R,m:.9,c:col,w:2.4,fp:1,fy:.32});spawn({k:'ring',x,y,r0:R*1.1,r1:R*.7,m:.8,c:'#a57cff',w:1.2,fp:1,fy:.32});
+ for(let i=0;i<9;i++){const a=i/9*6.283;setTimeout(()=>{glint(x+Math.cos(a)*R*.85,y+Math.sin(a)*R*.85*.32,RN(6,10),{m:.5,c:i%2?'#f6d58e':'#cdb0ff'})},i*55)}
+ for(let i=0;i<10;i++){const a=RN(0,6.283),v=RN(60,180);spawn({k:'puff',x:x+Math.cos(a)*R*.5,y:y+Math.sin(a)*R*.16,vx:Math.cos(a)*v,vy:-RN(10,40),dr:1.6,m:RN(1.1,1.7),s:RN(26,50),gr:1.1,c:'rgba(205,176,255,.14)',fin:.15,fp:1.3})}}
+async function sumInFx(){const s=S.sum,b=document.querySelector('.tabs [data-p="p-sum"]');if(!s||!b)return;const img=b.querySelector('img');
+ if(RM){b.classList.remove('pre');return}
+ sumBusy=1;const W=innerWidth,H=innerHeight,list=s.list.slice(0,10),N=list.length,m0=sM(list[0]),col=m0.col,mo=BMOT[m0.ic]||'glide';
+ const cx=W/2,cy=H*.4,S0=Math.min(W*.62,280),sz=N===1?S0:N<=2?S0*.62:N<=4?S0*.46:S0*.34;
+ const pos=list.map((e,i)=>{if(N===1)return[cx,cy];const cols=N<=2?2:N<=4?2:N<=6?3:N<=8?4:5,row=Math.floor(i/cols),c=i%cols,rows=Math.ceil(N/cols);return[cx+(c-(Math.min(cols,N-row*cols)-1)/2)*sz*1.02,cy+(row-(rows-1)/2)*sz*.95]});
+ /* 1. круг призыва под ними */
+ sumCircle(cx,cy+(N===1?S0*.42:sz*Math.ceil(N/(N<=4?2:N<=6?3:N<=8?4:5))*.5),Math.min(W*.42,200),col);bodyShake();
+ const pg=pgOn();if(pg)pg.animate([{filter:'none'},{filter:'brightness(.5) blur(1px)',offset:.15},{filter:'brightness(.6) blur(.6px)',offset:.85},{filter:'none'}],{duration:2600+N*120,easing:'ease-out'});
+ /* 2. контуры рисуются линией, на них загораются звёзды */
+ const D=pos.map((p,i)=>{const mi=sM(list[i]),d=bContour(mi.ic,sz,p[0],p[1]);d.style.color=mi.col;const ln=d.querySelector('.ln');ln.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:760,delay:i*90,easing:'cubic-bezier(.35,.2,.3,1)',fill:'forwards'});return d});
+ setTimeout(()=>D.forEach((d,i)=>bPts(d,N>4?3:6,.08,.94).forEach(([x,y,f],j)=>setTimeout(()=>{glint(x,y,RN(6,10),{m:.5,c:'#f6d58e'});if(N<=4)spawn({k:'ring',x,y,r0:2,r1:14,m:.3,c:sM(list[i]).col,w:1.2,fp:1})},i*90+f*700))),40);
+ await bWait(760+N*90);D.forEach(d=>d.querySelector('.fl').animate([{opacity:0},{opacity:1}],{duration:260,fill:'forwards'}));
+ spawn({k:'flash',x:cx,y:cy,s:S0*.6,gr:.4,m:.3,c:'rgba(246,213,142,.22)',add:1});await bWait(320);
+ /* 3. место во вкладках уже расступилось; каждый по-своему уходит в иконку, иконка вздрагивает от каждого */
+ for(let i=0;i<D.length;i++){const d=D[i],[x,y]=pos[i],R=img.getBoundingClientRect(),tx=R.left+R.width/2,ty=R.top+R.height/2,k=R.width*1.05/sz,mv=sumMove(d,mo,tx-x,ty-y,k);
+  d.animate(mv.kf,{duration:mv.dur,easing:mv.ez,fill:'forwards'});const last=i===D.length-1;
+  setTimeout(()=>{d.animate([{opacity:1},{opacity:0}],{duration:110,fill:'forwards'}).onfinish=()=>d.remove();
+   if(last){b.classList.remove('pre');bLand(img,m0.ic,mv.big||N>2)}else{img.parentNode.animate([{transform:'scale(1.18)'},{transform:'none'}],{duration:260,easing:'cubic-bezier(.3,1.5,.5,1)'});spawn({k:'ring',x:tx,y:ty,r0:R.width*.3,r1:R.width*1.1,m:.35,c:col,w:1.6,fp:1});if(i===0){b.classList.remove('pre')}}},mv.dur);
+  await bWait(last?mv.dur:Math.max(110,mv.dur*(N>4?.22:.4)))}
+ await bWait(120);sumBusy=0}
+function sumGoFx(){if(!sumFxNext)return;sumFxNext=0;requestAnimationFrame(()=>sumInFx())}
+/* исчезновение: контур выходит из карточки или из иконки вкладки, трескается и осыпается на «пол» с отскоком */
+async function sumOutFx(items,why){if(!items||!items.length)return;const tabImg=sumTabImg(),W=innerWidth,H=innerHeight;
+ if(RM)return;
+ const N=Math.min(items.length,10);
+ for(let i=0;i<N;i++){const it=items[i],R=it.R||(tabImg&&tabImg.offsetParent?tabImg.getBoundingClientRect():null)||{left:W/2-30,top:H-90,width:60,height:60},x0=R.left+R.width/2,y0=R.top+R.height/2,sz=Math.min(W*.4,why==='one'?150:200)*(N>4?.6:1),col=it.col||bCol(it.ic);
+  const d=bContour(it.ic,sz,x0,y0,'out');d.style.color=col;const ln=d.querySelector('.ln'),fl=d.querySelector('.fl');ln.style.strokeDashoffset=0;fl.style.opacity=.85;
+  const mx=(W/2-x0)*.5+(i-(N-1)/2)*sz*.5,my=Math.max(-y0+sz*.6,(H*.42-y0))*.6,k0=Math.max(.2,R.width/sz);
+  d.animate([{transform:`scale(${k0})`,opacity:.3},{transform:`translate(${mx}px,${my}px) scale(1)`,opacity:1}],{duration:380,easing:'cubic-bezier(.2,.8,.3,1)',fill:'forwards'});
+  setTimeout(()=>{fl.animate([{opacity:.85},{opacity:.1}],{duration:240,fill:'forwards'});ln.style.strokeDasharray='.008 .005';
+   d.animate([0,1,2,3,4,5].map(j=>({transform:`translate(${mx+(j%2?2:-2)}px,${my+(j%3?1:-1)}px) scale(1)`})),{duration:240,easing:'steps(6)',fill:'forwards'});
+   setTimeout(()=>{const Rd=d.getBoundingClientRect(),fy=Math.min(H-30,Rd.bottom+40);bPts(d,24).forEach(([x,y])=>spawn({x,y,vx:RN(-90,90),vy:RN(-140,20),g:1100,m:RN(.9,1.5),s:RN(1.6,2.8),c:[col,'#f6d58e','#a57cff'],fl:fy,bo:.32}));
+    for(let j=0;j<4;j++)spawn({k:'puff',x:Rd.left+Rd.width*RN(.2,.8),y:Rd.top+Rd.height*RN(.3,.8),vx:RN(-30,30),vy:-RN(10,40),dr:1.6,m:RN(.8,1.2),s:RN(20,34),gr:1,c:'rgba(205,176,255,.14)',fin:.1,fp:1.2});
+    d.remove();if(i===N-1)bodyShake()},250)},400+i*70);
+  await bWait(why==='one'?0:90)}}
+function sumHosFx(){const b=document.querySelector('.tabs [data-p="p-sum"]');renderAll();if(RM||!b)return;const img=b.querySelector('img'),R=img.getBoundingClientRect();
+ img.animate([{transform:'scale(1)'},{transform:'scale(1.3) rotate(-8deg)',filter:'brightness(1.8) sepia(1) hue-rotate(-40deg) saturate(3)'},{transform:'scale(.95) rotate(4deg)'},{transform:'none'}],{duration:620,easing:'cubic-bezier(.3,1.4,.5,1)'});
+ spawn({k:'ring',x:R.left+R.width/2,y:R.top+R.height/2,r0:R.width*.3,r1:R.width*1.8,m:.6,c:'#e0485e',w:2.4,fp:1});bigShake();
+ const c=document.querySelector('#smList .smc');if(c)c.animate([{boxShadow:'0 0 0 2px #e0485e,0 0 30px #e0485e'},{boxShadow:'0 0 0 1px var(--blood)'}],{duration:900})}
+/* старые сохранения: призванных ещё не было */
+if(S.sum&&(!S.sum.list||!S.sum.list.length||!SUMSP[S.sum.k]||!SPELLS[S.sum.k]||S.sum.list.some(e=>!SUMC[e.key])))S.sum=null;
+
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-28-76';
+const BUILD='2026-11-28-77';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
