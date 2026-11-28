@@ -6454,6 +6454,8 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 .bstr.bart .t{position:relative;flex:1;min-width:0}
 .bstat.bart{background-repeat:no-repeat;background-position:right center;background-size:auto 130%;border-radius:10px}
 .bstat.bart div{background:rgba(20,27,36,.5)}
+/* «Правка листа»: окно прокручивается, когда выше экрана (2026-11-28) */
+.sheetbg form{max-height:calc(100vh - 14px);max-height:calc(100dvh - 14px - env(safe-area-inset-top));overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
 </style>`);
 
 /* ---------- РАЗГОВОР С ЖИВОТНЫМИ: звериный зов приходит слева рваной, спутанной волной, ударяет в Арадию
@@ -6638,7 +6640,7 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState===
 addEventListener('pagehide',()=>cloudPush(true));
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-28-41';
+const BUILD='aradia-2026-11-28-42';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
