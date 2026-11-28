@@ -3090,6 +3090,64 @@ let DOMV='page';
    if(tt<2500)requestAnimationFrame(step);else{if(pg)pg.style.transform='';d.remove()}};
   d.animate([{opacity:1,offset:.85},{opacity:0}],{duration:2600,fill:'forwards'});requestAnimationFrame(step);return}
  }}
+/* Ловкость рук (2026-11-28): из-под кубика выскальзывает монета, её подбрасывают щелчком, она падает на кубик и дребезжит.
+   Успех (10+): пальцы из линий подхватывают её и уносят — монета исчезает. Провал: монета соскальзывает, падает на стол,
+   катится и дребезжит там, а пальцы хватают пустоту. */
+SKFX['Ловкость рук']=(ex,ey,fl,die,used)=>{const win=used>=10,W=innerWidth,H=innerHeight,R=17,G=1500;
+ const d=sfx(`<svg viewBox="0 0 ${W} ${H}" style="filter:none"><g class="hd" opacity="0"><g transform="scale(1.1)" fill="rgba(23,17,13,.93)" stroke="#e9dcc0" stroke-width="1.6"><path class="th" d="M100 -36 C82 -24 52 -14 16 -8 C6 -6 4 7 14 7 C46 6 76 -2 102 -18 Z"/><path d="M-1 -8 C10 -28 30 -50 52 -64 C66 -72 84 -78 100 -84 L132 -116 L162 -88 L128 -54 C124 -40 112 -34 100 -36 C96 -28 86 -26 76 -30 C64 -36 52 -38 42 -32 C32 -24 20 -12 10 0 C6 5 -3 2 -1 -8 Z"/><path d="M100 -38 C104 -46 112 -50 121 -48 M78 -32 C82 -42 92 -46 101 -44" fill="none" stroke-width="1.1" opacity=".7"/><path d="M24 -32 L28 -36 M40 -48 L45 -51" fill="none" stroke-width="1" opacity=".55"/></g></g>`+
+  `<g class="cn"><ellipse class="ed" rx="${R}" ry="4" fill="#7a5a26" stroke="none"/><ellipse class="fc" rx="${R}" ry="4" stroke="#fff0c8" stroke-width="1.2"/><ellipse class="rg" rx="${R*.6}" ry="2" stroke="#fff6d8" stroke-width=".8" fill="none" opacity=".8"/></g></svg>`,W/2,H/2,W,H,{life:win?2900:3300});
+ const sv=d.firstChild,cn=sv.querySelector('.cn'),ed=cn.querySelector('.ed'),fc=cn.querySelector('.fc'),rg=cn.querySelector('.rg'),hd=sv.querySelector('.hd');
+ sv.style.filter='drop-shadow(0 0 4px rgba(240,196,122,.45))';
+ const top=ey-60,c={x:ex+52,y:fl-4,vx:0,vy:0,ph:0,w:0,th:0,ps:0,m:'hide',s:0,lift:0};let hand=null;
+ const lie=(th)=>{c.m='lie';c.th=th;c.ps=0};
+ const draw=()=>{let ry,rot=0,dy=0,up=true;
+  if(c.m==='air'){const k=Math.cos(c.ph);up=k>=0;ry=Math.max(1.2,Math.abs(k)*R);rot=Math.sin(c.ph*.5)*18}
+  else{const t=c.th;ry=R*(.36+t*Math.sin(c.ps)*.7);ry=Math.max(1.2,Math.min(R,ry));rot=t*Math.cos(c.ps)*40;dy=-t*7*Math.abs(Math.sin(c.ps))}
+  const e=c.m==='air'?(up?2.2:-2.2)*(1-Math.abs(Math.cos(c.ph))*.4):2.2;
+  ed.setAttribute('ry',ry.toFixed(2));ed.setAttribute('cy',e.toFixed(2));fc.setAttribute('ry',ry.toFixed(2));rg.setAttribute('ry',(ry*.6).toFixed(2));
+  fc.setAttribute('fill',up?'#f0c47a':'#b8893e');rg.style.opacity=up?.8:.35;
+  cn.setAttribute('transform',`translate(${c.x.toFixed(1)} ${(c.y+dy-c.lift).toFixed(1)}) rotate(${rot.toFixed(1)}) scale(${c.s.toFixed(3)})`)};
+ const dieHit=(sx,sy,dy,ms)=>die.animate([{transform:`translate(${ex}px,${ey+dy}px) scale(${sx},${sy})`},{transform:`translate(${ex}px,${ey}px)`}],{duration:ms,easing:'cubic-bezier(.3,1.6,.5,1)'});
+ const clink=(x,y)=>{spawn({k:'flash',x,y,s:12,m:.18,c:'rgba(255,240,200,.9)',add:1});for(let i=0;i<3;i++)spawn({x,y,vx:RN(-60,60),vy:RN(-90,-30),g:500,m:.3,s:1.6,c:'#fff6d8',add:1})};
+ /* пальцы: появляются у цели, сжимаются и уходят вверх-вправо (с монетой или без) */
+ const grab=(x,y,withCoin)=>{hand={x:x+40,y:y-60,t:0,x0:x,y0:y,coin:withCoin};hd.setAttribute('opacity','1')};
+ const T0=performance.now();let last=T0,ev=0;
+ const step=now=>{if(!d.isConnected)return;const tt=now-T0,dt=Math.min(.033,(now-last)/1000);last=now;
+  /* 0–260: монета выскальзывает из-под кубика вправо, кубик чуть дёргает */
+  if(c.m==='hide'){c.s=Math.min(1,tt/160);c.x=ex+52+Math.min(1,tt/260)*30;c.th=0;c.ps=0;if(tt>260){lie(.12);c.m='lie'}}
+  if(!ev&&tt>20){ev=1;die.animate([{transform:`translate(${ex}px,${ey}px)`},{transform:`translate(${ex-5}px,${ey-2}px) rotate(-3deg)`},{transform:`translate(${ex}px,${ey}px)`}],{duration:240,easing:'ease-out'})}
+  /* 420: щелчок — монета взлетает и крутится, летит точно на верх кубика */
+  if(ev===1&&tt>420){ev=2;const T=.62;c.m='air';c.vx=(ex-c.x)/T;c.vy=(top-c.y-.5*G*T*T)/T;c.w=27;c.ph=0;clink(c.x,c.y);vib(8)}
+  if(c.m==='air'){c.vy+=G*dt;c.x+=c.vx*dt;c.y+=c.vy*dt;c.ph+=c.w*dt;
+   const floor=c.fall?fl+2:top;
+   if(c.vy>0&&c.y>=floor){c.y=floor;clink(c.x,c.y);
+    if(!c.bn){c.bn=1;c.vy=-c.vy*.22;c.vx*=.4;c.w*=.3;if(!c.fall){dieHit(1.05,.94,4,260);vib(14)}else vib(10)}
+    else if(c.fall){c.bn=2;c.m='roll';c.vx=-90;c.th=.5}
+    else{lie(.55);c.vx=0}}}
+  /* лежит и дребезжит: наклон гаснет, частота растёт (как брошенная монета) */
+  if(c.m==='lie'){c.th*=Math.exp(-dt*(c.fall?2.6:3.2));c.ps+=dt*9/Math.sqrt(c.th+.04);if(c.th<.02)c.th=0;
+   if(!c.fall&&!win&&ev===2&&tt>1500){ev=3;c.m='slide';c.vx=-60;c.vy=0}}
+  /* провал: соскальзывает с кубика, падает на стол */
+  if(c.m==='slide'){c.vx-=260*dt;c.x+=c.vx*dt;c.y+=Math.abs(c.vx)*.35*dt;c.th=.25;c.ps+=dt*14;if(c.x<ex-44){c.m='air';c.fall=1;c.bn=0;c.vy=40;c.w=14;c.ph=1.2}}
+  if(c.m==='roll'){c.vx*=Math.exp(-dt*2.2);c.x+=c.vx*dt;c.ps+=dt*12;c.th=Math.max(.15,c.th-dt*.3);if(Math.abs(c.vx)<18){lie(.45);clink(c.x,c.y)}}
+  /* пальцы */
+  if(win&&ev===2&&c.m==='lie'&&tt>1750){ev=3;grab(c.x,c.y,true)}
+  if(!win&&ev===3&&tt>1950){ev=4;grab(ex,top,false)}
+  if(hand){hand.t+=dt;const h=hand,t=h.t;let hx,hy,open;
+   if(t<.22){const k=1-Math.pow(1-t/.22,3);hx=h.x0+40*(1-k);hy=h.y0-60*(1-k);open=1}
+   else if(t<.32){hx=h.x0;hy=h.y0;open=1-(t-.22)/.1;if(!h.shut&&t>.3){h.shut=1;if(h.coin){dieHit(1,1.03,-3,220);vib(16);clink(h.x0,h.y0)}}}
+   else{const k=Math.pow((t-.32)/.34,2);hx=h.x0+k*(W*.7);hy=h.y0-k*(H*.55);open=0;if(h.coin){c.m='gone'}
+    if(!h.coin&&!h.oops){h.oops=1}}
+   if(t<.66||!h.coin){if(!h.coin&&t>.32){const k=Math.min(1,(t-.32)/.5);hx=h.x0+k*30;hy=h.y0-k*40;hd.setAttribute('opacity',(1-k).toFixed(2))}}
+   const op=Math.max(0,Math.min(1,open));
+   hd.setAttribute('transform',`translate(${hx.toFixed(1)} ${hy.toFixed(1)})`);
+   hd.querySelector('.th').setAttribute('transform',`rotate(${(-op*24).toFixed(1)} 96 -30)`);
+   if(h.coin&&c.m==='gone'){cn.setAttribute('transform',`translate(${(hx+6).toFixed(1)} ${(hy-2).toFixed(1)}) rotate(-30) scale(1)`);
+    fc.setAttribute('ry','5');ed.setAttribute('ry','5')}
+   if(h.coin&&t>.66&&!h.gl){h.gl=1;hd.setAttribute('opacity','0');cn.style.display='none'}}
+  if(c.m!=='gone')draw();
+  if(tt<3200)requestAnimationFrame(step)};
+ draw();requestAnimationFrame(step)};
 {const _sf=skillFx;skillFx=function(spec,used){if(RM)return;const f=SKFX[spec.label];if(f){const W=innerWidth,H=innerHeight,ex=W/2,ey=H/2-80;return f(ex,ey,ey+62,$('die'),used)}return _sf(spec,used)}}
 /* три огненных кнопки различаются: снаряд — огонёк, шар — шар пламени, цветной шарик — шар из шести стихий */
 EL.fball=EL.fire;EL.chroma=EL.fire;
@@ -6357,7 +6415,7 @@ const AF_DEER=new Path2D("m139.3 20.25l-16.1 4.5c9.4 33.5 22.3 51.1 37 60.3c14.9
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-28-36';
+const BUILD='aradia-2026-11-28-37';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
