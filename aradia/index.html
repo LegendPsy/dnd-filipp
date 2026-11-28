@@ -2260,7 +2260,8 @@ const TEST10=Object.assign(structuredClone(DEFAULT),{test:1,level:10,
  ab:{str:8,dex:14,con:15,int:10,wis:20,cha:12},hp:{max:73,cur:73,temp:0},hd:{die:8,used:0},money:{pp:2,gp:340,sp:15,cp:8},
  slots:{max:4,used:0,extra:0},hi:{2:{max:3,used:0,extra:0},3:{max:3,used:0,extra:0},4:{max:3,used:0,extra:0},5:{max:2,used:0,extra:0}},
  known:['produce_flame','thorn_whip','shillelagh','frostbite','healing_word','entangle','faerie_fire','fog_cloud','speak_with_animals','moonbeam','pass_without_trace','healing_spirit','call_lightning','conjure_animals','dispel_magic','polymorph','wall_of_fire','wall_of_stone','mass_cure_wounds']});
-let TEST=false;try{TEST=localStorage.getItem('aradia-test10')==='1'}catch(e){}
+/* тестовый 10 уровень убран (2026-11-28, просьба Алексея): TEST всегда false, старые тестовые данные стираются */
+let TEST=false;try{['aradia-test10','aradia-sheet-test10','aradia-use-test10'].forEach(k=>localStorage.removeItem(k))}catch(e){}
 const SKEY=TEST?'aradia-sheet-test10':'aradia-sheet-v1';
 let S;try{S=JSON.parse(localStorage.getItem(SKEY))}catch(e){}
 if(!S||S.v!==2)S=structuredClone(TEST?TEST10:DEFAULT);
@@ -2297,12 +2298,14 @@ function cLocal(){let s=null,u=null;try{s=localStorage.getItem(SKEY);u=localStor
 /* пометить: есть что отправить */
 function cloudMark(){if(TEST)return;const m=cMeta();m.n=(m.n||0)+1;cSetMeta(m);clearTimeout(cT);cT=setTimeout(()=>cloudPush(),2500)}
 function cloudPush(keep){if(TEST||cBusy)return;const m=cMeta();if(!m.id){m.id=cNewId();cSetMeta(m)}
- const {s,u}=cLocal();if(!s)return;const h=cHash(s+'|'+u);if(h===m.h)return;
+ const {s,u}=cLocal();if(!s)return;const h=cHash(s+'|'+u),mk=m.markPend||0;if(h===m.h&&!mk)return;
  if(navigator.onLine===false)return;cBusy=true;const n=m.n||0;let data;try{data={s:JSON.parse(s),use:u?JSON.parse(u):null}}catch(e){cBusy=false;return}
- cRpc('hero_save',{p_id:m.id,p_hero:CLOUD.hero,p_data:data,p_base:m.rev||0},keep).then(rev=>{const m2=cMeta();
-   if(m2.id===m.id){m2.rev=+rev||m2.rev;m2.h=h;m2.at=Date.now();delete m2.err;cSetMeta(m2)}cBusy=false;
+ if(mk)data.mark=mk;/* «Сохранить изменения»: p_base 0 заставляет сервер положить эту версию в историю */
+ cRpc('hero_save',{p_id:m.id,p_hero:CLOUD.hero,p_data:data,p_base:mk?0:(m.rev||0)},keep).then(rev=>{const m2=cMeta();
+   if(m2.id===m.id){m2.rev=+rev||m2.rev;m2.h=h;m2.at=Date.now();delete m2.err;if(mk&&m2.markPend===mk){m2.mark=mk;delete m2.markPend}cSetMeta(m2)}cBusy=false;
+   if(typeof cShow==='function')cShow();
    if((m2.n||0)!==n){clearTimeout(cT);cT=setTimeout(()=>cloudPush(),1500)}})
-  .catch(()=>{cBusy=false;const m2=cMeta();m2.err=Date.now();cSetMeta(m2)})}
+  .catch(()=>{cBusy=false;const m2=cMeta();m2.err=Date.now();cSetMeta(m2);if(typeof cShow==='function')cShow()})}
 /* забрать с сервера, если там новее (герой менялся на другом устройстве) */
 function cloudPull(){if(TEST)return Promise.resolve(false);const m=cMeta();if(!m.id)return Promise.resolve(false);
  const {s,u}=cLocal();if(s&&cHash(s+'|'+u)!==m.h)return Promise.resolve(false);/* здесь есть неотправленное: оно главнее */
@@ -4383,7 +4386,7 @@ function hiAct(a){const [w,x,y]=a.split(':'),c=+x,L=S.spt.max-S.spt.used,re=k=>{
 COINS.forEach(([k,n])=>INFO['coin_'+k]=()=>({t:n[0].toUpperCase()+n.slice(1),sub:`${S.money[k]} монет`,body:`<p class="mu">1 платиновая = 10 золотых = 100 серебряных = 1000 медных.</p><div class="cpm">${[-10,-1,1,10].map(d=>`<button data-coin="${k}" data-d="${d}">${d>0?'+':'−'}${Math.abs(d)}</button>`).join('')}</div>`,acts:`<button data-act="closeD">Готово</button>`}));
 document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
  if(t.dataset.coin){const k=t.dataset.coin;S.money[k]=Math.max(0,S.money[k]+ +t.dataset.d);save();renderInv();if(openInfoKey==='coin_'+k)openInfo(openInfoKey,true);vib(8);e.stopImmediatePropagation();return}
- if(t.id==='faceBtn'){e.stopImmediatePropagation();if(S.wf&&typeof wfB==='function'&&wfB())openInfo('wfnow');else toggleTest()}
+ if(t.id==='faceBtn'){e.stopImmediatePropagation();if(S.wf&&typeof wfB==='function'&&wfB())openInfo('wfnow')}
 },true);
 function toggleTest(){save();vib([20,40,70]);document.body.classList.add('flip');
  try{localStorage.setItem('aradia-test10',TEST?'0':'1');sessionStorage.setItem('aradia-tmsg',TEST?'real':'test')}catch(e){}
@@ -6584,18 +6587,29 @@ renderAll();fit();setTimeout(fit,300);wideFix();
 /* СЕРВЕР: запуск и блок «Сохранение на сервере» внизу «Правки листа». Устройство описано у cloudMark(). */
 function cWhen(t){if(!t)return'';const d=new Date(t),now=new Date(),hm=d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
  return d.toDateString()===now.toDateString()?'сегодня в '+hm:d.toLocaleDateString('ru-RU',{day:'numeric',month:'long'})+' в '+hm}
-function cStatus(){if(TEST)return'Сейчас открыт тестовый 10 уровень: он на сервер не отправляется. Настоящий лист сохраняется как обычно.';
- const m=cMeta(),{s,u}=cLocal(),wait=s&&cHash(s+'|'+u)!==m.h;
- if(wait)return navigator.onLine===false?'Есть новые изменения. Нет сети: они хранятся на этом устройстве и уйдут на сервер сами, когда сеть появится.':'Есть новые изменения, отправляю на сервер.';
- return m.at?'Всё сохранено на сервере, '+cWhen(m.at)+'.':'Пока не сохранялось.'}
+function cStatus(){if(TEST)return'';
+ const m=cMeta(),{s,u}=cLocal(),wait=(s&&cHash(s+'|'+u)!==m.h)||m.markPend,off=navigator.onLine===false;
+ let t=wait?(off?'Нет сети: изменения хранятся на этом устройстве и уйдут на сервер сами, когда сеть появится.':'Отправляю на сервер…')
+  :(m.at?'Всё сохранено на сервере, '+cWhen(m.at)+'.':'Пока не сохранялось.');
+ if(m.markPend)t=(off?'Версия запомнена. Нет сети: на сервер она уйдёт сама, когда сеть появится.':'Сохраняю эту версию на сервере…');
+ else if(m.mark)t+=' Сохранённая версия: '+cWhen(m.mark)+'.';
+ return t}
+function cShow(){const e=document.getElementById('cloudSt');if(e)e.textContent=cStatus()}
+/* «Сохранить изменения»: применить правки из окна, отправить сразу и отметить версию в истории сервера */
+function cloudCheckpoint(){const f=$('form');try{if(f.onsubmit)f.onsubmit({preventDefault(){}})}catch(e){}save();
+ const m=cMeta();m.markPend=Date.now();cSetMeta(m);clearTimeout(cT);cloudPush();
+ editSheet();const b=document.querySelector('.cloudbox');if(b)b.scrollIntoView({block:'center'});cShow();vib([15,30,15])}
 function cLink(){return location.origin+location.pathname+'#hero='+cMeta().id}
 {const _es=editSheet;editSheet=function(){_es();const f=$('form');
- f.insertAdjacentHTML('beforeend',`<div class="rst cloudbox"><p style="font-weight:600;color:var(--ink,inherit)">Сохранение на сервере</p><p id="cloudSt">${esc(cStatus())}</p>
-  ${TEST?'':`<button class="go" type="button" id="cloudLink">Открыть героя на другом устройстве</button>
+ f.insertAdjacentHTML('beforeend',TEST?'':`<div class="rst cloudbox"><button class="go gold" type="button" id="cloudSave">Сохранить изменения</button>
+  <p>Запомнит лист таким, какой он сейчас: с этой версии герой начнёт следующую игру. Всё и так сохраняется само, а эта кнопка ставит отметку.</p>
+  <p style="font-weight:600;margin-top:6px">Сохранение на сервере</p><p id="cloudSt">${esc(cStatus())}</p>
+  ${`<button class="go" type="button" id="cloudLink">Открыть героя на другом устройстве</button>
   <div id="cloudOut" hidden><p>Открой эту ссылку на другом телефоне или компьютере: там появится этот же герой, и дальше он будет сохраняться на обоих. Ссылку никому не давай: по ней можно менять героя.</p>
   <input id="cloudUrl" type="text" readonly style="width:100%;font-size:13px;text-align:left" value="">
   <button class="go" type="button" id="cloudCopy" style="width:100%">Скопировать ссылку</button></div>`}</div>`);
  if(TEST)return;
+ $('cloudSave').onclick=cloudCheckpoint;
  $('cloudLink').onclick=()=>{if(!cMeta().id)cloudPush();const m=cMeta();if(!m.id){m.id=cNewId();cSetMeta(m)}
   $('cloudUrl').value=cLink();$('cloudOut').hidden=false;$('cloudLink').hidden=true;vib(10)};
  $('cloudCopy').onclick=()=>{const v=$('cloudUrl').value,ok=()=>{$('cloudCopy').textContent='Ссылка скопирована'};
@@ -6624,7 +6638,7 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState===
 addEventListener('pagehide',()=>cloudPush(true));
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-28-40';
+const BUILD='aradia-2026-11-28-41';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
