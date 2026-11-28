@@ -6004,11 +6004,18 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 .fx-shield:not(.on) .fxl svg{opacity:.22!important;-webkit-mask:none!important;mask:none!important;animation:aurIdle 6s ease-in-out infinite!important}
 .fx-shield.on .fxl svg{opacity:1!important;-webkit-mask:linear-gradient(100deg,rgba(0,0,0,.45) 30%,#000 50%,rgba(0,0,0,.45) 70%) 0 0/300% 100%!important;mask:linear-gradient(100deg,rgba(0,0,0,.45) 30%,#000 50%,rgba(0,0,0,.45) 70%) 0 0/300% 100%!important;animation:fhexm 2.6s linear infinite!important}
 @media (prefers-reduced-motion:reduce){.aur{animation:none}.aur .m{animation:none!important}}
+/* Состояния компактно: все значки целиком, в несколько рядов, без прокрутки вбок */
+@media (min-height:721px){#spare .cnds{flex-wrap:wrap;overflow:visible;gap:4px;padding-right:0;-webkit-mask:none;mask:none;align-content:flex-start}}
+@media (max-height:720px){#spare .cnds{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;gap:4px}#spare .cnds::-webkit-scrollbar{display:none}#spare .cnd.more{display:block}}
+#spare .cnd{flex:none;padding:4px 8px;font-size:13.5px;line-height:1.15;border-radius:9px}
+#spare .cnd.on::before{width:5px;height:5px;margin-right:4px}
+#spare .cnd.more{display:none}
+#spare{gap:4px}
 </style>`);
 
 actDecorSafe();
 /* ===== /ДЕЙСТВУЮЩИЕ ЗАКЛИНАНИЯ */
-const BUILD='2026-11-28-87';
+const BUILD='2026-11-28-88';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
