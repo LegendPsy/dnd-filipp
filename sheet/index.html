@@ -5182,6 +5182,396 @@ function sumHosFx(){const b=document.querySelector('.tabs [data-p="p-sum"]');ren
 /* старые сохранения: призванных ещё не было */
 if(S.sum&&(!S.sum.list||!S.sum.list.length||!SUMSP[S.sum.k]||!SPELLS[S.sum.k]||S.sum.list.some(e=>!SUMC[e.key])))S.sum=null;
 
+/* ===== СВОИ ВОЛНЫ ВМЕСТО ОДИНАКОВЫХ (2026-11-28): у каждого заклинания без урона своё действие на экране.
+   Общие для листов Филиппа, Арадии и Макс: заклинание, которое есть в нескольких листах, везде выглядит одинаково.
+   Только светлые линии и свечения в режиме сложения, никаких тёмных пятен; ничего не крутится постоянно. ===== */
+function uwP(pts,close){return pts.map((t,i)=>(i?'L':'M')+t[0].toFixed(1)+' '+t[1].toFixed(1)).join(' ')+(close?'Z':'')}
+function uwDrop(x,y,r){return `M${x} ${y-r*1.6} C${x+r*.9} ${y-r*.5} ${x+r} ${y+r*.2} ${x+r} ${y+r*.35} A${r} ${r} 0 0 1 ${x-r} ${y+r*.35} C${x-r} ${y+r*.2} ${x-r*.9} ${y-r*.5} ${x} ${y-r*1.6}Z`}
+function uwPop(el,t,dur,from){el.style.transformBox='fill-box';el.style.transformOrigin='50% 50%';el.style.opacity=0;el.animate([{opacity:0,transform:from||'scale(.3)'},{opacity:1,transform:'none'}],{duration:dur||260,delay:t,easing:'cubic-bezier(.3,1.5,.5,1)',fill:'forwards'})}
+function uwThud(o,px,ms){o.wob([{transform:'none'},{transform:`translateY(${px||4}px) scale(1.004,.994)`,offset:.3},{transform:'none'}],ms||260);vib([30,15,20])}
+
+/* --- поиск и чутьё: раньше у всех был один и тот же глаз --- */
+/* Обнаружение болезней и яда: по листу проступают зелёные огоньки заразы, к каждому тянется тонкая нить, в центре загорается капля с крестом */
+CW2.detect_poison_and_disease=o=>{const{W,H,cx,cy}=o,pts=Array.from({length:6},()=>[RN(.08,.92)*W,RN(.12,.85)*H]);
+ const d=o.svg(pts.map((p,i)=>`<path data-d="${200+i*90}" d="M${cx} ${cy} Q${(cx+p[0])/2+RN(-40,40)} ${(cy+p[1])/2+RN(-40,40)} ${p[0]} ${p[1]}" stroke="#a6e07a" stroke-width="1" stroke-dasharray="2 4"/>`).join('')+
+  `<path class="dr" d="${uwDrop(cx,cy,16)}" stroke="#c8f560" stroke-width="1.8" fill="rgba(166,224,122,.12)"/><path class="dr" d="M${cx} ${cy-4} V${cy+12} M${cx-8} ${cy+4} H${cx+8}" stroke="#eaffd6" stroke-width="1.6"/>`,'filter:drop-shadow(0 0 5px rgba(166,224,122,.7))');
+ d.querySelectorAll('.dr').forEach(e=>uwPop(e,0,320,'scale(.2) translateY(-30px)'));sDraw(d,0,420);
+ pts.forEach((p,i)=>setTimeout(()=>{sGlow({x:p[0],y:p[1],s:14,m:.9,c:'#a6e07a',add:1,fin:.3});for(let j=0;j<4;j++)sGlow({x:p[0],y:p[1],vx:RN(-20,20),vy:-RN(20,50),m:RN(.6,1),s:RN(2,3.5),c:POIC,add:1});vib(8)},620+i*90));
+ setTimeout(()=>o.wob([{transform:'none'},{transform:'scale(.996)'},{transform:'none'}],240),1150);o.fade(d,1500)};
+/* Чувство зверя: по бокам открываются два звериных глаза с узкими зрачками, моргают, через лист пробегает цепочка следов лап */
+CW2.beast_sense=o=>{const{W,H,cx,cy}=o,E=Math.min(W*.16,70),ey=cy-H*.08,eye=x=>`<g class="ey"><path d="M${x-E} ${ey} Q${x} ${ey-E*.62} ${x+E} ${ey} Q${x} ${ey+E*.62} ${x-E} ${ey}Z" stroke="#f0c47a" stroke-width="1.6" fill="rgba(240,196,122,.08)"/><ellipse class="pu" cx="${x}" cy="${ey}" rx="${E*.09}" ry="${E*.4}" fill="rgba(255,236,190,.55)" stroke="#fff3d6" stroke-width="1"/></g>`;
+ const d=o.svg(eye(cx-W*.24)+eye(cx+W*.24),'filter:drop-shadow(0 0 6px rgba(240,196,122,.6))');
+ d.querySelectorAll('.ey').forEach(e=>{e.style.transformBox='fill-box';e.style.transformOrigin='50% 50%';e.animate([{transform:'scaleY(0)'},{transform:'scaleY(1)',offset:.25},{transform:'scaleY(1)',offset:.55},{transform:'scaleY(.05)',offset:.62},{transform:'scaleY(1)',offset:.72},{transform:'scaleY(1)'}],{duration:1500,easing:'ease-in-out',fill:'forwards'})});
+ d.querySelectorAll('.pu').forEach(e=>{e.style.transformBox='fill-box';e.style.transformOrigin='50% 50%';e.animate([{transform:'scaleX(2.4)'},{transform:'scaleX(1)'}],{duration:500,delay:350,fill:'forwards'})});
+ const s=Math.random()<.5?1:-1;for(let i=0;i<7;i++)setTimeout(()=>{const x=s>0?W*(.08+i*.13):W*(.92-i*.13),y=H*.72+(i%2?-14:14);for(const [dx,dy,r] of [[0,0,6],[-7,-9,2.6],[-2,-12,2.6],[4,-11,2.6],[8,-6,2.6]])sGlow({x:x+dx*s,y:y+dy,s:r*1.6,m:.9,c:'#e9d2a8',add:1,fin:.4});vib(6)},500+i*110);
+ o.fade(d,1500)};
+/* Поиск ловушек: поперёк листа натягивается растяжка, по ней бежит искра, и в центре со щелчком смыкаются зубья капкана */
+CW2.find_traps=o=>{const{W,H,cx,cy}=o,y=cy+H*.12,R=Math.min(W*.22,90);let teeth='';for(let i=0;i<=8;i++){const x=cx-R+i*R/4;teeth+=`${i?'L':'M'}${x} ${y-(i%2?0:R*.22)}`}
+ const d=o.svg(`<path data-d="0" d="M${W*.04} ${y} L${W*.96} ${y}" stroke="#e9e1d2" stroke-width="1.2" stroke-dasharray="6 4"/><g class="jt"><path d="M${cx-R} ${y} A${R} ${R*.7} 0 0 1 ${cx+R} ${y}" stroke="#f0c47a" stroke-width="2"/><path d="${teeth}" stroke="#f6dca8" stroke-width="1.4"/></g><g class="jb"><path d="M${cx-R} ${y} A${R} ${R*.7} 0 0 0 ${cx+R} ${y}" stroke="#f0c47a" stroke-width="2"/><path d="${teeth}" transform="translate(0 ${2*y}) scale(1 -1)" stroke="#f6dca8" stroke-width="1.4"/></g>`,'filter:drop-shadow(0 0 5px rgba(240,196,122,.6))');
+ sDraw(d,0,400);const jt=d.querySelector('.jt'),jb=d.querySelector('.jb');[jt,jb].forEach((g,i)=>{const o0=`translateY(${i?R*.55:-R*.55}px) scale(1,${i?.5:.5})`;g.style.transformOrigin=`${cx}px ${y}px`;g.style.opacity=0;g.animate([{opacity:0,transform:o0},{opacity:1,transform:o0,offset:.6},{opacity:1,transform:'none'}],{duration:900,easing:'cubic-bezier(.7,0,.9,.4)',fill:'forwards'})});
+ spRun(500,q=>{const x=W*.04+W*.92*q;sGlow({x,y,s:8,m:.12,c:'#fff6d8',add:1})});
+ setTimeout(()=>{sRing({x:cx,y,r0:10,r1:R*1.8,m:.4,c:'#f6dca8',w:2,fy:.4});for(let i=0;i<10;i++){const a=RN(-Math.PI,0),v=RN(120,260);sSpark({x:cx+RN(-R,R),y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:600,m:.4,w:1.4,c:['#ffffff','#f6dca8'],add:1})}
+  o.wob([{transform:'none'},{transform:'translateY(5px) scale(1.006,.99)',offset:.25},{transform:'none'}],280);vib([10,10,70])},900);o.fade(d,1600)};
+/* Поиск предмета: в центре стрелка компаса раскачивается, всё тише, замирает и пускает луч к краю листа */
+CW2.locate_object=o=>{const{W,H,cx,cy}=o,R=Math.min(W,H)*.2,tgt=RN(-2.6,-.5),d=o.svg(`<circle data-d="0" cx="${cx}" cy="${cy}" r="${R}" stroke="#e9e1d2" stroke-width="1.4"/><circle data-d="80" cx="${cx}" cy="${cy}" r="${R*.86}" stroke="#f0c47a" stroke-width="1" stroke-dasharray="2 7"/><g class="nd"><path d="M${cx} ${cy-R*.78} L${cx+R*.09} ${cy} L${cx} ${cy+R*.78} L${cx-R*.09} ${cy}Z" stroke="#f6dca8" stroke-width="1.4" fill="rgba(246,220,168,.15)"/><path d="M${cx} ${cy-R*.78} L${cx+R*.09} ${cy} L${cx-R*.09} ${cy}Z" fill="rgba(255,200,140,.6)"/></g>`,'filter:drop-shadow(0 0 5px rgba(240,196,122,.6))');
+ sDraw(d,0,360);const n=d.querySelector('.nd'),deg=(tgt+Math.PI/2)*57.3;n.style.transformOrigin=`${cx}px ${cy}px`;
+ n.animate([{transform:'rotate(0)'},{transform:`rotate(${deg+120}deg)`,offset:.2},{transform:`rotate(${deg-70}deg)`,offset:.38},{transform:`rotate(${deg+35}deg)`,offset:.55},{transform:`rotate(${deg-14}deg)`,offset:.7},{transform:`rotate(${deg+5}deg)`,offset:.82},{transform:`rotate(${deg}deg)`}],{duration:1300,easing:'ease-in-out',fill:'forwards'});
+ setTimeout(()=>{const L=Math.max(W,H);sBeam({x0:cx+Math.cos(tgt)*R*.8,y0:cy+Math.sin(tgt)*R*.8,x1:cx+Math.cos(tgt)*L,y1:cy+Math.sin(tgt)*L,w:3,m:.7,c:'#f6dca8',f:q=>Math.min(1,q/.3),thin:1});glint(cx,cy,10,{m:.5,c:'#fff6d8'});vib([10,10,40])},1300);o.fade(d,2100)};
+/* Поиск существа: от центра петляет живой след, по нему бегут шаги-огоньки, у края листа бьётся пульс найденного */
+CW2.locate_creature=o=>{const{W,H,cx,cy}=o,s=Math.random()<.5?1:-1,pts=[[cx,cy]];let x=cx,y=cy;for(let i=1;i<=7;i++){x=cx+s*W*.42*i/7;y=cy+Math.sin(i*1.3)*H*.12+RN(-12,12);pts.push([x,y])}
+ let p='M'+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i];p+=` Q${(a[0]+b[0])/2} ${a[1]+(i%2?-30:30)} ${b[0]} ${b[1]}`}
+ const d=o.svg(`<path data-d="0" d="${p}" stroke="#a9c9ea" stroke-width="1.2" stroke-dasharray="1 6"/>`,'filter:drop-shadow(0 0 4px rgba(169,201,234,.7))');sDraw(d,0,800);
+ pts.forEach((t,i)=>setTimeout(()=>{sGlow({x:t[0],y:t[1],s:7,m:.8,c:'#e8f2ff',add:1,fin:.3});vib(5)},i*115));
+ setTimeout(()=>{for(let k=0;k<3;k++)setTimeout(()=>{sRing({x,y,r0:4,r1:40,m:.5,c:'#e8f2ff',w:1.6});vib(18)},k*260);sGlow({x,y,s:18,m:1,c:'#cfe3f7',add:1,fin:.3})},850);o.fade(d,1800)};
+/* Предсказание: сверху одна за другой падают три гадальные дощечки с рунами, стучат о стол и вспыхивают */
+CW2.divination=o=>{const{W,H,cx,cy}=o,R='ᚨᛟᛉᛞᚱᛊᛏ',xs=[cx-W*.22,cx,cx+W*.22],y1=cy+H*.12,w=34,h=46;
+ const d=o.svg(xs.map((x,i)=>`<g class="tb"><rect x="${x-w/2}" y="${y1-h/2}" width="${w}" height="${h}" rx="5" stroke="#e9d2a8" stroke-width="1.5" fill="rgba(233,210,168,.1)"/><text x="${x}" y="${y1+9}" text-anchor="middle" font-size="26" font-family="serif" fill="#f6dca8" stroke="none">${R[Math.floor(RN(0,R.length))]}</text></g>`).join(''),'filter:drop-shadow(0 0 5px rgba(240,196,122,.5))');
+ d.querySelectorAll('.tb').forEach((g,i)=>{const r=RN(-14,14);g.style.transformBox='fill-box';g.style.transformOrigin='50% 100%';g.style.opacity=0;
+  g.animate([{opacity:1,transform:`translateY(${-H*.6}px) rotate(${r*3}deg)`},{opacity:1,transform:`translateY(0) rotate(${r}deg) scale(1.06,.9)`,offset:.6},{opacity:1,transform:`translateY(-12px) rotate(${r*.6}deg)`,offset:.78},{opacity:1,transform:`translateY(0) rotate(${r*.5}deg)`}],{duration:560,delay:i*260,easing:'cubic-bezier(.5,0,.8,.6)',fill:'forwards'});
+  setTimeout(()=>{uwThud(o,3,200);sGlow({x:xs[i],y:y1,s:30,m:.4,c:'#f0c47a',add:1});for(let j=0;j<5;j++)sGlow({x:xs[i]+RN(-14,14),y:y1+h/2,vx:RN(-50,50),vy:-RN(10,40),dr:2,m:.6,s:RN(5,9),c:'#e9e1d2',a:.25})},i*260+340);
+  setTimeout(()=>{g.animate([{filter:'none'},{filter:'brightness(2) drop-shadow(0 0 8px #fff6d8)'},{filter:'none'}],{duration:500});glint(xs[i],y1-h/2,9,{m:.5,c:'#fff6d8'})},1150+i*120)});o.fade(d,2100)};
+/* Наблюдение: посреди листа разливается овал водяного зеркала, по нему бегут круги, в глубине проступают блики далёкого места */
+CW2.scrying=o=>{const{W,H,cx,cy}=o,rx=Math.min(W*.34,150),ry=rx*.42,d=o.svg(`<ellipse data-d="0" cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" stroke="#cfe3f7" stroke-width="2" fill="rgba(159,208,255,.07)"/><ellipse data-d="100" cx="${cx}" cy="${cy}" rx="${rx+10}" ry="${ry+5}" stroke="#a9c9ea" stroke-width="1" stroke-dasharray="3 6"/>`,'filter:drop-shadow(0 0 6px rgba(159,208,255,.6))');sDraw(d,0,500);
+ for(let k=0;k<4;k++)setTimeout(()=>sRing({x:cx,y:cy,r0:6,r1:rx*.95,m:.8,c:'#e8f2ff',w:1.4,fy:ry/rx}),400+k*230);
+ for(let i=0;i<10;i++)setTimeout(()=>{const a=RN(0,6.283),r=RN(0,.8);glint(cx+Math.cos(a)*rx*r,cy+Math.sin(a)*ry*r,RN(4,8),{m:.6,c:['#fff6d8','#cfe3f7','#a8f0b0'][i%3]})},700+i*80);
+ o.flt('brightness(1.08) saturate(.85)',1700,.5);o.wob([{transform:'none'},{transform:'perspective(900px) rotateX(4deg)',offset:.4},{transform:'none'}],1600,'ease-in-out');vib(10);o.fade(d,1900)};
+
+/* --- вода: раньше у всех одна и та же волна --- */
+/* Сотворение или уничтожение воды: сверху проливается короткий дождь, внизу собирается полоска воды и тут же уходит паром */
+CW2.create_or_destroy_water=o=>{const{W,H}=o,y=H*.82;spRun(700,q=>{for(let j=0;j<3;j++)sSpark({x:RN(.1,.9)*W,y:-10,vx:-40,vy:RN(900,1200),m:.9,w:1.3,len:.03,c:['#ffffff','#dff4ff','#8fd0f0'],add:1,fl:y,bo:0})});
+ const d=o.svg(`<path data-d="300" d="M0 ${y} C${W*.25} ${y-6} ${W*.5} ${y+6} ${W*.75} ${y-4} S${W} ${y}" stroke="#9fd0ff" stroke-width="2.2"/>`,'filter:drop-shadow(0 0 5px #9fd0ff)');sDraw(d,0,600);
+ setTimeout(()=>{for(let i=0;i<16;i++)sGlow({x:RN(0,W),y,vx:RN(-15,15),vy:-RN(60,140),dr:1,m:RN(1,1.5),s:RN(10,18),gr:1.2,c:'#e8f2ff',a:.25,fin:.2});o.wob([{transform:'none'},{transform:'translateY(-3px)'},{transform:'none'}],500,'ease-out')},950);
+ vib([8,30,8,30,8]);o.fade(d,1200)};
+/* Очищение пищи и питья: в чаше со дна поднимаются мутные зелёные искры, по пути светлеют до чистой голубизны, чаша звенит */
+CW2.purify_food_and_drink=o=>{const{W,H,cx,cy}=o,R=Math.min(W*.2,80),y=cy+R*.3,d=o.svg(`<path data-d="0" d="M${cx-R} ${y-R*.4} Q${cx-R} ${y+R*.55} ${cx} ${y+R*.6} Q${cx+R} ${y+R*.55} ${cx+R} ${y-R*.4}" stroke="#e9e1d2" stroke-width="2"/><ellipse data-d="60" cx="${cx}" cy="${y-R*.4}" rx="${R}" ry="${R*.18}" stroke="#e9e1d2" stroke-width="1.4"/><path data-d="160" d="M${cx-R*.3} ${y+R*.6} L${cx-R*.4} ${y+R*.85} H${cx+R*.4} L${cx+R*.3} ${y+R*.6}" stroke="#e9e1d2" stroke-width="1.6"/>`,'filter:drop-shadow(0 0 5px rgba(233,225,210,.6))');sDraw(d,0,420);
+ spRun(900,q=>{if(q<.35)return;sGlow({x:cx+RN(-R*.6,R*.6),y:y+R*.3,vy:-RN(60,120),m:.9,s:RN(2.5,4),c:['#a6e07a','#c8f560','#dff4ff','#9fd0ff','#ffffff'],add:1})},
+  ()=>{sRing({x:cx,y:y-R*.4,r0:R*.4,r1:R*2,m:.6,c:'#dff4ff',w:1.6,fy:.25});glint(cx+R*.7,y-R*.45,9,{m:.5,c:'#ffffff'});vib([5,10,5])});o.fade(d,1500)};
+/* Власть над водами: вода расступается: две стены волн раздвигаются от середины к краям, лист раздаётся вширь */
+CW2.control_water=o=>{const{W,H,cx}=o,wv=(x)=>{let p='';for(let y=0;y<=H;y+=24)p+=(y?'L':'M')+(x+Math.sin(y/30)*8).toFixed(1)+' '+y;return p};
+ const d=o.svg(`<g class="l"><path d="${wv(cx-6)}" stroke="#8fd0f0" stroke-width="3"/><path d="${wv(cx-16)}" stroke="#dff4ff" stroke-width="1.2"/></g><g class="r"><path d="${wv(cx+6)}" stroke="#8fd0f0" stroke-width="3"/><path d="${wv(cx+16)}" stroke="#dff4ff" stroke-width="1.2"/></g>`,'filter:drop-shadow(0 0 6px #8fd0f0)');
+ d.querySelector('.l').animate([{transform:'none'},{transform:`translateX(${-W*.42}px)`}],{duration:900,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});d.querySelector('.r').animate([{transform:'none'},{transform:`translateX(${W*.42}px)`}],{duration:900,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});
+ spRun(900,q=>{for(const s of [-1,1])sGlow({x:cx+s*W*.42*(1-Math.pow(1-q,2)),y:RN(0,H),vx:s*RN(40,120),vy:RN(-60,60),m:.5,s:RN(2,4),c:WATC,add:1})});
+ o.wob([{transform:'none'},{transform:'scaleX(1.012)',offset:.5},{transform:'none'}],1100,'ease-in-out');vib([20,40,20,40]);o.fade(d,1200)};
+/* Стена воды: снизу встаёт прозрачная стена воды с бегущим гребнем, брызги летят с верха, лист вздрагивает от удара */
+CW2.wall_of_water=o=>{const{W,H}=o,top=H*.32,T=1700,t0=performance.now();
+ spawn({k:'d',x:W/2,y:H,m:T/1000,fp:3,add:1,draw:g=>{const t=(performance.now()-t0)/1000,up=Math.min(1,t/.45),e=1-Math.pow(1-up,3),y=H-(H-top)*e,f=t>T/1000-.4?(T/1000-t)/.4:1;g.globalAlpha*=Math.max(0,f);
+  const gr=g.createLinearGradient(0,y,0,H);gr.addColorStop(0,'rgba(143,208,240,.32)');gr.addColorStop(1,'rgba(143,208,240,.06)');g.fillStyle=gr;g.beginPath();g.moveTo(0,H);for(let x=0;x<=W;x+=16)g.lineTo(x,y+Math.sin(x/38+t*6)*7);g.lineTo(W,H);g.fill();
+  g.strokeStyle='rgba(223,244,255,.9)';g.lineWidth=2;g.beginPath();for(let x=0;x<=W;x+=16)g[x?'lineTo':'moveTo'](x,y+Math.sin(x/38+t*6)*7);g.stroke()}});
+ setTimeout(()=>{for(let i=0;i<26;i++)sGlow({x:RN(0,W),y:top,vx:RN(-80,80),vy:-RN(80,260),g:700,m:RN(.5,.9),s:RN(2,4),c:WATC,add:1});o.wob([{transform:'none'},{transform:'translateY(-6px)',offset:.3},{transform:'none'}],380);vib([50,20,30])},420)};
+/* Подводное дыхание: со дна поднимаются пузыри, лист делает один глубокий вдох и выдох */
+CW2.water_breathing=o=>{const{W,H}=o;for(let i=0;i<24;i++){const x=RN(.05,.95)*W,s=RN(4,11),ph=RN(0,6),t0=performance.now()+i*50;
+  setTimeout(()=>spawn({k:'d',x,y:H+20,m:RN(1.2,1.8),fp:2,draw:(g,p)=>{const t=(performance.now()-t0)/1000,y=H+20-t*H*RN(.55,.6),xx=x+Math.sin(t*5+ph)*8;g.strokeStyle='rgba(223,244,255,.8)';g.lineWidth=1.2;g.beginPath();g.arc(xx,y,s,0,6.283);g.stroke();g.beginPath();g.arc(xx-s*.35,y-s*.35,s*.25,3.5,5);g.stroke()}}),i*50)}
+ o.wob([{transform:'none'},{transform:'scale(1.014)',offset:.4},{transform:'scale(.992)',offset:.75},{transform:'none'}],1500,'ease-in-out');o.flt('hue-rotate(-12deg) saturate(1.15)',1500,.45);vib([10,200,10])};
+/* Хождение по воде: поперёк листа ложится гладь воды, по ней слева направо идут шаги, от каждого расходятся круги */
+CW2.water_walk=o=>{const{W,H}=o,y=H*.62,s=Math.random()<.5?1:-1,d=o.svg(`<path data-d="0" d="M0 ${y} L${W} ${y}" stroke="#8fd0f0" stroke-width="1.6"/><path data-d="100" d="M0 ${y+8} L${W} ${y+8}" stroke="#dff4ff" stroke-width="1" stroke-dasharray="10 14"/>`,'filter:drop-shadow(0 0 5px #8fd0f0)');sDraw(d,0,400);
+ for(let i=0;i<6;i++)setTimeout(()=>{const x=s>0?W*(.1+i*.16):W*(.9-i*.16),yy=y+(i%2?-5:5);sRing({x,y:yy,r0:3,r1:46,m:.7,c:'#dff4ff',w:1.6,fy:.25});sRing({x,y:yy,r0:2,r1:26,m:.55,c:'#8fd0f0',w:1.2,fy:.25});
+  sGlow({x,y:yy,s:6,m:.3,c:'#ffffff',add:1});o.wob([{transform:'none'},{transform:'translateY(2px)'},{transform:'none'}],160);vib(10)},400+i*190);o.fade(d,1800)};
+/* Водяная сфера: капли со всех сторон слетаются в шар воды, в нём кружит блик, шар тяжело опускается и лопается брызгами */
+CW2.watery_sphere=o=>{const{W,H,cx,cy}=o,R=Math.min(W,H)*.14,t0=performance.now()+500;
+ for(let i=0;i<30;i++){const a=RN(0,6.283),r=Math.max(W,H)*.6;sGlow({x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r,vx:-Math.cos(a)*r*2,vy:-Math.sin(a)*r*2,m:.5,s:RN(2.5,4),c:WATC,add:1})}
+ setTimeout(()=>spawn({k:'d',x:cx,y:cy,m:1.1,fp:3,draw:g=>{const t=(performance.now()-t0)/1000,dy=t>.7?(t-.7)*(t-.7)*900:0,y=cy+dy,r=R*(1+Math.sin(t*14)*.04);g.fillStyle='rgba(143,208,240,.14)';g.strokeStyle='rgba(223,244,255,.9)';g.lineWidth=2;g.beginPath();g.arc(cx,y,r,0,6.283);g.fill();g.stroke();
+  g.strokeStyle='rgba(255,255,255,.8)';g.lineWidth=2.5;g.beginPath();g.arc(cx,y,r*.7,-2.4+t*5,-1.6+t*5);g.stroke()}}),500);
+ setTimeout(()=>{const y=cy+.16*.16*900;for(let i=0;i<24;i++){const a=RN(-Math.PI,0),v=RN(140,320);sGlow({x:cx,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:800,m:RN(.5,.8),s:RN(2,4),c:WATC,add:1})}sRing({x:cx,y,r0:R*.6,r1:R*3,m:.5,c:'#dff4ff',w:2,fy:.3});uwThud(o,6,320)},1560)};
+
+/* --- растения: раньше у всех один росток --- */
+/* Поиск животных или растений: от центра по листу разбегаются корни-жилки, на их концах раскрываются листик или след лапы */
+CW2.locate_animals_or_plants=o=>{const{W,H,cx,cy}=o;let s='';const ends=[];for(let i=0;i<6;i++){const a=i/6*6.283+RN(-.3,.3),L=Math.min(W,H)*RN(.32,.45),pts=[[cx,cy]];for(let j=1;j<=5;j++){const r=L*j/5,b=a+Math.sin(j*1.7+i)*.25;pts.push([cx+Math.cos(b)*r,cy+Math.sin(b)*r])}ends.push(pts[5]);s+=`<path data-d="${i*60}" d="${uwP(pts)}" stroke="#b8dc8a" stroke-width="1.3"/>`}
+ const d=o.svg(s,'filter:drop-shadow(0 0 4px rgba(184,220,138,.6))');sDraw(d,0,650);
+ ends.forEach((e,i)=>setTimeout(()=>{if(i%2)for(const [dx,dy,r] of [[0,0,5],[-6,-8,2.2],[0,-10,2.2],[6,-8,2.2]])sGlow({x:e[0]+dx,y:e[1]+dy,s:r*1.6,m:.9,c:'#e9d2a8',add:1,fin:.4});
+  else spawn({k:'d',x:e[0],y:e[1],m:.9,fp:2,draw:(g,p)=>{const q=Math.min(1,p.l/.2);g.save();g.translate(e[0],e[1]);g.scale(q*1.6,q*1.6);g.strokeStyle='#b8dc8a';g.fillStyle='rgba(143,232,170,.25)';g.lineWidth=.8;g.fill(new Path2D(LEAF));g.stroke(new Path2D(LEAF));g.restore()}});vib(6)},500+i*80+i*40));o.fade(d,1500)};
+/* Разговор с растениями: снизу поднимаются стебли, разом кивают бутонами к центру, от бутонов расходятся тихие кольца речи */
+CW2.speak_with_plants=o=>{const{W,H,cx,cy}=o,N=5,xs=Array.from({length:N},(_,i)=>W*(.1+i*.2)),tops=xs.map(()=>H*RN(.55,.68));
+ const d=o.svg(xs.map((x,i)=>`<g class="st" data-x="${x}"><path data-d="${i*60}" d="M${x} ${H+4} C${x+12} ${H-(H-tops[i])*.5} ${x-10} ${tops[i]+30} ${x} ${tops[i]}" stroke="#7fae55" stroke-width="2"/><circle cx="${x}" cy="${tops[i]-6}" r="7" stroke="#f0c4d8" stroke-width="1.5" fill="rgba(240,196,216,.2)"/></g>`).join(''),'filter:drop-shadow(0 0 4px rgba(127,174,85,.6))');sDraw(d,0,500);
+ d.querySelectorAll('.st').forEach((g,i)=>{const x=xs[i];g.style.transformOrigin=`${x}px ${H}px`;const a=(cx-x)/W*16;g.animate([{transform:'none'},{transform:'none',offset:.4},{transform:`rotate(${a}deg)`,offset:.6},{transform:`rotate(${a*.3}deg)`,offset:.8},{transform:`rotate(${a}deg)`}],{duration:1300,easing:'ease-in-out',fill:'forwards'});
+  setTimeout(()=>{for(let k=0;k<2;k++)setTimeout(()=>sRing({x:x+a*2,y:tops[i]-6,r0:6,r1:30,m:.5,c:'#f6dca8',w:1.2}),k*180);vib(5)},900+i*60)});o.fade(d,1900)};
+/* Рост растений: по всему низу листа разом прорастает трава, лист тяжелеет и проседает */
+CW2.plant_growth=o=>{const{W,H}=o;let s='';for(let i=0;i<46;i++){const x=RN(0,W),h=RN(20,H*.22),b=RN(-14,14);s+=`<path data-d="${RN(0,500)|0}" d="M${x} ${H+2} Q${x+b*.3} ${H-h*.5} ${x+b} ${H-h}" stroke="${['#7fae55','#9cc86a','#b8dc8a'][i%3]}" stroke-width="${RN(1.2,2.4).toFixed(1)}"/>`}
+ for(let i=0;i<8;i++){const x=RN(.05,.95)*W,y=H-RN(30,H*.2);s+=`<path class="lf" d="${LEAF}" transform="translate(${x} ${y}) rotate(${RN(-160,-20)|0}) scale(1.6)" stroke="#b8dc8a" stroke-width=".7" fill="rgba(143,232,170,.22)"/>`}
+ const d=o.svg(s,'filter:drop-shadow(0 0 3px rgba(127,174,85,.5))');sDraw(d,0,500);d.querySelectorAll('.lf').forEach((e,i)=>uwPop(e,600+i*50,240));
+ setTimeout(()=>{o.wob([{transform:'none'},{transform:'translateY(5px) scale(1.004,.992)',offset:.35},{transform:'translateY(2px)',offset:.7},{transform:'none'}],900,'ease-in-out');vib([40,30,30])},800);o.fade(d,1900)};
+/* Общение с природой: по кругу прорисовывается линия горизонта с горами и лесом, от центра трижды медленно расходится дыхание земли */
+CW2.commune_with_nature=o=>{const{W,H,cx,cy}=o,R=Math.min(W,H)*.38;const pts=[];for(let i=0;i<=120;i++){const a=i/120*6.283,n=Math.abs(Math.sin(a*3))*.12+Math.abs(Math.sin(a*11))*.05+Math.max(0,Math.sin(a*23))*.04;pts.push([cx+Math.cos(a)*R*(1+n),cy+Math.sin(a)*R*(1+n)*.9])}
+ const d=o.svg(`<path data-d="0" d="${uwP(pts,1)}" stroke="#b8dc8a" stroke-width="1.6"/><circle data-d="200" cx="${cx}" cy="${cy}" r="${R*.92}" stroke="#e9e1d2" stroke-width="1" stroke-dasharray="1 5"/>`,'filter:drop-shadow(0 0 5px rgba(184,220,138,.6))');sDraw(d,0,900);
+ for(let k=0;k<3;k++)setTimeout(()=>{sRing({x:cx,y:cy,r0:10,r1:R*.85,m:1,c:k%2?'#e9e1d2':'#b8dc8a',w:1.6});o.wob([{transform:'none'},{transform:'scale(1.006)',offset:.4},{transform:'none'}],900,'ease-in-out');vib(12)},500+k*520);o.fade(d,2300)};
+/* Пробуждение разума: семечко в центре прорастает деревцем, на стволе открываются два светлых глаза и моргают */
+CW2.awaken=o=>{const{H,cx,cy}=o,y=cy+H*.14,h=H*.26,d=o.svg(`<path data-d="0" d="M${cx} ${y} C${cx-6} ${y-h*.4} ${cx+8} ${y-h*.6} ${cx} ${y-h}" stroke="#c9a878" stroke-width="3"/><path data-d="400" d="M${cx} ${y-h*.6} C${cx-20} ${y-h*.75} ${cx-40} ${y-h*.8} ${cx-52} ${y-h*.98} M${cx} ${y-h*.7} C${cx+22} ${y-h*.8} ${cx+38} ${y-h*.95} ${cx+48} ${y-h*1.08}" stroke="#c9a878" stroke-width="2"/><path data-d="0" d="M${cx-30} ${y} Q${cx} ${y+6} ${cx+30} ${y}" stroke="#c9a878" stroke-width="1.4"/>`+
+  [[-52,-.98],[48,-1.08],[0,-1],[-26,-.86],[24,-.92]].map(([dx,f],i)=>`<path class="lf" d="${LEAF}" transform="translate(${cx+dx} ${y+h*f}) rotate(${-90+dx}) scale(2)" stroke="#b8dc8a" stroke-width=".6" fill="rgba(143,232,170,.25)"/>`).join('')+
+  `<g class="ey"><ellipse cx="${cx-7}" cy="${y-h*.42}" rx="4" ry="3" fill="rgba(255,240,190,.9)"/><ellipse cx="${cx+7}" cy="${y-h*.42}" rx="4" ry="3" fill="rgba(255,240,190,.9)"/></g>`,'filter:drop-shadow(0 0 5px rgba(201,168,120,.6))');
+ sGlow({x:cx,y,s:12,m:.6,c:'#f6dca8',add:1});sDraw(d,200,700);d.querySelectorAll('.lf').forEach((e,i)=>uwPop(e,900+i*60,260));
+ const e=d.querySelector('.ey');e.style.transformBox='fill-box';e.style.transformOrigin='50% 50%';e.style.opacity=0;e.animate([{opacity:0,transform:'scaleY(0)'},{opacity:1,transform:'scaleY(1)',offset:.3},{opacity:1,transform:'scaleY(1)',offset:.6},{opacity:1,transform:'scaleY(.1)',offset:.68},{opacity:1,transform:'scaleY(1)'}],{duration:1000,delay:1200,fill:'forwards'});
+ setTimeout(()=>{o.wob([{transform:'none'},{transform:'translateY(-3px)'},{transform:'none'}],300);vib([15,40,15])},1300);o.fade(d,2500)};
+
+/* --- лозы и ягоды: раньше у всех одна и та же лоза --- */
+/* Чудо-ягоды: на веточке одна за другой наливаются десять ягод и по очереди падают вниз, подпрыгивая */
+CW2.goodberry=o=>{const{W,H,cx,cy}=o,y0=cy-H*.1,L=Math.min(W*.7,300),x0=cx-L/2,d=o.svg(`<path data-d="0" d="M${x0} ${y0} C${x0+L*.3} ${y0-20} ${x0+L*.6} ${y0+16} ${x0+L} ${y0-6}" stroke="#7fae55" stroke-width="2"/>`,'filter:drop-shadow(0 0 4px rgba(127,174,85,.6))');sDraw(d,0,400);
+ const fl=H*.8;for(let i=0;i<10;i++){const x=x0+L*(.05+i*.1),y=y0+Math.sin(i*1.1)*8+12,t0=performance.now()+300+i*70,fall=900+i*90;
+  setTimeout(()=>spawn({k:'d',x,y,m:2.4-i*.05,fp:3,draw:(g,p)=>{const t=performance.now()-t0,gr=Math.min(1,t/200);let yy=y,xx=x;if(t>fall){const s=(t-fall)/1000;yy=y+900*s*s;if(yy>fl){const s2=s-Math.sqrt((fl-y)/900),b=Math.max(0,280*s2-700*s2*s2);yy=fl-b}xx=x+(t-fall)*.02*(i%2?1:-1)}
+   g.fillStyle='rgba(122,90,200,.55)';g.strokeStyle='#d8c0ff';g.lineWidth=1.2;g.beginPath();g.arc(xx,yy,6*gr,0,6.283);g.fill();g.stroke();g.fillStyle='rgba(255,255,255,.85)';g.beginPath();g.arc(xx-2,yy-2,1.6*gr,0,6.283);g.fill()}}),300+i*70);
+  setTimeout(()=>vib(6),300+i*70+fall+Math.sqrt((fl-y)/900)*1000)}o.fade(d,2300)};
+/* Силок: на полу листа рисуется петля, потом рывком затягивается и взлетает вверх на натянутой верёвке, лист дёргает */
+CW2.snare=o=>{const{W,H,cx}=o,y=H*.76,R=Math.min(W*.2,80),d=o.svg(`<g class="lp"><ellipse cx="${cx}" cy="${y}" rx="${R}" ry="${R*.28}" stroke="#c9a878" stroke-width="2" stroke-dasharray="7 3"/><path d="M${cx+R} ${y} C${cx+R+20} ${y-10} ${cx+R+30} ${y-30} ${cx+R+26} ${y-60}" stroke="#c9a878" stroke-width="1.6"/></g>`,'filter:drop-shadow(0 0 4px rgba(201,168,120,.6))');
+ const lp=d.querySelector('.lp');lp.style.transformOrigin=`${cx}px ${y}px`;lp.animate([{opacity:0,transform:'scale(1.3)'},{opacity:1,transform:'none',offset:.3},{opacity:1,transform:'none',offset:.62},{opacity:1,transform:`translateY(${-H*.3}px) scale(.25,.6)`,offset:.75},{opacity:1,transform:`translateY(${-H*.26}px) scale(.25,.6)`,offset:.85},{opacity:0,transform:`translateY(${-H*.28}px) scale(.25,.6)`}],{duration:1500,easing:'ease-in-out',fill:'forwards'});
+ setTimeout(()=>{o.wob([{transform:'none'},{transform:'translateY(-10px)',offset:.25},{transform:'translateY(3px)',offset:.6},{transform:'none'}],420);vib([60,20,20]);for(let i=0;i<8;i++)sGlow({x:cx+RN(-R,R),y,vx:RN(-60,60),vy:-RN(20,80),dr:2,m:.7,s:RN(6,12),c:'#e9e1d2',a:.25})},940)};
+/* Шипы: из низа листа по очереди с толчком выстреливают острые шипы и медленно уходят обратно */
+CW2.spike_growth=o=>{const{W,H}=o;let s='';const N=11;for(let i=0;i<N;i++){const x=W*(i+.5)/N+RN(-8,8),h=RN(40,H*.16),w=RN(9,15);s+=`<path class="sp" d="M${x-w} ${H+2} L${x+RN(-4,4)} ${H-h} L${x+w} ${H+2}" stroke="#c9a878" stroke-width="1.6" fill="rgba(201,168,120,.15)"/>`}
+ const d=o.svg(s,'filter:drop-shadow(0 0 4px rgba(201,168,120,.6))');const ord=[...Array(N).keys()].sort(()=>Math.random()-.5);
+ d.querySelectorAll('.sp').forEach((e,i)=>{const dl=ord[i]*70;e.style.transformBox='fill-box';e.style.transformOrigin='50% 100%';e.style.opacity=0;e.animate([{opacity:1,transform:'scaleY(0)'},{opacity:1,transform:'scaleY(1.15)',offset:.12},{opacity:1,transform:'scaleY(1)',offset:.2},{opacity:1,transform:'scaleY(1)',offset:.8},{opacity:0,transform:'scaleY(.4)'}],{duration:1600,delay:dl,easing:'ease-out',fill:'forwards'});
+  setTimeout(()=>{o.wob([{transform:'none'},{transform:'translateY(-2px)'},{transform:'none'}],120);vib(8)},dl)});setTimeout(()=>d.remove(),2500)};
+/* Хватающая лоза: с края листа хлещет толстая лоза, закручивается петлёй вокруг точки и тянет лист к себе */
+CW2.grasping_vine=o=>{const{W,H,cx,cy}=o,s=Math.random()<.5?1:-1,x0=s>0?-10:W+10,y0=H*.85,tx=lastPt?lastPt.x:cx,ty=lastPt?lastPt.y:cy,r=26;
+ const p=`M${x0} ${y0} C${x0+s*W*.3} ${y0-60} ${tx-s*120} ${ty+120} ${tx-s*r} ${ty} A${r} ${r} 0 1 1 ${tx+s*r*.2} ${ty+r} A${r*.8} ${r*.8} 0 1 1 ${tx-s*r*.4} ${ty-r*.3}`;
+ const d=o.svg(`<path data-d="0" d="${p}" stroke="#7fae55" stroke-width="5"/><path data-d="60" d="${p}" stroke="#b8dc8a" stroke-width="1.4" stroke-dasharray="2 9"/>`,'filter:drop-shadow(0 0 5px rgba(127,174,85,.7))');sDraw(d,0,560);
+ setTimeout(()=>{d.firstChild.animate([{transform:'none'},{transform:`translateX(${-s*14}px)`,offset:.4},{transform:'none'}],{duration:600,easing:'cubic-bezier(.3,1.3,.5,1)'});o.wob([{transform:'none'},{transform:`translateX(${-s*12}px) skewX(${s*1.5}deg)`,offset:.35},{transform:'none'}],600);vib([50,30,30]);
+  for(let i=0;i<8;i++)sGlow({x:tx+RN(-r,r),y:ty+RN(-r,r),vx:RN(-80,80),vy:RN(-80,40),g:300,m:.7,s:RN(2,3.5),c:['#d8f0b8','#9cc86a'],add:1})},620);o.fade(d,1700)};
+
+/* --- защиты: раньше у всех одна и та же --- */
+/* Сопротивление: вокруг центра на миг встаёт маленький плащ-щиток, в него бьёт искра и отлетает */
+CW2.resistance=o=>{const{W,cx,cy}=o,R=Math.min(W*.16,64),d=o.svg(`<path data-d="0" d="M${cx} ${cy-R} C${cx+R*.9} ${cy-R*.8} ${cx+R} ${cy-R*.2} ${cx+R*.8} ${cy+R*.5} Q${cx} ${cy+R*1.1} ${cx-R*.8} ${cy+R*.5} C${cx-R} ${cy-R*.2} ${cx-R*.9} ${cy-R*.8} ${cx} ${cy-R}Z" stroke="#a9c9ea" stroke-width="2" fill="rgba(169,201,234,.08)"/>`,'filter:drop-shadow(0 0 6px #a9c9ea)');sDraw(d,0,360);
+ const a=RN(-2.6,-.5),x0=cx+Math.cos(a)*W*.6,y0=cy+Math.sin(a)*W*.6;setTimeout(()=>spFly({cx,cy,W},{x0,y0,x1:cx+Math.cos(a)*R,y1:cy+Math.sin(a)*R,T:220,head:(x,y)=>sGlow({x,y,s:6,m:.1,c:'#ffe0a0',add:1}),
+  hit:()=>{const x=cx+Math.cos(a)*R,y=cy+Math.sin(a)*R;sGlow({x,y,s:24,m:.3,c:'#e8f2ff',add:1});for(let i=0;i<7;i++){const b=a+RN(-.9,.9),v=RN(140,260);sSpark({x,y,vx:Math.cos(b)*v,vy:Math.sin(b)*v,g:400,m:.4,w:1.4,c:['#ffffff','#ffe0a0'],add:1})}
+   o.wob([{transform:'none'},{transform:`translate(${-Math.cos(a)*3}px,${-Math.sin(a)*3}px)`},{transform:'none'}],200);vib([25,10,10])}}),420);o.fade(d,1200)};
+/* Защита от добра и зла: на полу проступает круг с рунами, по ободу бежит свет, светлые тени снаружи пробуют войти и отскакивают */
+CW2.protection_from_evil_and_good=o=>{const{W,H,cx}=o,y=H*.62,R=Math.min(W*.36,150),RU='ᛉᛟᚦᛗᚨᛊᛏᛒ';let t='';for(let i=0;i<8;i++){const a=i/8*6.283;t+=`<text x="${cx+Math.cos(a)*R*.82}" y="${y+Math.sin(a)*R*.82*.35+5}" text-anchor="middle" font-size="14" font-family="serif" fill="#f6dca8" stroke="none" class="ru">${RU[i]}</text>`}
+ const d=o.svg(`<ellipse data-d="0" cx="${cx}" cy="${y}" rx="${R}" ry="${R*.35}" stroke="#f0c47a" stroke-width="2"/><ellipse data-d="120" cx="${cx}" cy="${y}" rx="${R*.66}" ry="${R*.23}" stroke="#f6dca8" stroke-width="1" stroke-dasharray="3 5"/>${t}`,'filter:drop-shadow(0 0 5px rgba(240,196,122,.7))');sDraw(d,0,500);d.querySelectorAll('.ru').forEach((e,i)=>uwPop(e,300+i*50,200));
+ spRun(900,q=>{const a=q*6.283*1.2;sGlow({x:cx+Math.cos(a)*R,y:y+Math.sin(a)*R*.35,s:7,m:.15,c:'#fff6d8',add:1})});
+ for(let i=0;i<4;i++)setTimeout(()=>{const a=RN(0,6.283),xe=cx+Math.cos(a)*R,ye=y+Math.sin(a)*R*.35,x0=cx+Math.cos(a)*R*2,y0=ye+RN(-80,-30);spFly({cx,cy:y,W},{x0,y0,x1:xe,y1:ye,T:260,head:(x,yy)=>sGlow({x,y:yy,s:9,m:.12,c:'#cfc4e8',add:1}),hit:()=>{sGlow({x:xe,y:ye,s:20,m:.3,c:'#fff6d8',add:1});sSpark({x:xe,y:ye,vx:Math.cos(a)*300,vy:-160,g:500,m:.4,w:1.6,c:'#cfc4e8',add:1});vib(15)}})},700+i*180);o.fade(d,1900)};
+/* Защита от яда: зелёное облако накатывает и разбивается о прозрачную сферу, сфера отталкивает его и облако тает */
+CW2.protection_from_poison=o=>{const{W,cx,cy}=o,R=Math.min(W*.2,80),s=Math.random()<.5?1:-1,d=o.svg(`<circle data-d="0" cx="${cx}" cy="${cy}" r="${R}" stroke="#dff4ff" stroke-width="1.6" fill="rgba(223,244,255,.05)"/><path data-d="200" d="M${cx-R*.6} ${cy-R*.5} A${R*.8} ${R*.8} 0 0 1 ${cx+R*.2} ${cy-R*.75}" stroke="#ffffff" stroke-width="2"/>`,'filter:drop-shadow(0 0 5px #dff4ff)');sDraw(d,0,360);
+ for(let i=0;i<16;i++){const y=cy+RN(-R*1.2,R*1.2),x0=cx+s*W*.6;setTimeout(()=>sGlow({x:x0,y,vx:-s*RN(500,640),vy:RN(-20,20),dr:4,m:.9,s:RN(14,24),gr:.6,c:'#a6e07a',a:.22,fin:.2}),i*25)}
+ setTimeout(()=>{d.firstChild.animate([{transform:'none'},{transform:`translateX(${-s*6}px) scale(.96,1.03)`},{transform:'none'}],{duration:300});sRing({x:cx,y:cy,r0:R,r1:R*1.8,m:.4,c:'#dff4ff',w:2});o.wob([{transform:'none'},{transform:`translateX(${-s*4}px)`},{transform:'none'}],260);vib([30,15,20]);
+  for(let i=0;i<10;i++)sGlow({x:cx+s*R*1.1,y:cy+RN(-R,R),vx:s*RN(60,160),vy:RN(-40,40),m:.9,s:RN(12,20),gr:1,c:'#c8f560',a:.16,fin:.2})},380);o.fade(d,1400)};
+/* Преграда жизни: от центра упруго раздувается невидимый купол, раздвигает воздух к краям, лист сжимается от его давления */
+CW2.antilife_shell=o=>{const{W,H,cx,cy}=o,R=Math.min(W,H)*.42,d=o.svg(`<circle class="sh" cx="${cx}" cy="${cy}" r="${R}" stroke="#e8f2ff" stroke-width="2.4" fill="rgba(232,242,255,.04)"/><circle class="sh" cx="${cx}" cy="${cy}" r="${R*.94}" stroke="#a9c9ea" stroke-width="1" stroke-dasharray="2 6"/>`,'filter:drop-shadow(0 0 6px rgba(169,201,234,.8))');
+ d.querySelectorAll('.sh').forEach(e=>{e.style.transformOrigin=`${cx}px ${cy}px`;e.animate([{transform:'scale(.05)',opacity:0},{transform:'scale(1.08)',opacity:1,offset:.45},{transform:'scale(.97)',offset:.65},{transform:'scale(1)',opacity:1}],{duration:900,easing:'ease-out',fill:'forwards'})});
+ spRun(500,q=>{for(let j=0;j<3;j++){const a=RN(0,6.283),r=R*(.1+q*1.1);sSpark({x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r,vx:Math.cos(a)*420,vy:Math.sin(a)*420,m:.35,w:1.2,len:.05,c:['#ffffff','#cfe3f7'],add:1})}});
+ o.wob([{transform:'none'},{transform:'scale(.985)',offset:.45},{transform:'scale(1.004)',offset:.7},{transform:'none'}],800,'ease-out');vib([20,20,80]);o.fade(d,1500)};
+
+/* --- ветер --- */
+/* Пылевой вихрь: по низу листа проходит маленький смерч из песчинок, лист покачивает вслед */
+CW2.dust_devil=o=>{const{W,H}=o,s=Math.random()<.5?1:-1,T=1400,t0=performance.now(),y=H*.8;
+ spRun(T,q=>{const x=s>0?-30+(W+60)*q:W+30-(W+60)*q,t=(performance.now()-t0)/1000;for(let j=0;j<5;j++){const h=RN(0,1),a=t*14+RN(0,6.283),r=8+h*38;sGlow({x:x+Math.cos(a)*r,y:y-h*H*.28+Math.sin(a)*r*.25,vx:-Math.sin(a)*r*6,vy:-RN(10,40),m:RN(.3,.5),s:RN(2,3.5),c:['#f2e6cc','#e8d2a8','#c9a77a'],add:1})}});
+ o.wob([{transform:'none'},{transform:`translateX(${s*4}px) rotate(${s*.4}deg)`,offset:.5},{transform:'none'}],T,'ease-in-out');vib([10,30,10,30,10])};
+/* Защитные ветра: ветер обходит лист по кругу у самого края, всё, что подлетает к центру, сдувает прочь */
+CW2.warding_wind=o=>{const{W,H,cx,cy}=o,R=Math.min(W,H)*.44;spRun(1300,q=>{for(let j=0;j<3;j++){const a=q*6.283*1.6+j*2.09+RN(-.2,.2),r=R*RN(.85,1.05);sSpark({x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r*.95,vx:-Math.sin(a)*700,vy:Math.cos(a)*660,m:.3,w:RN(1,2),len:.05,c:['#ffffff','#e8f2ff','#cfe3f7'],add:1})}
+  if(Math.random()<.25){const a=RN(0,6.283);sGlow({x:cx+Math.cos(a)*R*.3,y:cy+Math.sin(a)*R*.3,vx:Math.cos(a)*500,vy:Math.sin(a)*500,dr:1,m:.5,s:RN(3,5),c:'#e9e1d2',add:1})}});
+ o.wob([{transform:'none'},{transform:'rotate(.4deg)',offset:.3},{transform:'rotate(-.4deg)',offset:.65},{transform:'none'}],1300,'ease-in-out');vib([10,40,10,40])};
+/* Власть над ветрами: ветер меняет направление три раза: сверху вниз, вбок, снизу вверх, и лист каждый раз кренится вслед */
+CW2.control_winds=o=>{const{W,H}=o,dirs=[[0,1],[Math.random()<.5?1:-1,0],[0,-1]];dirs.forEach(([dx,dy],k)=>setTimeout(()=>{
+  spRun(420,()=>{for(let j=0;j<4;j++){const x=dx>0?-10:dx<0?W+10:RN(0,W),y=dy>0?-10:dy<0?H+10:RN(0,H);sSpark({x,y,vx:dx*RN(1100,1500)+RN(-40,40),vy:dy*RN(1100,1500)+RN(-40,40),m:.6,w:RN(1,2.2),len:.05,c:['#ffffff','#e8f2ff','#cfe3f7'],add:1})}});
+  o.wob([{transform:'none'},{transform:`translate(${dx*8}px,${dy*6}px) skew(${dx*1.5}deg,${dy*.6}deg)`,offset:.35},{transform:'none'}],420);vib(25)},k*460))};
+
+/* --- земля и камень: раньше у всех одна волна земли (она осталась только у Каменной кожи, как у Филиппа) --- */
+/* Лепка земли: в центре земля вспучивается холмиком, потом проседает ямкой, комья скатываются по склонам */
+CW2.mold_earth=o=>{const{W,H,cx}=o,y=H*.7,R=Math.min(W*.3,130),t0=performance.now(),T=1400;
+ spawn({k:'d',x:cx,y,m:T/1000,fp:2,draw:g=>{const t=(performance.now()-t0)/T,h=t<.45?Math.sin(t/.45*Math.PI/2)*R*.5:t<.7?R*.5-(t-.45)/.25*R*.75:-R*.25+(t-.7)/.3*R*.1,f=t>.85?(1-t)/.15:1;g.globalAlpha*=f;
+  g.strokeStyle='#c9a77a';g.lineWidth=2.4;g.beginPath();g.moveTo(cx-R*1.4,y);for(let i=0;i<=40;i++){const u=i/40*2-1;g.lineTo(cx+u*R*1.4,y-h*Math.exp(-u*u*4))}g.stroke();g.strokeStyle='rgba(233,210,168,.6)';g.lineWidth=1;g.setLineDash([3,6]);g.beginPath();g.moveTo(cx-R*1.3,y+8);g.lineTo(cx+R*1.3,y+8);g.stroke();g.setLineDash([])}});
+ setTimeout(()=>{for(let i=0;i<10;i++){const s=i%2?1:-1;sShard({x:cx+s*RN(0,R*.3),y:y-R*.45,vx:s*RN(60,160),vy:-RN(0,60),g:700,m:.8,s:RN(3,6),n:5,c:['#e8d2a8','#c9a77a'],fl:y,bo:.2})}vib([30,20,20])},640);
+ o.wob([{transform:'none'},{transform:'translateY(-3px)',offset:.35},{transform:'translateY(4px)',offset:.65},{transform:'none'}],T,'ease-in-out')};
+/* Земные узы: из низа листа вырастают каменные жгуты, тянутся к точке и рывком тянут лист вниз */
+CW2.earthbind=o=>{const{W,H,cx,cy}=o,tx=cx,ty=cy-H*.05;let s='';for(let i=0;i<4;i++){const x0=W*(.12+i*.25),c1=RN(-40,40);s+=`<path data-d="${i*60}" d="M${x0} ${H+4} C${x0+c1} ${H*.7} ${tx+c1} ${ty+120} ${tx+(i-1.5)*12} ${ty+16}" stroke="#c9a77a" stroke-width="4" stroke-dasharray="14 4"/>`}
+ const d=o.svg(s+`<ellipse data-d="300" cx="${tx}" cy="${ty+10}" rx="34" ry="12" stroke="#e8d2a8" stroke-width="2"/>`,'filter:drop-shadow(0 0 4px rgba(201,167,122,.7))');sDraw(d,0,520);
+ setTimeout(()=>{d.firstChild.animate([{transform:'none'},{transform:'translateY(18px)'},{transform:'translateY(10px)'}],{duration:400,easing:'cubic-bezier(.5,0,.5,1.4)',fill:'forwards'});o.wob([{transform:'none'},{transform:'translateY(10px) scale(1.006,.985)',offset:.3},{transform:'translateY(6px)',offset:.7},{transform:'none'}],900);vib([70,30,40]);
+  for(let i=0;i<10;i++)sGlow({x:tx+RN(-50,50),y:ty+20,vx:RN(-60,60),vy:RN(20,90),g:300,m:.8,s:RN(6,11),c:'#e8d2a8',a:.25})},620);o.fade(d,1600)};
+/* Волшебный камень: снизу в ладонь подбрасываются три гальки, каждая на взлёте загорается руной и тяжело ложится обратно */
+CW2.magic_stone=o=>{const{W,H,cx}=o,y0=H*.78,R='ᛟᚱᛉ';for(let i=0;i<3;i++){const x=cx+(i-1)*W*.18,t0=performance.now()+i*260;
+  setTimeout(()=>spawn({k:'d',x,y:y0,m:1.2,fp:2,draw:(g,p)=>{const t=(performance.now()-t0)/1000,u=Math.min(1,t/.75),h=Math.sin(u*Math.PI)*H*.3,y=y0-h,r=10;g.save();g.translate(x,y);g.rotate(t*3);g.fillStyle='rgba(200,190,175,.35)';g.strokeStyle='#e9e1d2';g.lineWidth=1.5;g.beginPath();g.ellipse(0,0,r,r*.75,0,0,6.283);g.fill();g.stroke();
+   if(u>.25){g.rotate(-t*3);g.fillStyle=`rgba(255,236,190,${Math.min(1,(u-.25)*4)})`;g.font='14px serif';g.textAlign='center';g.fillText(R[i],0,5)}g.restore();if(u>.25&&u<.6&&Math.random()<.4)sGlow({x,y,s:16,m:.15,c:'#f0c47a',add:1})}}),i*260);
+  setTimeout(()=>{uwThud(o,3,180);for(let j=0;j<4;j++)sGlow({x:x+RN(-10,10),y:y0+8,vx:RN(-40,40),vy:-RN(10,30),dr:2,m:.5,s:RN(5,8),c:'#e9e1d2',a:.25})},i*260+750)}};
+/* Слияние с камнем: по всему листу проступают слои камня, середина медленно уходит в толщу и затягивается */
+CW2.meld_into_stone=o=>{const{W,H,cx,cy}=o;let s='';for(let i=0;i<9;i++){const y=H*(.12+i*.1);let p='';for(let x=0;x<=W;x+=W/12)p+=(x?'L':'M')+x.toFixed(1)+' '+(y+Math.sin(x/50+i)*6).toFixed(1);s+=`<path data-d="${i*50}" d="${p}" stroke="${i%2?'#c9a77a':'#e8d2a8'}" stroke-width="${i%3?1:1.8}" opacity=".7"/>`}
+ const d=o.svg(s+`<ellipse class="hole" cx="${cx}" cy="${cy}" rx="60" ry="80" stroke="#f6dca8" stroke-width="2" fill="rgba(232,210,168,.08)"/>`,'filter:drop-shadow(0 0 3px rgba(201,167,122,.6))');sDraw(d,0,700);
+ const h=d.querySelector('.hole');h.style.transformOrigin=`${cx}px ${cy}px`;h.animate([{transform:'scale(1.2)',opacity:0},{transform:'scale(1)',opacity:1,offset:.3},{transform:'scale(.05)',opacity:.4}],{duration:1300,delay:300,easing:'ease-in',fill:'forwards'});
+ o.flt('sepia(.45) contrast(.95) brightness(.96)',1800,.5);setTimeout(()=>{uwThud(o,2,300)},1500);vib([20,60,20]);o.fade(d,1900)};
+/* Превращение камня в грязь: в центре ложится каменная сетка плит, плиты оплывают, линии растекаются волнами грязи */
+CW2.transmute_rock=o=>{const{W,H,cx,cy}=o,S=Math.min(W*.7,300),n=5,c=S/n,x0=cx-S/2,y0=cy-S*.3,t0=performance.now()+500,T=2000;
+ spawn({k:'d',x:cx,y:cy,m:T/1000,fp:2,draw:g=>{const t=Math.max(0,(performance.now()-t0)/1000),m=Math.min(1,t/.9),f=t>1.3?Math.max(0,1-(t-1.3)/.4):Math.min(1,(performance.now()-t0+500)/300);g.globalAlpha*=f;g.strokeStyle=m<.4?'#e9e1d2':'#c9a77a';g.lineWidth=1.6;
+  for(let i=0;i<=n;i++){g.beginPath();for(let j=0;j<=20;j++){const u=j/20,x=x0+u*S,y=y0+i*c*.6+Math.sin(u*9+i+t*5)*m*10+m*m*12;j?g.lineTo(x,y):g.moveTo(x,y)}g.stroke();g.beginPath();for(let j=0;j<=20;j++){const u=j/20,x=x0+i*c+Math.sin(u*7+i+t*4)*m*12,y=y0+u*S*.6+m*m*12;j?g.lineTo(x,y):g.moveTo(x,y)}g.stroke()}}});
+ setTimeout(()=>{for(let i=0;i<14;i++)sGlow({x:cx+RN(-S/2,S/2),y:y0+RN(0,S*.6),vy:RN(20,80),g:200,m:.9,s:RN(3,5),c:['#e8d2a8','#c9a77a'],add:1});o.wob([{transform:'none'},{transform:'translateY(4px) scale(1.004,.99)',offset:.5},{transform:'none'}],900,'ease-in-out');vib([20,40,40])},700)};
+
+/* --- огонь: раньше у всех одна волна огня --- */
+/* Горящий клинок: в руке вспыхивает рукоять, из неё вырастает клинок пламени и делает широкий взмах */
+CW2.flame_blade=o=>{const{W,H}=o,hx=W*.78,hy=H*.78,L=Math.min(W,H)*.5,T=900,t0=performance.now();sGlow({x:hx,y:hy,s:30,m:.4,c:'#ff9a3a',add:1});
+ spawn({k:'d',x:hx,y:hy,m:T/1000+.2,fp:2,add:1,draw:g=>{const t=(performance.now()-t0)/T,gr=Math.min(1,t/.25),a=-2.2+(t>.4?Math.min(1,(t-.4)/.3)*-1.4:0)*-1,ln=L*gr,ex=hx+Math.cos(a)*ln,ey=hy+Math.sin(a)*ln;
+  g.lineCap='round';g.strokeStyle='rgba(255,138,42,.35)';g.lineWidth=16;g.beginPath();g.moveTo(hx,hy);g.lineTo(ex,ey);g.stroke();g.strokeStyle='rgba(255,208,90,.9)';g.lineWidth=6;g.stroke();g.strokeStyle='#fff4c8';g.lineWidth=2;g.stroke();
+  for(let j=0;j<2;j++){const u=RN(.2,1);sGlow({x:hx+Math.cos(a)*ln*u,y:hy+Math.sin(a)*ln*u,vx:RN(-20,20),vy:-RN(40,120),g:-60,m:.4,s:RN(3,6),c:FIREC.slice(1),add:1})}
+  g.strokeStyle='#e9d2a8';g.lineWidth=4;g.beginPath();g.moveTo(hx-Math.cos(a)*18,hy-Math.sin(a)*18);g.lineTo(hx,hy);g.stroke()}});
+ setTimeout(()=>{o.wob([{transform:'none'},{transform:'translateX(-8px) rotate(-.5deg)',offset:.35},{transform:'none'}],420);vib([20,10,50])},T*.45)};
+/* Пылающий шар: огненный шар выкатывается сбоку, катится по низу листа, подпрыгивает на кочке и оставляет тлеющий след */
+CW2.flaming_sphere=o=>{const{W,H}=o,s=Math.random()<.5?1:-1,y=H*.78,R=22,T=1500,t0=performance.now();
+ spawn({k:'d',x:0,y,m:T/1000,fp:2,add:1,draw:g=>{const q=(performance.now()-t0)/T,x=s>0?-R+(W+2*R)*q:W+R-(W+2*R)*q,b=Math.max(0,Math.sin(Math.min(1,Math.max(0,(q-.45)/.15))*Math.PI))*30,yy=y-b;
+  g.drawImage(spG('#ff9a3a'),x-R*2.2,yy-R*2.2,R*4.4,R*4.4);g.drawImage(spG('#ffd05a'),x-R,yy-R,R*2,R*2);g.drawImage(spG('#fff4c8'),x-R*.5,yy-R*.5,R,R);
+  sGlow({x,y:y+R*.8,s:RN(4,7),m:.9,c:['#ffd05a','#ff9a3a'],add:1,fin:.5});if(Math.random()<.6)sGlow({x:x+RN(-R,R)*.5,y:yy-R*.5,vy:-RN(60,140),g:-50,m:.4,s:RN(3,5),c:FIREC.slice(1),add:1})}});
+ setTimeout(()=>{uwThud(o,4,240)},T*.6);vib([10,30,10,30,10,30])};
+/* Раскалённый металл: в центре проступает контур клинка, он краснеет, белеет от жара, дрожит и сыплет искрами */
+CW2.heat_metal=o=>{const{H,cx,cy}=o,L=H*.32,d=o.svg(`<g class="bl"><path d="M${cx} ${cy-L*.5} L${cx+9} ${cy+L*.25} L${cx} ${cy+L*.32} L${cx-9} ${cy+L*.25}Z" stroke="#b9c2cc" stroke-width="2" fill="rgba(185,194,204,.12)"/><path d="M${cx-24} ${cy+L*.32} H${cx+24} M${cx} ${cy+L*.32} V${cy+L*.5}" stroke="#b9c2cc" stroke-width="3"/></g>`,'');
+ const b=d.querySelector('.bl');b.animate([{stroke:'#b9c2cc',filter:'none'},{filter:'drop-shadow(0 0 6px #ff6a2a)',offset:.4},{filter:'drop-shadow(0 0 12px #ffd05a) brightness(2.4)',offset:.75},{filter:'drop-shadow(0 0 4px #ff9a3a)'}],{duration:1600,fill:'forwards'});
+ b.querySelectorAll('path').forEach(p=>p.animate([{stroke:'#b9c2cc'},{stroke:'#ff6a2a',offset:.4},{stroke:'#fff4c8',offset:.75},{stroke:'#ff9a3a'}],{duration:1600,fill:'forwards'}));
+ setTimeout(()=>{b.style.transformOrigin=`${cx}px ${cy}px`;b.animate([0,1,2,3,4,5,6,7].map(i=>({transform:`translate(${RN(-2,2)}px,${RN(-1.5,1.5)}px)`})),{duration:600,easing:'steps(8)'});o.wob([{transform:'none'},{transform:'translateX(1px)'},{transform:'translateX(-1px)'},{transform:'none'}],300);vib([15,15,15,15,15])},700);
+ spRun(1400,q=>{if(q<.35)return;if(Math.random()<.6)sSpark({x:cx+RN(-9,9),y:cy+RN(-L*.4,L*.3),vx:RN(-120,120),vy:-RN(80,240),g:600,m:RN(.3,.5),w:1.2,c:FIREC,add:1});if(Math.random()<.3)sGlow({x:cx+RN(-20,20),y:cy-L*.4,vy:-RN(30,60),dr:1,m:1,s:RN(10,16),gr:1,c:'#e9e1d2',a:.12})});o.fade(d,1900)};
+/* Пылающие стрелы: снизу встаёт колчан, по трём стрелам один за другим от оперения к наконечнику пробегает огонь */
+CW2.flame_arrows=o=>{const{H,cx}=o,y=H*.82,ln=H*.3;let s=`<path data-d="0" d="M${cx-34} ${y} L${cx-26} ${y-ln*.55} H${cx+26} L${cx+34} ${y}Z" stroke="#c9a878" stroke-width="2" fill="rgba(201,168,120,.1)"/>`;const xs=[-14,0,14];
+ xs.forEach((dx,i)=>{s+=`<path data-d="${150+i*80}" d="M${cx+dx} ${y-ln*.4} L${cx+dx*1.6} ${y-ln}" stroke="#e9e1d2" stroke-width="1.6"/><path data-d="${200+i*80}" d="M${cx+dx*1.6-5} ${y-ln+9} L${cx+dx*1.6} ${y-ln-3} L${cx+dx*1.6+5} ${y-ln+9}" stroke="#e9e1d2" stroke-width="1.6"/>`});
+ const d=o.svg(s,'filter:drop-shadow(0 0 4px rgba(233,225,210,.6))');sDraw(d,0,360);
+ xs.forEach((dx,i)=>setTimeout(()=>{spRun(300,q=>{const x=cx+dx+(dx*.6)*q,yy=y-ln*.4-ln*.6*q;sGlow({x,y:yy,s:10,m:.25,c:'#ff9a3a',add:1});sGlow({x,y:yy,vx:RN(-10,10),vy:-RN(30,80),g:-40,m:.5,s:RN(3,5),c:FIREC.slice(1),add:1})},()=>{const x=cx+dx*1.6,yy=y-ln;sGlow({x,y:yy,s:24,m:.5,c:'#ffd05a',add:1});vib(20)})},600+i*260));
+ setTimeout(()=>uwThud(o,3,220),1500);o.fade(d,2100)};
+
+/* --- остальные пары с одинаковыми волнами --- */
+/* Очарование чудовища: огромная петля из золотых и розовых лент облетает лист и затягивается в центре, лист сжимается и обмякает */
+CW2.charm_monster=o=>{const{W,H,cx,cy}=o,R=Math.max(W,H)*.6,T=1300,t0=performance.now();
+ spawn({k:'d',x:cx,y:cy,m:T/1000+.3,fp:2,add:1,draw:g=>{const t=Math.min(1,(performance.now()-t0)/T),r=R*(1-.85*Math.pow(t,2)),f=t>=1?Math.max(0,1-((performance.now()-t0)/1000-T/1000)/.3):1;g.globalAlpha*=f;
+  for(let k=0;k<2;k++){g.strokeStyle=k?'rgba(255,170,200,.8)':'rgba(246,213,142,.9)';g.lineWidth=k?2:3;g.beginPath();for(let i=0;i<=60;i++){const a=i/60*6.283+t*4+k*.5,rr=r*(1+Math.sin(a*5+t*9+k)*.04);i?g.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr*.8):g.moveTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr*.8)}g.closePath();g.stroke()}}});
+ setTimeout(()=>{sGlow({x:cx,y:cy,s:70,m:.6,c:'#ffb0d0',add:1});for(let i=0;i<10;i++)sGlow({x:cx+RN(-30,30),y:cy+RN(-20,20),vx:RN(-60,60),vy:-RN(30,90),m:.9,s:RN(3,5),c:['#ffd6e8','#f6d58e'],add:1});
+  o.wob([{transform:'none'},{transform:'scale(.985)',offset:.3},{transform:'scale(1.003)',offset:.7},{transform:'none'}],700);vib([60,30,30])},T)};
+/* Проклятие стихии: по кругу встают четыре знака стихий, на них ложится цепь, и они гаснут один за другим под её тяжестью */
+CW2.elemental_bane=o=>{const{W,cx,cy}=o,R=Math.min(W*.3,120),C=[['#ff9a3a','M0 8 C-6 2 -4 -4 0 -10 C4 -4 6 2 0 8Z'],['#aee2ff','M0 -10 V10 M-9 -5 L9 5 M-9 5 L9 -5'],['#9be84a','M0 -10 C6 -2 7 4 0 9 C-7 4 -6 -2 0 -10Z M-3 2 H3'],['#ffe14a','M3 -10 L-4 1 H2 L-3 10 L6 -2 H0Z']];
+ const d=o.svg(C.map(([c,p],i)=>{const a=i/4*6.283-Math.PI/2;return `<g class="el" style="color:${c}"><circle cx="${cx+Math.cos(a)*R}" cy="${cy+Math.sin(a)*R}" r="18" stroke="${c}" stroke-width="1.6"/><path d="${p}" transform="translate(${cx+Math.cos(a)*R} ${cy+Math.sin(a)*R}) scale(1.2)" stroke="${c}" stroke-width="1.6"/></g>`}).join('')+`<circle data-d="400" cx="${cx}" cy="${cy}" r="${R}" stroke="#e9e1d2" stroke-width="3" stroke-dasharray="10 5"/>`,'filter:drop-shadow(0 0 5px rgba(255,255,255,.4))');
+ d.querySelectorAll('.el').forEach((e,i)=>uwPop(e,i*90,260));sDraw(d,0,500);
+ d.querySelectorAll('.el').forEach((e,i)=>setTimeout(()=>{e.animate([{opacity:1},{opacity:.12,filter:'grayscale(1)'}],{duration:300,fill:'forwards'});const a=i/4*6.283-Math.PI/2;sRing({x:cx+Math.cos(a)*R,y:cy+Math.sin(a)*R,r0:18,r1:4,m:.3,c:'#e9e1d2',w:2});uwThud(o,2,160)},1000+i*200));o.fade(d,2100)};
+/* Посланник животных: маленькая птица с лентой-письмом вспархивает из центра и улетает за край листа */
+CW2.animal_messenger=o=>{const{W,H,cx,cy}=o,s=Math.random()<.5?1:-1,T=1300,t0=performance.now();
+ spawn({k:'d',x:cx,y:cy,m:T/1000,fp:3,draw:g=>{const t=(performance.now()-t0)/T,x=cx+s*(W*.65)*t*t,y=cy-H*.45*t+Math.sin(t*20)*6,fl=Math.sin(t*50),sc=1-t*.4;g.save();g.translate(x,y);g.scale(s*sc,sc);g.strokeStyle='#e9e1d2';g.lineWidth=1.6;g.lineCap='round';
+  g.beginPath();g.moveTo(-10,0);g.quadraticCurveTo(0,-4,10,-1);g.lineTo(15,-3);g.moveTo(10,-1);g.quadraticCurveTo(0,4,-10,0);g.moveTo(-2,-1);g.quadraticCurveTo(-8,-12*fl,-16,-14*fl);g.moveTo(2,-1);g.quadraticCurveTo(6,-12*fl,12,-15*fl);g.stroke();
+  g.strokeStyle='#f0c47a';g.beginPath();g.moveTo(-6,2);g.quadraticCurveTo(-18,10,-30,4+Math.sin(t*30)*4);g.stroke();g.restore();if(Math.random()<.4)sGlow({x,y,s:4,m:.5,c:'#f6dca8',add:1})}});
+ for(let i=0;i<5;i++)sGlow({x:cx+RN(-14,14),y:cy+RN(-6,6),vx:RN(-40,40),vy:-RN(20,60),m:.7,s:RN(2,3),c:'#e9e1d2',add:1});o.wob([{transform:'none'},{transform:'translateY(-3px)'},{transform:'none'}],260);vib([10,20,10])};
+/* Подчинение зверя: в центре звериный глаз, с двух сторон натягивается узда, зрачок сужается до щели, лист дёргает к центру */
+CW2.dominate_beast=o=>{const{W,cx,cy}=o,E=Math.min(W*.22,90),d=o.svg(`<path d="M${cx-E} ${cy} Q${cx} ${cy-E*.6} ${cx+E} ${cy} Q${cx} ${cy+E*.6} ${cx-E} ${cy}Z" stroke="#f0c47a" stroke-width="2" fill="rgba(240,196,122,.08)"/><ellipse class="pu" cx="${cx}" cy="${cy}" rx="${E*.3}" ry="${E*.4}" stroke="#ffe0a0" stroke-width="1.4" fill="rgba(255,224,160,.35)"/>
+  <path data-d="300" d="M-10 ${cy-E*.6} Q${cx-E*1.4} ${cy-E*.2} ${cx-E} ${cy}" stroke="#c9a8ff" stroke-width="2.4"/><path data-d="300" d="M${W+10} ${cy-E*.6} Q${cx+E*1.4} ${cy-E*.2} ${cx+E} ${cy}" stroke="#c9a8ff" stroke-width="2.4"/>`,'filter:drop-shadow(0 0 6px rgba(201,168,255,.6))');
+ d.firstChild.style.opacity=0;d.firstChild.animate([{opacity:0},{opacity:1}],{duration:400,fill:'forwards'});sDraw(d,0,400);const pu=d.querySelector('.pu');pu.style.transformBox='fill-box';pu.style.transformOrigin='50% 50%';pu.animate([{transform:'none'},{transform:'none',offset:.5},{transform:'scaleX(.18)'}],{duration:1100,easing:'cubic-bezier(.6,0,.4,1)',fill:'forwards'});
+ setTimeout(()=>{o.wob([{transform:'none'},{transform:'scale(.99,1.01)',offset:.3},{transform:'none'}],320);vib([40,20,40]);sGlow({x:cx,y:cy,s:40,m:.4,c:'#c9a8ff',add:1})},800);o.fade(d,1800)};
+/* Страж природы: за листом вырастает огромное древо: ствол поднимается снизу, ветви раскидываются, лист тяжело оседает */
+CW2.guardian_of_nature=o=>{const{W,H,cx}=o;let s=`<path data-d="0" d="M${cx-30} ${H+4} C${cx-20} ${H*.6} ${cx-34} ${H*.4} ${cx-8} ${H*.22} M${cx+30} ${H+4} C${cx+22} ${H*.6} ${cx+30} ${H*.4} ${cx+8} ${H*.22}" stroke="#c9a878" stroke-width="3"/>`;
+ for(let i=0;i<7;i++){const a=-Math.PI/2+(i-3)*.42,L=W*RN(.3,.45),x0=cx+(i-3)*4,y0=H*.24+Math.abs(i-3)*14;s+=`<path data-d="${400+Math.abs(i-3)*60}" d="M${x0} ${y0} Q${x0+Math.cos(a)*L*.5} ${y0+Math.sin(a)*L*.5+20} ${x0+Math.cos(a)*L} ${y0+Math.sin(a)*L*.7}" stroke="#c9a878" stroke-width="${3-Math.abs(i-3)*.3}"/>`}
+ const d=o.svg(s,'filter:drop-shadow(0 0 5px rgba(201,168,120,.6));opacity:.8');sDraw(d,0,600);
+ setTimeout(()=>{for(let i=0;i<18;i++)sGlow({x:RN(.1,.9)*W,y:RN(.02,.3)*H,vx:RN(-30,30),vy:RN(30,80),m:RN(1,1.5),s:RN(3,5),c:['#b8dc8a','#8fe8aa','#e8f2ff'],add:1});o.wob([{transform:'none'},{transform:'translateY(7px) scale(1.006,.988)',offset:.3},{transform:'translateY(3px)',offset:.7},{transform:'none'}],800);vib([80,40,40])},900);o.fade(d,2000)};
+/* Исцеляющий дух: маленький зелёный дух-огонёк порхает по листу зигзагом и роняет светлые листья */
+CW2.healing_spirit=o=>{const{W,H}=o,T=1600,t0=performance.now(),x0=RN(.2,.8)*W;
+ spawn({k:'d',x:x0,y:H,m:T/1000,fp:3,add:1,draw:g=>{const t=(performance.now()-t0)/T,x=x0+Math.sin(t*9)*W*.3,y=H*(.95-.8*t)+Math.cos(t*13)*20;g.drawImage(spG('#8fe8aa'),x-26,y-26,52,52);g.drawImage(spG('#e2ffe8'),x-8,y-8,16,16);
+  if(Math.random()<.35)spawn({k:'d',x,y,m:1.2,fp:2,vx:RN(-20,20),vy:RN(20,50),dr:1,draw:(g2,p)=>{const q=p.l/p.m;g2.save();g2.globalAlpha*=1-q;g2.translate(p.x,p.y);g2.rotate(q*4);g2.scale(1.4,1.4);g2.strokeStyle='#b8dc8a';g2.fillStyle='rgba(143,232,170,.3)';g2.lineWidth=.7;g2.fill(new Path2D(LEAF));g2.stroke(new Path2D(LEAF));g2.restore()}})}});
+ o.wob([{transform:'none'},{transform:'scale(1.006)',offset:.5},{transform:'none'}],T,'ease-in-out');vib([10,60,10])};
+/* Высшее восстановление: сверху в центр падает столп золотого света, в нём рвутся и разлетаются звенья оков */
+CW2.greater_restoration=o=>{const{H,cx,cy}=o;sBeam({x0:cx,y0:-20,x1:cx,y1:cy+40,w:30,m:1.2,c:'#ffe08a',f:q=>Math.min(1,q/.2),thin:1});spFlash('#fff6d0',.6,.35,cx,cy);
+ const d=o.svg([0,1,2].map(i=>`<ellipse class="ln" cx="${cx}" cy="${cy-30+i*30}" rx="34" ry="10" stroke="#e9e1d2" stroke-width="3"/>`).join(''),'filter:drop-shadow(0 0 5px #fff6d0)');
+ d.querySelectorAll('.ln').forEach((e,i)=>{e.style.transformBox='fill-box';e.style.transformOrigin='50% 50%';e.animate([{transform:'none',opacity:1},{transform:'none',opacity:1,offset:.5+i*.1},{transform:`translate(${(i-1)*60}px,${-30-i*10}px) rotate(${(i-1)*60}deg) scale(1.3)`,opacity:0}],{duration:1200,fill:'forwards'});
+  setTimeout(()=>{for(let j=0;j<6;j++){const a=RN(0,6.283),v=RN(120,260);sSpark({x:cx,y:cy-30+i*30,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:400,m:.5,w:1.4,c:['#ffffff','#ffe08a'],add:1})}vib(25)},600+i*120)});
+ spRun(1100,()=>sGlow({x:cx+RN(-14,14),y:cy+40,vy:-RN(120,260),m:.8,s:RN(2,4),c:RADC,add:1}));setTimeout(()=>o.wob([{transform:'none'},{transform:'translateY(-4px)'},{transform:'none'}],500,'ease-out'),900);o.fade(d,1400)};
+/* Свобода перемещения: вокруг центра натягивается цепь и с треском лопается, звенья разлетаются, лист распрямляется */
+CW2.freedom_of_movement=o=>{const{W,cx,cy}=o,R=Math.min(W*.26,110),N=12;let s='';for(let i=0;i<N;i++){const a=i/N*6.283,x=cx+Math.cos(a)*R,y=cy+Math.sin(a)*R*.7;s+=`<ellipse class="lk" cx="${x}" cy="${y}" rx="13" ry="7" transform="rotate(${(a*57.3+90)|0} ${x} ${y})" stroke="#b9c2cc" stroke-width="2.4"/>`}
+ const d=o.svg(s,'filter:drop-shadow(0 0 3px rgba(185,194,204,.6))');const L=[...d.querySelectorAll('.lk')];L.forEach((e,i)=>uwPop(e,i*30,200));
+ setTimeout(()=>{o.wob([{transform:'none'},{transform:'scale(.99)',offset:.6},{transform:'scale(1.01)',offset:.8},{transform:'none'}],500);
+  L.forEach((e,i)=>{const a=i/N*6.283;e.style.transformBox='fill-box';e.style.transformOrigin='50% 50%';e.animate([{transform:'none',opacity:1},{transform:`translate(${Math.cos(a)*RN(80,160)}px,${Math.sin(a)*RN(60,140)+60}px) rotate(${RN(-200,200)}deg)`,opacity:0}],{duration:800,delay:300,easing:'cubic-bezier(.2,.7,.4,1)',fill:'forwards'})});
+  setTimeout(()=>{sGlow({x:cx,y:cy,s:60,m:.4,c:'#e8f2ff',add:1});vib([80,20,20])},300)},500);setTimeout(()=>d.remove(),1700)};
+/* Заражение: от точки касания по листу расползаются светлые споры, местами проступают зеленовато-лиловые пятнышки и гаснут */
+CW2.contagion=o=>{const{W,H,cx,cy}=o,x=lastPt?lastPt.x:cx,y=lastPt?lastPt.y:cy;sGlow({x,y,s:20,m:.5,c:'#c8f560',add:1});
+ for(let i=0;i<26;i++){const a=RN(0,6.283),v=RN(30,160);sGlow({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,dr:1.2,m:RN(1,1.6),s:RN(2,3.5),c:['#eaffd6','#c8f560','#d8c0ff'],add:1})}
+ for(let i=0;i<9;i++)setTimeout(()=>{const a=RN(0,6.283),r=RN(40,Math.min(W,H)*.4);sGlow({x:x+Math.cos(a)*r,y:y+Math.sin(a)*r,s:RN(8,14),m:1,c:i%2?'#c8f560':'#d8c0ff',a:.5,add:1,fin:.4});vib(6)},300+i*90);
+ o.flt('hue-rotate(-25deg) saturate(.8)',1500,.5);o.wob([{transform:'none'},{transform:'translateX(1px)'},{transform:'translateX(-1px)'},{transform:'none'}],400)};
+/* Изменение формы камня: каменный блок в центре мнётся, как глина, на нём проступают отпечатки пальцев */
+CW2.stone_shape=o=>{const{W,cx,cy}=o,S=Math.min(W*.2,80),t0=performance.now(),T=1500;
+ spawn({k:'d',x:cx,y:cy,m:T/1000,fp:2,draw:g=>{const t=Math.min(1,(performance.now()-t0)/1100),f=(performance.now()-t0)/T>.8?(1-(performance.now()-t0)/T)/.2:1;g.globalAlpha*=Math.max(0,f);g.strokeStyle='#e8d2a8';g.fillStyle='rgba(232,210,168,.12)';g.lineWidth=2;g.beginPath();
+  for(let i=0;i<=48;i++){const a=i/48*6.283,sq=1/Math.max(Math.abs(Math.cos(a)),Math.abs(Math.sin(a))),r=S*(sq*(1-t)+(1+Math.sin(a*3+1)*.18)*t)*(1+Math.sin(a*2+t*3)*.06*t);i?g.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r*.8):g.moveTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r*.8)}g.closePath();g.fill();g.stroke();
+  if(t>.3){g.strokeStyle='rgba(246,220,168,.8)';g.lineWidth=1;for(let k=0;k<3;k++){const px=cx+(k-1)*S*.45,py=cy+(k%2?-1:1)*S*.2;for(let r=3;r<12;r+=3){g.beginPath();g.ellipse(px,py,r*Math.min(1,(t-.3)*3),r*.7*Math.min(1,(t-.3)*3),.4,0,6.283);g.stroke()}}}}});
+ for(let k=0;k<3;k++)setTimeout(()=>{o.wob([{transform:'none'},{transform:'scale(.996,1.004)'},{transform:'none'}],180);vib(15)},300+k*260)};
+/* Реинкарнация: лепестки слетаются в кокон, кокон светится, раскрывается, и из него выходит новый огонёк жизни */
+CW2.reincarnate=o=>{const{W,cx,cy}=o,N=10;for(let i=0;i<N;i++){const a=i/N*6.283,r=W*.5,t0=performance.now();
+  spawn({k:'d',x:cx,y:cy,m:1.6,fp:2,draw:g=>{const t=(performance.now()-t0)/1000,u=Math.min(1,t/.6),op=t>.9?Math.min(1,(t-.9)/.4):0,rr=r*(1-u)+16+op*60,aa=a+u*2+op*.5;g.save();g.translate(cx+Math.cos(aa)*rr,cy+Math.sin(aa)*rr*.9);g.rotate(aa+1.57);g.globalAlpha*=t>1.3?Math.max(0,1-(t-1.3)/.3):1;
+   g.fillStyle='rgba(255,200,220,.3)';g.strokeStyle='#ffd6e8';g.lineWidth=1;g.beginPath();g.ellipse(0,0,6,13,0,0,6.283);g.fill();g.stroke();g.restore()}})}
+ setTimeout(()=>{sGlow({x:cx,y:cy,s:30,m:.4,c:'#fff6d8',add:1});o.wob([{transform:'none'},{transform:'scale(.994)'},{transform:'none'}],300);vib(20)},600);
+ setTimeout(()=>{spFlash('#ffe8f0',.6,.3,cx,cy);sGlow({x:cx,y:cy,s:14,m:1.2,c:'#a8f0b0',add:1,fin:.3});sRing({x:cx,y:cy,r0:10,r1:120,m:.6,c:'#ffd6e8',w:2});vib([10,10,60])},950)};
+/* Гнев природы: земля дрожит, снизу пробиваются корни, с краёв хлещут ветви, камни подлетают, листья несёт ветром */
+CW2.wrath_of_nature=o=>{const{W,H}=o;let s='';for(let i=0;i<6;i++){const x=W*(.08+i*.17),h=H*RN(.18,.32);s+=`<path data-d="${i*50}" d="M${x} ${H+4} C${x+RN(-30,30)} ${H-h*.5} ${x+RN(-40,40)} ${H-h*.8} ${x+RN(-20,20)} ${H-h}" stroke="#c9a878" stroke-width="${RN(2.5,4).toFixed(1)}"/>`}
+ for(const sd of [-1,1])s+=`<path data-d="300" d="M${sd<0?-10:W+10} ${H*.25} Q${W/2+sd*W*.1} ${H*.32} ${W/2-sd*W*.05} ${H*.48}" stroke="#7fae55" stroke-width="3"/>`;
+ const d=o.svg(s,'filter:drop-shadow(0 0 4px rgba(201,168,120,.6))');sDraw(d,0,450);
+ o.wob([{transform:'none'},{transform:'translate(-4px,2px)'},{transform:'translate(4px,-1px)'},{transform:'translate(-3px,2px)'},{transform:'translate(2px,0)'},{transform:'none'}],700,'linear');vib([40,20,40,20,80]);
+ setTimeout(()=>{for(let i=0;i<10;i++)sShard({x:RN(.1,.9)*W,y:H-10,vx:RN(-80,80),vy:-RN(300,520),g:900,m:1,s:RN(4,8),n:5,c:['#e8d2a8','#c9a77a'],fl:H-6,bo:.3});
+  for(let i=0;i<14;i++)spawn({k:'d',x:-10,y:RN(.1,.6)*H,vx:RN(300,520),vy:RN(-30,60),m:1.2,fp:2,draw:(g,p)=>{g.save();g.translate(p.x,p.y);g.rotate(p.l*8);g.scale(1.4,1.4);g.strokeStyle='#b8dc8a';g.fillStyle='rgba(143,232,170,.3)';g.lineWidth=.7;g.fill(new Path2D(LEAF));g.stroke(new Path2D(LEAF));g.restore()}})},450);o.fade(d,1600)};
+/* Обет: строка золотых рун обвивает центр кольцом, замыкается и ложится печатью */
+CW2.geas=o=>{const{W,cx,cy}=o,R=Math.min(W*.26,110),RU='ᚷᛖᚨᛊᛟᚦᚱᛉᛞᛏᛒᛗᛚᚾ';let t='';for(let i=0;i<14;i++){const a=i/14*6.283;t+=`<text class="ru" x="${cx+Math.cos(a)*R}" y="${cy+Math.sin(a)*R*.7+5}" text-anchor="middle" font-size="15" font-family="serif" fill="#f6dca8" stroke="none">${RU[i]}</text>`}
+ const d=o.svg(t+`<circle class="se" cx="${cx}" cy="${cy}" r="22" stroke="#f0c47a" stroke-width="2.4" fill="rgba(240,196,122,.15)"/><path class="se" d="M${cx-9} ${cy} L${cx} ${cy-11} L${cx+9} ${cy} L${cx} ${cy+11}Z" stroke="#fff6d8" stroke-width="1.4"/>`,'filter:drop-shadow(0 0 5px rgba(240,196,122,.7))');
+ d.querySelectorAll('.ru').forEach((e,i)=>uwPop(e,i*55,180));d.querySelectorAll('.se').forEach(e=>uwPop(e,950,320,'scale(2.4)'));
+ setTimeout(()=>{d.querySelectorAll('.ru').forEach(e=>{e.style.transformOrigin=`${cx}px ${cy}px`;e.animate([{transform:'none'},{transform:'scale(.75)'}],{duration:300,fill:'forwards'})});uwThud(o,4,260);sRing({x:cx,y:cy,r0:20,r1:90,m:.4,c:'#f0c47a',w:2})},1000);o.fade(d,1900)};
+/* Планарные узы: на полу рисуется круг с пятью лучами, лучи стягиваются к центру и вдавливают тяжёлую печать */
+CW2.planar_binding=o=>{const{W,H,cx}=o,y=H*.6,R=Math.min(W*.36,150),pts=[0,1,2,3,4].map(i=>{const a=-Math.PI/2+i*4*Math.PI/5;return[cx+Math.cos(a)*R,y+Math.sin(a)*R*.38]});
+ const d=o.svg(`<ellipse data-d="0" cx="${cx}" cy="${y}" rx="${R}" ry="${R*.38}" stroke="#c9a8ff" stroke-width="2"/><path data-d="300" d="${uwP(pts,1)}" stroke="#e0c9ff" stroke-width="1.6"/>`,'filter:drop-shadow(0 0 6px rgba(201,168,255,.7))');sDraw(d,0,600);
+ setTimeout(()=>{pts.forEach(p=>sBeam({x0:p[0],y0:p[1],x1:cx,y1:y-R*.5,w:3,m:.5,c:'#c9a8ff',f:q=>Math.min(1,q/.4),thin:1}));sGlow({x:cx,y:y-R*.5,s:40,m:.6,c:'#e0c9ff',add:1})},800);
+ setTimeout(()=>{sRing({x:cx,y,r0:10,r1:R*1.2,m:.5,c:'#e0c9ff',w:2.4,fy:.38});o.wob([{transform:'none'},{transform:'translateY(8px) scale(1.006,.988)',offset:.25},{transform:'none'}],420);vib([90,30,30])},1100);o.fade(d,1800)};
+
+/* --- Филипп: заклинания, у которых волна была общей с другим --- */
+/* Интеллектуальная крепость: вокруг головы из шестиугольных кирпичей складывается фиолетовая крепость, о неё звонко бьётся шип */
+CW2.intellect_fortress=o=>{const{W,cx,cy}=o,r=Math.min(W*.05,20);let s='';const cells=[];for(let q=-2;q<=2;q++)for(let k=-2;k<=2;k++){const x=cx+(q+k*.5)*r*1.8,y=cy+k*r*1.56;if(Math.hypot(x-cx,y-cy)>r*4.2||Math.hypot(x-cx,y-cy)<r*1.5)continue;cells.push([x,y]);let p='';for(let j=0;j<6;j++){const a=j/6*6.283+.52;p+=(j?'L':'M')+(x+Math.cos(a)*r).toFixed(1)+' '+(y+Math.sin(a)*r).toFixed(1)}s+=`<path class="hx" d="${p}Z" stroke="#d29cff" stroke-width="1.4" fill="rgba(210,156,255,.1)"/>`}
+ const d=o.svg(s,'filter:drop-shadow(0 0 5px rgba(210,156,255,.7))');d.querySelectorAll('.hx').forEach((e,i)=>{const c=cells[i];uwPop(e,Math.hypot(c[0]-cx,c[1]-cy)*4,220,'scale(.2) translateY(-20px)');setTimeout(()=>vib(4),Math.hypot(c[0]-cx,c[1]-cy)*4)});
+ setTimeout(()=>{const a=RN(-2.6,-.5),x1=cx+Math.cos(a)*r*4.2,y1=cy+Math.sin(a)*r*4.2;spFly({cx,cy,W},{x0:cx+Math.cos(a)*W,y0:cy+Math.sin(a)*W,x1,y1,T:220,head:(x,y)=>sGlow({x,y,s:8,m:.1,c:'#f0d8ff',add:1}),hit:()=>{sGlow({x:x1,y:y1,s:30,m:.3,c:'#f0d8ff',add:1});for(let i=0;i<8;i++){const b=a+RN(-1,1),v=RN(120,240);sShard({x:x1,y:y1,vx:Math.cos(b)*v,vy:Math.sin(b)*v,g:500,m:.5,s:RN(2,4),n:3,c:'#f0d8ff'})}o.wob([{transform:'none'},{transform:`translate(${-Math.cos(a)*3}px,${-Math.sin(a)*3}px)`},{transform:'none'}],200);vib([30,10,10])}})},700);o.fade(d,1600)};
+/* Огненный щит: вокруг центра поднимается плащ из языков пламени, лист обдаёт жаром и чуть отталкивает */
+CW2.fire_shield=o=>{const{W,cx,cy}=o,R=Math.min(W*.3,120),T=1500,t0=performance.now();
+ spawn({k:'d',x:cx,y:cy,m:T/1000,fp:2,add:1,draw:g=>{const t=(performance.now()-t0)/T,gr=Math.min(1,t/.25),f=t>.75?(1-t)/.25:1;g.globalAlpha*=f;for(let i=0;i<28;i++){const a=i/28*6.283,rr=R*gr,x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr*.9,h=(10+Math.abs(Math.sin(t*20+i*1.7))*16)*gr;
+  g.drawImage(spG(i%2?'#ff9a3a':'#ffd05a'),x-h*.8,y-h*1.4,h*1.6,h*1.6)}}});
+ spRun(T*.7,()=>{const a=RN(0,6.283);sGlow({x:cx+Math.cos(a)*R,y:cy+Math.sin(a)*R*.9,vy:-RN(60,140),g:-40,m:.5,s:RN(3,5),c:FIREC.slice(1),add:1})});
+ o.flt('sepia(.35) saturate(1.3) brightness(1.05)',T,.4);o.wob([{transform:'none'},{transform:'scale(1.01)',offset:.25},{transform:'none'}],600);vib([20,20,40])};
+/* Враги повсюду: по краям листа одно за другим загораются прицелы, лист дёргается к каждому */
+CW2.enemies_abound=o=>{const{W,H}=o;for(let i=0;i<6;i++)setTimeout(()=>{const x=i%2?RN(.06,.2)*W:RN(.8,.94)*W,y=RN(.12,.88)*H,d=o.svg(`<g class="t"><circle cx="${x}" cy="${y}" r="20" stroke="#ff8a8a" stroke-width="1.6"/><path d="M${x-28} ${y} H${x-10} M${x+10} ${y} H${x+28} M${x} ${y-28} V${y-10} M${x} ${y+10} V${y+28}" stroke="#ffb0b0" stroke-width="1.4"/></g>`,'filter:drop-shadow(0 0 5px rgba(255,138,138,.7))');
+  const t=d.querySelector('.t');t.style.transformOrigin=`${x}px ${y}px`;t.animate([{transform:'scale(2.4) rotate(-40deg)',opacity:0},{transform:'none',opacity:1}],{duration:240,easing:'cubic-bezier(.3,1.4,.5,1)',fill:'forwards'});
+  o.wob([{transform:'none'},{transform:`translate(${(x<W/2?-1:1)*4}px,0)`},{transform:'none'}],160);vib(15);o.fade(d,700)},i*160)};
+/* Переносящая дверь: посреди листа распахивается светлый дверной проём, сквозь него проходит свет, дверь захлопывается */
+CW2.dimension_door=o=>{const{H,cx,cy}=o,w=64,h=H*.28,y0=cy-h/2,d=o.svg(`<rect data-d="0" x="${cx-w/2}" y="${y0}" width="${w}" height="${h}" rx="3" stroke="#c9a8ff" stroke-width="2.4"/><g class="dl"><rect x="${cx-w/2}" y="${y0}" width="${w/2}" height="${h}" stroke="#e0c9ff" stroke-width="1.4" fill="rgba(201,168,255,.12)"/></g><g class="dr"><rect x="${cx}" y="${y0}" width="${w/2}" height="${h}" stroke="#e0c9ff" stroke-width="1.4" fill="rgba(201,168,255,.12)"/></g>`,'filter:drop-shadow(0 0 6px rgba(201,168,255,.7))');sDraw(d,0,320);
+ const L=d.querySelector('.dl'),R=d.querySelector('.dr');L.style.transformOrigin=`${cx-w/2}px ${cy}px`;R.style.transformOrigin=`${cx+w/2}px ${cy}px`;const kf=s=>[{transform:'none'},{transform:'scaleX(.08)',offset:.25},{transform:'scaleX(.08)',offset:.7},{transform:'scaleX(1.05)',offset:.9},{transform:'none'}];
+ L.animate(kf(),{duration:1400,delay:300,fill:'forwards'});R.animate(kf(),{duration:1400,delay:300,fill:'forwards'});
+ setTimeout(()=>{sBeam({x0:cx,y0:y0+h*.1,x1:cx,y1:y0+h*.9,w:w*.7,m:.6,c:'#e0c9ff',thin:1});for(let i=0;i<12;i++)sGlow({x:cx+RN(-w/3,w/3),y:cy+RN(-h/2,h/2),vx:RN(-180,180),vy:RN(-30,30),m:.5,s:RN(2,4),c:PSYC,add:1})},650);
+ setTimeout(()=>{uwThud(o,0,200);o.wob([{transform:'none'},{transform:'scale(.99)'},{transform:'none'}],200);vib([60,20,20])},1550);o.fade(d,1900)};
+/* Далёкий шаг: у тебя вспыхивает фиолетовый разрыв, по дуге в дальний край листа летят искры, там ты появляешься с хлопком */
+CW2.far_step=o=>{const{W,H}=o,s=Math.random()<.5?1:-1,x0=W/2-s*W*.25,y0=H*.7,x1=W/2+s*W*.35,y1=H*.25;
+ sGlow({x:x0,y:y0,s:50,m:.5,c:'#9a5cff',add:1});sRing({x:x0,y:y0,r0:30,r1:4,m:.35,c:'#d29cff',w:2});o.wob([{transform:'none'},{transform:'scale(.99)'},{transform:'none'}],180);
+ spFly({cx:x1,cy:y1,W},{x0,y0,x1,y1,T:380,arc:H*.15,head:(x,y)=>{sGlow({x,y,s:9,m:.2,c:'#d29cff',add:1});sGlow({x:x+RN(-6,6),y:y+RN(-6,6),m:.4,s:2.5,c:PSYC,add:1})},
+  hit:()=>{sGlow({x:x1,y:y1,s:60,m:.5,c:'#d29cff',add:1});sRing({x:x1,y:y1,r0:4,r1:60,m:.45,c:'#f0d8ff',w:2});o.wob([{transform:'none'},{transform:`translate(${s*6}px,-4px)`},{transform:'none'}],260);vib([10,10,40])}})};
+/* Круг телепортации: на полу один за другим загораются руны по кругу, из круга бьёт вверх столб света */
+CW2.teleportation_circle=o=>{const{W,H,cx}=o,y=H*.66,R=Math.min(W*.34,140),RU='ᛗᚨᛞᛟᚱᛊᛏᛉᚷᛒ';let t='';for(let i=0;i<10;i++){const a=i/10*6.283;t+=`<text class="ru" x="${cx+Math.cos(a)*R*.85}" y="${y+Math.sin(a)*R*.3+5}" text-anchor="middle" font-size="13" font-family="serif" fill="#e0c9ff" stroke="none">${RU[i]}</text>`}
+ const d=o.svg(`<ellipse data-d="0" cx="${cx}" cy="${y}" rx="${R}" ry="${R*.35}" stroke="#c9a8ff" stroke-width="2"/><ellipse data-d="100" cx="${cx}" cy="${y}" rx="${R*.7}" ry="${R*.25}" stroke="#e0c9ff" stroke-width="1"/>${t}`,'filter:drop-shadow(0 0 5px rgba(201,168,255,.7))');sDraw(d,0,420);
+ d.querySelectorAll('.ru').forEach((e,i)=>{uwPop(e,300+i*70,200);setTimeout(()=>vib(4),300+i*70)});
+ setTimeout(()=>{sBeam({x0:cx,y0:y,x1:cx,y1:-20,w:R*.9,m:.7,c:'#d29cff',f:q=>Math.min(1,q/.25),thin:1});spRun(600,()=>sGlow({x:cx+RN(-R*.6,R*.6),y,vy:-RN(300,600),m:.6,s:RN(2,4),c:PSYC,add:1}));o.wob([{transform:'none'},{transform:'translateY(-6px)'},{transform:'none'}],400,'ease-out');vib([20,20,80])},1100);o.fade(d,1900)};
+/* Рука Бигби: снизу поднимается огромная светлая ладонь, сжимается в кулак и бьёт по столу так, что лист подпрыгивает */
+CW2.bigbys_hand=o=>{const{H,cx}=o,s=H*.3,y1=H*.55,T=1300,t0=performance.now();
+ spawn({k:'d',x:cx,y:H,m:T/1000,fp:2,add:1,draw:g=>{const t=(performance.now()-t0)/T,up=Math.min(1,t/.35),y=H+s-(H+s-y1)*(1-Math.pow(1-up,3))+(t>.6?Math.min(1,(t-.6)/.1)*H*.12:0),cl=Math.min(1,Math.max(0,(t-.4)/.15)),f=t>.85?(1-t)/.15:1;g.globalAlpha*=f;g.strokeStyle='rgba(143,232,200,.9)';g.lineWidth=3;g.lineCap='round';
+  g.beginPath();g.roundRect?g.roundRect(cx-s*.32,y-s*.3,s*.64,s*.6,s*.12):g.rect(cx-s*.32,y-s*.3,s*.64,s*.6);g.stroke();
+  for(let i=0;i<4;i++){const x=cx-s*.24+i*s*.16,L=s*.42*(1-cl*.7);g.beginPath();g.moveTo(x,y-s*.3);g.lineTo(x,y-s*.3-L);g.stroke()}g.beginPath();g.moveTo(cx-s*.32,y);g.lineTo(cx-s*.5+cl*s*.15,y-s*.25);g.stroke();g.drawImage(spG('#8fe8c8'),cx-s*.6,y-s*.6,s*1.2,s*1.2)}});
+ setTimeout(()=>{spShake(1);vib([90,20,30]);sRing({x:cx,y:y1+H*.12,r0:10,r1:160,m:.5,c:'#c8f2e2',w:2.5,fy:.3});o.wob([{transform:'none'},{transform:'translateY(-10px)',offset:.25},{transform:'translateY(2px)',offset:.6},{transform:'none'}],420)},T*.7)};
+/* Оживление предметов: по листу подпрыгивают маленькие вещи (книга, кружка, ключ), разом встают и пускаются в пляс */
+CW2.animate_objects=o=>{const{W,H}=o,shapes=['M-8 -6 H8 V6 H-8Z M0 -6 V6','M-6 -7 H5 V7 H-6Z M5 -3 C10 -3 10 3 5 3','M-9 0 A3 3 0 1 1 -3 0 H9 M5 0 V4 M8 0 V3','M-7 7 L0 -8 L7 7Z','M-6 -6 H6 V6 H-6Z M-6 -6 L0 -10 L6 -6'];
+ for(let i=0;i<9;i++){const x0=RN(.1,.9)*W,yf=H*RN(.55,.85),sh=new Path2D(shapes[i%5]),t0=performance.now()+i*70,ph=RN(0,6);
+  setTimeout(()=>spawn({k:'d',x:x0,y:yf,m:1.7,fp:2,draw:g=>{const t=(performance.now()-t0)/1000,hop=Math.abs(Math.sin(t*7+ph))*(t<.4?6:22),x=x0+(t>.4?Math.sin(t*4+ph)*16:0);g.save();g.translate(x,yf-hop);g.rotate(t>.4?Math.sin(t*9+ph)*.4:0);g.scale(1.6,1.6);g.strokeStyle='#f6dca8';g.lineWidth=1.2;g.stroke(sh);g.restore()}}),i*70)}
+ for(let k=0;k<4;k++)setTimeout(()=>{o.wob([{transform:'none'},{transform:'translateY(-2px)'},{transform:'none'}],140);vib(8)},400+k*230)};
+/* Телекинез: невидимая сила приподнимает весь лист, вокруг дрожит кольцо искажения, потом бережно опускает */
+CW2.telekinesis=o=>{const{W,H,cx,cy}=o;for(let k=0;k<3;k++)setTimeout(()=>sRing({x:cx,y:cy,r0:Math.min(W,H)*.45,r1:Math.min(W,H)*.3,m:.7,c:'#8fe8c8',w:1.6}),k*200);
+ spRun(1200,()=>{const a=RN(0,6.283),r=Math.min(W,H)*.42;sGlow({x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r,vx:-Math.cos(a)*40,vy:-Math.sin(a)*40-20,m:.6,s:RN(2,3.5),c:['#c8f2e2','#8fe8c8'],add:1})});
+ o.wob([{transform:'none'},{transform:'translateY(-14px) scale(1.012)',offset:.4},{transform:'translateY(-12px) scale(1.012) rotate(.3deg)',offset:.65},{transform:'translateY(1px)',offset:.9},{transform:'none'}],1400,'ease-in-out');vib([10,600,40])};
+/* Создание большого образа: огромный радужный контур башни прорисовывается на весь лист, по нему бегут блики и он рябит */
+CW2.major_image=o=>{const{W,H,cx}=o,b=H*.82,w=W*.18,t=H*.2,d=o.svg(`<path data-d="0" d="M${cx-w} ${b} V${t+H*.12} L${cx-w*1.2} ${t+H*.12} L${cx} ${t} L${cx+w*1.2} ${t+H*.12} L${cx+w} ${t+H*.12} V${b} Z M${cx-w*.3} ${b} V${b-H*.12} A${w*.3} ${w*.3} 0 0 1 ${cx+w*.3} ${b-H*.12} V${b}" stroke="#ffb0e0" stroke-width="2"/><path data-d="300" d="M${cx-w*2.2} ${b} V${b-H*.25} H${cx-w*1.4} V${b-H*.35} M${cx+w*2.2} ${b} V${b-H*.25} H${cx+w*1.4} V${b-H*.35} M${cx-w*2.4} ${b} H${cx+w*2.4}" stroke="#a0e8ff" stroke-width="1.6"/>`,'filter:drop-shadow(0 0 6px rgba(255,176,224,.6))');sDraw(d,0,800);
+ d.firstChild.animate([{filter:'hue-rotate(0)'},{filter:'hue-rotate(360deg)'}],{duration:1500,delay:400});setTimeout(()=>d.firstChild.animate([{transform:'none'},{transform:'skewX(3deg)'},{transform:'skewX(-2deg)'},{transform:'none'}],{duration:400}),1200);
+ for(let i=0;i<12;i++)setTimeout(()=>glint(cx+RN(-w*2,w*2),RN(t,b),RN(5,9),{m:.5,c:['#ffb0e0','#a0e8ff','#fff0a0'][i%3]}),500+i*80);vib(10);o.fade(d,2100)};
+/* Притворство: по листу проплывают несколько масок, у каждой на ходу меняется выражение */
+CW2.seeming=o=>{const{W,H}=o;for(let i=0;i<4;i++){const y=H*(.2+i*.18),s=i%2?1:-1,t0=performance.now()+i*150;
+  setTimeout(()=>spawn({k:'d',x:0,y,m:1.6,fp:2,draw:g=>{const t=(performance.now()-t0)/1600,x=s>0?-40+(W+80)*t:W+40-(W+80)*t,sm=t>.5?1:-1;g.save();g.translate(x,y+Math.sin(t*9)*6);g.strokeStyle=['#ffb0e0','#a0e8ff','#fff0a0','#c9a8ff'][i];g.lineWidth=1.6;
+   g.beginPath();g.ellipse(0,0,18,23,0,0,6.283);g.stroke();g.beginPath();g.ellipse(-7,-5,4,2.4,0,0,6.283);g.ellipse(7,-5,4,2.4,0,0,6.283);g.stroke();g.beginPath();g.moveTo(-8,9);g.quadraticCurveTo(0,9+sm*7,8,9);g.stroke();g.restore()}}),i*150)}
+ setTimeout(()=>{o.flt('hue-rotate(30deg)',600,.5);vib(10)},800)};
+/* Маскировка: перед листом встаёт маска-лицо, на неё ложится вторая, первая сползает вниз и тает */
+CW2.disguise_self=o=>{const{cx,cy}=o,mask=(c,cls)=>`<g class="${cls}"><ellipse cx="${cx}" cy="${cy}" rx="44" ry="56" stroke="${c}" stroke-width="2" fill="rgba(255,255,255,.04)"/><path d="M${cx-24} ${cy-12} Q${cx-16} ${cy-20} ${cx-8} ${cy-12} M${cx+8} ${cy-12} Q${cx+16} ${cy-20} ${cx+24} ${cy-12} M${cx-14} ${cy+24} Q${cx} ${cy+30} ${cx+14} ${cy+24}" stroke="${c}" stroke-width="1.6"/></g>`;
+ const d=o.svg(mask('#e9e1d2','a')+mask('#ffb0e0','b'),'filter:drop-shadow(0 0 5px rgba(255,176,224,.6))');const a=d.querySelector('.a'),b=d.querySelector('.b');
+ a.animate([{opacity:0},{opacity:1,offset:.2},{opacity:1,transform:'none',offset:.5},{opacity:0,transform:'translateY(60px) rotate(8deg)'}],{duration:1400,fill:'forwards'});
+ b.style.transformOrigin=`${cx}px ${cy}px`;b.animate([{opacity:0,transform:'scale(1.4)'},{opacity:0,transform:'scale(1.4)',offset:.35},{opacity:1,transform:'none',offset:.55},{opacity:1,filter:'hue-rotate(0)'},{opacity:1,filter:'hue-rotate(120deg)'}],{duration:1400,fill:'forwards'});
+ setTimeout(()=>{uwThud(o,2,180)},770);o.fade(d,1700)};
+/* Усиление навыка: из центра поднимается золотой знак мастерства, дважды вспыхивает и ложится в лист */
+CW2.skill_empowerment=o=>{const{cx,cy}=o,pts=[];for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=i%2?16:38;pts.push([cx+Math.cos(a)*r,cy+Math.sin(a)*r])}
+ const d=o.svg(`<g class="st"><path d="${uwP(pts,1)}" stroke="#f0c47a" stroke-width="2" fill="rgba(240,196,122,.12)"/><circle cx="${cx}" cy="${cy}" r="48" stroke="#f6dca8" stroke-width="1.2" stroke-dasharray="3 5"/></g>`,'filter:drop-shadow(0 0 6px rgba(240,196,122,.8))');const s=d.querySelector('.st');s.style.transformOrigin=`${cx}px ${cy}px`;
+ s.animate([{transform:'translateY(80px) scale(.4)',opacity:0},{transform:'none',opacity:1,offset:.35},{transform:'none',offset:.75},{transform:'scale(.2)',opacity:0}],{duration:1500,easing:'ease-in-out',fill:'forwards'});
+ for(let k=0;k<2;k++)setTimeout(()=>{sGlow({x:cx,y:cy,s:70,m:.3,c:'#ffe08a',add:1});glint(cx,cy-38,10,{m:.4,c:'#fff6d8'});vib(20)},650+k*250);setTimeout(()=>uwThud(o,2,200),1400);setTimeout(()=>d.remove(),1600)};
+/* Удержание чудовища: сверху падают два тяжёлых обруча-кандалы и со звоном защёлкиваются вокруг центра */
+CW2.hold_monster=o=>{const{W,H,cx,cy}=o,R=Math.min(W*.3,120),d=o.svg([0,1].map(i=>`<g class="h${i}"><ellipse cx="${cx}" cy="${cy+(i?24:-24)}" rx="${R}" ry="${R*.22}" stroke="#c9a8ff" stroke-width="5"/><ellipse cx="${cx}" cy="${cy+(i?24:-24)}" rx="${R}" ry="${R*.22}" stroke="#f0d8ff" stroke-width="1.2" stroke-dasharray="4 8"/></g>`).join(''),'filter:drop-shadow(0 0 6px rgba(201,168,255,.7))');
+ [0,1].forEach(i=>{const g=d.querySelector('.h'+i);g.style.transformOrigin=`${cx}px ${cy}px`;g.animate([{transform:`translateY(${-H*.6}px) scale(1.3)`,opacity:0},{transform:`translateY(${-H*.6}px) scale(1.3)`,opacity:1,offset:.1},{transform:'scale(1.1)',offset:.6},{transform:'scale(.92)',offset:.8},{transform:'none',opacity:1}],{duration:700,delay:i*200,easing:'cubic-bezier(.6,0,.9,.6)',fill:'forwards'});
+  setTimeout(()=>{uwThud(o,6,260);for(let j=0;j<8;j++){const a=RN(0,6.283);sSpark({x:cx+Math.cos(a)*R,y:cy+(i?24:-24)+Math.sin(a)*R*.22,vx:Math.cos(a)*200,vy:-RN(60,200),g:600,m:.4,w:1.4,c:['#ffffff','#e0c9ff'],add:1})}},i*200+450)});
+ setTimeout(()=>o.flt('saturate(.4) brightness(.95)',900,.3),800);o.fade(d,1700)};
+/* Языки: из центра вылетают буквы разных алфавитов, на лету превращаются в понятные русские и складываются в строку */
+CW2.tongues=o=>{const{W,cx,cy}=o,A='ΣΩΨΔאבגדᚠᚢᚦ文字مسخ',R='РЕЧЬПОНЯТНА';for(let i=0;i<R.length;i++){const a=RN(0,6.283),x1=cx+(i-R.length/2+.5)*Math.min(18,W/14),t0=performance.now(),ch=A[Math.floor(RN(0,A.length))];
+  spawn({k:'d',x:cx,y:cy,m:1.7,fp:2,draw:g=>{const t=(performance.now()-t0)/1000,u=Math.min(1,t/.5),v=Math.min(1,Math.max(0,(t-.5)/.5)),x=cx+Math.cos(a)*120*u*(1-v)+(x1-cx)*v,y=cy+Math.sin(a)*90*u*(1-v),f=t>1.4?Math.max(0,1-(t-1.4)/.3):1;
+   g.globalAlpha*=f;g.font='bold 24px serif';g.textAlign='center';g.drawImage(spG(v>.5?'#f0c47a':'#9a5cff'),x-16,y-16,32,32);g.fillStyle=v>.5?'#fff6d8':'#f0d8ff';g.fillText(v>.5?R[i]:ch,x,y+8)}})}
+ setTimeout(()=>{uwThud(o,2,180);glint(cx,cy,12,{m:.4,c:'#fff6d8'})},1000);vib(10)};
+
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* СЕРВЕР: запуск и блок «Сохранение на сервере» внизу «Правки листа». Устройство описано у cloudMark(). */
 function cWhen(t){if(!t)return'';const d=new Date(t),now=new Date(),hm=d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
@@ -5237,7 +5627,7 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState===
 addEventListener('pagehide',()=>cloudPush(true));
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-28-79';
+const BUILD='2026-11-28-80';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
