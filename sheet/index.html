@@ -3058,7 +3058,7 @@ const INFO={
   <p>В свой ход у тебя есть:</p><p>• <b>Перемещение</b> до ${String(effSpeed()).replace('.',',')} футов. Можно делить: пройти, ударить, пройти дальше.<br>• <b>Одно действие</b>: заклинание, атака кинжалом или что-то из «Других действий».<br>• <b>Бонусное действие</b>, только если что-то его даёт (у тебя: Гибкое колдовство).<br>• Одно мелкое дело бесплатно: открыть дверь, достать кинжал.</p>
   <p><b>Реакция</b> одна на раунд, и её можно потратить даже в чужой ход: Щит, Удар вслед.</p>
   <p class="mu">Правило бонусного заклинания: если в этот ход ты сотворил заклинание бонусным действием, то другим заклинанием в этот ход может быть только заговор за 1 действие.</p>`,acts:''}),
- ac:()=>({t:'Класс доспеха',sub:S.shieldOn?`${S.ac} + 5 от Щита = ${effAC()}`:`${S.ac} = 10 + Ловкость ${sg(mod(S.ab.dex))}`,body:`<p>Сколько должен выбросить враг (к20 + его бонус), чтобы <b>попасть</b> по тебе. Меньше этого числа: промах.</p>${S.shieldOn?'<p><b>Щит действует</b>: +5 до начала твоего следующего хода.</p>':''}<div class="how">Если по тебе попали и итог врага меньше ${S.ac+5}, Щит превратит попадание в промах. Спроси мастера, сколько выпало.</div>`,
+ ac:()=>({t:'Класс доспеха',sub:S.shieldOn?`${S.ac} + 5 от Щита = ${effAC()}`:`${S.ac} = 10 + Ловкость ${sg(mod(S.ab.dex))}`,body:`<p>Сколько должен выбросить враг (к20 + его бонус), чтобы <b>попасть</b> по тебе. Меньше этого числа: промах.</p>${S.shieldOn?'<p><b>Щит действует</b>: +5 до начала твоего следующего хода.</p>':''}<div class="how">Если по тебе попали и итог врага меньше ${(S.mArm?Math.max(S.ac,13+mod(S.ab.dex)):S.ac)+5}, Щит превратит попадание в промах. Спроси мастера, сколько выпало.</div>`,
   acts:S.shieldOn?`<button class="ghost" data-act="shieldOff">Мой ход начался: Щит исчез</button>`:`<button data-info="sp_shield">Открыть Щит</button>`}),
  move:()=>({t:'Скорость',sub:`${String(effSpeed()).replace('.',',')} футов за ход`,body:`<p>Столько футов можешь пройти за свой ход. Одна клетка на карте обычно 5 футов, значит <b>${Math.floor(effSpeed()/5)} клеток</b>.</p><p>Труднопроходимая местность (завал, болото, лестница) стоит вдвое: 1 фут съедает 2.</p><p>Встать, если сбит с ног, стоит половину скорости.</p><div class="how">Если уходишь от врага, который стоит рядом, он может ударить вслед. Чтобы этого не было, используй действие <b>Отход</b>.</div>`,acts:''}),
  actions:()=>({t:'Другие действия',sub:'вместо атаки или заклинания',body:`<p><b>Рывок</b>: ещё раз столько же движения (всего ${String(effSpeed()*2).replace('.',',')} футов).</p>
@@ -5727,7 +5727,149 @@ function sheetFold(){const bg=$('sheet'),f=$('form');if(!bg.classList.contains('
 })();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='2026-11-28-83';
+/* ===== ДЕЙСТВУЮЩИЕ ЗАКЛИНАНИЯ (общий блок для всех трёх листов) =====
+   S.act = {ключ заклинания: {m: сколько минут уже прошло}}.
+   Попадают все заклинания, которые длятся минуту и дольше (с концентрацией и без).
+   Концентрация по-прежнему в S.conc, Доспехи мага в S.mArm: actNorm() держит S.act в согласии с ними.
+   Пометки статичные; эффект только в момент включения и выключения. */
+const ACT_UNI={'минут':1,'минута':1,'минуты':1,'час':60,'часа':60,'часов':60,'день':1440,'дня':1440,'дней':1440};
+function actDur(k){const p=SPELLS[k];if(!p||!p.meta||k==='shield')return 0;
+ for(const seg of String(p.meta).split(' · ')){const s=seg.trim();
+  if(/^пока не рассеян/.test(s))return 1e9;
+  const m=s.match(/^(?:концентрация\s+)?(?:до\s+)?(\d+)\s+(минут[аы]?|час(?:а|ов)?|д(?:ень|ня|ней))$/);
+  if(m)return +m[1]*(ACT_UNI[m[2]]||0)}
+ return 0}
+const actPl=(n,f)=>{const a=n%10,b=n%100;return f[a===1&&b!==11?0:a>=2&&a<=4&&(b<10||b>=20)?1:2]};
+function actFmt(min){if(min>=1e8)return 'пока не рассеешь';min=Math.max(1,Math.round(min));
+ if(min>=1440&&min%1440===0){const d=min/1440;return d+' '+actPl(d,['день','дня','дней'])}
+ if(min>=60){const h=Math.floor(min/60),r=min%60;return h+' '+actPl(h,['час','часа','часов'])+(r?' '+r+' '+actPl(r,['минута','минуты','минут']):'')}
+ return min+' '+actPl(min,['минута','минуты','минут'])}
+let actNewK=null;
+function actNorm(){if(typeof S!=='object'||!S)return {};if(!S.act||typeof S.act!=='object'||Array.isArray(S.act))S.act={};const A=S.act;
+ for(const k of Object.keys(A)){const p=SPELLS[k];
+  if(!p||!actDur(k)||(p.conc&&S.conc!==k)||(k==='mage_armor'&&!S.mArm)||typeof A[k]!=='object')delete A[k]}
+ if(S.conc&&SPELLS[S.conc]&&actDur(S.conc)&&!A[S.conc])A[S.conc]={m:0};
+ if(S.mArm&&SPELLS.mage_armor&&!A.mage_armor)A.mage_armor={m:0};
+ return A}
+const actKeys=()=>{const A=actNorm();return Object.keys(A).sort((a,b)=>(SPELLS[b].conc?1:0)-(SPELLS[a].conc?1:0))};
+const actLeft=k=>{const d=actDur(k),A=S.act||{};return d>=1e8?1e9:Math.max(0,d-((A[k]&&A[k].m)||0))};
+const actLeftTx=k=>{const l=actLeft(k);return l>=1e8?'пока не рассеешь':'ещё '+actFmt(l)};
+function actStop(k){if(k===S.conc){S.conc=null}if(k==='mage_armor')S.mArm=0;if(S.act)delete S.act[k]}
+function actEnd(k){const wasArm=k==='mage_armor'&&S.mArm;
+ if(k===S.conc&&typeof _actA==='function'){actFade(k);_actA('concEnd');if(wasArm)armFx(false);return}
+ actFade(k);actStop(k);save();renderAll();closeDrawer();vib(10);if(wasArm)setTimeout(()=>armFx(false),40)}
+function actPassRaw(min){const A=actNorm(),gone=[];
+ for(const k of Object.keys(A)){A[k].m=(A[k].m||0)+min;if(actLeft(k)<=0)gone.push(k)}
+ const arm=gone.includes('mage_armor')&&S.mArm;gone.forEach(k=>actFade(k));gone.forEach(actStop);return {gone,arm}}
+function actPass(min){const {gone,arm}=actPassRaw(min);save();renderAll();vib(gone.length?[12,30,18]:8);
+ if(arm)setTimeout(()=>armFx(false),40);
+ if(openInfoKey&&/^act_/.test(openInfoKey)&&!(S.act||{})[openInfoKey.slice(4)]){if(actKeys().length)openInfo('actlist',true);else closeDrawer()}
+ else if(openInfoKey==='actlist'&&!actKeys().length)closeDrawer()}
+/* кнопка «время прошло» под длительность */
+function actStepBtn(k){const l=actLeft(k);if(l>=1e8)return '';
+ const st=l<=1?1:l<=10?1:l<=60?10:60,lb=st===1?'Прошла минута':st===10?'Прошло 10 минут':'Прошёл час';
+ return `<button class="ghost" data-act="actPass:${st}">${lb}${l<=st?': закончится':''}</button>`}
+/* шторки */
+INFO.actlist=()=>{const ks=actKeys();return{t:'Действующие заклинания',sub:ks.length?ks.length+' '+actPl(ks.length,['действует','действуют','действуют'])+' сейчас':'сейчас ничего не действует',
+ body:(ks.length?`<div class="aclist">${ks.map(k=>{const p=SPELLS[k];return `<div class="acr"><button class="acn" data-info="act_${k}"><b>${p.n}</b><small>${actLeftTx(k)}${p.conc?' · концентрация':''}</small></button><button class="acx" data-act="actEnd:${k}">Закончить</button></div>`}).join('')}</div>`:'<p>Когда сотворишь заклинание, которое длится минуту и дольше, оно появится здесь и в «Состояниях».</p>')
+  +`<div class="how">Лист сам время не считает. Когда в игре проходит время, нажми кнопку ниже: закончится то, у чего время вышло. Долгий отдых заканчивает всё, что длится до 8 часов${typeof S.wild==='object'?', короткий отдых добавляет час':''}.</div>`,
+ acts:ks.length?`<button class="ghost" data-act="actPass:10">Прошло 10 минут</button><button class="ghost" data-act="actPass:60">Прошёл час</button>`:''}};
+function actInfo(k){const p=SPELLS[k],on=!!(S.act||{})[k],d=actDur(k);
+ return{t:p.n,sub:on?`действует · ${actLeftTx(k)}`:'сейчас не действует',bang:INFO['full_'+k]?'full_'+k:null,
+  body:`<p>${p.short?p.short.charAt(0).toUpperCase()+p.short.slice(1)+'.':''}</p>`
+   +(on?`<div class="how actst"><b>Действует.</b> Длится ${actFmt(d)}${d<1e8?`, осталось <b>${actLeftTx(k).replace('ещё ','')}</b>`:''}.${p.conc?' Держится на концентрации: ранение (спасбросок Телосложения), новое заклинание с концентрацией или потеря сознания обрывают его.':''}</div>`:'')
+   +`<div class="how">Когда в игре проходит время, нажми кнопку ниже. Долгий отдых заканчивает всё, что длится до 8 часов.</div>`,
+  acts:on?`${actStepBtn(k)}<button class="ghost" data-act="actEnd:${k}">Закончить «${p.n}»</button><button class="ghost" data-info="sp_${k}">Описание заклинания ›</button>`:`<button class="ghost" data-info="sp_${k}">Описание заклинания ›</button>`}}
+const _actOI=openInfo;
+openInfo=function(k,re){if(typeof k==='string'&&k.startsWith('act_')&&SPELLS[k.slice(4)]&&!INFO[k]){const sk=k.slice(4);INFO[k]=()=>actInfo(sk)}
+ const r=_actOI.apply(this,arguments);
+ try{if(typeof k==='string'&&k.startsWith('sp_')){const sk=k.slice(3);if((actNorm())[sk]){const b=document.querySelector('#dbody .info');
+   if(b&&!b.querySelector('.actst'))b.insertAdjacentHTML('afterbegin',`<div class="how actst"><b>Действует</b> · ${actLeftTx(sk)}${SPELLS[sk].conc?' · концентрация':''}</div>`);
+   const da=document.querySelector('#dbody .dacts');if(da&&!da.querySelector('[data-act="mArmOff"],[data-act="concEnd"],[data-act^="actEnd:"]'))da.insertAdjacentHTML('beforeend',`<button class="ghost" data-act="actEnd:${sk}">Закончить «${SPELLS[sk].n}»</button>`)}}}catch(e){}
+ return r};
+/* КД: показать, что Доспехи мага считаются */
+if(INFO.ac){const _acI=INFO.ac;INFO.ac=()=>{const d=_acI();if(!S.mArm)return d;const dx=mod(S.ab.dex),ma=13+dx;
+ return Object.assign({},d,{sub:`Доспехи мага: 13 + Ловкость ${sg(dx)} = ${ma}${S.shieldOn?' + 5 от Щита':''}${S.shieldOn||effAC()!==ma?' = '+effAC():''}`,
+  body:`<div class="how actst"><b>Доспехи мага действуют</b> · ${actLeftTx('mage_armor')}. Класс доспеха 13 + Ловкость, пока на тебе нет доспехов.${typeof S.ac==='number'&&S.ac>=ma?' Сейчас твой обычный класс доспеха не ниже, поэтому он и считается.':''}</div>`+d.body,
+  acts:`<button class="ghost" data-info="act_mage_armor">Доспехи мага ›</button>`+(d.acts||'')})}}
+/* пометки на экране */
+function actDecor(){const ks=actKeys(),A=S.act||{};
+ /* кнопки заклинаний в Бою и в Общении */
+ document.querySelectorAll('.atk[data-info^="sp_"],.sp[data-info^="sp_"]').forEach(b=>{const k=b.dataset.info.slice(3);if(!A[k]||k==='shield')return;
+  b.classList.add('on','acton');const sm=b.querySelector(':scope > small');const tx=(SPELLS[k].conc?'концентрация · ':'действует · ')+actLeftTx(k);if(sm)sm.textContent=tx;else b.insertAdjacentHTML('beforeend',`<small>${tx}</small>`)});
+ /* «Состояния» на главной: значки действующих заклинаний первыми */
+ const cn=document.querySelector('#spare .cnds');if(cn){cn.querySelectorAll('.spa').forEach(x=>x.remove());
+  cn.insertAdjacentHTML('afterbegin',ks.map(k=>`<button class="cnd spa" data-info="act_${k}"><i class="sg">✦</i>${SPELLS[k].n}<small>${actLeft(k)>=1e8?'':' · '+actFmt(actLeft(k))}</small></button>`).join(''))}
+ /* Бой: карточка рядом с концентрацией */
+ const fr=document.getElementById('fRes');if(fr){fr.querySelectorAll('.actc').forEach(x=>x.remove());const nc=ks.filter(k=>!SPELLS[k].conc),cb=fr.querySelector('[data-info="conc"]');
+  if(nc.length){const h=nc.length===1?`<button class="fc armed actc" data-info="act_${nc[0]}"><span class="t">${SPELLS[nc[0]].n}</span><small class="cc">действует · ${actLeftTx(nc[0]).replace('ещё ','')}</small></button>`:`<button class="fc armed actc" data-info="actlist"><span class="t">Действуют: ${nc.length}</span><small class="cc">${nc.map(k=>SPELLS[k].n).join(', ')}</small></button>`;
+   if(cb)cb.insertAdjacentHTML('afterend',h);else fr.insertAdjacentHTML('beforeend',h)}
+  if(cb&&S.conc&&A[S.conc]){const cc=cb.querySelector('.cc');if(cc)cc.textContent='концентрация · '+actLeftTx(S.conc)}}
+ /* КД с Доспехами мага */
+ const toks=[...document.querySelectorAll('.tok[data-info="ac"]')];const hv=document.getElementById('acV');if(hv&&hv.parentNode&&!toks.includes(hv.parentNode))toks.push(hv.parentNode);
+ toks.forEach(t=>{t.classList.toggle('buff',!!S.mArm);let m=t.querySelector('.bmk');if(S.mArm&&!m){t.insertAdjacentHTML('beforeend','<span class="bmk">доспехи мага</span>')}else if(!S.mArm&&m)m.remove()});
+}
+function actDecorSafe(){try{actDecor()}catch(e){}}
+['renderAll','renderFight','renderConds','renderSmag','renderHead'].forEach(n=>{try{const f=window[n]||eval(n);if(typeof f!=='function')return;
+ const w=function(){if(n==='renderAll')try{actNorm()}catch(e){}const r=f.apply(this,arguments);actDecorSafe();return r};eval(n+'=w')}catch(e){}});
+/* сотворение: отметить новое действующее */
+const _actUB=useBump;
+useBump=function(g,k){_actUB.apply(this,arguments);try{if(g==='cast'&&SPELLS[k]&&actDur(k)){if(!S.act||typeof S.act!=='object')S.act={};S.act[k]={m:0};actNewK=k}}catch(e){}};
+const _actA=act;
+act=function(a){
+ if(typeof a==='string'){if(a.startsWith('actEnd:')){actEnd(a.slice(7));return}if(a.startsWith('actPass:')){actPass(+a.slice(8)||1);return}}
+ actNewK=null;const arm0=!!S.mArm,c0=S.conc;
+ const r=_actA.apply(this,arguments);
+ try{if(a==='longRest'||a==='shortRest'){const {gone}=actPassRaw(a==='longRest'?480:60);if(gone.length){save();renderAll()}}
+  if(actNewK){const k=actNewK;actNewK=null;if((S.act||{})[k]){setTimeout(()=>actIgnite(k),620);if(k==='mage_armor')setTimeout(()=>armFx(true),700)}}
+  if(arm0&&!S.mArm)setTimeout(()=>armFx(false),40);
+  if(c0&&S.conc!==c0&&a!=='longRest')actFade(c0)}catch(e){}
+ return r};
+/* эффекты: только в момент включения и выключения */
+function actSpark(el,n,col){if(RM||!el)return;const r=el.getBoundingClientRect();if(!r.width)return;const cx=r.left+r.width/2,cy=r.top+r.height/2;
+ for(let i=0;i<n;i++){const s=document.createElement('i');s.className='acsp';const a=Math.random()*6.283,d=r.width*.35+18+Math.random()*30;s.style.cssText=`left:${cx}px;top:${cy}px;background:${col};box-shadow:0 0 8px ${col}`;document.body.appendChild(s);
+  s.animate([{transform:'translate(-50%,-50%) scale(.4)',opacity:0},{transform:`translate(calc(-50% + ${Math.cos(a)*d*.5}px),calc(-50% + ${Math.sin(a)*d*.5}px)) scale(1.2)`,opacity:1,offset:.3},{transform:`translate(calc(-50% + ${Math.cos(a)*d}px),calc(-50% + ${Math.sin(a)*d}px)) scale(.2)`,opacity:0}],{duration:700+Math.random()*350,easing:'cubic-bezier(.2,.8,.3,1)'}).onfinish=()=>s.remove()}}
+function actIgnite(k){const els=[...document.querySelectorAll(`.page.on [data-info="act_${k}"],.page.on .actc,.page.on .atk[data-info="sp_${k}"],.page.on .sp[data-info="sp_${k}"]`+(SPELLS[k]&&SPELLS[k].conc?',.page.on #fRes [data-info="conc"]':''))].filter(e=>e.offsetParent);
+ if(!els.length){const w=document.querySelector(`#p-fight .actc,#p-char [data-info="act_${k}"]`);if(w)els.push(w)}
+ els.forEach((e,i)=>{e.classList.remove('acign');void e.offsetWidth;e.classList.add('acign');setTimeout(()=>e.classList.remove('acign'),1300);if(i<2)actSpark(e,9,'#fff3d6')});vib([12,40,22])}
+function actFade(k){if(RM)return;document.querySelectorAll(`.page.on [data-info="act_${k}"],.page.on .actc`).forEach(e=>{if(!e.offsetParent)return;const r=e.getBoundingClientRect(),g=document.createElement('div');g.className='acghost';g.style.cssText=`left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px`;document.body.appendChild(g);
+  g.animate([{opacity:.9,transform:'scale(1)'},{opacity:0,transform:'scale(1.12) translateY(-6px)'}],{duration:520,easing:'ease-out'}).onfinish=()=>g.remove()})}
+/* Доспехи мага: на КД складываются светлые грани (вкл) или осыпаются (выкл) */
+function armFx(on){if(RM)return;[...document.querySelectorAll('.tok.buff,.tok[data-info="ac"]'),document.getElementById('acV')&&document.getElementById('acV').parentNode].filter((e,i,a)=>e&&e.offsetParent&&a.indexOf(e)===i).forEach(t=>{
+ const r=t.getBoundingClientRect(),o=document.createElement('div');o.className='achex';const W=r.width+28,H=r.height+28;
+ let p='';const s=11;for(let y=-1;y*s*1.5<H+s;y++)for(let x=-1;x*s*1.732<W+s;x++){const cx=x*s*1.732+(y%2?s*.866:0),cy=y*s*1.5;let d='';for(let j=0;j<6;j++){const a=(j/6)*6.283+.5236;d+=(j?'L':'M')+(cx+Math.cos(a)*s*.92).toFixed(1)+' '+(cy+Math.sin(a)*s*.92).toFixed(1)}p+=d+'Z'}
+ o.style.cssText=`left:${r.left-14}px;top:${r.top-14}px;width:${W}px;height:${H}px`;
+ o.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><defs><radialGradient id="acg${on?1:0}"><stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><mask id="acm${on?1:0}"><rect width="${W}" height="${H}" fill="url(#acg${on?1:0})"/></mask></defs><path d="${p}" fill="rgba(235,225,255,.10)" stroke="#efe6ff" stroke-width="1.3" mask="url(#acm${on?1:0})"/></svg>`;
+ document.body.appendChild(o);
+ const kf=on?[{opacity:0,transform:'scale(1.6) rotate(-8deg)'},{opacity:1,transform:'scale(1) rotate(0)',offset:.45},{opacity:.85,transform:'scale(1)',offset:.7},{opacity:0,transform:'scale(.96)'}]:[{opacity:.9,transform:'scale(1)'},{opacity:.6,transform:'translateY(4px) scale(1.04)',offset:.4},{opacity:0,transform:'translateY(18px) scale(1.1)'}];
+ o.animate(kf,{duration:on?1250:700,easing:on?'cubic-bezier(.2,.9,.3,1)':'ease-in'}).onfinish=()=>o.remove();
+ t.classList.remove('acign');void t.offsetWidth;t.classList.add('acign');setTimeout(()=>t.classList.remove('acign'),1300);if(on)actSpark(t,8,'#efe6ff')})}
+document.head.insertAdjacentHTML('beforeend',`<style>
+.cnd.spa{color:#f4ecff;border-color:var(--violet);background:linear-gradient(160deg,rgba(90,64,140,.55),rgba(36,26,58,.65));box-shadow:0 0 0 1px rgba(200,180,255,.25),0 0 12px rgba(165,124,255,.3);white-space:nowrap}
+.cnd.spa{display:inline-flex;align-items:baseline;gap:5px}
+.cnd.spa .sg,.cnd.spa small{display:inline;position:static;width:auto;height:auto;margin:0}
+.cnd.spa .sg{font-style:normal;color:#fff3d6}
+.cnd.spa small{font-size:.82em;opacity:.8;font-weight:500}
+.atk.acton small,.sp.acton small{color:#f1e8ff!important;opacity:1}
+.fc.actc .cc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.tok.buff{border-color:var(--violet);box-shadow:0 0 0 1px var(--violet),0 0 14px rgba(165,124,255,.35);position:relative}
+.tok .bmk{position:absolute;left:0;right:0;bottom:2px;text-align:center;font-size:9.5px;line-height:1;letter-spacing:.02em;color:#e9defc;opacity:.9;pointer-events:none;white-space:nowrap}
+.acign{animation:acign 1.2s cubic-bezier(.2,.9,.3,1)}
+@keyframes acign{0%{transform:scale(.82);filter:brightness(2.2)}35%{transform:scale(1.07);filter:brightness(1.7)}100%{transform:none;filter:none}}
+.acsp{position:fixed;width:5px;height:5px;border-radius:50%;pointer-events:none;z-index:9998;mix-blend-mode:screen}
+.acghost{position:fixed;border-radius:12px;border:1.5px solid #f1e8ff;box-shadow:0 0 16px rgba(241,232,255,.6);pointer-events:none;z-index:9998}
+.achex{position:fixed;pointer-events:none;z-index:9998;mix-blend-mode:screen;filter:drop-shadow(0 0 5px rgba(220,205,255,.9))}
+.actst{border-color:var(--violet)!important}
+.aclist{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.acr{display:flex;gap:8px;align-items:stretch}
+.acn{flex:1;text-align:left;display:flex;flex-direction:column;gap:3px;padding:9px 12px;border-radius:12px;border:1px solid var(--violet);background:rgba(60,44,96,.35);color:inherit;font:inherit}
+.acn b{font-size:16px}.acn small{opacity:.8;font-size:12.5px}
+.acx{flex:none;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.2);color:inherit;font:inherit;font-size:13.5px}
+@media (prefers-reduced-motion:reduce){.acign{animation:none}}
+</style>`);
+actDecorSafe();
+/* ===== /ДЕЙСТВУЮЩИЕ ЗАКЛИНАНИЯ */
+const BUILD='2026-11-28-84';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
