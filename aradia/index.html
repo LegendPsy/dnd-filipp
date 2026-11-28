@@ -6179,10 +6179,36 @@ function resetUndo(){let b=null;try{b=localStorage.getItem(RBAK)}catch(e){}if(!b
  $('rstYes').onclick=resetBase;
  if($('rstBack'))$('rstBack').onclick=resetUndo}}
 
+/* ---------- КАРТОЧКИ ЗВЕРЕЙ СО СВОИМ РИСУНКОМ: в «Выбрать зверя» у каждого зверя его портрет слева
+   и его силуэт тихо проступает справа в фоне карточки; в карточке зверя силуэт за цифрами.
+   Рисунок статичный (силуэты game-icons.net, CC BY 3.0), текст поверх читается. ---------- */
+function bCard(ic){const key='c'+ic;if(bArtC[key])return bArtC[key];const Wc=360,Hc=110,c=document.createElement('canvas');c.width=Wc;c.height=Hc;const g=c.getContext('2d'),r=bRnd(ic+'c'),col=bCol(ic);
+ const P=new Path2D(BICO[ic]),b=bBox(ic),sc=Hc*1.25/Math.max(b.w,b.h),ox=Wc-70-(b.x+b.w/2)*sc,oy=Hc/2-(b.y+b.h/2)*sc+Hc*.08;
+ g.save();g.translate(ox,oy);g.scale(sc,sc);g.shadowColor=col;g.shadowBlur=10;
+ const fg=g.createLinearGradient(0,b.y,0,b.y+b.h);fg.addColorStop(0,col);fg.addColorStop(1,'#2a3a4c');g.fillStyle=fg;g.globalAlpha=.24;g.fill(P);g.shadowBlur=0;
+ g.globalAlpha=.32;g.lineWidth=2.2/sc;g.strokeStyle=col;g.stroke(P);g.restore();g.globalAlpha=1;
+ const st=bStars(g,P,ox,oy,sc,Wc,4,r);if(st.pts){g.strokeStyle='rgba(220,235,250,.28)';g.lineWidth=.8;g.beginPath();st.ed.forEach(([a,q])=>{g.moveTo(...st.pts[a]);g.lineTo(...st.pts[q])});g.stroke();st.pts.forEach(p=>starDot(g,p[0],p[1],.9,'rgba(200,225,250,.5)'))}
+ for(let i=0;i<14;i++){g.fillStyle=`rgba(220,235,250,${.15+r()*.3})`;g.fillRect(Wc*.45+r()*Wc*.55,r()*Hc,.9,.9)}
+ /* слева рисунок растворяется, чтобы текст оставался чистым */
+ g.globalCompositeOperation='destination-in';const fd=g.createLinearGradient(0,0,Wc,0);fd.addColorStop(0,'rgba(0,0,0,0)');fd.addColorStop(.42,'rgba(0,0,0,.15)');fd.addColorStop(.75,'rgba(0,0,0,1)');g.fillStyle=fd;g.fillRect(0,0,Wc,Hc);
+ return bArtC[key]=c.toDataURL()}
+{const _wp=INFO.wfpick;INFO.wfpick=function(){const o=_wp.apply(this,arguments);if(!o||!o.body)return o;
+ o.body=o.body.replace(/<button class="bstr ([^"]*)" data-info="bst_(\d+)">([\s\S]*?)<\/button>/g,(m,cl,i,inner)=>{const B=S.beasts[+i];if(!B)return m;const ic=bIcon(B);
+  return `<button class="bstr bart ${cl}" data-info="bst_${i}" style="background-image:url(${bCard(ic)})"><img src="${bFace(ic)}" alt=""><span class="t">${inner}</span></button>`});
+ return o}}
+{const _bb=beastBody;beastBody=function(B){const h=_bb.apply(this,arguments);if(!B)return h;return h.replace('<div class="bstat">',`<div class="bstat bart" style="background-image:url(${bCard(bIcon(B))})">`)}}
+document.head.insertAdjacentHTML('beforeend',`<style>
+.bstr.bart{display:flex;align-items:center;gap:10px;padding:6px 10px;background-repeat:no-repeat;background-position:right center;background-size:auto 100%}
+.bstr.bart>img{flex:none;width:40px;height:40px;border-radius:50%;box-shadow:0 0 0 1px rgba(201,214,228,.3)}
+.bstr.bart .t{position:relative;flex:1;min-width:0}
+.bstat.bart{background-repeat:no-repeat;background-position:right center;background-size:auto 130%;border-radius:10px}
+.bstat.bart div{background:rgba(20,27,36,.5)}
+</style>`);
+
 renderAll();fit();setTimeout(fit,300);wideFix();
 /* самообновление: сайт разрешает телефону держать старую копию до 10 минут.
    При открытии и при возврате в приложение тихо проверяем, нет ли версии новее, и сразу её грузим. */
-const BUILD='aradia-2026-11-27-29';
+const BUILD='aradia-2026-11-27-30';
 function checkUpdate(){if(location.protocol==='file:')return;
  fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
   const m=t.match(/const BUILD='([^']+)'/);if(!m||m[1]===BUILD)return;
